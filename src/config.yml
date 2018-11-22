@@ -1,0 +1,58 @@
+#List of worlds where lucky blocks will be enabled.
+Worlds-list:
+- world
+Wands:
+  Regen:
+    cooldown-time: 20
+    required-permission: false
+    permission: amazinglb.wands.regenwand
+  Dragon-breath:
+    cooldown-time: 30
+    required-permission: false
+    permission: amazinglb.wands.dragonbreathwand
+  Invisibility:
+    cooldown-time: 20
+    required-permission: false
+    permission: amazinglb.wands.invwand
+  TNT:
+    cooldown-time: 10
+    required-permission: false
+    permission: amazinglb.wands.tntwand
+  Slime:
+    cooldown-time: 30
+    required-permission: false
+    permission: amazinglb.wands.slimewand
+  Lightning:
+    cooldown-time: 30
+    required-permission: false
+    permission: amazinglb.wands.lightning
+  Shield:
+    cooldown-time: 30
+    ShieldWandBlock: 'LEAVES'
+    withfloor: true
+    required-permission: false
+    permission: amazinglb.wands.shield
+Objects:
+  DarkHole:
+    number-of-blocks: 5
+    #The time must be in ticks. 1 second = 20 ticks
+    time-before-darkhole: 20
+    #The time must be in ticks. 1 second = 20 ticks
+    time-between-one-block-and-the-next: 5   
+    block-material: BUCKET
+    required-permission: false
+    permission: amazinglb.objets.darkhole
+  MiniVolcano:
+    #The time must be in ticks. 1 second = 20 ticks
+    time-before-minivolcano: 20
+    #The time must be in ticks. 1 second = 20 ticks
+    time-between-one-block-and-the-next: 20   
+    block-material: LAVA_BUCKET
+    required-permission: false
+    permission: amazinglb.objets.minivolcano
+Commands:        
+    Reload-permission: amazinglb.reload
+    Wands-permission: amazinglb.wands
+    Objects-permission: amazinglb.objects
+    RandomBlocks-permission: amazinglb.randomblocks
+LuckyBlock: 'SPONGE'

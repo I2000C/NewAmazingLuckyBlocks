@@ -1,0 +1,8 @@
+name: NewAmazingLuckyBlocks
+main: net.servermc.plugins.AmazingLuckyBlocks
+version: 1.0 BETA
+description: The Official LuckyBlocks plugin of ServerMC.
+author: RewKun
+commands:
+   alb:
+    description: Reload config and lang files of Amazing Lucky Blocks.
