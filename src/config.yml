@@ -7,7 +7,7 @@ Wands:
     required-permission: false
     permission: amazinglb.wands.regenwand
   Dragon-breath:
-    cooldown-time: 30
+    cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.dragonbreathwand
   Invisibility:
@@ -15,19 +15,19 @@ Wands:
     required-permission: false
     permission: amazinglb.wands.invwand
   TNT:
-    cooldown-time: 10
+    cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.tntwand
   Slime:
-    cooldown-time: 30
+    cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.slimewand
   Lightning:
-    cooldown-time: 30
+    cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.lightning
   Shield:
-    cooldown-time: 30
+    cooldown-time: 20
     ShieldWandBlock: 'LEAVES'
     withfloor: true
     required-permission: false
@@ -38,7 +38,7 @@ Objects:
     #The time must be in ticks. 1 second = 20 ticks
     time-before-darkhole: 20
     #The time must be in ticks. 1 second = 20 ticks
-    time-between-one-block-and-the-next: 5   
+    time-between-one-block-and-the-next: 5
     block-material: BUCKET
     required-permission: false
     permission: amazinglb.objets.darkhole
@@ -46,11 +46,12 @@ Objects:
     #The time must be in ticks. 1 second = 20 ticks
     time-before-minivolcano: 20
     #The time must be in ticks. 1 second = 20 ticks
-    time-between-one-block-and-the-next: 20   
+    time-between-one-block-and-the-next: 20
     block-material: LAVA_BUCKET
     required-permission: false
     permission: amazinglb.objets.minivolcano
-Commands:        
+Commands:
+    Update-message-permission: amazinglb.update
     Reload-permission: amazinglb.reload
     Wands-permission: amazinglb.wands
     Objects-permission: amazinglb.objects

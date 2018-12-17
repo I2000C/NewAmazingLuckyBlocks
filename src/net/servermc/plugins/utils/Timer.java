@@ -5,9 +5,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.Material;
+import org.bukkit.Bukkit;
 
 import net.servermc.plugins.AmazingLuckyBlocks;
-import org.bukkit.Material;
+
 
 import org.bukkit.Effect;
 import org.bukkit.Sound;
@@ -29,9 +31,20 @@ public class Timer {
     this.location = l;
     }    
     public void darkhole(){
+        Sound sound;
+        Effect effect;
+        try {
+            sound = Sound.valueOf("WITHER_IDLE"); // pre 1.9 sound //pre 1.9 sounds are here: http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Sound.html
+        } catch(IllegalArgumentException e) {
+            sound = Sound.valueOf("ENTITY_WITHER_AMBIENT"); // post 1.9 sound //post 1.9 sounds are here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+        }
+        player.playSound(player.getLocation(), sound, 2.0F, 1.0F);
+        
+        effect = Effect.ENDER_SIGNAL;
+        location.getWorld().playEffect(location, effect, 100);
+        
+        
         long before_ticks = CLBManager.getManager().getConfig().getInt("Objects.DarkHole.time-before-darkhole");
-        player.playSound(player.getLocation(), Sound.WITHER_IDLE, 100.0F, 1.0F);
-        location.getWorld().playEffect(location, Effect.ENDER_SIGNAL, 100);
         
         BukkitScheduler sh = Bukkit.getServer().getScheduler();
         taskID = sh.scheduleSyncRepeatingTask(plugin,new Runnable(){
@@ -63,12 +76,25 @@ public class Timer {
         },before_ticks,ticks);      //},"Tiempo de espera antes de que se ejecute en ticks","Cada cuanto tiempo se repite en ticks");
     }
     public void minivolcano(){
-        long before_ticks = CLBManager.getManager().getConfig().getInt("Objects.MiniVolcano.time-before-minivolcano");
-        player.playSound(player.getLocation(), Sound.FUSE, 100.0F, 1.0F);
-        location.getWorld().playEffect(location, Effect.LAVA_POP, 100);
-        location.getWorld().playEffect(location, Effect.LAVADRIP, 100);
-        location.getWorld().playEffect(location, Effect.LARGE_SMOKE, 100);
+        Sound sound;
+        Effect effect;
+        try {
+            sound = Sound.valueOf("FUSE"); // pre 1.9 sound //pre 1.9 sounds are here: http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Sound.html
+        } catch(IllegalArgumentException e) {
+            sound = Sound.valueOf("ENTITY_TNT_PRIMED"); // post 1.9 sound //post 1.9 sounds are here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+        }
+        player.playSound(player.getLocation(), sound, 2.0F, 1.0F);
         
+         
+        try{
+            effect = Effect.valueOf("LARGE_SMOKE"); // pparticle effects are here: https://www.digminecraft.com/lists/particle_list_pc.php
+            location.getWorld().playEffect(location, effect, 100);
+        }catch(IllegalArgumentException e){
+            }
+            
+        
+        long before_ticks = CLBManager.getManager().getConfig().getInt("Objects.MiniVolcano.time-before-minivolcano");
+                
         BukkitScheduler sh = Bukkit.getServer().getScheduler();
         taskID = sh.scheduleSyncRepeatingTask(plugin,new Runnable(){
             

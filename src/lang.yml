@@ -24,7 +24,7 @@ Helpmenu:
   line1: '&cNewAmazing Lucky Blocks'
   line2: ''
   line3: '&c/alb wands  &7-  Gives you all the magic wands'
-  line4: '&c/alb objects &7- Gives you all the fantastic objects'
+  line4: '&c/alb objects [amount] &7- Gives you all the fantastic objects'
   line5: '&c/alb randomblock <radx> <rady> <radz> <blocks> <floating_blocks: true/false> &7- Places random lucky blocks'
   line6: '&c/alb reload  &7-  Reload config and lang files'
   line7: '&c/alb  &7-  Show help page'

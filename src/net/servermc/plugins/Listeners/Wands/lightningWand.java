@@ -3,6 +3,7 @@ package net.servermc.plugins.Listeners.Wands;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import net.servermc.plugins.AmazingLuckyBlocks;
 import net.servermc.plugins.utils.CLBManager;
@@ -64,7 +65,12 @@ public class lightningWand
         {
           this.lightningcooldown.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis() + lw * 1000));
           this.transparent.add(Material.AIR);
-          Block block = player.getTargetBlock(this.transparent, 120);
+          Block block;
+          if(AmazingLuckyBlocks.instance.minecraftVersion.equals("1.13")){
+            block = player.getTargetBlock((Set<Material>) null, 120);
+          }else{
+            block = player.getTargetBlock(this.transparent, 120); 
+          }
           player.getWorld().strikeLightning(block.getLocation());
         }
       }

@@ -64,6 +64,10 @@ public class CommandManager
         String wandsperm = CLBManager.getManager().getConfig().getString("Commands.Wands-permission");
         if (sender.hasPermission(wandsperm))
         {
+            if(!(sender instanceof Player)) {
+			Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+			return false;
+            }else{
         Player p = (Player) sender;
         
         //Regen wand
@@ -125,24 +129,39 @@ public class CommandManager
         
         String loadwands = color(LangLoader.LangCfg.getString("LoadingWands"));
         sender.sendMessage (loadwands);
+            }
         }
         else 
         {
           String noperm = color(LangLoader.LangCfg.getString("NoPermission"));
           sender.sendMessage (noperm);
         }
-      }else if ((args.length == 1) && 
-        (args[0].equalsIgnoreCase("objects"))){
+      }else if (args[0].equalsIgnoreCase("objects")){
               String wandsperm = CLBManager.getManager().getConfig().getString("Commands.Objects-permission");
         if (sender.hasPermission(wandsperm))
         {
+            if(!(sender instanceof Player)) {
+			Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+			return false;
+            }else{
+        int amount = 0;
         Player p = (Player) sender;
-        
+        if(args.length > 1)
+        {
+        try{
+            amount = Integer.parseInt(args[1]);
+        }catch(IllegalArgumentException e){
+            amount = 1;
+            }
+        }else{
+            amount = 1;
+        }
         //Dark Hole
             
         ItemStack stack24 = new ItemStack(Material.valueOf(CLBManager.getManager().getConfig().getString("Objects.DarkHole.block-material")));
         ItemMeta meta7 = stack24.getItemMeta();
         meta7.setDisplayName(color(LangLoader.LangCfg.getString("Objects.DarkHole.name")));
+        stack24.setAmount(amount);
         stack24.setItemMeta(meta7);
         
         //Mini Volcano
@@ -150,6 +169,7 @@ public class CommandManager
         ItemStack stack25 = new ItemStack(Material.valueOf(CLBManager.getManager().getConfig().getString("Objects.MiniVolcano.block-material")));
         ItemMeta meta8 = stack25.getItemMeta();
         meta8.setDisplayName(color(LangLoader.LangCfg.getString("Objects.MiniVolcano.name")));
+        stack25.setAmount(amount);
         stack25.setItemMeta(meta8);
         
         
@@ -158,8 +178,8 @@ public class CommandManager
         
         String loadobjects = color(LangLoader.LangCfg.getString("LoadingObjects"));
         sender.sendMessage(loadobjects);
-        }
-        else 
+            }
+        }else 
         {
           String noperm = color(LangLoader.LangCfg.getString("NoPermission"));
           sender.sendMessage (noperm);
@@ -172,11 +192,13 @@ public class CommandManager
         {
           plugin.reloadConfig();
           File cfile = CLBManager.getManager().cfile;
-          LangLoader.mkdir();
-          LangLoader.MessageFile();
-          LangLoader.loadLang();
+          //LangLoader.mkdir();
+          //LangLoader.MessageFile();
+          //LangLoader.loadLang();
           CLBManager.getManager().config = YamlConfiguration.loadConfiguration(cfile);
           CLBManager.getManager().saveConfig();
+          LangLoader.getManager().reloadMessages();
+          LangLoader.getManager().getMessages();
           
           WorldList.instance.ReloadAll();
           
@@ -220,7 +242,7 @@ public class CommandManager
                 sender.sendMessage(plugin.name + " " +noperm);
             }
           }
-      } else {
+      }else {
           String unknowncommand = color(LangLoader.LangCfg.getString("UnknownCommand"));
           sender.sendMessage (unknowncommand);
       }

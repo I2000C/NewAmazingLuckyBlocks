@@ -61,14 +61,34 @@ public class AmazingLuckyBlocks
   public String version = pdffile.getVersion();
   public String name = ChatColor.GOLD + pdffile.getName();
   
+  public String serverVersion;
+  public String minecraftVersion;
+  
   public void onEnable()
   {
-    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[name " + ChatColor.GOLD + version + ChatColor.GREEN +"] is now enabled");
+    Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[" + name + " " + ChatColor.AQUA + version + ChatColor.GREEN +"] is now enabled");
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Plugin by RewKun (Galactic Networks)" + ChatColor.GREEN + " and edited by I2000C");
     new PlayerInteract(this);
     CLBManager.getManager().setup(this);
-    LangLoader.mkdir();
-    LangLoader.MessageFile();
+    
+    LangLoader.getManager().registerMessages();
+    LangLoader.getManager().getMessages();
+    //LangLoader.mkdir();
+    //LangLoader.MessageFile();
+    serverVersion = getServer().getVersion();
+    if(serverVersion.contains("1.8")){
+        minecraftVersion = "1.8";
+    }else if(serverVersion.contains("1.9")){
+        minecraftVersion = "1.9";
+    }else if(serverVersion.contains("1.10")){
+        minecraftVersion = "1.10";
+    }else if(serverVersion.contains("1.11")){
+        minecraftVersion = "1.11";
+    }else if(serverVersion.contains("1.12")){
+        minecraftVersion = "1.12";
+    }else if(serverVersion.contains("1.13")){
+        minecraftVersion = "1.13";
+    }
     
     getServer().getPluginManager().registerEvents(new BlockBreak(), this);
     getServer().getPluginManager().registerEvents(new regenWand(), this);
@@ -81,10 +101,13 @@ public class AmazingLuckyBlocks
     getServer().getPluginManager().registerEvents(new DarkHole(instance), this);
     getServer().getPluginManager().registerEvents(new MiniVolcano(instance), this);
     
+    
+    
     getCommand("alb").setExecutor(new CommandManager(this));
     
-    //Updater updater = new Updater();
-    //updater.checkUpdates(name, version);
+    Updater updater = new Updater();
+    updater.checkUpdates(name, version);
+    getServer().getPluginManager().registerEvents(new Updater(), this);
     
     WorldList wl = new WorldList();
     wl.ReloadAll();

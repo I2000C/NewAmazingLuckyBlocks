@@ -1,4 +1,4 @@
-package net.servermc.plugins.utils;
+/*package net.servermc.plugins.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,4 +78,106 @@ public class LangLoader
   {
     return LangCfg;
   }
+}*/
+
+package net.servermc.plugins.utils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.FileConfigurationOptions;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+
+import org.bukkit.Bukkit;
+
+import net.servermc.plugins.AmazingLuckyBlocks;
+
+public class LangLoader
+{
+    private AmazingLuckyBlocks plugin;
+    private static final LangLoader manager = new LangLoader();
+    
+    public static FileConfiguration LangCfg = null;
+    public static File LangFile = null;
+    public static String LangFileRoute;
+    
+    public static LangLoader getManager()
+  {
+    return manager;
+  }
+    
+public FileConfiguration getMessages(){
+        if(LangCfg == null){
+            reloadMessages();
+        }
+        return LangCfg;
+    }
+   
+    public void reloadMessages(){
+        if(LangCfg == null){
+            LangFile = new File(AmazingLuckyBlocks.instance.getDataFolder(),"lang.yml");
+        }
+        LangCfg = YamlConfiguration.loadConfiguration(LangFile);
+        Reader defConfigStream;
+        try{
+            defConfigStream = new InputStreamReader(AmazingLuckyBlocks.instance.getResource("lang.yml"),"UTF8");
+            if(defConfigStream != null){
+                YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+                LangCfg.setDefaults(defConfig);
+            }          
+        }catch(UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+    }
+   
+    public void saveMessages(){
+        try{
+            LangCfg.save(LangFile);           
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+   
+    public void registerMessages(){
+        LangFile = new File(AmazingLuckyBlocks.instance.getDataFolder(),"lang.yml");
+        this.getMessages().options().copyDefaults(true);
+        checkMessages();
+        //if(!LangFile.exists()){
+        //    
+        //}
+    }
+    
+    public void checkMessages(){
+        //To modify an existing section:
+        if(!LangLoader.LangCfg.getString("Helpmenu.line4").contains("[")){
+            LangLoader.LangCfg.set("Helpmenu.line4", "&c/alb objects [amount] &7- Gives you all the fantastic objects");
+            }
+        
+        //To add a new section:
+        /*LangFileRoute = LangFile.getPath();
+        Path archivo = Paths.get(LangFileRoute);
+        try {
+        String texto = new String(Files.readAllBytes(archivo));
+        if(!texto.contains("nuevo-mensaje:")){
+        getMessages().set("Messages.nuevo-mensaje", "loquesea");
+        }
+        } catch (IOException e) {
+        e.printStackTrace();
+        }*/
+        saveMessages();
+        }
+
 }

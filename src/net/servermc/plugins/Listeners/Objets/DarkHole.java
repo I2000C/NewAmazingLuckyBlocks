@@ -3,6 +3,7 @@ package net.servermc.plugins.Listeners.Objets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import net.servermc.plugins.AmazingLuckyBlocks;
 import net.servermc.plugins.utils.CLBManager;
@@ -70,7 +71,7 @@ public class DarkHole
     }*/
   public void regenInteraction(PlayerInteractEvent dark)
   {
-    Player player = dark.getPlayer();
+    Player player = dark.getPlayer();       
     Action action = dark.getAction();
     String darkName = color(LangLoader.LangCfg.getString("Objects.DarkHole.name"));
     if ((action.equals(Action.RIGHT_CLICK_BLOCK)) && (player.getItemInHand().getType() == Material.valueOf(CLBManager.getManager().getConfig().getString("Objects.DarkHole.block-material"))))
@@ -87,17 +88,20 @@ public class DarkHole
       if ((stack.hasItemMeta()) && (stack.getItemMeta().getDisplayName().equals(darkName))) {
 
           this.transparent.add(Material.AIR);
-          Block block = player.getTargetBlock(this.transparent, 120);
+          Block block;
+          if(AmazingLuckyBlocks.instance.minecraftVersion.equals("1.13")){
+            block = player.getTargetBlock((Set<Material>) null, 120);
+          }else{
+            block = player.getTargetBlock(this.transparent, 120); 
+          }
           Location l = block.getLocation();
           ItemStack stack2 = player.getItemInHand();
           bloques = CLBManager.getManager().getConfig().getInt("Objects.DarkHole.number-of-blocks");  
           ticks = CLBManager.getManager().getConfig().getInt("Objects.DarkHole.time-between-one-block-and-the-next");
-          
           int amt = stack2.getAmount() - 1;
           if(amt == 0){
-              int i = 0;
               
-              for(i = 0; i <= 8; i++){
+              for(int i = 0; i <= 8; i++){
                 if(((player.getInventory().getItem(i) != null)) && (player.getInventory().getItem(i).hasItemMeta())){
                    String item_name = player.getInventory().getItem(i).getItemMeta().getDisplayName();
                    //player.sendMessage("" + i);
@@ -115,7 +119,6 @@ public class DarkHole
           
           Timer c = new Timer(plugin, bloques, ticks, player, l);
           c.darkhole();
-
            // for(int i = 0; i < player.getInventory().getSize(); i++){
            // ItemStack itm = player.getInventory().getItem(i);
            //  if((itm != null) && (itm.getItemMeta().getDisplayName().equals(lightName))){

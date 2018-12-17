@@ -3,6 +3,7 @@ package net.servermc.plugins.Listeners.Objets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import net.servermc.plugins.AmazingLuckyBlocks;
 import net.servermc.plugins.utils.CLBManager;
@@ -67,11 +68,11 @@ public class MiniVolcano
             } 
         },0L,20);
     }*/
-  public void regenInteraction(PlayerInteractEvent mini)
+  public void regenInteraction(PlayerInteractEvent miniV)
   {
-    Player player = mini.getPlayer();
-    Action action = mini.getAction();
-    String darkName = color(LangLoader.LangCfg.getString("Objects.MiniVolcano.name"));
+    Player player = miniV.getPlayer();
+    Action action = miniV.getAction();
+    String miniVName = color(LangLoader.LangCfg.getString("Objects.MiniVolcano.name"));
     if ((action.equals(Action.RIGHT_CLICK_BLOCK)) && (player.getItemInHand().getType() == Material.valueOf(CLBManager.getManager().getConfig().getString("Objects.MiniVolcano.block-material"))))
     {
       ItemStack stack = player.getItemInHand();
@@ -83,24 +84,28 @@ public class MiniVolcano
         player.sendMessage(color(LangLoader.LangCfg.getString("need-permission")));
         return;
       }
-      if ((stack.hasItemMeta()) && (stack.getItemMeta().getDisplayName().equals(darkName))) {
-
+      if ((stack.hasItemMeta()) && (stack.getItemMeta().getDisplayName().equals(miniVName))) {
+          
           this.transparent.add(Material.AIR);
-          Block block = player.getTargetBlock(this.transparent, 120);
+          Block block;
+          if(AmazingLuckyBlocks.instance.minecraftVersion.equals("1.13")){
+            block = player.getTargetBlock((Set<Material>) null, 120);
+          }else{
+            block = player.getTargetBlock(this.transparent, 120); 
+          }
           Location l = block.getLocation();
-          ItemStack stack2 = player.getItemInHand();
+          ItemStack stack3 = player.getItemInHand();
           ticks = CLBManager.getManager().getConfig().getInt("Objects.MiniVolcano.time-between-one-block-and-the-next");
           
-          int amt = stack2.getAmount() - 1;
+          int amt = stack3.getAmount() - 1;
           if(amt == 0){
-              int i = 0;
               
-              for(i = 0; i <= 8; i++){
+              for(int i = 0; i <= 8; i++){
                 if(((player.getInventory().getItem(i) != null)) && (player.getInventory().getItem(i).hasItemMeta())){
                    String item_name = player.getInventory().getItem(i).getItemMeta().getDisplayName();
                    //player.sendMessage("" + i);
                    
-                   if((item_name.matches(darkName)) && (player.getInventory().getItem(i).getAmount() == 1)){
+                   if((item_name.matches(miniVName)) && (player.getInventory().getItem(i).getAmount() == 1)){
                       //player.sendMessage(item_name);
                       player.getInventory().clear(i);
                       i = 9;   
@@ -108,7 +113,7 @@ public class MiniVolcano
                 }  
               }
           }else{
-          stack2.setAmount(amt);
+          stack3.setAmount(amt);
           }
           
           Timer c = new Timer(plugin, 1, ticks, player, l);
