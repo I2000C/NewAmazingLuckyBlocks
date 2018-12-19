@@ -72,49 +72,49 @@ public class CommandManager
         
         //Regen wand
             
-        ItemStack stack6 = new ItemStack(Material.RECORD_8);
+        ItemStack stack6 = new ItemStack(Material.valueOf("RECORD_8"));
         ItemMeta meta2 = stack6.getItemMeta();
         meta2.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Regen.name")));
         stack6.setItemMeta(meta2);
         
         //Invisibility wand
         
-        ItemStack stack7 = new ItemStack(Material.RECORD_7);
+        ItemStack stack7 = new ItemStack(Material.valueOf("RECORD_7"));
         ItemMeta meta3 = stack7.getItemMeta();
         meta3.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Invisibility.name")));
         stack7.setItemMeta(meta3);
         
         //Tnt wand
         
-        ItemStack stack21 = new ItemStack(Material.RECORD_3);
+        ItemStack stack21 = new ItemStack(Material.valueOf("RECORD_3"));
         ItemMeta meta4 = stack21.getItemMeta();
         meta4.setDisplayName(color(LangLoader.LangCfg.getString("Wands.TNT.name")));
         stack21.setItemMeta(meta4);
         
         //Slime wand
         
-        ItemStack stack22 = new ItemStack(Material.RECORD_4);
+        ItemStack stack22 = new ItemStack(Material.valueOf("RECORD_4"));
         ItemMeta meta5 = stack22.getItemMeta();
         meta5.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Slime.name")));
         stack22.setItemMeta(meta5);
         
         //Dragon-breath wand
         
-        ItemStack stack23 = new ItemStack(Material.RECORD_6);
+        ItemStack stack23 = new ItemStack(Material.valueOf("RECORD_6"));
         ItemMeta meta6 = stack23.getItemMeta();
         meta6.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Dragon-breath.name")));
         stack23.setItemMeta(meta6);
         
         //Lightning wand
         
-        ItemStack stack24 = new ItemStack(Material.RECORD_5);
+        ItemStack stack24 = new ItemStack(Material.valueOf("RECORD_5"));
         ItemMeta meta7 = stack24.getItemMeta();
         meta7.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Lightning.name")));
         stack24.setItemMeta(meta7);
         
         //Shield wand
         
-        ItemStack stack29 = new ItemStack(Material.RECORD_9);
+        ItemStack stack29 = new ItemStack(Material.valueOf("RECORD_9"));
         ItemMeta meta8 = stack29.getItemMeta();
         meta8.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Shield.name")));
         stack29.setItemMeta(meta8);

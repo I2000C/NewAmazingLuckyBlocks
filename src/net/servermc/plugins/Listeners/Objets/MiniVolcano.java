@@ -26,6 +26,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.servermc.plugins.utils.WorldList;
 
 import net.servermc.plugins.utils.Timer;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class MiniVolcano
@@ -73,6 +74,13 @@ public class MiniVolcano
     Player player = miniV.getPlayer();
     Action action = miniV.getAction();
     String miniVName = color(LangLoader.LangCfg.getString("Objects.MiniVolcano.name"));
+    
+    if(AmazingLuckyBlocks.instance.minecraftVersion.equals("1.13")){
+        if(miniV.getHand() == EquipmentSlot.OFF_HAND){
+        return;
+        }
+    }
+    
     if ((action.equals(Action.RIGHT_CLICK_BLOCK)) && (player.getItemInHand().getType() == Material.valueOf(CLBManager.getManager().getConfig().getString("Objects.MiniVolcano.block-material"))))
     {
       ItemStack stack = player.getItemInHand();

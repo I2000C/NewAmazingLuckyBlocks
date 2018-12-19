@@ -42,7 +42,7 @@ public class slimeWand
     String slimeName = color(LangLoader.LangCfg.getString("Wands.Slime.name"));
     int sw = CLBManager.getManager().getConfig().getInt("Wands.Slime.cooldown-time");
     if (((action.equals(Action.RIGHT_CLICK_AIR)) || (action.equals(Action.RIGHT_CLICK_BLOCK))) && 
-      (player.getItemInHand().getType() == Material.RECORD_4))
+      (player.getItemInHand().getType() == Material.valueOf("RECORD_4")))
     {
       ItemStack stack = player.getItemInHand();
       if (!WorldList.instance.worlds.contains(player.getWorld().getName())) {

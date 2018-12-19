@@ -42,7 +42,7 @@ public class tntWand
     int tw = CLBManager.getManager().getConfig().getInt("Wands.TNT.cooldown-time");
     double v = 4.5D;
     if (((action.equals(Action.RIGHT_CLICK_AIR)) || (action.equals(Action.RIGHT_CLICK_BLOCK))) && 
-      (player.getItemInHand().getType() == Material.RECORD_3))
+      (player.getItemInHand().getType() == Material.valueOf("RECORD_3")))
     {
       ItemStack stack = player.getItemInHand();
       if (!WorldList.instance.worlds.contains(player.getWorld().getName())) {

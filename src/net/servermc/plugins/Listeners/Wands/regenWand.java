@@ -43,7 +43,7 @@ public class regenWand
     int rw = CLBManager.getManager().getConfig().getInt("Wands.Regen.cooldown-time");
     ItemStack stack = player.getItemInHand();
     if (((action.equals(Action.RIGHT_CLICK_AIR)) || (action.equals(Action.RIGHT_CLICK_BLOCK))) && 
-      (player.getItemInHand().getType() == Material.RECORD_8))
+      (player.getItemInHand().getType() == Material.valueOf("RECORD_8")))
     {
       if (!WorldList.instance.worlds.contains(player.getWorld().getName())) {
         return;

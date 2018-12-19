@@ -42,7 +42,7 @@ public class lightningWand
     String lightName = color(LangLoader.LangCfg.getString("Wands.Lightning.name"));
     int lw = CLBManager.getManager().getConfig().getInt("Wands.Lightning.cooldown-time");
     if (((action.equals(Action.RIGHT_CLICK_AIR)) || (action.equals(Action.RIGHT_CLICK_BLOCK))) && 
-      (player.getItemInHand().getType() == Material.RECORD_5))
+      (player.getItemInHand().getType() == Material.valueOf("RECORD_5")))
     {
       ItemStack stack = player.getItemInHand();
       if (!WorldList.instance.worlds.contains(player.getWorld().getName())) {

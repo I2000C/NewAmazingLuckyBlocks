@@ -22,11 +22,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.EquipmentSlot;
 
 import net.servermc.plugins.utils.WorldList;
 
 import net.servermc.plugins.utils.Timer;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.w3c.dom.events.EventException;
 
 public class DarkHole
   implements Listener
@@ -74,6 +76,13 @@ public class DarkHole
     Player player = dark.getPlayer();       
     Action action = dark.getAction();
     String darkName = color(LangLoader.LangCfg.getString("Objects.DarkHole.name"));
+    
+    if(AmazingLuckyBlocks.instance.minecraftVersion.equals("1.13")){
+        if(dark.getHand() == EquipmentSlot.OFF_HAND){
+        return;
+        }
+    }
+    
     if ((action.equals(Action.RIGHT_CLICK_BLOCK)) && (player.getItemInHand().getType() == Material.valueOf(CLBManager.getManager().getConfig().getString("Objects.DarkHole.block-material"))))
     {
       ItemStack stack = player.getItemInHand();

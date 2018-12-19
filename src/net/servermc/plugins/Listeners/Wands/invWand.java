@@ -40,7 +40,7 @@ public class invWand
     String invName = color(LangLoader.LangCfg.getString("Wands.Invisibility.name"));
     int iw = CLBManager.getManager().getConfig().getInt("Wands.Invisibility.cooldown-time");
     if (((action.equals(Action.RIGHT_CLICK_AIR)) || (action.equals(Action.RIGHT_CLICK_BLOCK))) && 
-      (player.getItemInHand().getType() == Material.RECORD_7))
+      (player.getItemInHand().getType() == Material.valueOf("RECORD_7")))
     {
       ItemStack stack1 = player.getItemInHand();
       if (!WorldList.instance.worlds.contains(player.getWorld().getName())) {

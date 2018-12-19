@@ -107,14 +107,14 @@ public class BlockBreak
       case 2: 
         ItemStack stack3 = new ItemStack(Material.STONE_PICKAXE);
         ItemStack stack4 = new ItemStack(Material.STONE_AXE);
-        ItemStack stack5 = new ItemStack(Material.STONE_SPADE);
+        ItemStack stack5 = new ItemStack(Material.valueOf("STONE_SPADE"));
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack3);
         loc.getWorld().dropItemNaturally(b.getLocation(), stack4);
         loc.getWorld().dropItemNaturally(b.getLocation(), stack5);
         break;
       case 3: 
-        ItemStack stack6 = new ItemStack(Material.RECORD_8);
+        ItemStack stack6 = new ItemStack(Material.valueOf("RECORD_8"));
         ItemMeta meta2 = stack6.getItemMeta();
         meta2.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Regen.name")));
         stack6.setItemMeta(meta2);
@@ -126,7 +126,7 @@ public class BlockBreak
         lucky.setType(Material.SPONGE);
         break;
       case 5: 
-        ItemStack stack7 = new ItemStack(Material.RECORD_7);
+        ItemStack stack7 = new ItemStack(Material.valueOf("RECORD_7"));
         ItemMeta meta3 = stack7.getItemMeta();
         meta3.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Invisibility.name")));
         stack7.setItemMeta(meta3);
@@ -136,7 +136,7 @@ public class BlockBreak
       case 6: 
         ItemStack stack8 = new ItemStack(Material.IRON_PICKAXE);
         ItemStack stack9 = new ItemStack(Material.IRON_AXE);
-        ItemStack stack10 = new ItemStack(Material.IRON_SPADE);
+        ItemStack stack10 = new ItemStack(Material.valueOf("IRON_SPADE"));
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack8);
         loc.getWorld().dropItemNaturally(b.getLocation(), stack9);
@@ -151,7 +151,7 @@ public class BlockBreak
         lava.setType(Material.LAVA);
         break;
       case 9: 
-        ItemStack stack11 = new ItemStack(Material.CARROT_ITEM, 2);
+        ItemStack stack11 = new ItemStack(Material.valueOf("CARROT_ITEM"), 2);
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack11);
         break;
@@ -221,7 +221,7 @@ public class BlockBreak
         z1.getEquipment().setBootsDropChance(1.0F);
         break;
       case 21: 
-        ItemStack stack21 = new ItemStack(Material.RECORD_3);
+        ItemStack stack21 = new ItemStack(Material.valueOf("RECORD_3"));
         ItemMeta meta4 = stack21.getItemMeta();
         meta4.setDisplayName(color(LangLoader.LangCfg.getString("Wands.TNT.name")));
         stack21.setItemMeta(meta4);
@@ -229,7 +229,7 @@ public class BlockBreak
         loc.getWorld().dropItemNaturally(b.getLocation(), stack21);
         break;
       case 22: 
-        ItemStack stack22 = new ItemStack(Material.RECORD_4);
+        ItemStack stack22 = new ItemStack(Material.valueOf("RECORD_4"));
         ItemMeta meta5 = stack22.getItemMeta();
         meta5.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Slime.name")));
         stack22.setItemMeta(meta5);
@@ -246,7 +246,7 @@ public class BlockBreak
         z2.getEquipment().getChestplate().setDurability((short)1);
         break;
       case 24: 
-        ItemStack stack23 = new ItemStack(Material.RECORD_6);
+        ItemStack stack23 = new ItemStack(Material.valueOf("RECORD_6"));
         ItemMeta meta6 = stack23.getItemMeta();
         meta6.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Dragon-breath.name")));
         stack23.setItemMeta(meta6);
@@ -254,7 +254,7 @@ public class BlockBreak
         loc.getWorld().dropItemNaturally(b.getLocation(), stack23);
         break;
       case 25: 
-        ItemStack stack24 = new ItemStack(Material.RECORD_5);
+        ItemStack stack24 = new ItemStack(Material.valueOf("RECORD_5"));
         ItemMeta meta7 = stack24.getItemMeta();
         meta7.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Lightning.name")));
         stack24.setItemMeta(meta7);
@@ -311,7 +311,7 @@ public class BlockBreak
         diamond_ore.setType(Material.DIAMOND_ORE);
         break;
       case 34:
-        ItemStack stack29 = new ItemStack(Material.RECORD_9);
+        ItemStack stack29 = new ItemStack(Material.valueOf("RECORD_9"));
         ItemMeta meta8 = stack29.getItemMeta();
         meta8.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Shield.name")));
         stack29.setItemMeta(meta8);

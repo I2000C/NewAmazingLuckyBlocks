@@ -56,4 +56,5 @@ Commands:
     Wands-permission: amazinglb.wands
     Objects-permission: amazinglb.objects
     RandomBlocks-permission: amazinglb.randomblocks
+Update-checker: true
 LuckyBlock: 'SPONGE'

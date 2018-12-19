@@ -42,7 +42,7 @@ public class shieldWand
     String shieldName = color(LangLoader.LangCfg.getString("Wands.Shield.name"));
     int dw = CLBManager.getManager().getConfig().getInt("Wands.Shield.cooldown-time");
     if (((action.equals(Action.RIGHT_CLICK_AIR)) || (action.equals(Action.RIGHT_CLICK_BLOCK))) && 
-      (player.getItemInHand().getType() == Material.RECORD_9))
+      (player.getItemInHand().getType() == Material.valueOf("RECORD_9")))
     {
       ItemStack stack = player.getItemInHand();
       if (!WorldList.instance.worlds.contains(player.getWorld().getName())) {

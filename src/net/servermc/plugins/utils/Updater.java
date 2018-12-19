@@ -22,8 +22,9 @@ public class Updater implements Listener{
     return ChatColor.translateAlternateColorCodes('&', str);
   }
     
-    public void checkUpdates(String name, String version){         
-          try {
+    public void checkUpdates(String name, String version){
+        if(CLBManager.getManager().getConfig().getBoolean("Update-checker")){
+            try {
               HttpURLConnection con = (HttpURLConnection) new URL(
                       "https://api.spigotmc.org/legacy/update.php?resource=62644").openConnection();
               int timed_out = 1250;
@@ -45,6 +46,7 @@ public class Updater implements Listener{
               
               
           }
+        }      
       }
     @EventHandler
     public void onEnter(PlayerJoinEvent event){
