@@ -53,9 +53,16 @@ public class IceBow
     if(damagee instanceof Player || damager instanceof Arrow){
         Entity hurt = damagee;
         //Player hurt = (Player) e1;
-        if(((Arrow)damager).getShooter() instanceof Player){
+        Player shooter = null;
+        try{
+          if(((Arrow)damager).getShooter() instanceof Player){
             Arrow arrow = (Arrow) damager;
-            Player shooter = (Player) arrow.getShooter();
+            shooter = (Player) arrow.getShooter();
+            }
+        }catch(ClassCastException e){
+            return;
+        }
+        
             
             if (!WorldList.instance.worlds.contains(shooter.getWorld().getName())) {
                 return;
@@ -100,10 +107,9 @@ public class IceBow
                             effect = Effect.valueOf("SMOKE"); 
                           }
                           hurt_loc.getWorld().playEffect(hurt_loc, effect, 100);*/
-                      }
-                  }
+                        }
+                    }
             }
         }
-     }
-  }
+    }
 }
