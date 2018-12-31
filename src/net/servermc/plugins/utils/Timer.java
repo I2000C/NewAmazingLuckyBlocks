@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Material;
-import org.bukkit.Bukkit;
 
 import net.servermc.plugins.AmazingLuckyBlocks;
 
@@ -41,7 +40,7 @@ public class Timer {
         player.playSound(player.getLocation(), sound, 2.0F, 1.0F);
         
         effect = Effect.ENDER_SIGNAL;
-        location.getWorld().playEffect(location, effect, 100);
+        location.getWorld().playEffect(location, effect, 100); // pre 1.9 effects are here: https://www.spigotmc.org/wiki/effect-list-1-8-8/
         
         
         long before_ticks = CLBManager.getManager().getConfig().getInt("Objects.DarkHole.time-before-darkhole");

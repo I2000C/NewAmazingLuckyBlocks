@@ -1,7 +1,10 @@
 package net.servermc.plugins;
 
+import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import net.servermc.plugins.Listeners.BlockBreak;
@@ -16,6 +19,7 @@ import net.servermc.plugins.Listeners.Wands.shieldWand;
 
 import net.servermc.plugins.Listeners.Objets.DarkHole;
 import net.servermc.plugins.Listeners.Objets.MiniVolcano;
+import net.servermc.plugins.Listeners.Objets.IceBow;
 
 import net.servermc.plugins.utils.CLBManager;
 import net.servermc.plugins.utils.CommandManager;
@@ -32,6 +36,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.servermc.plugins.utils.WorldList;
 import net.servermc.plugins.utils.Updater;
+import org.bukkit.event.EventPriority;
+import org.bukkit.plugin.InvalidPluginException;
+import org.bukkit.plugin.UnknownDependencyException;
 
 public class AmazingLuckyBlocks
   extends JavaPlugin
@@ -60,6 +67,7 @@ public class AmazingLuckyBlocks
   PluginDescriptionFile pdffile = getDescription();
   public String version = pdffile.getVersion();
   public String name = ChatColor.GOLD + pdffile.getName();
+  public String prefix;
   
   public String serverVersion;
   public String minecraftVersion;
@@ -73,6 +81,9 @@ public class AmazingLuckyBlocks
     
     LangLoader.getManager().registerMessages();
     LangLoader.getManager().getMessages();
+    
+    prefix = LangLoader.LangCfg.getString("InGamePrefix");
+    
     //LangLoader.mkdir();
     //LangLoader.MessageFile();
     serverVersion = getServer().getVersion();
@@ -100,8 +111,7 @@ public class AmazingLuckyBlocks
     getServer().getPluginManager().registerEvents(new shieldWand(), this);
     getServer().getPluginManager().registerEvents(new DarkHole(instance), this);
     getServer().getPluginManager().registerEvents(new MiniVolcano(instance), this);
-    
-    
+    getServer().getPluginManager().registerEvents(new IceBow(), this);
     
     getCommand("alb").setExecutor(new CommandManager(this));
     
@@ -110,6 +120,20 @@ public class AmazingLuckyBlocks
     getServer().getPluginManager().registerEvents(new Updater(), this);
     
     WorldList wl = new WorldList();
+    
+    boolean force_enable_plugins = false;
+    Plugin[] plugins = getServer().getPluginManager().getPlugins();
+    List<Plugin> plugin_list = Arrays.asList(plugins);    
+    for(int i=0;i<plugin_list.size();i++){
+        String plugin = plugin_list.get(i).toString();
+        force_enable_plugins = plugin.contains("Multiverse"); 
+    }
+    
+    if((!getServer().getPluginManager().isPluginEnabled("Multiverse-Core")) && force_enable_plugins){
+        Plugin pluginz = getServer().getPluginManager().getPlugin("Multiverse-Core");
+        getServer().getPluginManager().enablePlugin(pluginz);
+    }
+    
     wl.ReloadAll();
   }
   

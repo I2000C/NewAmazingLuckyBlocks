@@ -54,13 +54,13 @@ public class BlockBreak
     Location loc = b.getLocation();
     Player p = e.getPlayer();
     World w = p.getWorld();
-    if (b.getType() == Material.valueOf(CLBManager.getManager().getConfig().getString("LuckyBlock")))
+    if (b.getType() == Material.valueOf(CLBManager.getManager().getConfig().getString("LuckyBlock.Material")))
     {
       if (!WorldList.instance.worlds.contains(p.getWorld().getName())) {
         return;
       }
       b.setType(Material.AIR);
-      int r = new Random().nextInt(36);
+      int r = new Random().nextInt(38);
       Entity blaze;
       Entity c9;
       switch (r)
@@ -333,6 +333,32 @@ public class BlockBreak
         stack31.setItemMeta(meta10);
               
         loc.getWorld().dropItemNaturally(b.getLocation(), stack31);      
+          break;
+      case 37:
+        int x = loc.getBlockX();
+        int y = loc.getBlockY();
+        int z = loc.getBlockZ();
+        int i = new Random().nextInt(15);
+        for(i=0;i<8;i++){
+            int randomx = new Random().nextInt(((x+3) - (x-3))+1)+(x-3);
+            int randomy = new Random().nextInt(((y+10) - (y+5))+1)+(y+5);
+            int randomz = new Random().nextInt(((z+3) - (z-3))+1)+(z-3);
+            w.spawnFallingBlock(new Location(b.getWorld(), randomx, randomy, randomz), Material.OBSIDIAN, (byte)0);
+        }  
+          break;
+      case 38:
+        ItemStack stack32 = new ItemStack(Material.BOW);
+        ItemMeta meta11 = stack32.getItemMeta();
+        meta11.setDisplayName(color(LangLoader.LangCfg.getString("Objects.IceBow.name")));
+        meta11.addEnchant(Enchantment.DURABILITY, 5, true);
+        stack32.setItemMeta(meta11);
+              
+        ItemStack stack33 = new ItemStack(Material.ARROW);
+        int amt = new Random().nextInt(10);
+        stack33.setAmount(amt);
+        
+        loc.getWorld().dropItemNaturally(b.getLocation(), stack32);  
+        loc.getWorld().dropItemNaturally(b.getLocation(), stack33);
           break;
       /*case 37:
       p.playSound(p.getLocation(), Sound.WITHER_IDLE, 100.0F, 1.0F);

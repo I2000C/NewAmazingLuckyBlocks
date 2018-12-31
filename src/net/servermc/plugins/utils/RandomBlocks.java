@@ -38,7 +38,7 @@ public class RandomBlocks {
         int randomy;
         int randomz;
         World w = player.getWorld();
-        Material luckyblock = Material.valueOf(CLBManager.getManager().getConfig().getString("LuckyBlock"));
+        Material luckyblock = Material.valueOf(CLBManager.getManager().getConfig().getString("LuckyBlock.Material"));
         for(int i = 0; i < blocks; i++){
             //r.nextInt((max - min) + 1) + min;
             randomx = new Random().nextInt(((x+radx) - (x-radx))+1)+(x-radx);

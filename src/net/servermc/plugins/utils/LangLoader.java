@@ -154,18 +154,22 @@ public FileConfiguration getMessages(){
     public void registerMessages(){
         LangFile = new File(AmazingLuckyBlocks.instance.getDataFolder(),"lang.yml");
         this.getMessages().options().copyDefaults(true);
-        checkMessages();
-        //if(!LangFile.exists()){
-        //    
-        //}
+        if(LangFile.exists()){
+            checkMessages();
+        }
+        saveMessages();
     }
     
     public void checkMessages(){
         //To modify an existing section:
-        if(!LangLoader.LangCfg.getString("Helpmenu.line4").contains("[")){
+        /*if(!LangLoader.LangCfg.getString("Helpmenu.line4").contains("[")){
             LangLoader.LangCfg.set("Helpmenu.line4", "&c/alb objects [amount] &7- Gives you all the fantastic objects");
-            }
-        
+            }*/
+        /*if(LangLoader.LangCfg.contains("Helpmenu.line1")){
+            backupMessages();
+            LangLoader.LangFile.delete();
+            registerMessages();
+        }*/
         //To add a new section:
         /*LangFileRoute = LangFile.getPath();
         Path archivo = Paths.get(LangFileRoute);
@@ -177,7 +181,31 @@ public FileConfiguration getMessages(){
         } catch (IOException e) {
         e.printStackTrace();
         }*/
-        saveMessages();
         }
+    
+    public void backupMessages(){
+        int checker = 1;
+        LangCfg = YamlConfiguration.loadConfiguration(LangFile);
+        File dir = new File(AmazingLuckyBlocks.getInstance().getDataFolder(),"backups"); 
+        dir.mkdir(); 
+        
+        File LangBackup = new File(dir.getPath(),"lang_backup" + checker + ".yml");
+        
+        while(checker<=100){
+            if(LangBackup.exists()){ 
+                checker ++;
+                LangBackup = new File(dir.getPath(),"lang_backup" + checker + ".yml");
+            }else{
+                checker = 200;
+            }
+            
+        }
+        try{
+            LangCfg.save(LangBackup);           
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        LangCfg = null;
+    }
 
 }

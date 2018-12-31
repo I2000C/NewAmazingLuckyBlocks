@@ -11,6 +11,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import net.servermc.plugins.AmazingLuckyBlocks;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 public class CLBManager
 {private AmazingLuckyBlocks plugin;
@@ -44,7 +45,10 @@ public class CLBManager
         e.printStackTrace();
         Bukkit.getPluginManager().disablePlugin(plugin);
         }
-    }
+    }/*else{
+        checkConfig();
+        return;
+    }*/
     this.config.options().copyDefaults(true);
     getManager().saveConfig();
   }
@@ -76,4 +80,38 @@ public class CLBManager
   {
     return this.dataFolder;
   }
+  
+  public void checkConfig(){
+      this.config = YamlConfiguration.loadConfiguration(cfile);
+      /*if(!this.config.contains("Commands.Give")){
+          backupConfig();
+          CLBManager.getManager().cfile.delete();
+          CLBManager.getManager().setup(AmazingLuckyBlocks.getInstance());
+      }*/
+  }
+  
+  public void backupConfig(){
+        FileConfiguration CLBConfigBackup;
+        int checker = 1;
+        CLBConfigBackup = YamlConfiguration.loadConfiguration(cfile);
+        File dir = new File(AmazingLuckyBlocks.getInstance().getDataFolder(),"backups"); 
+        dir.mkdir(); 
+        
+        File CLBFileBackup = new File(dir.getPath(),"config_backup" + checker + ".yml");
+        
+        while(checker<=100){
+            if(CLBFileBackup.exists()){ 
+                checker ++;
+                CLBFileBackup = new File(dir.getPath(),"config_backup" + checker + ".yml");
+            }else{
+                checker = 200;
+            }
+            
+        }
+        try{
+            CLBConfigBackup.save(CLBFileBackup);           
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 }

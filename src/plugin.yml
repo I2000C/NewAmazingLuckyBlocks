@@ -1,6 +1,6 @@
 name: NewAmazingLuckyBlocks
 main: net.servermc.plugins.AmazingLuckyBlocks
-version: 1.3.0 BETA
+version: 1.4.0 BETA
 description: The Official LuckyBlocks plugin of ServerMC.
 author: RewKun
 commands:

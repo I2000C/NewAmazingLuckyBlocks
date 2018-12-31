@@ -28,7 +28,6 @@ import net.servermc.plugins.utils.WorldList;
 
 import net.servermc.plugins.utils.Timer;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.w3c.dom.events.EventException;
 
 public class DarkHole
   implements Listener

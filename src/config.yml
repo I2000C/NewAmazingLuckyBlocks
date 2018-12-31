@@ -50,11 +50,19 @@ Objects:
     block-material: LAVA_BUCKET
     required-permission: false
     permission: amazinglb.objets.minivolcano
+  IceBow:
+    freeze-material: ICE
+    required-permission: false
+    permission: amazinglb.objects.icebow
 Commands:
     Update-message-permission: amazinglb.update
     Reload-permission: amazinglb.reload
-    Wands-permission: amazinglb.wands
-    Objects-permission: amazinglb.objects
+    Give:
+        Wands: amazinglb.give.wands
+        Objects: amazinglb.give.objects
+        LuckyBlock: amazinglb.give.luckyblock
     RandomBlocks-permission: amazinglb.randomblocks
 Update-checker: true
-LuckyBlock: 'SPONGE'
+LuckyBlock:
+    Name: '&6&lLuckyBlock'
+    Material: 'SPONGE'
