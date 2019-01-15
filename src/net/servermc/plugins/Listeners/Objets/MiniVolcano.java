@@ -75,7 +75,7 @@ public class MiniVolcano
     Action action = miniV.getAction();
     String miniVName = color(LangLoader.LangCfg.getString("Objects.MiniVolcano.name"));
     
-    if(AmazingLuckyBlocks.instance.minecraftVersion.equals("1.13")){
+    if(!AmazingLuckyBlocks.instance.minecraftVersion.equals("1.8")){
         if(miniV.getHand() == EquipmentSlot.OFF_HAND){
         return;
         }

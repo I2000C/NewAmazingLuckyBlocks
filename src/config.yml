@@ -6,32 +6,53 @@ Wands:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.regenwand
+    limited-uses:
+        enable: false
+        uses: 5
   Dragon-breath:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.dragonbreathwand
+    limited-uses:
+        enable: false
+        uses: 5
   Invisibility:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.invwand
+    limited-uses:
+        enable: false
+        uses: 5
   TNT:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.tntwand
+    limited-uses:
+        enable: false
+        uses: 5
   Slime:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.slimewand
+    limited-uses:
+        enable: false
+        uses: 5
   Lightning:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.lightning
+    limited-uses:
+        enable: false
+        uses: 5
   Shield:
     cooldown-time: 20
     ShieldWandBlock: 'LEAVES'
     withfloor: true
     required-permission: false
     permission: amazinglb.wands.shield
+    limited-uses:
+        enable: false
+        uses: 5
 Objects:
   DarkHole:
     number-of-blocks: 5

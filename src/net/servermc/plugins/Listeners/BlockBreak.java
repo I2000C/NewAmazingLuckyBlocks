@@ -1,5 +1,6 @@
 package net.servermc.plugins.Listeners;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -61,6 +62,7 @@ public class BlockBreak
       }
       b.setType(Material.AIR);
       int r = new Random().nextInt(38);
+      List<String> loreList = new ArrayList();
       Entity blaze;
       Entity c9;
       switch (r)
@@ -70,7 +72,6 @@ public class BlockBreak
         Firework f = (Firework)p.getWorld().spawnEntity(b.getLocation(), EntityType.FIREWORK);
         FireworkMeta fm = f.getFireworkMeta();
         fm.addEffect(FireworkEffect.builder().flicker(true).trail(true).with(FireworkEffect.Type.BALL).withColor(Color.RED).withFade(Color.RED).build());
-        
         fm.setPower(2);
         f.setFireworkMeta(fm);
         
@@ -117,6 +118,13 @@ public class BlockBreak
         ItemStack stack6 = new ItemStack(Material.valueOf("RECORD_8"));
         ItemMeta meta2 = stack6.getItemMeta();
         meta2.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Regen.name")));
+        if(CLBManager.getManager().getConfig().getBoolean("Wands.Regen.limited-uses.enable")){
+           int uses = CLBManager.getManager().getConfig().getInt("Wands.Regen.limited-uses.uses");
+           loreList.clear();
+           loreList.add("Uses left:");
+           loreList.add(String.valueOf(uses));
+           meta2.setLore(loreList);
+        }
         stack6.setItemMeta(meta2);
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack6);
@@ -129,6 +137,13 @@ public class BlockBreak
         ItemStack stack7 = new ItemStack(Material.valueOf("RECORD_7"));
         ItemMeta meta3 = stack7.getItemMeta();
         meta3.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Invisibility.name")));
+        if(CLBManager.getManager().getConfig().getBoolean("Wands.Invisibility.limited-uses.enable")){
+           int uses = CLBManager.getManager().getConfig().getInt("Wands.Invisibility.limited-uses.uses");
+           loreList.clear();
+           loreList.add("Uses left:");
+           loreList.add(String.valueOf(uses));
+           meta3.setLore(loreList);
+        }
         stack7.setItemMeta(meta3);
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack7);
@@ -224,6 +239,13 @@ public class BlockBreak
         ItemStack stack21 = new ItemStack(Material.valueOf("RECORD_3"));
         ItemMeta meta4 = stack21.getItemMeta();
         meta4.setDisplayName(color(LangLoader.LangCfg.getString("Wands.TNT.name")));
+        if(CLBManager.getManager().getConfig().getBoolean("Wands.TNT.limited-uses.enable")){
+           int uses = CLBManager.getManager().getConfig().getInt("Wands.TNT.limited-uses.uses");
+           loreList.clear();
+           loreList.add("Uses left:");
+           loreList.add(String.valueOf(uses));
+           meta4.setLore(loreList);
+        }
         stack21.setItemMeta(meta4);
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack21);
@@ -232,6 +254,13 @@ public class BlockBreak
         ItemStack stack22 = new ItemStack(Material.valueOf("RECORD_4"));
         ItemMeta meta5 = stack22.getItemMeta();
         meta5.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Slime.name")));
+        if(CLBManager.getManager().getConfig().getBoolean("Wands.Slime.limited-uses.enable")){
+           int uses = CLBManager.getManager().getConfig().getInt("Wands.Slime.limited-uses.uses");
+           loreList.clear();
+           loreList.add("Uses left:");
+           loreList.add(String.valueOf(uses));
+           meta5.setLore(loreList);
+        }
         stack22.setItemMeta(meta5);
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack22);
@@ -249,6 +278,13 @@ public class BlockBreak
         ItemStack stack23 = new ItemStack(Material.valueOf("RECORD_6"));
         ItemMeta meta6 = stack23.getItemMeta();
         meta6.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Dragon-breath.name")));
+        if(CLBManager.getManager().getConfig().getBoolean("Wands.Dragon-breath.limited-uses.enable")){
+           int uses = CLBManager.getManager().getConfig().getInt("Wands.Dragon-breath.limited-uses.uses");
+           loreList.clear();
+           loreList.add("Uses left:");
+           loreList.add(String.valueOf(uses));
+           meta6.setLore(loreList);
+        }
         stack23.setItemMeta(meta6);
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack23);
@@ -257,6 +293,13 @@ public class BlockBreak
         ItemStack stack24 = new ItemStack(Material.valueOf("RECORD_5"));
         ItemMeta meta7 = stack24.getItemMeta();
         meta7.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Lightning.name")));
+        if(CLBManager.getManager().getConfig().getBoolean("Wands.Lightning.limited-uses.enable")){
+           int uses = CLBManager.getManager().getConfig().getInt("Wands.Lightning.limited-uses.uses");
+           loreList.clear();
+           loreList.add("Uses left:");
+           loreList.add(String.valueOf(uses));
+           meta7.setLore(loreList);
+        }
         stack24.setItemMeta(meta7);
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack24);
@@ -314,6 +357,13 @@ public class BlockBreak
         ItemStack stack29 = new ItemStack(Material.valueOf("RECORD_9"));
         ItemMeta meta8 = stack29.getItemMeta();
         meta8.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Shield.name")));
+        if(CLBManager.getManager().getConfig().getBoolean("Wands.Shield.limited-uses.enable")){
+           int uses = CLBManager.getManager().getConfig().getInt("Wands.Shield.limited-uses.uses");
+           loreList.clear();
+           loreList.add("Uses left:");
+           loreList.add(String.valueOf(uses));
+           meta8.setLore(loreList);
+        }
         stack29.setItemMeta(meta8);
         
         loc.getWorld().dropItemNaturally(b.getLocation(), stack29);

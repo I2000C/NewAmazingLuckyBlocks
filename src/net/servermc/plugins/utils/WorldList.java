@@ -55,7 +55,7 @@ public class WorldList {
         Bukkit.getConsoleSender().sendMessage(line6);
         
     }else{
-        Bukkit.getConsoleSender().sendMessage(line7 + " " + ChatColor.LIGHT_PURPLE + this.worlds.size() + " " + line8);
+        Bukkit.getConsoleSender().sendMessage(color(LangLoader.LangCfg.getString("InGamePrefix")) + " " + line7 + " " + ChatColor.LIGHT_PURPLE + this.worlds.size() + " " + line8);
     }
   }
 }

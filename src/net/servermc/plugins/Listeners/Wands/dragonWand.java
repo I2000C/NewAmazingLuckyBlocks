@@ -1,5 +1,6 @@
 package net.servermc.plugins.Listeners.Wands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -59,44 +60,76 @@ public class dragonWand
           long remainingTime = ((Long)this.dragoncooldown.get(player.getUniqueId())).longValue() - System.currentTimeMillis();
           String cmsg = color(LangLoader.LangCfg.getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L)));
           player.sendMessage(cmsg);
-        }
-        else
-        {
-          this.dragoncooldown.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis() + dw * 1000));
-          Vector vector = player.getLocation().getDirection();
-          Vector vector2 = vector.multiply(3.0D);
-          FallingBlock fallingBlock1 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(2.0D, 1.0D, 2.0D), Material.FIRE, (byte)0);
-          fallingBlock1.setVelocity(vector2);
-          FallingBlock fallingBlock2 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(2.0D, 1.0D, 3.0D), Material.FIRE, (byte)0);
-          fallingBlock2.setVelocity(vector2);
-          FallingBlock fallingBlock3 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(2.0D, 1.0D, 4.0D), Material.FIRE, (byte)0);
-          fallingBlock3.setVelocity(vector2);
-          FallingBlock fallingBlock4 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(2.0D, 1.0D, 5.0D), Material.FIRE, (byte)0);
-          fallingBlock4.setVelocity(vector2);
-          FallingBlock fallingBlock5 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(3.0D, 1.0D, 2.0D), Material.FIRE, (byte)0);
-          fallingBlock5.setVelocity(vector2);
-          FallingBlock fallingBlock6 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(3.0D, 1.0D, 3.0D), Material.FIRE, (byte)0);
-          fallingBlock6.setVelocity(vector2);
-          FallingBlock fallingBlock7 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(3.0D, 1.0D, 4.0D), Material.FIRE, (byte)0);
-          fallingBlock7.setVelocity(vector2);
-          FallingBlock fallingBlock8 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(3.0D, 1.0D, 5.0D), Material.FIRE, (byte)0);
-          fallingBlock8.setVelocity(vector2);
-          FallingBlock fallingBlock9 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(4.0D, 1.0D, 2.0D), Material.FIRE, (byte)0);
-          fallingBlock9.setVelocity(vector2);
-          FallingBlock fallingBlock10 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(4.0D, 1.0D, 3.0D), Material.FIRE, (byte)0);
-          fallingBlock10.setVelocity(vector2);
-          FallingBlock fallingBlock11 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(4.0D, 1.0D, 4.0D), Material.FIRE, (byte)0);
-          fallingBlock11.setVelocity(vector2);
-          FallingBlock fallingBlock12 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(4.0D, 1.0D, 5.0D), Material.FIRE, (byte)0);
-          fallingBlock12.setVelocity(vector2);
-          FallingBlock fallingBlock13 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(5.0D, 1.0D, 2.0D), Material.FIRE, (byte)0);
-          fallingBlock13.setVelocity(vector2);
-          FallingBlock fallingBlock14 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(5.0D, 1.0D, 3.0D), Material.FIRE, (byte)0);
-          fallingBlock14.setVelocity(vector2);
-          FallingBlock fallingBlock15 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(5.0D, 1.0D, 4.0D), Material.FIRE, (byte)0);
-          fallingBlock15.setVelocity(vector2);
-          FallingBlock fallingBlock16 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(5.0D, 1.0D, 5.0D), Material.FIRE, (byte)0);
-          fallingBlock16.setVelocity(vector2);
+        }else{   
+            ItemStack stack2 = player.getItemInHand();
+            ItemMeta meta2 = stack2.getItemMeta();
+            if(CLBManager.getManager().getConfig().getBoolean("Wands.Dragon-breath.limited-uses.enable")){
+                if(meta2.hasLore()){
+                    List<String> loreList = meta2.getLore();
+                    int Uses = Integer.parseInt(loreList.get(1));
+                    if(Uses == 0){
+                      player.sendMessage(color("&cThis wand has expired"));
+                      return;
+                    }else{
+                      Uses--;
+                    }
+                    loreList.set(1, String.valueOf(Uses));
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                }else{
+                    List<String> loreList = new ArrayList();
+                    int uses = CLBManager.getManager().getConfig().getInt("Wands.Dragon-breath.limited-uses.uses");
+                    loreList.add("Uses left:");
+                    loreList.add(String.valueOf(uses));
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                } 
+            }else{
+                if(meta2.hasLore()){
+                    List<String> loreList = meta2.getLore();
+                    loreList.clear();
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                }
+            }
+            
+            
+
+            this.dragoncooldown.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis() + dw * 1000));
+            Vector vector = player.getLocation().getDirection();
+            Vector vector2 = vector.multiply(3.0D);
+            FallingBlock fallingBlock1 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(2.0D, 1.0D, 2.0D), Material.FIRE, (byte)0);
+            fallingBlock1.setVelocity(vector2);
+            FallingBlock fallingBlock2 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(2.0D, 1.0D, 3.0D), Material.FIRE, (byte)0);
+            fallingBlock2.setVelocity(vector2);
+            FallingBlock fallingBlock3 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(2.0D, 1.0D, 4.0D), Material.FIRE, (byte)0);
+            fallingBlock3.setVelocity(vector2);
+            FallingBlock fallingBlock4 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(2.0D, 1.0D, 5.0D), Material.FIRE, (byte)0);
+            fallingBlock4.setVelocity(vector2);
+            FallingBlock fallingBlock5 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(3.0D, 1.0D, 2.0D), Material.FIRE, (byte)0);
+            fallingBlock5.setVelocity(vector2);
+            FallingBlock fallingBlock6 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(3.0D, 1.0D, 3.0D), Material.FIRE, (byte)0);
+            fallingBlock6.setVelocity(vector2);
+            FallingBlock fallingBlock7 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(3.0D, 1.0D, 4.0D), Material.FIRE, (byte)0);
+            fallingBlock7.setVelocity(vector2);
+            FallingBlock fallingBlock8 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(3.0D, 1.0D, 5.0D), Material.FIRE, (byte)0);
+            fallingBlock8.setVelocity(vector2);
+            FallingBlock fallingBlock9 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(4.0D, 1.0D, 2.0D), Material.FIRE, (byte)0);
+            fallingBlock9.setVelocity(vector2);
+            FallingBlock fallingBlock10 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(4.0D, 1.0D, 3.0D), Material.FIRE, (byte)0);
+            fallingBlock10.setVelocity(vector2);
+            FallingBlock fallingBlock11 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(4.0D, 1.0D, 4.0D), Material.FIRE, (byte)0);
+            fallingBlock11.setVelocity(vector2);
+            FallingBlock fallingBlock12 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(4.0D, 1.0D, 5.0D), Material.FIRE, (byte)0);
+            fallingBlock12.setVelocity(vector2);
+            FallingBlock fallingBlock13 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(5.0D, 1.0D, 2.0D), Material.FIRE, (byte)0);
+            fallingBlock13.setVelocity(vector2);
+            FallingBlock fallingBlock14 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(5.0D, 1.0D, 3.0D), Material.FIRE, (byte)0);
+            fallingBlock14.setVelocity(vector2);
+            FallingBlock fallingBlock15 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(5.0D, 1.0D, 4.0D), Material.FIRE, (byte)0);
+            fallingBlock15.setVelocity(vector2);
+            FallingBlock fallingBlock16 = dragon.getPlayer().getWorld().spawnFallingBlock(dragon.getPlayer().getLocation().add(5.0D, 1.0D, 5.0D), Material.FIRE, (byte)0);
+            fallingBlock16.setVelocity(vector2);
         }
       }
     }

@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import net.servermc.plugins.AmazingLuckyBlocks;
+import net.servermc.plugins.Listeners.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -21,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.enchantments.Enchantment;
 
-
 public class CommandManager
   implements CommandExecutor
 {
@@ -35,6 +35,20 @@ public class CommandManager
   public String color(String str)
   {
     return ChatColor.translateAlternateColorCodes('&', str);
+  }
+  
+  public String intColorSet(int Uses){
+    String intColor;  
+    if(Uses >= 10){
+      intColor = "&a";  
+    }else if(Uses < 10 || Uses >= 5){
+      intColor = "&e";    
+    }else if(Uses < 5 || Uses >= 1){
+      intColor = "&6";    
+    }else{
+      intColor = "&4";    
+    }
+    return intColor;
   }
   
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
@@ -82,8 +96,6 @@ public class CommandManager
                     String line5 = LangLoader.LangCfg.getString("Helpmenu.line5");
                     String line6 = LangLoader.LangCfg.getString("Helpmenu.line6");
                     String line7 = LangLoader.LangCfg.getString("Helpmenu.line7");
-                    String line8 = LangLoader.LangCfg.getString("Helpmenu.line8");
-                    String line9 = LangLoader.LangCfg.getString("Helpmenu.line9");
 
                     List<String> helpmenu = LangLoader.LangCfg.getStringList("Helpmenu");
                     helpmenu.add(line1);
@@ -93,8 +105,6 @@ public class CommandManager
                     helpmenu.add(line5);
                     helpmenu.add(line6);
                     helpmenu.add(line7);
-                    helpmenu.add(line8);
-                    helpmenu.add(line9);
                     for(int i=0;i<helpmenu.size();i++){
                             String text = helpmenu.get(i);
                             sender.sendMessage(color(text.replaceAll("%prefix%", AmazingLuckyBlocks.getInstance().prefix)));
@@ -122,6 +132,8 @@ public class CommandManager
                         sender.sendMessage(color(text.replaceAll("%prefix%", AmazingLuckyBlocks.getInstance().prefix)));
                     }
                     break;
+                default:
+                    sender.sendMessage(color(LangLoader.LangCfg.getString("UnknownCommand")));
             }
         }else if((args.length == 1) && (args[0].equalsIgnoreCase("give"))){
             String unknowncommand = color(LangLoader.LangCfg.getString("UnknownCommand"));
@@ -130,10 +142,10 @@ public class CommandManager
         }else if ((args.length <= 3) && (args[0].equalsIgnoreCase("give")) && (args[1].equalsIgnoreCase("wands"))){
             String wandsperm = CLBManager.getManager().getConfig().getString("Commands.Give.Wands");
             if (sender.hasPermission(wandsperm)){
-                if(!(sender instanceof Player)){
-                            Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
-                            return false;
-                }else{
+//                if(!(sender instanceof Player)){
+//                            Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+//                            return false;
+//                }else{
                     Player p;
                     if(args.length == 3){
                        p = Bukkit.getServer().getPlayer(args[2]);
@@ -142,15 +154,28 @@ public class CommandManager
                            return false;
                        }
                     }else{
-                       p = (Player) sender;
+                        if(!(sender instanceof Player)){
+                            Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+                            return false;
+                        }
+                        p = (Player) sender;
                     }
                     
 
+                    List<String> loreList = new ArrayList();
+                    
                     //Regen wand
 
                     ItemStack stack6 = new ItemStack(Material.valueOf("RECORD_8"));
                     ItemMeta meta2 = stack6.getItemMeta();
                     meta2.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Regen.name")));
+                    if(CLBManager.getManager().getConfig().getBoolean("Wands.Regen.limited-uses.enable")){
+                       int uses = CLBManager.getManager().getConfig().getInt("Wands.Regen.limited-uses.uses");
+                       loreList.clear();
+                       loreList.add("Uses left:");
+                       loreList.add(String.valueOf(uses));
+                       meta2.setLore(loreList);
+                    }
                     stack6.setItemMeta(meta2);
 
                     //Invisibility wand
@@ -158,6 +183,13 @@ public class CommandManager
                     ItemStack stack7 = new ItemStack(Material.valueOf("RECORD_7"));
                     ItemMeta meta3 = stack7.getItemMeta();
                     meta3.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Invisibility.name")));
+                    if(CLBManager.getManager().getConfig().getBoolean("Wands.Invisibility.limited-uses.enable")){
+                       int uses = CLBManager.getManager().getConfig().getInt("Wands.Invisibility.limited-uses.uses");
+                       loreList.clear();
+                       loreList.add("Uses left:");
+                       loreList.add(String.valueOf(uses));
+                       meta3.setLore(loreList);
+                    }
                     stack7.setItemMeta(meta3);
 
                     //Tnt wand
@@ -165,6 +197,13 @@ public class CommandManager
                     ItemStack stack21 = new ItemStack(Material.valueOf("RECORD_3"));
                     ItemMeta meta4 = stack21.getItemMeta();
                     meta4.setDisplayName(color(LangLoader.LangCfg.getString("Wands.TNT.name")));
+                    if(CLBManager.getManager().getConfig().getBoolean("Wands.TNT.limited-uses.enable")){
+                       int uses = CLBManager.getManager().getConfig().getInt("Wands.TNT.limited-uses.uses");
+                       loreList.clear();
+                       loreList.add("Uses left:");
+                       loreList.add(String.valueOf(uses));
+                       meta4.setLore(loreList);
+                    }
                     stack21.setItemMeta(meta4);
 
                     //Slime wand
@@ -172,6 +211,13 @@ public class CommandManager
                     ItemStack stack22 = new ItemStack(Material.valueOf("RECORD_4"));
                     ItemMeta meta5 = stack22.getItemMeta();
                     meta5.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Slime.name")));
+                    if(CLBManager.getManager().getConfig().getBoolean("Wands.Slime.limited-uses.enable")){
+                       int uses = CLBManager.getManager().getConfig().getInt("Wands.Slime.limited-uses.uses");
+                       loreList.clear();
+                       loreList.add("Uses left:");
+                       loreList.add(String.valueOf(uses));
+                       meta5.setLore(loreList);
+                    }
                     stack22.setItemMeta(meta5);
 
                     //Dragon-breath wand
@@ -179,6 +225,13 @@ public class CommandManager
                     ItemStack stack23 = new ItemStack(Material.valueOf("RECORD_6"));
                     ItemMeta meta6 = stack23.getItemMeta();
                     meta6.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Dragon-breath.name")));
+                    if(CLBManager.getManager().getConfig().getBoolean("Wands.Dragon-breath.limited-uses.enable")){
+                       int uses = CLBManager.getManager().getConfig().getInt("Wands.Dragon-breath.limited-uses.uses");
+                       loreList.clear();
+                       loreList.add("Uses left:");
+                       loreList.add(String.valueOf(uses));
+                       meta6.setLore(loreList);
+                    }
                     stack23.setItemMeta(meta6);
 
                     //Lightning wand
@@ -186,6 +239,13 @@ public class CommandManager
                     ItemStack stack24 = new ItemStack(Material.valueOf("RECORD_5"));
                     ItemMeta meta7 = stack24.getItemMeta();
                     meta7.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Lightning.name")));
+                    if(CLBManager.getManager().getConfig().getBoolean("Wands.Lightning.limited-uses.enable")){
+                       int uses = CLBManager.getManager().getConfig().getInt("Wands.Lightning.limited-uses.uses");
+                       loreList.clear();
+                       loreList.add("Uses left:");
+                       loreList.add(String.valueOf(uses));
+                       meta7.setLore(loreList);
+                    }
                     stack24.setItemMeta(meta7);
 
                     //Shield wand
@@ -193,6 +253,13 @@ public class CommandManager
                     ItemStack stack29 = new ItemStack(Material.valueOf("RECORD_9"));
                     ItemMeta meta8 = stack29.getItemMeta();
                     meta8.setDisplayName(color(LangLoader.LangCfg.getString("Wands.Shield.name")));
+                    if(CLBManager.getManager().getConfig().getBoolean("Wands.Shield.limited-uses.enable")){
+                       int uses = CLBManager.getManager().getConfig().getInt("Wands.Shield.limited-uses.uses");
+                       loreList.clear();
+                       loreList.add("Uses left:");
+                       loreList.add(String.valueOf(uses));
+                       meta8.setLore(loreList);
+                    }
                     stack29.setItemMeta(meta8);
 
                     p.getInventory().addItem(stack6);
@@ -205,7 +272,7 @@ public class CommandManager
 
                     String loadwands = color(LangLoader.LangCfg.getString("LoadingWands"));
                     sender.sendMessage (loadwands);
-                }
+//                }
             }else{
               String noperm = color(LangLoader.LangCfg.getString("NoPermission"));
               sender.sendMessage (noperm);
@@ -213,13 +280,18 @@ public class CommandManager
         }else if ((args[0].equalsIgnoreCase("give")) && (args[1].equalsIgnoreCase("objects"))){
             String objectsperm = CLBManager.getManager().getConfig().getString("Commands.Give.Objects");
             if (sender.hasPermission(objectsperm)){
-                if(!(sender instanceof Player)) {
-                    Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
-                    return false;
-                }else{
+//                if(!(sender instanceof Player)) {
+//                    Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+//                    return false;
+//                }else{
                     int amount = 1;
-                    Player p = (Player) sender;
+                    Player p = null;
                     if(args.length == 2){
+                        if(!(sender instanceof Player)){
+                            Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+                            return false;
+                        }
+                        p = (Player) sender;
                         amount = 1; 
                     }
                     if(args.length == 4){
@@ -238,6 +310,11 @@ public class CommandManager
                     if(args.length == 3){
                         try{
                             amount = Integer.parseInt(args[2]);
+                            if(!(sender instanceof Player)){
+                                Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+                                return false;
+                            }
+                            p = (Player) sender;
                         }catch(IllegalArgumentException e){
                             amount = 1;
                             p = Bukkit.getServer().getPlayer(args[2]);
@@ -246,8 +323,6 @@ public class CommandManager
                             return false;
                             }
                         }
-                        
-                        
                     }
                     
                     //Dark Hole
@@ -274,31 +349,35 @@ public class CommandManager
                     meta9.addEnchant(Enchantment.DURABILITY, 5, true);
                     stack26.setAmount(amount);
                     stack26.setItemMeta(meta9); 
-
-
+                    
+                    
+                    
                     p.getInventory().addItem(stack24);
                     p.getInventory().addItem(stack25);
                     p.getInventory().addItem(stack26);
 
                     String loadobjects = color(LangLoader.LangCfg.getString("LoadingObjects"));
                     sender.sendMessage(loadobjects);
-                    }
+//                    }
             }else{
                 String noperm = color(LangLoader.LangCfg.getString("NoPermission"));
                 sender.sendMessage (noperm);
             }
         }else if(((args[0].equalsIgnoreCase("give")) && args[1].equalsIgnoreCase("luckyblock"))){
             String luckyperm = CLBManager.getManager().getConfig().getString("Commands.Give.LuckyBlock");
-        
             if (sender.hasPermission(luckyperm)){
-                if(!(sender instanceof Player)){
-                    Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
-                    return false;
-                }else{
-                    
+//                if(!(sender instanceof Player)){
+//                    Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+//                    return false;
+//                }else{
                     int amount = 1;
-                    Player p = (Player) sender;
+                    Player p = null;
                     if(args.length == 2){
+                        if(!(sender instanceof Player)){
+                            Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+                            return false;
+                        }
+                        p = (Player) sender;
                         amount = 1; 
                     }
                     if(args.length == 4){
@@ -317,6 +396,11 @@ public class CommandManager
                     if(args.length == 3){
                         try{
                             amount = Integer.parseInt(args[2]);
+                            if(!(sender instanceof Player)){
+                                Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+                                return false;
+                            }
+                            p = (Player) sender;
                         }catch(IllegalArgumentException e){
                             amount = 1;
                             p = Bukkit.getServer().getPlayer(args[2]);
@@ -325,8 +409,6 @@ public class CommandManager
                             return false;
                             }
                         }
-                        
-                        
                     }
                     
                 ItemStack lucky = new ItemStack(Material.valueOf(CLBManager.getManager().getConfig().getString("LuckyBlock.Material")));
@@ -335,8 +417,10 @@ public class CommandManager
                 lucky.setItemMeta(lucky_meta);
                 lucky.setAmount(amount);
 
+                String loadblocks = color(LangLoader.LangCfg.getString("LoadingBlocks"));
+                sender.sendMessage(loadblocks);
                 p.getInventory().addItem(lucky);
-                }
+//                }
             }else{
                 String noperm = color(LangLoader.LangCfg.getString("NoPermission"));
                 sender.sendMessage (noperm);     
@@ -368,14 +452,28 @@ public class CommandManager
                 sender.sendMessage (noperm2);
             }
             return true;
-        }else if((args.length == 6) && (args[0].equalsIgnoreCase("randomblock"))){
+        }else if(((args.length == 6) || (args.length == 7)) && (args[0].equalsIgnoreCase("randomblock"))){
             String rbperm = CLBManager.getManager().getConfig().getString("Commands.RandomBlocks-permission");
-            if(!(sender instanceof Player)){
-		Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
-		return false;
-            }else{
+//            if(!(sender instanceof Player)){
+//		Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+//		return false;
+//            }else{
                 if(sender.hasPermission(rbperm)){
-                    Player player = (Player) sender;
+                    Player player;
+                    if(args.length == 6){
+                        if(!(sender instanceof Player)){
+                            Bukkit.getConsoleSender().sendMessage(plugin.name+ChatColor.RED+" You can't send this command from the console");
+                            return false;
+                        } 
+                        player = (Player) sender; 
+                    }else{
+                        player = Bukkit.getServer().getPlayer(args[6]);
+                        if(player == null){
+                           sender.sendMessage(color("&cPlayer " + args[6] + "&c is offline"));
+                           return false;
+                        }
+                    }
+                    
                     int radx = Integer.parseInt(args[1]);
                     int rady = Integer.parseInt(args[2]);
                     int radz = Integer.parseInt(args[3]);
@@ -386,14 +484,17 @@ public class CommandManager
                     }else{
                         floating_blocks = 0;
                     }
-          
+                    
+                    String placeblocks = color(LangLoader.LangCfg.getString("PlacingBlocks"));
+                    sender.sendMessage(placeblocks);
+                    
                     RandomBlocks rb = new RandomBlocks(radx,rady,radz,blocks,floating_blocks,player);
                     rb.generateRandomBlocks();
                 }else{
                     String noperm = color(LangLoader.LangCfg.getString("NoPermission"));
                     sender.sendMessage(plugin.name + " " +noperm);
                 }
-            }
+//            }
         }else{
             String unknowncommand = color(LangLoader.LangCfg.getString("UnknownCommand"));
             sender.sendMessage(unknowncommand);

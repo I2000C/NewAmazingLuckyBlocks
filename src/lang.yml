@@ -25,7 +25,8 @@ need-permission: '&cYou not have permission for using this wand/object'
 Helpmenu:
   line1: '%prefix%'
   line2: ''
-  line3: '&c/alb randomblock <radx> <rady> <radz> <blocks> <floating_blocks: true/false> &7- Places random lucky blocks'
+  line3: '&c/alb randomblock <radx> <rady> <radz> <blocks> 
+                <floating_blocks: true/false> [player] &7- Places random lucky blocks'
   line4: '&c/alb reload  &7-  Reload config and lang files'
   line5: '&c/alb help <page> &7- Open the help page'
   line6: '&c/alb  &7-  Show plugin name and version'
@@ -50,6 +51,8 @@ World-loading:
 NoPermission: "&cYou don't have permissions enough"
 LoadingWands: '&aLoading wands...'
 LoadingObjects: '&bLoading objects...'
+LoadingBlocks: '&6Loading luckyblocks...'
+PlacingBlocks: '&dPlacing random lucky blocks...'
 Reload:
   line1: '&aReloading lang...'
   line2: '&aReloading config...'

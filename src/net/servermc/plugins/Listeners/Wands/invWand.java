@@ -1,5 +1,6 @@
 package net.servermc.plugins.Listeners.Wands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -58,9 +59,40 @@ public class invWand
           long remainingTime = ((Long)this.invcooldown.get(player.getUniqueId())).longValue() - System.currentTimeMillis();
           String cmsg = color(LangLoader.LangCfg.getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L)));
           player.sendMessage(cmsg);
-        }
-        else
-        {
+        }else{
+            
+            ItemStack stack2 = player.getItemInHand();
+            ItemMeta meta2 = stack2.getItemMeta();
+            if(CLBManager.getManager().getConfig().getBoolean("Wands.Invisibility.limited-uses.enable")){
+                if(meta2.hasLore()){
+                    List<String> loreList = meta2.getLore();
+                    int Uses = Integer.parseInt(loreList.get(1));
+                    if(Uses == 0){
+                      player.sendMessage(color("&cThis wand has expired"));
+                      return;
+                    }else{
+                      Uses--;
+                    }
+                    loreList.set(1, String.valueOf(Uses));
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                }else{
+                    List<String> loreList = new ArrayList();
+                    int uses = CLBManager.getManager().getConfig().getInt("Wands.Invisibility.limited-uses.uses");
+                    loreList.add("Uses left:");
+                    loreList.add(String.valueOf(uses));
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                } 
+            }else{
+                if(meta2.hasLore()){
+                    List<String> loreList = meta2.getLore();
+                    loreList.clear();
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                }
+            }
+          
           this.invcooldown.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis() + iw * 1000));
           player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 220, 0));
         }

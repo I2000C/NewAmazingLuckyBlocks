@@ -40,6 +40,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.UnknownDependencyException;
 
+import net.servermc.plugins.Listeners.Database;
+
+
 public class AmazingLuckyBlocks
   extends JavaPlugin
 
@@ -66,7 +69,7 @@ public class AmazingLuckyBlocks
   public String rutaConfig;
   PluginDescriptionFile pdffile = getDescription();
   public String version = pdffile.getVersion();
-  public String name = ChatColor.GOLD + pdffile.getName();
+  public String name = ChatColor.GOLD + pdffile.getName() + ChatColor.RESET;
   public String prefix;
   
   public String serverVersion;
@@ -75,7 +78,7 @@ public class AmazingLuckyBlocks
   public void onEnable()
   {
     Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[" + name + " " + ChatColor.AQUA + version + ChatColor.GREEN +"] is now enabled");
-    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Plugin by RewKun (Galactic Networks)" + ChatColor.GREEN + " and edited by I2000C");
+    Bukkit.getConsoleSender().sendMessage("[" + name + "] " + ChatColor.RED + "Plugin by RewKun (Galactic Networks)" + ChatColor.GREEN + " and edited by I2000C");
     new PlayerInteract(this);
     CLBManager.getManager().setup(this);
     
@@ -119,6 +122,7 @@ public class AmazingLuckyBlocks
     updater.checkUpdates(name, version);
     getServer().getPluginManager().registerEvents(new Updater(), this);
     
+    
     WorldList wl = new WorldList();
     
     boolean force_enable_plugins = false;
@@ -133,9 +137,12 @@ public class AmazingLuckyBlocks
         Plugin pluginz = getServer().getPluginManager().getPlugin("Multiverse-Core");
         getServer().getPluginManager().enablePlugin(pluginz);
     }
-    
+    /*Plugin pluginz = getServer().getPluginManager().getPlugin("HeadDatabase");
+    getServer().getPluginManager().enablePlugin(pluginz);
+    getServer().getPluginManager().registerEvents(new Database(), this);*/
     wl.ReloadAll();
   }
+  
   
   
   public void onDisable()

@@ -1,8 +1,9 @@
 name: NewAmazingLuckyBlocks
 main: net.servermc.plugins.AmazingLuckyBlocks
-version: 1.4.1 BETA
+version: 1.4.5 BETA
 description: The Official LuckyBlocks plugin of ServerMC.
 author: RewKun
 commands:
    alb:
     description: The main command of New Amazing Lucky Blocks.
+softdepend: [Multiverse-Core]

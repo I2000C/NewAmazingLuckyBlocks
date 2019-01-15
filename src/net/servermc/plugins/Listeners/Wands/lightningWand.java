@@ -1,5 +1,6 @@
 package net.servermc.plugins.Listeners.Wands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -66,11 +67,42 @@ public class lightningWand
           this.lightningcooldown.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis() + lw * 1000));
           this.transparent.add(Material.AIR);
           Block block;
-          if(AmazingLuckyBlocks.instance.minecraftVersion.equals("1.13")){
+          if(AmazingLuckyBlocks.instance.minecraftVersion.equals("1.13")||AmazingLuckyBlocks.instance.minecraftVersion.equals("1.14")){
             block = player.getTargetBlock((Set<Material>) null, 120);
           }else{
             block = player.getTargetBlock(this.transparent, 120); 
           }
+            ItemStack stack2 = player.getItemInHand();
+            ItemMeta meta2 = stack2.getItemMeta();
+            if(CLBManager.getManager().getConfig().getBoolean("Wands.Lightning.limited-uses.enable")){
+                if(meta2.hasLore()){
+                    List<String> loreList = meta2.getLore();
+                    int Uses = Integer.parseInt(loreList.get(1));
+                    if(Uses == 0){
+                      player.sendMessage(color("&cThis wand has expired"));
+                      return;
+                    }else{
+                      Uses--;
+                    }
+                    loreList.set(1, String.valueOf(Uses));
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                }else{
+                    List<String> loreList = new ArrayList();
+                    int uses = CLBManager.getManager().getConfig().getInt("Wands.Lightning.limited-uses.uses");
+                    loreList.add("Uses left:");
+                    loreList.add(String.valueOf(uses));
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                } 
+            }else{
+                if(meta2.hasLore()){
+                    List<String> loreList = meta2.getLore();
+                    loreList.clear();
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                }
+            }
           player.getWorld().strikeLightning(block.getLocation());
         }
       }

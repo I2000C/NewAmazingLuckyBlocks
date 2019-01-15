@@ -1,5 +1,6 @@
 package net.servermc.plugins.Listeners.Wands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -63,6 +64,39 @@ public class slimeWand
         }
         else
         {
+            
+            ItemStack stack2 = player.getItemInHand();
+            ItemMeta meta2 = stack2.getItemMeta();
+            if(CLBManager.getManager().getConfig().getBoolean("Wands.Slime.limited-uses.enable")){
+                if(meta2.hasLore()){
+                    List<String> loreList = meta2.getLore();
+                    int Uses = Integer.parseInt(loreList.get(1));
+                    if(Uses == 0){
+                      player.sendMessage(color("&cThis wand has expired"));
+                      return;
+                    }else{
+                      Uses--;
+                    }
+                    loreList.set(1, String.valueOf(Uses));
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                }else{
+                    List<String> loreList = new ArrayList();
+                    int uses = CLBManager.getManager().getConfig().getInt("Wands.Slime.limited-uses.uses");
+                    loreList.add("Uses left:");
+                    loreList.add(String.valueOf(uses));
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                } 
+            }else{
+                if(meta2.hasLore()){
+                    List<String> loreList = meta2.getLore();
+                    loreList.clear();
+                    meta2.setLore(loreList);
+                    stack2.setItemMeta(meta2);
+                }
+            }  
+            
           this.slimecooldown.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis() + sw * 1000));
           Slime slime = (Slime)slimee.getPlayer().getWorld().spawnEntity(player.getLocation().add(0.0D, 2.0D, 0.0D), EntityType.SLIME);
           slime.setVelocity(player.getLocation().getDirection().multiply(1.8D));

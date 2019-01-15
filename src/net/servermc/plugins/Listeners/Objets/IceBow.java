@@ -50,15 +50,17 @@ public class IceBow
     String iceName = color(LangLoader.LangCfg.getString("Objects.IceBow.name"));
     Material iceMaterial = Material.valueOf(CLBManager.getManager().getConfig().getString("Objects.IceBow.freeze-material"));
     
-    if(damagee instanceof Player || damager instanceof Arrow){
+    if(damager instanceof Arrow){
         Entity hurt = damagee;
         //Player hurt = (Player) e1;
-        Player shooter = null;
+        Player shooter;
         try{
           if(((Arrow)damager).getShooter() instanceof Player){
             Arrow arrow = (Arrow) damager;
             shooter = (Player) arrow.getShooter();
-            }
+          }else{
+            return;
+          }
         }catch(ClassCastException e){
             return;
         }

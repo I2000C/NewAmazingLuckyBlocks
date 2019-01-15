@@ -33,11 +33,11 @@ public class Updater implements Listener{
               latestversion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
               if (latestversion.length() <= 30) {
                   if(!version.equals(latestversion)){
-                      Bukkit.getConsoleSender().sendMessage(color("&cThere is a new version available: &e("+ChatColor.GRAY+latestversion+"&e)"));
-                      Bukkit.getConsoleSender().sendMessage(color("&cYou can download it at: &f https://www.spigotmc.org/resources/62644/"));
+                      Bukkit.getConsoleSender().sendMessage(color(LangLoader.LangCfg.getString("InGamePrefix") + " " + "&cThere is a new version available: &e("+ChatColor.GRAY+latestversion+"&e)"));
+                      Bukkit.getConsoleSender().sendMessage(color(LangLoader.LangCfg.getString("InGamePrefix") + " " + "&cYou can download it at: &f https://www.spigotmc.org/resources/62644/"));
                       update = true;
                   }else{
-                      Bukkit.getConsoleSender().sendMessage(color("&aYou are using the latest version"));
+                      Bukkit.getConsoleSender().sendMessage(color(LangLoader.LangCfg.getString("InGamePrefix") + " " + "&aYou are using the latest version"));
                       update = false;
                   }          
               }

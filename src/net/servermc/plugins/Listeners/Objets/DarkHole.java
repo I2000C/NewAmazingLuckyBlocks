@@ -76,7 +76,7 @@ public class DarkHole
     Action action = dark.getAction();
     String darkName = color(LangLoader.LangCfg.getString("Objects.DarkHole.name"));
     
-    if(AmazingLuckyBlocks.instance.minecraftVersion.equals("1.13")){
+    if(!AmazingLuckyBlocks.instance.minecraftVersion.equals("1.8")){
         if(dark.getHand() == EquipmentSlot.OFF_HAND){
         return;
         }
