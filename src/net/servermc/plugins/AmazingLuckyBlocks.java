@@ -41,6 +41,8 @@ import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.UnknownDependencyException;
 
 import net.servermc.plugins.Listeners.Database;
+import net.servermc.plugins.utils.BlockProtect;
+import net.servermc.plugins.utils.LocationManager;
 
 
 public class AmazingLuckyBlocks
@@ -85,6 +87,9 @@ public class AmazingLuckyBlocks
     LangLoader.getManager().registerMessages();
     LangLoader.getManager().getMessages();
     
+    LocationManager.getManager().registerLocations();
+    LocationManager.getManager().getLocations();
+    
     prefix = LangLoader.LangCfg.getString("InGamePrefix");
     
     //LangLoader.mkdir();
@@ -121,32 +126,48 @@ public class AmazingLuckyBlocks
     Updater updater = new Updater();
     updater.checkUpdates(name, version);
     getServer().getPluginManager().registerEvents(new Updater(), this);
+    getServer().getPluginManager().registerEvents(new LocationManager(), this);
+    getServer().getPluginManager().registerEvents(new BlockProtect(), this);
     
     
     WorldList wl = new WorldList();
     
     boolean force_enable_plugins = false;
+    String plugin = new String();
     Plugin[] plugins = getServer().getPluginManager().getPlugins();
     List<Plugin> plugin_list = Arrays.asList(plugins);    
     for(int i=0;i<plugin_list.size();i++){
-        String plugin = plugin_list.get(i).toString();
-        force_enable_plugins = plugin.contains("Multiverse"); 
+        plugin = plugin_list.get(i).toString(); 
     }
     
-    if((!getServer().getPluginManager().isPluginEnabled("Multiverse-Core")) && force_enable_plugins){
+    if((!getServer().getPluginManager().isPluginEnabled("Multiverse-Core")) && plugin.contains("Multiverse")){
         Plugin pluginz = getServer().getPluginManager().getPlugin("Multiverse-Core");
         getServer().getPluginManager().enablePlugin(pluginz);
     }
-    /*Plugin pluginz = getServer().getPluginManager().getPlugin("HeadDatabase");
-    getServer().getPluginManager().enablePlugin(pluginz);
-    getServer().getPluginManager().registerEvents(new Database(), this);*/
+    
+    if((!getServer().getPluginManager().isPluginEnabled("HeadDatabase")) && plugin.contains("HeadDatabase")){
+        Plugin pluginz = getServer().getPluginManager().getPlugin("HeadDatabase");
+        getServer().getPluginManager().enablePlugin(pluginz);
+    }
+    
     wl.ReloadAll();
-  }
-  
+    Database db = new Database();
+    db.checkHeadMode();
+    
+    if(CLBManager.getManager().getConfig().getString("LuckyBlock.Material").equals("SKULL") && !Database.headMode &&
+                        (AmazingLuckyBlocks.getInstance().minecraftVersion.equals("1.13") || AmazingLuckyBlocks.getInstance().minecraftVersion.equals("1.14"))){
+        getServer().getConsoleSender().sendMessage(color(prefix + " " + LangLoader.LangCfg.getString("Error-message.1").replaceAll("%version%", this.minecraftVersion)));
+        getServer().getConsoleSender().sendMessage(color(prefix + " " + LangLoader.LangCfg.getString("Error-message.2")));
+        }
+  }  
   
   
   public void onDisable()
   {
     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + name + " is now disabled");
   }
+
+    private String color(String str) {
+        return ChatColor.translateAlternateColorCodes('&', str);
+    }
 }

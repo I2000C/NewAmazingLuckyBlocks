@@ -22,6 +22,7 @@ Objects:
     name: '&bIce Bow &7- &6Right Click'
 Cooldown-message: '&cYou cannot use this wand for %time% seconds'
 need-permission: '&cYou not have permission for using this wand/object'
+cannot-rename: '&cYou cannot rename luckyblocks'
 Helpmenu:
   line1: '%prefix%'
   line2: ''
@@ -59,4 +60,7 @@ Reload:
   line3: '&cReload finished'
 HelpMessage: '&cType &7/alb help &cfor help'
 UnknownCommand: '&cUnknown command. Type &7/alb &cfor plugin info'
+Error-message:
+    1: '&cYou are in &b%version% &r&cversion, so you need to &d&lenable the HeadMode &cor to &d&lchange the LuckyBlock material &cin order to let the plugin work correctly'
+    2: '&aChange the Material or enable the HeadMode and then use &b/alb reload'
 InGamePrefix: '[&6NewAmazingLuckyBlocks&r]'

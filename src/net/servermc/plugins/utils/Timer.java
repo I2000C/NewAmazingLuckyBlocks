@@ -58,6 +58,40 @@ public class Timer {
                         Bukkit.getScheduler().cancelTask(taskID);
                         return;
                     }else{
+                        if(CLBManager.getManager().getConfig().getBoolean("Objects.DarkHole.block-stop-mode.enable")){
+                            Material noBreakBlockMaterial = Material.valueOf(CLBManager.getManager().getConfig().getString("Objects.DarkHole.block-stop-mode.block"));
+                            if(player.getWorld().getBlockAt(x, y, z).getType().equals(noBreakBlockMaterial)){
+                            Bukkit.getScheduler().cancelTask(taskID);  
+                            }else if(player.getWorld().getBlockAt(x+1, y, z).getType().equals(noBreakBlockMaterial)){
+                            Bukkit.getScheduler().cancelTask(taskID);  
+                            }else if(player.getWorld().getBlockAt(x-1, y, z).getType().equals(noBreakBlockMaterial)){
+                            Bukkit.getScheduler().cancelTask(taskID);  
+                            }else if(player.getWorld().getBlockAt(x, y, z+1).getType().equals(noBreakBlockMaterial)){
+                            Bukkit.getScheduler().cancelTask(taskID);  
+                            }else if(player.getWorld().getBlockAt(x, y, z-1).getType().equals(noBreakBlockMaterial)){
+                            Bukkit.getScheduler().cancelTask(taskID);  
+                            }else if(player.getWorld().getBlockAt(x+1, y, z+1).getType().equals(noBreakBlockMaterial)){
+                            Bukkit.getScheduler().cancelTask(taskID);  
+                            }else if(player.getWorld().getBlockAt(x-1, y, z-1).getType().equals(noBreakBlockMaterial)){
+                            Bukkit.getScheduler().cancelTask(taskID);  
+                            }else if(player.getWorld().getBlockAt(x+1, y, z-1).getType().equals(noBreakBlockMaterial)){
+                            Bukkit.getScheduler().cancelTask(taskID);  
+                            }else if(player.getWorld().getBlockAt(x-1, y, z+1).getType().equals(noBreakBlockMaterial)){
+                            Bukkit.getScheduler().cancelTask(taskID);  
+                            }else{
+                                player.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
+                                player.getWorld().getBlockAt(x+1, y, z).setType(Material.AIR);
+                                player.getWorld().getBlockAt(x-1, y, z).setType(Material.AIR);
+                                player.getWorld().getBlockAt(x, y, z+1).setType(Material.AIR);
+                                player.getWorld().getBlockAt(x, y, z-1).setType(Material.AIR);
+                                player.getWorld().getBlockAt(x+1, y, z+1).setType(Material.AIR);
+                                player.getWorld().getBlockAt(x-1, y, z-1).setType(Material.AIR);
+                                player.getWorld().getBlockAt(x+1, y, z-1).setType(Material.AIR);
+                                player.getWorld().getBlockAt(x-1, y, z+1).setType(Material.AIR);
+                                y--;
+                                bloques--; //tambien se puede poner bloques = bloques -1;
+                            }
+                        }else{                        
                         player.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
                         player.getWorld().getBlockAt(x+1, y, z).setType(Material.AIR);
                         player.getWorld().getBlockAt(x-1, y, z).setType(Material.AIR);
@@ -69,6 +103,7 @@ public class Timer {
                         player.getWorld().getBlockAt(x-1, y, z+1).setType(Material.AIR);
                         y--;
                         bloques--; //tambien se puede poner bloques = bloques -1;
+                        }
                         
                     }          
             } 

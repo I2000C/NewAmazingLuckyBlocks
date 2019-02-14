@@ -109,7 +109,7 @@ public class MiniVolcano
           if(amt == 0){
               
               for(int i = 0; i <= 8; i++){
-                if(((player.getInventory().getItem(i) != null)) && (player.getInventory().getItem(i).hasItemMeta())){
+                if(((player.getInventory().getItem(i) != null)) && (player.getInventory().getItem(i).getItemMeta().hasDisplayName())){
                    String item_name = player.getInventory().getItem(i).getItemMeta().getDisplayName();
                    //player.sendMessage("" + i);
                    

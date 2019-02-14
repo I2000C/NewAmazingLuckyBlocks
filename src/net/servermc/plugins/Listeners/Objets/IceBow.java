@@ -69,15 +69,16 @@ public class IceBow
             if (!WorldList.instance.worlds.contains(shooter.getWorld().getName())) {
                 return;
             }
-            if ((CLBManager.getManager().getConfig().getBoolean("Objects.IceBow.required-permission")) && (!shooter.hasPermission(CLBManager.getManager().getConfig().getString("Objects.IceBow.permission"))))
-            {
-                shooter.sendMessage(color(LangLoader.LangCfg.getString("need-permission")));
-                return;
-            }
+            
             if(shooter.getItemInHand().getType().equals(Material.BOW)){
                   ItemStack hand = shooter.getItemInHand();
                   if(hand != null && hand.hasItemMeta() && hand.getItemMeta().hasDisplayName()){
                       if(hand.getItemMeta().getDisplayName().equals(iceName)){
+                          if ((CLBManager.getManager().getConfig().getBoolean("Objects.IceBow.required-permission")) && (!shooter.hasPermission(CLBManager.getManager().getConfig().getString("Objects.IceBow.permission"))))
+                          {
+                            shooter.sendMessage(color(LangLoader.LangCfg.getString("need-permission")));
+                            return;
+                          }
                           Location hurt_loc = hurt.getLocation();
                           int x = hurt_loc.getBlockX();
                           int y = hurt_loc.getBlockY();

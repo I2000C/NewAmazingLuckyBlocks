@@ -40,6 +40,8 @@ public class invWand
     Action action = inv.getAction();
     String invName = color(LangLoader.LangCfg.getString("Wands.Invisibility.name"));
     int iw = CLBManager.getManager().getConfig().getInt("Wands.Invisibility.cooldown-time");
+    int effectTime = CLBManager.getManager().getConfig().getInt("Wands.Invisibility.effect-time");
+    effectTime *= 20; //effectTime = effectTime * 20
     if (((action.equals(Action.RIGHT_CLICK_AIR)) || (action.equals(Action.RIGHT_CLICK_BLOCK))) && 
       (player.getItemInHand().getType() == Material.valueOf("RECORD_7")))
     {
@@ -94,7 +96,7 @@ public class invWand
             }
           
           this.invcooldown.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis() + iw * 1000));
-          player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 220, 0));
+          player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, effectTime, 0));
         }
       }
     }

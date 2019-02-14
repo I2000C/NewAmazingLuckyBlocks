@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import net.servermc.plugins.AmazingLuckyBlocks;
 import net.servermc.plugins.utils.CLBManager;
 import net.servermc.plugins.utils.LangLoader;
+import net.servermc.plugins.utils.LocationManager;
 import org.bukkit.Bukkit;
 import static org.bukkit.Bukkit.getServer;
 import org.bukkit.ChatColor;
@@ -55,11 +56,25 @@ public class BlockBreak
     Location loc = b.getLocation();
     Player p = e.getPlayer();
     World w = p.getWorld();
-    if (b.getType() == Material.valueOf(CLBManager.getManager().getConfig().getString("LuckyBlock.Material")))
+    LocationManager lm = new LocationManager();
+    if (LocationManager.loc_list.contains(b.getLocation()))
     {
       if (!WorldList.instance.worlds.contains(p.getWorld().getName())) {
         return;
       }
+      if(CLBManager.getManager().getConfig().getBoolean("LuckyBlock.Permissions.break.enable") && 
+                !p.hasPermission(CLBManager.getManager().getConfig().getString("LuckyBlock.Permissions.break.permission"))){
+            p.sendMessage(color(LangLoader.LangCfg.getString("NoPermission")));           
+            e.setCancelled(true);
+            return;
+        }
+      /*if (Database.headMode){
+      Database.compareSkullSkin(b);
+      if(!Database.isSimilar){
+      return;
+      }
+      }*/
+      lm.removeBlockFromListAndConfig(b);
       b.setType(Material.AIR);
       int r = new Random().nextInt(38);
       List<String> loreList = new ArrayList();

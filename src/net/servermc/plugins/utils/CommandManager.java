@@ -410,12 +410,29 @@ public class CommandManager
                             }
                         }
                     }
-                    
-                ItemStack lucky = new ItemStack(Material.valueOf(CLBManager.getManager().getConfig().getString("LuckyBlock.Material")));
+                ItemStack lucky;
+                if(Database.headMode && Database.isDatabaseLoaded){
+                    lucky = Database.item;
+                }else if(Database.headMode && !Database.isDatabaseLoaded){
+                    return false;
+                }else{
+                    lucky = new ItemStack(Material.valueOf(CLBManager.getManager().getConfig().getString("LuckyBlock.Material")));
+                }
+                
+                List<String> configLore = CLBManager.getManager().getConfig().getStringList("LuckyBlock.Lore");
+                List<String> blockLore = new ArrayList();
+                for(int i = 0; i < configLore.size(); i++){
+                    blockLore.add(color(configLore.get(i)));
+                }
+                
+                
                 ItemMeta lucky_meta = lucky.getItemMeta();
                 lucky_meta.setDisplayName(color(CLBManager.getManager().getConfig().getString("LuckyBlock.Name")));
+                lucky_meta.setLore(blockLore);
                 lucky.setItemMeta(lucky_meta);
                 lucky.setAmount(amount);
+                    
+                
 
                 String loadblocks = color(LangLoader.LangCfg.getString("LoadingBlocks"));
                 sender.sendMessage(loadblocks);
@@ -441,12 +458,24 @@ public class CommandManager
 
                 WorldList.instance.ReloadAll();
           
+                Database db = new Database();
+                db.checkHeadMode();
+                
                 String reload1 = color(LangLoader.LangCfg.getString("Reload.line1"));
                 String reload2 = color(LangLoader.LangCfg.getString("Reload.line2"));
                 String reload3 = color(LangLoader.LangCfg.getString("Reload.line3"));
                 sender.sendMessage(reload1);
                 sender.sendMessage(reload2);
                 sender.sendMessage(reload3);
+                
+                String prefix = LangLoader.LangCfg.getString("InGamePrefix");
+                
+                if(CLBManager.getManager().getConfig().getString("LuckyBlock.Material").equals("SKULL") && !Database.headMode &&
+                        (AmazingLuckyBlocks.getInstance().minecraftVersion.equals("1.13") || AmazingLuckyBlocks.getInstance().minecraftVersion.equals("1.14"))){
+                    sender.sendMessage(color(prefix + " " + LangLoader.LangCfg.getString("Error-message.1").replaceAll("%version%", plugin.minecraftVersion)));
+                    sender.sendMessage(color(prefix + " " + LangLoader.LangCfg.getString("Error-message.2")));
+                }
+                
             }else{
                 String noperm2 = color(LangLoader.LangCfg.getString("NoPermission"));
                 sender.sendMessage (noperm2);
@@ -478,17 +507,26 @@ public class CommandManager
                     int rady = Integer.parseInt(args[2]);
                     int radz = Integer.parseInt(args[3]);
                     int blocks = Integer.parseInt(args[4]);
-                    int floating_blocks;
-                    if(args[5].equals("true")){
-                        floating_blocks = 1;
-                    }else{
-                        floating_blocks = 0;
+                    boolean floating_blocks;
+                    switch (args[5]) {
+                    case "true":
+                        floating_blocks = true;
+                        break;
+                    case "false":
+                        floating_blocks = false;
+                        break;
+                    default:
+                        floating_blocks = false;
+                        break;
                     }
+                    
                     
                     String placeblocks = color(LangLoader.LangCfg.getString("PlacingBlocks"));
                     sender.sendMessage(placeblocks);
                     
-                    RandomBlocks rb = new RandomBlocks(radx,rady,radz,blocks,floating_blocks,player);
+                    boolean isPlayer = sender instanceof Player;
+                    
+                    RandomBlocks rb = new RandomBlocks(radx,rady,radz,blocks,floating_blocks,player,isPlayer);
                     rb.generateRandomBlocks();
                 }else{
                     String noperm = color(LangLoader.LangCfg.getString("NoPermission"));

@@ -43,6 +43,8 @@ public class regenWand
     String regenName = color(LangLoader.LangCfg.getString("Wands.Regen.name"));
     int rw = CLBManager.getManager().getConfig().getInt("Wands.Regen.cooldown-time");
     ItemStack stack = player.getItemInHand();
+    int effectTime = CLBManager.getManager().getConfig().getInt("Wands.Regen.effect-time");
+    effectTime *= 20; //effectTime = effectTime * 20
     if (((action.equals(Action.RIGHT_CLICK_AIR)) || (action.equals(Action.RIGHT_CLICK_BLOCK))) && 
       (player.getItemInHand().getType() == Material.valueOf("RECORD_8")))
     {
@@ -98,7 +100,7 @@ public class regenWand
             }  
             
           regencooldown.put(player.getUniqueId(), Long.valueOf(System.currentTimeMillis() + rw * 1000));
-          player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 220, 0));
+          player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, effectTime ,0));
         }
       }
     }

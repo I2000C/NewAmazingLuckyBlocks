@@ -4,6 +4,8 @@ Worlds-list:
 Wands:
   Regen:
     cooldown-time: 20
+    #The time must be in seconds
+    effect-time: 10
     required-permission: false
     permission: amazinglb.wands.regenwand
     limited-uses:
@@ -18,6 +20,8 @@ Wands:
         uses: 5
   Invisibility:
     cooldown-time: 20
+    #The time must be in seconds
+    effect-time: 10
     required-permission: false
     permission: amazinglb.wands.invwand
     limited-uses:
@@ -61,6 +65,9 @@ Objects:
     #The time must be in ticks. 1 second = 20 ticks
     time-between-one-block-and-the-next: 5
     block-material: BUCKET
+    block-stop-mode:
+        enable: false
+        block: BEDROCK
     required-permission: false
     permission: amazinglb.objets.darkhole
   MiniVolcano:
@@ -86,4 +93,17 @@ Commands:
 Update-checker: true
 LuckyBlock:
     Name: '&6&lLuckyBlock'
+    Lore:
+        - '&3This is a lucky block'
+        - '&bEnjoy it'
     Material: 'SPONGE'
+    HeadMode:
+        enable: false
+        skull-ID: 22751
+    Permissions:
+        break:
+            enable: false
+            permission: 'amazinglb.lucky_block.break'
+        place:
+            enable: false
+            permission: 'amazinglb.lucky_block.place'
