@@ -11,13 +11,12 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,13 +25,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.i2000c.newalb.utils.WorldList;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class SlimeWand implements Listener{
+public class SlimeWand extends SpecialItem{
     private final HashMap<UUID, Long> slimecooldown = new HashMap();
     
     @EventHandler
     public void playerInteraction(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
+        
+        ItemStack wand = getItem();
         String slimeName = wand.getItemMeta().getDisplayName();
         
         if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
@@ -101,14 +102,9 @@ public class SlimeWand implements Listener{
             }
         }
     }
-  
-    private static ItemStack wand;
     
-    public static ItemStack getWand(){
-        return wand.clone();
-    }
-  
-    public static void loadWand(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = XMaterial.MUSIC_DISC_CHIRP.parseItem();
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Wands.Slime.name")));
@@ -121,6 +117,6 @@ public class SlimeWand implements Listener{
         }
         stack.setItemMeta(meta);
         
-        wand = stack;
+        return stack;
     }
 }

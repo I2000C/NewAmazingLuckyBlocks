@@ -13,13 +13,13 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,14 +31,16 @@ import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class ShieldWand implements Listener{
+public class ShieldWand extends SpecialItem{
     private final HashMap<UUID, Long> shieldcooldown = new HashMap<>();
-    private static ItemStack shieldItemStack;
+    private ItemStack shieldItemStack;
     
     @EventHandler
     public void playerInteraction(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
+        
+        ItemStack wand = getItem();
         String shieldName = wand.getItemMeta().getDisplayName();
 
         if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
@@ -157,14 +159,9 @@ public class ShieldWand implements Listener{
         }
         return circleBlocks;     
     }
-  
-    private static ItemStack wand;
     
-    public static ItemStack getWand(){
-        return wand.clone();
-    }
-  
-    public static void loadWand(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = XMaterial.MUSIC_DISC_STRAD.parseItem();
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Wands.Shield.name")));
@@ -177,12 +174,12 @@ public class ShieldWand implements Listener{
         }
         stack.setItemMeta(meta);
         
-        wand = stack;
-        
         try{
             shieldItemStack = OtherUtils.parseMaterial(ConfigManager.getConfig().getString("Wands.Shield.ShieldWandBlock"));
         }catch(Exception ex){
             Logger.log(Logger.color("&cInvalid block in config at Wands.Shield.ShieldWandBlock"));
-        }        
+        }
+        
+        return stack;
     }
 }

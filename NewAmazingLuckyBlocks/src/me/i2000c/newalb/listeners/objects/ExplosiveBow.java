@@ -4,13 +4,13 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.enchantments.Enchantment;
@@ -19,7 +19,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 
-public class ExplosiveBow implements Listener{
+public class ExplosiveBow extends SpecialItem{
     private static final String TAG = "explosive_bow";
     
     @EventHandler
@@ -43,6 +43,7 @@ public class ExplosiveBow implements Listener{
             if(item != null && item.hasItemMeta()){
                 ItemMeta meta = item.getItemMeta();
                 if(meta.hasDisplayName()){
+                    ItemStack object = getItem();
                     String name = object.getItemMeta().getDisplayName();
                     if(item.getType().equals(Material.BOW) && meta.getDisplayName().equalsIgnoreCase(name)){                        
                         if(OtherUtils.checkPermission(shooter, "Objects.ExplosiveBow")){
@@ -55,13 +56,8 @@ public class ExplosiveBow implements Listener{
         }
     }
     
-    private static ItemStack object;
-    
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.BOW);
         
         ItemMeta meta = stack.getItemMeta();
@@ -69,6 +65,6 @@ public class ExplosiveBow implements Listener{
         meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }

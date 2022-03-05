@@ -5,25 +5,24 @@ import java.util.UUID;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
-import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class LuckyTool implements Listener{
+public class LuckyTool extends SpecialItem{
     private final HashMap<UUID, Long> luckyToolCooldown = new HashMap();
     
     @EventHandler
@@ -39,6 +38,7 @@ public class LuckyTool implements Listener{
         
         ItemStack stack = player.getItemInHand();
         if((action.equals(Action.RIGHT_CLICK_BLOCK))){
+            ItemStack object = getItem();
             if(!OtherUtils.checkItemStack(object, stack)){
                 return;
             }
@@ -87,20 +87,14 @@ public class LuckyTool implements Listener{
         }
     }
     
-    
-    private static ItemStack object;
-    
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.STICK);
         
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.LuckyTool.name")));
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }

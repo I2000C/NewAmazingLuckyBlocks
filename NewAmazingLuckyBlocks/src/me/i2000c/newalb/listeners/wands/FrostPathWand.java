@@ -11,13 +11,12 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils.Timer;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -27,13 +26,15 @@ import me.i2000c.newalb.utils.WorldList;
 import org.bukkit.Sound;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class FrostPathWand implements Listener{
+public class FrostPathWand extends SpecialItem{
     private final HashMap<UUID, Long> frostcooldown = new HashMap();
     
     @EventHandler
     public void playerInteraction(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
+        
+        ItemStack wand = getItem();
         String frostName = wand.getItemMeta().getDisplayName();
     
         if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
@@ -120,13 +121,8 @@ public class FrostPathWand implements Listener{
         }
     }
     
-    private static ItemStack wand;
-    
-    public static ItemStack getWand(){
-        return wand.clone();
-    }
-  
-    public static void loadWand(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = XMaterial.MUSIC_DISC_WAIT.parseItem();        
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Wands.Frost.name")));
@@ -139,6 +135,6 @@ public class FrostPathWand implements Listener{
         }
         stack.setItemMeta(meta);
         
-        wand = stack;
+        return stack;
     }
 }

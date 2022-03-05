@@ -68,7 +68,8 @@ public class BlockProtect implements Listener{
         if(sk0.getType() == Material.AIR || sk1.getType() == Material.AIR || sk2.getType() == Material.AIR){
             return;
         }
-        if(OtherUtils.checkItemStack(sk0, AutoBow.getObject()) || OtherUtils.checkItemStack(sk0, MultiBow.getObject())){
+        if(OtherUtils.checkItemStack(sk0, SpecialItemManager.getSpecialItem("auto_bow").getItem()) || 
+                OtherUtils.checkItemStack(sk0, SpecialItemManager.getSpecialItem("multi_bow").getItem())){
             ItemMeta meta = sk2.getItemMeta();
             meta.setDisplayName(sk0.getItemMeta().getDisplayName());
             sk2.setItemMeta(meta);

@@ -4,6 +4,7 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
@@ -13,7 +14,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -21,12 +21,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
-public class HotPotato implements Listener{
+public class HotPotato extends SpecialItem{
     private static final String TAG = "hot_potato";
     
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        ItemStack object = getItem();
         if(!OtherUtils.checkItemStack(object, e.getItem())){
             return;
         }
@@ -49,7 +50,7 @@ public class HotPotato implements Listener{
             }
             
             Location loc = e.getPlayer().getEyeLocation();
-            Item item = loc.getWorld().dropItem(loc, getObject());
+            Item item = loc.getWorld().dropItem(loc, object);
             item.setMetadata(TAG, new FixedMetadataValue(NewAmazingLuckyBlocks.getInstance(), NewAmazingLuckyBlocks.getInstance()));
             item.setVelocity(e.getPlayer().getLocation().getDirection());
             
@@ -77,14 +78,9 @@ public class HotPotato implements Listener{
         }
 //</editor-fold>
     }
-    
-    private static ItemStack object;
-    
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+        
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.BAKED_POTATO);
         
         ItemMeta meta = stack.getItemMeta();
@@ -92,6 +88,6 @@ public class HotPotato implements Listener{
         meta.addEnchant(Enchantment.FIRE_ASPECT, 1, true);
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }

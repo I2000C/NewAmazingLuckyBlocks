@@ -10,6 +10,7 @@ import me.i2000c.newalb.utils.WorldList;
 import java.util.HashMap;
 import java.util.UUID;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.utils.SpecialItem;
 import net.ArtlieX.Utilities.XSound;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,7 +18,6 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
-public class EndermanSoup implements Listener{
+public class EndermanSoup extends SpecialItem{
     
     private final HashMap<UUID, Long> cooldown = new HashMap();
     
@@ -40,6 +40,7 @@ public class EndermanSoup implements Listener{
             }
         }
         
+        ItemStack object = getItem();
         ItemStack stack = player.getItemInHand();
         if((action.equals(Action.RIGHT_CLICK_AIR))){
             if(!OtherUtils.checkItemStack(object, stack)){
@@ -94,19 +95,14 @@ public class EndermanSoup implements Listener{
         }
     }
     
-    private static ItemStack object;
-    
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.RABBIT_STEW);
         
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.EndermanSoup.name")));
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }

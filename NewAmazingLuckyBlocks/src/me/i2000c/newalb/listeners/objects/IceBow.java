@@ -4,6 +4,7 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils.Timer;
 import org.bukkit.Location;
@@ -12,7 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,7 +27,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 
-public class IceBow implements Listener{
+public class IceBow extends SpecialItem{
     private static final String TAG = "ice_bow";
     
     @EventHandler
@@ -98,6 +98,7 @@ public class IceBow implements Listener{
             if(item != null && item.hasItemMeta()){
                 ItemMeta meta = item.getItemMeta();
                 if(meta.hasDisplayName()){
+                    ItemStack object = getItem();
                     String name = object.getItemMeta().getDisplayName();
                     if(item.getType().equals(Material.BOW) && meta.getDisplayName().equalsIgnoreCase(name)){                        
                         if(OtherUtils.checkPermission(shooter, "Objects.IceBow")){
@@ -151,13 +152,8 @@ public class IceBow implements Listener{
 //</editor-fold>
     }
     
-    private static ItemStack object;
-    
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.BOW);
         
         ItemMeta meta = stack.getItemMeta();
@@ -165,6 +161,6 @@ public class IceBow implements Listener{
         meta.addEnchant(Enchantment.DURABILITY, 5, true);
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }

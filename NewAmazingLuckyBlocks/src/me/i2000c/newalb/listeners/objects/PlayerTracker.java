@@ -9,12 +9,12 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -27,13 +27,15 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import org.bukkit.GameMode;
 
-public class PlayerTracker implements Listener{
+public class PlayerTracker extends SpecialItem{
     private final HashMap<UUID, Long> trackercooldown = new HashMap();
     
     @EventHandler
     public void playerInteraction(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
+        
+        ItemStack object = getItem();
         String trackerName = object.getItemMeta().getDisplayName();
     
         if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
@@ -128,20 +130,15 @@ public class PlayerTracker implements Listener{
             }
         }
     }
-  
-    private static ItemStack object;
     
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.COMPASS);
         
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.PlayerTracker.name")));
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }

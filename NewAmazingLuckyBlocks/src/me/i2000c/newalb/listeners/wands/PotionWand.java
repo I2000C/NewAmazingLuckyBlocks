@@ -13,12 +13,12 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.Logger.LogLevel;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils.WorldList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -32,13 +32,15 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class PotionWand implements Listener{   
+public class PotionWand extends SpecialItem{   
     private final HashMap<UUID, Long> potioncooldown = new HashMap();
     
     @EventHandler
     public void playerInteraction(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
+        
+        ItemStack wand = getItem();
         String potionName = wand.getItemMeta().getDisplayName();  
 
         if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
@@ -162,13 +164,8 @@ public class PotionWand implements Listener{
         return pm;
     }
     
-    private static ItemStack wand;
-    
-    public static ItemStack getWand(){
-        return wand.clone();
-    }
-  
-    public static void loadWand(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = XMaterial.MUSIC_DISC_11.parseItem();
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Wands.Potion.name")));
@@ -181,6 +178,6 @@ public class PotionWand implements Listener{
         }
         stack.setItemMeta(meta);
         
-        wand = stack;
+        return stack;
     }
 }

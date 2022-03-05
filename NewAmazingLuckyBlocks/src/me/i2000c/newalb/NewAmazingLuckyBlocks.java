@@ -53,6 +53,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
 import me.i2000c.newalb.utils.LocationManager;
+import me.i2000c.newalb.utils.SpecialItemManager;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.plugin.Plugin;
 
@@ -99,9 +100,6 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         Task.initializeTaskManager(this);
         
-        loadWands();
-        loadObjects();
-        
         registerEvents();
         getCommand("alb").setExecutor(new CommandManager(this));
         getCommand("nalb").setExecutor(new CommandManager(this));    
@@ -120,7 +118,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         Logger.log(LangLoader.getMessages().getString("Enable.line2").replace("%prefix%", ""));
     }
     
-    public void loadWands(){
+    /*public void loadWands(){
         FireWand.loadWand();
         FrostPathWand.loadWand();
         InvWand.loadWand();
@@ -147,34 +145,11 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         HookBow.loadObject();
         
         LuckyTool.loadObject();
-    }
+    }*/
     
     private void registerEvents(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         PluginManager pm = getServer().getPluginManager();
-        
-        pm.registerEvents(new RegenWand(), this);
-        pm.registerEvents(new FireWand(), this);
-        pm.registerEvents(new InvWand(), this);
-        pm.registerEvents(new TntWand(), this);
-        pm.registerEvents(new SlimeWand(), this);
-        pm.registerEvents(new LightningWand(), this);
-        pm.registerEvents(new ShieldWand(), this);
-        pm.registerEvents(new PotionWand(), this);
-        pm.registerEvents(new FrostPathWand(), this);
-        
-        pm.registerEvents(new DarkHole(instance), this);
-        pm.registerEvents(new MiniVolcano(instance), this);
-        pm.registerEvents(new IceBow(), this);
-        pm.registerEvents(new PlayerTracker(), this);
-        pm.registerEvents(new EndermanSoup(), this);
-        pm.registerEvents(new HotPotato(), this);
-        
-        pm.registerEvents(new AutoBow(), this);
-        pm.registerEvents(new MultiBow(), this);
-        pm.registerEvents(new ExplosiveBow(), this);
-        pm.registerEvents(new HomingBow(), this);
-        pm.registerEvents(new HookBow(), this);
         
         pm.registerEvents(Timer.getTimer(), this);
         
@@ -190,9 +165,9 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         pm.registerEvents(new InventoryListener(), this);
         pm.registerEvents(new ChatListener(), this);
         
-        pm.registerEvents(new LuckyTool(), this);
-        
         pm.registerEvents(new TrapManager(), this);
+        
+        SpecialItemManager.loadSpecialItems(pm, this);
 //</editor-fold>
     }
     

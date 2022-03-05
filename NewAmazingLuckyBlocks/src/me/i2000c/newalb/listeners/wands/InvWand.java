@@ -11,11 +11,10 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,13 +25,15 @@ import org.bukkit.potion.PotionEffectType;
 import me.i2000c.newalb.utils.WorldList;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class InvWand implements Listener{
+public class InvWand extends SpecialItem{
     private final HashMap<UUID, Long> invcooldown = new HashMap();
     
     @EventHandler
     public void playerInteraction(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
+        
+        ItemStack wand = getItem();
         String invName = wand.getItemMeta().getDisplayName();
     
         if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
@@ -102,14 +103,9 @@ public class InvWand implements Listener{
             }
         }
     }
-  
-    private static ItemStack wand;
     
-    public static ItemStack getWand(){
-        return wand.clone();
-    }
-  
-    public static void loadWand(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = XMaterial.MUSIC_DISC_MELLOHI.parseItem();
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Wands.Invisibility.name")));
@@ -122,6 +118,6 @@ public class InvWand implements Listener{
         }
         stack.setItemMeta(meta);
         
-        wand = stack;
+        return stack;
     }
 }

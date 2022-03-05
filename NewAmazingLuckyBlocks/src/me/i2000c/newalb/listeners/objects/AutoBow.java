@@ -8,6 +8,7 @@ import me.i2000c.newalb.utils.WorldList;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.Task;
 import net.ArtlieX.Utilities.XSound;
 import org.bukkit.GameMode;
@@ -16,14 +17,12 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 
 import org.bukkit.entity.SpectralArrow;
@@ -31,7 +30,7 @@ import org.bukkit.entity.TippedArrow;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 
-public class AutoBow implements Listener{
+public class AutoBow extends SpecialItem{
     @EventHandler
     public void playerInteraction(PlayerInteractEvent e){
         Player player = e.getPlayer();
@@ -43,6 +42,7 @@ public class AutoBow implements Listener{
             }
         }
         
+        ItemStack object = getItem();
         ItemStack stack = player.getItemInHand();
         if(!OtherUtils.checkItemStack(stack, object)){
             return;
@@ -222,13 +222,8 @@ public class AutoBow implements Listener{
         
     }
     
-    private static ItemStack object;
-    
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.BOW, 1);
         
         ItemMeta meta = stack.getItemMeta();
@@ -236,6 +231,6 @@ public class AutoBow implements Listener{
         meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }

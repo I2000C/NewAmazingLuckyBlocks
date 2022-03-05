@@ -9,6 +9,7 @@ import me.i2000c.newalb.utils.WorldList;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.utils.SpecialItem;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,7 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.TippedArrow;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +28,8 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.util.Vector;
 
-public class MultiBow implements Listener{
+public class MultiBow extends SpecialItem{
+    
     @EventHandler
     public void onArrowShooted(EntityShootBowEvent e){
         if(!(e.getEntity() instanceof Player)){
@@ -36,6 +37,7 @@ public class MultiBow implements Listener{
         }
         Player player = (Player) e.getEntity();
         
+        ItemStack object = getItem();
         ItemStack stack = player.getItemInHand();
         if(!OtherUtils.checkItemStack(stack, object)){
             return;
@@ -260,13 +262,8 @@ public class MultiBow implements Listener{
         return arrow;
     }
     
-    private static ItemStack object;
-    
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.BOW, 1);
         
         ItemMeta meta = stack.getItemMeta();
@@ -274,7 +271,7 @@ public class MultiBow implements Listener{
         meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }
 

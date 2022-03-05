@@ -7,6 +7,7 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.OtherUtils;
@@ -14,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.enchantments.Enchantment;
@@ -34,7 +34,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-public class HookBow implements Listener{
+public class HookBow extends SpecialItem{
     private static final String TAG = "hook_bow";
     
     private static final HashMap<Player, HookData> players = new HashMap<>();
@@ -267,6 +267,7 @@ public class HookBow implements Listener{
             if(item != null && item.hasItemMeta()){
                 ItemMeta meta = item.getItemMeta();
                 if(meta.hasDisplayName()){
+                    ItemStack object = getItem();
                     String name = object.getItemMeta().getDisplayName();
                     if(item.getType().equals(Material.BOW) && meta.getDisplayName().equals(name)){
                         if(OtherUtils.checkPermission(shooter, "Objects.HookBow")){
@@ -378,6 +379,7 @@ public class HookBow implements Listener{
             return;
         }
         
+        ItemStack object = getItem();
         if(!OtherUtils.checkItemStack(object, e.getItem())){
             return;
         }
@@ -480,13 +482,8 @@ public class HookBow implements Listener{
         }
     }
     
-    private static ItemStack object;
-    
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.BOW);
         
         ItemMeta meta = stack.getItemMeta();
@@ -494,6 +491,6 @@ public class HookBow implements Listener{
         meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }

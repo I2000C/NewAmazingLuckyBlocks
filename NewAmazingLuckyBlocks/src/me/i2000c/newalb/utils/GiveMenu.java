@@ -5,27 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import me.i2000c.newalb.listeners.objects.AutoBow;
-import me.i2000c.newalb.listeners.objects.DarkHole;
-import me.i2000c.newalb.listeners.objects.EndermanSoup;
-import me.i2000c.newalb.listeners.objects.ExplosiveBow;
-import me.i2000c.newalb.listeners.objects.HomingBow;
-import me.i2000c.newalb.listeners.objects.HookBow;
-import me.i2000c.newalb.listeners.objects.HotPotato;
-import me.i2000c.newalb.listeners.objects.IceBow;
-import me.i2000c.newalb.listeners.objects.LuckyTool;
-import me.i2000c.newalb.listeners.objects.MiniVolcano;
-import me.i2000c.newalb.listeners.objects.MultiBow;
-import me.i2000c.newalb.listeners.objects.PlayerTracker;
-import me.i2000c.newalb.listeners.wands.FireWand;
-import me.i2000c.newalb.listeners.wands.FrostPathWand;
-import me.i2000c.newalb.listeners.wands.InvWand;
-import me.i2000c.newalb.listeners.wands.LightningWand;
-import me.i2000c.newalb.listeners.wands.PotionWand;
-import me.i2000c.newalb.listeners.wands.RegenWand;
-import me.i2000c.newalb.listeners.wands.ShieldWand;
-import me.i2000c.newalb.listeners.wands.SlimeWand;
-import me.i2000c.newalb.listeners.wands.TntWand;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
@@ -85,7 +64,7 @@ public class GiveMenu{
         meta.setLore(null);
         luckyBlocks.setItemMeta(meta);
         
-        ItemStack luckyTool = LuckyTool.getObject();
+        ItemStack luckyTool = SpecialItemManager.getLuckyTool().getItem();
         meta = luckyTool.getItemMeta();
         meta.setDisplayName(Logger.color("&eGive the LuckyTool"));
         meta.setLore(null);
@@ -127,7 +106,7 @@ public class GiveMenu{
                     break;
                 case 3:
                     if(target != null){
-                        target.getInventory().addItem(LuckyTool.getObject());
+                        target.getInventory().addItem(SpecialItemManager.getLuckyTool().getItem());
                     }
                     break;
                 case 8:
@@ -255,15 +234,10 @@ public class GiveMenu{
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.WANDS_MENU, 27, "&aGive Wands");
         
-        inv.setItem(0, RegenWand.getWand());
-        inv.setItem(1, InvWand.getWand());
-        inv.setItem(2, TntWand.getWand());
-        inv.setItem(3, SlimeWand.getWand());
-        inv.setItem(4, FireWand.getWand());
-        inv.setItem(5, LightningWand.getWand());
-        inv.setItem(6, ShieldWand.getWand());
-        inv.setItem(7, PotionWand.getWand());
-        inv.setItem(8, FrostPathWand.getWand());
+        List<SpecialItem> wandsList = SpecialItemManager.getWands();
+        for(int i=0; i<wandsList.size() && i<16; i++){
+            inv.setItem(i, wandsList.get(i).getItem());
+        }
         
         inv.setItem(18, playerItem);
         
@@ -325,41 +299,12 @@ public class GiveMenu{
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.OBJECTS_MENU, 27, "&bGive Objects");
         
-        ItemStack stack0 = DarkHole.getObject();
-        ItemStack stack1 = MiniVolcano.getObject();
-        ItemStack stack2 = PlayerTracker.getObject();
-        ItemStack stack3 = EndermanSoup.getObject();
-        ItemStack stack4 = IceBow.getObject();
-        ItemStack stack5 = AutoBow.getObject();
-        ItemStack stack6 = MultiBow.getObject();
-        ItemStack stack7 = ExplosiveBow.getObject();
-        ItemStack stack8 = HomingBow.getObject();
-        ItemStack stack9 = HookBow.getObject();
-        ItemStack stack10 = HotPotato.getObject();
-        stack0.setAmount(amount);
-        stack1.setAmount(amount);
-        stack2.setAmount(amount);
-        stack3.setAmount(amount);
-        stack4.setAmount(amount);
-        stack5.setAmount(amount);
-        stack6.setAmount(amount);
-        stack7.setAmount(amount);
-        stack8.setAmount(amount);
-        stack9.setAmount(amount);
-        stack10.setAmount(amount);
-        
-        
-        inv.setItem(0, stack0);
-        inv.setItem(1, stack1);
-        inv.setItem(2, stack2);
-        inv.setItem(3, stack3);
-        inv.setItem(4, stack4);
-        inv.setItem(5, stack5);
-        inv.setItem(6, stack6);
-        inv.setItem(7, stack7);
-        inv.setItem(8, stack8);
-        inv.setItem(9, stack9);
-        inv.setItem(10, stack10);
+        List<SpecialItem> objectsList = SpecialItemManager.getObjects();
+        for(int i=0; i<objectsList.size() && i<16; i++){
+            ItemStack stack = objectsList.get(i).getItem();
+            stack.setAmount(amount);
+            inv.setItem(i, stack);
+        }
         
         inv.setItem(18, playerItem);
         

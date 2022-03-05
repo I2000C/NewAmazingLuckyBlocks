@@ -1,7 +1,6 @@
 package me.i2000c.newalb;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,15 +17,6 @@ import me.i2000c.newalb.listeners.objects.LuckyTool;
 import me.i2000c.newalb.listeners.objects.MiniVolcano;
 import me.i2000c.newalb.listeners.objects.MultiBow;
 import me.i2000c.newalb.listeners.objects.PlayerTracker;
-import me.i2000c.newalb.listeners.wands.FireWand;
-import me.i2000c.newalb.listeners.wands.FrostPathWand;
-import me.i2000c.newalb.listeners.wands.InvWand;
-import me.i2000c.newalb.listeners.wands.LightningWand;
-import me.i2000c.newalb.listeners.wands.PotionWand;
-import me.i2000c.newalb.listeners.wands.RegenWand;
-import me.i2000c.newalb.listeners.wands.ShieldWand;
-import me.i2000c.newalb.listeners.wands.SlimeWand;
-import me.i2000c.newalb.listeners.wands.TntWand;
 import me.i2000c.newalb.custom_outcomes.menus.GUIManager;
 import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
 import me.i2000c.newalb.custom_outcomes.menus.GUIPackManager;
@@ -39,6 +29,8 @@ import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.RandomBlocks;
+import me.i2000c.newalb.utils.SpecialItem;
+import me.i2000c.newalb.utils.SpecialItemManager;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils.WorldMenu;
 import me.i2000c.newalb.utils2.Schematic;
@@ -50,7 +42,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 public class CommandManager implements CommandExecutor, TabCompleter{
     private final NewAmazingLuckyBlocks plugin;
@@ -216,15 +207,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                             }
                             p = (Player) sender;
                         }
-                        p.getInventory().addItem(RegenWand.getWand());
-                        p.getInventory().addItem(InvWand.getWand());
-                        p.getInventory().addItem(TntWand.getWand());
-                        p.getInventory().addItem(SlimeWand.getWand());
-                        p.getInventory().addItem(FireWand.getWand());
-                        p.getInventory().addItem(LightningWand.getWand());
-                        p.getInventory().addItem(ShieldWand.getWand());
-                        p.getInventory().addItem(PotionWand.getWand());
-                        p.getInventory().addItem(FrostPathWand.getWand());
+                        
+                        SpecialItemManager.getWands().forEach(wand -> p.getInventory().addItem(wand.getItem()));
                         
                         String loadwands = Logger.color(LangLoader.getMessages().getString("LoadingWands"));
                         sender.sendMessage(loadwands);
@@ -286,40 +270,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                             return false;
                     }
                     
-                    ItemStack stack0 = DarkHole.getObject();
-                    ItemStack stack1 = MiniVolcano.getObject();
-                    ItemStack stack2 = PlayerTracker.getObject();
-                    ItemStack stack3 = EndermanSoup.getObject();
-                    ItemStack stack4 = IceBow.getObject();
-                    ItemStack stack5 = AutoBow.getObject();
-                    ItemStack stack6 = MultiBow.getObject();
-                    ItemStack stack7 = ExplosiveBow.getObject();
-                    ItemStack stack8 = HomingBow.getObject();
-                    ItemStack stack9 = HookBow.getObject();
-                    ItemStack stack10 = HotPotato.getObject();
-                    stack0.setAmount(amount);
-                    stack1.setAmount(amount);
-                    stack2.setAmount(amount);
-                    stack3.setAmount(amount);
-                    stack4.setAmount(amount);
-                    stack5.setAmount(amount);
-                    stack6.setAmount(amount);
-                    stack7.setAmount(amount);
-                    stack8.setAmount(amount);
-                    stack9.setAmount(amount);
-                    stack10.setAmount(amount);
-                    
-                    p.getInventory().addItem(stack0);
-                    p.getInventory().addItem(stack1);
-                    p.getInventory().addItem(stack2);
-                    p.getInventory().addItem(stack3);
-                    p.getInventory().addItem(stack4);
-                    p.getInventory().addItem(stack5);
-                    p.getInventory().addItem(stack6);
-                    p.getInventory().addItem(stack7);
-                    p.getInventory().addItem(stack8);
-                    p.getInventory().addItem(stack9);
-                    p.getInventory().addItem(stack10);
+                    for(SpecialItem object : SpecialItemManager.getObjects()){
+                        ItemStack stack = object.getItem();
+                        stack.setAmount(amount);
+                        p.getInventory().addItem(stack);
+                    }
                     
                     String loadobjects = Logger.color(LangLoader.getMessages().getString("LoadingObjects"));
                     sender.sendMessage(loadobjects);
@@ -411,7 +366,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                                       
                     String loadtool = Logger.color(LangLoader.getMessages().getString("LoadingLuckyTool"));                    
                     sender.sendMessage(loadtool);                    
-                    p.getInventory().addItem(LuckyTool.getObject());
+                    p.getInventory().addItem(SpecialItemManager.getLuckyTool().getItem());
                     return true;
                 }else{
                     sender.sendMessage(Logger.color(LangLoader.getMessages().getString("NoPermission")));
@@ -436,8 +391,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             
             WorldList.reloadAll();
             
-            NewAmazingLuckyBlocks.getInstance().loadWands();
-            NewAmazingLuckyBlocks.getInstance().loadObjects();
+            SpecialItemManager.reloadSpecialItems();
             
             PackManager.getManager().loadPacks();
             TrapManager.loadTraps();

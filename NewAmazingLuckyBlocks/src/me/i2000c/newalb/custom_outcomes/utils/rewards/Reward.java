@@ -3,7 +3,6 @@ package me.i2000c.newalb.custom_outcomes.utils.rewards;
 import me.i2000c.newalb.custom_outcomes.utils.Displayable;
 import me.i2000c.newalb.custom_outcomes.utils.Executable;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 

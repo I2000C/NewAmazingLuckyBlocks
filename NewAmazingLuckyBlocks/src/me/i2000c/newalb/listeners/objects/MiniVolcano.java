@@ -4,12 +4,12 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,17 +19,14 @@ import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils.Timer;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class MiniVolcano implements Listener{
-    private final NewAmazingLuckyBlocks plugin;
-  
-    public MiniVolcano(NewAmazingLuckyBlocks plugin){
-        this.plugin = plugin;
-    }
-  
+public class MiniVolcano extends SpecialItem{
+    
     @EventHandler
     public void playerInteraction(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
+        
+        ItemStack object = getItem();
         String miniVName = object.getItemMeta().getDisplayName();
 
         if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
@@ -66,19 +63,14 @@ public class MiniVolcano implements Listener{
         }
     }
     
-    private static ItemStack object;
-    
-    public static ItemStack getObject(){
-        return object.clone();
-    }
-    
-    public static void loadObject(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = new ItemStack(Material.LAVA_BUCKET);
         
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.MiniVolcano.name")));
         stack.setItemMeta(meta);
         
-        object = stack;
+        return stack;
     }
 }

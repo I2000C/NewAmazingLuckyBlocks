@@ -30,6 +30,8 @@ import me.i2000c.newalb.listeners.objects.HotPotato;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
+import me.i2000c.newalb.utils.SpecialItem;
+import me.i2000c.newalb.utils.SpecialItemManager;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -216,120 +218,19 @@ public class ItemReward extends Reward{
 //</editor-fold>
     }
     
-    private static enum SpecialName{
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        regen_wand,
-        inv_wand,
-        tnt_wand,
-        slime_wand,
-        fire_wand,
-        lightning_wand,
-        shield_wand,
-        potion_wand,
-        frost_path_wand,
-        
-        dark_hole,
-        mini_volcano,
-        player_tracker,
-        enderman_soup,
-        hot_potato,
-        ice_bow,
-        auto_bow,
-        multi_bow,
-        explosive_bow,
-        homing_bow,
-        hook_bow;
-        
-        public static SpecialName fromString(String str){
-            try{
-                return SpecialName.valueOf(str.replace("%", ""));
-            }catch(IllegalArgumentException ex){
-                return null;
-            }
-        }
-//</editor-fold>
-    }
-    
     @Override
     public void execute(Player player, Location location){
         ItemStack stack;
         if(this.item.hasItemMeta() && this.item.getItemMeta().hasDisplayName()){
-            //<editor-fold defaultstate="collapsed" desc="Code">
             String name = Logger.stripColor(this.item.getItemMeta().getDisplayName());
-            SpecialName sn = SpecialName.fromString(name);
-            if(sn == null){
+            SpecialItem specialItem = SpecialItemManager.getSpecialItem(name);
+            if(specialItem != null){
+                stack = specialItem.getItem();
+            }else{
                 stack = this.item;
-            }else switch(sn){
-                //Wands
-                case regen_wand:
-                    stack = RegenWand.getWand();
-                    break;
-                case inv_wand:
-                    stack = InvWand.getWand();
-                    break;
-                case tnt_wand:
-                    stack = TntWand.getWand();
-                    break;
-                case slime_wand:
-                    stack = SlimeWand.getWand();
-                    break;
-                case fire_wand:
-                    stack = FireWand.getWand();
-                    break;
-                case lightning_wand:
-                    stack = LightningWand.getWand();
-                    break;
-                case shield_wand:
-                    stack = ShieldWand.getWand();
-                    break;
-                case potion_wand:
-                    stack = PotionWand.getWand();
-                    break;
-                case frost_path_wand:
-                    stack = FrostPathWand.getWand();
-                    break;
-
-
-                    //Objects
-                case dark_hole:
-                    stack = DarkHole.getObject();
-                    break;
-                case mini_volcano:
-                    stack = MiniVolcano.getObject();
-                    break;
-                case player_tracker:
-                    stack = PlayerTracker.getObject();
-                    break;
-                case enderman_soup:
-                    stack = EndermanSoup.getObject();
-                    break;
-                case hot_potato:
-                    stack = HotPotato.getObject();
-                    break;
-                case ice_bow:
-                    stack = IceBow.getObject();
-                    break;
-                case auto_bow:
-                    stack = AutoBow.getObject();
-                    break;
-                case multi_bow:
-                    stack = MultiBow.getObject();
-                    break;
-                case explosive_bow:
-                    stack = ExplosiveBow.getObject();
-                    break;
-                case homing_bow:
-                    stack = HomingBow.getObject();
-                    break;
-                case hook_bow:
-                    stack = HookBow.getObject();
-                    break;
-                default:
-                    stack = this.item;
             }
         }else{
             stack = this.item;
-//</editor-fold>
         }
         
         if(stack != this.item){

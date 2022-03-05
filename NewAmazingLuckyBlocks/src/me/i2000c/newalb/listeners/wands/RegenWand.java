@@ -11,11 +11,10 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,14 +25,14 @@ import org.bukkit.potion.PotionEffectType;
 import me.i2000c.newalb.utils.WorldList;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class RegenWand implements Listener{
+public class RegenWand extends SpecialItem{
     public static HashMap<UUID, Long> regencooldown = new HashMap();
     
     @EventHandler
     public void playerInteraction(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
-        String regenName = wand.getItemMeta().getDisplayName();
+        String regenName = getItem().getItemMeta().getDisplayName();
         
         if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
             if(e.getHand() == EquipmentSlot.OFF_HAND){
@@ -41,6 +40,7 @@ public class RegenWand implements Listener{
             }
         }
         
+        ItemStack wand = getItem();
         ItemStack stack = player.getItemInHand();
         int rw = ConfigManager.getConfig().getInt("Wands.Regen.cooldown-time");
         int effectTime = ConfigManager.getConfig().getInt("Wands.Regen.effect-time");
@@ -102,14 +102,9 @@ public class RegenWand implements Listener{
             }
         }
     }
-  
-    private static ItemStack wand;
     
-    public static ItemStack getWand(){
-        return wand.clone();
-    }
-  
-    public static void loadWand(){
+    @Override
+    public ItemStack buildItem(){
         ItemStack stack = XMaterial.MUSIC_DISC_STAL.parseItem();
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Wands.Regen.name")));
@@ -122,6 +117,6 @@ public class RegenWand implements Listener{
         }
         stack.setItemMeta(meta);
         
-        wand = stack;
+        return stack;
     }
 }
