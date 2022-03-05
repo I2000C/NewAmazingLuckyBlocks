@@ -1,3 +1,3 @@
 # NewAmazingLuckyBlocks
 
-A new Lucky Blocks plugin based in RewKun Amazing Lucky Blocks plugin
+A new Lucky Blocks plugin in which you can create your own outcomes

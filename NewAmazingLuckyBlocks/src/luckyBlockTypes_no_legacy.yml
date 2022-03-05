@@ -1,0 +1,69 @@
+GlobalPermissions:
+    break:
+        enable: false
+        permission: 'amazinglb.lucky_block.global.break'
+    place:
+        enable: false
+        permission: 'amazinglb.lucky_block.global.place'
+LuckyBlockTypes:
+    default:
+        name: '&6&lLuckyBlock'
+        lore:
+            - '&3This is a lucky block'
+            - '&bEnjoy it'
+        material: 'SPONGE'
+        textureID: ''
+        permissions:
+            break:
+                enable: false
+                permission: 'amazinglb.lucky_block.default.break'
+            place:
+                enable: false
+                permission: 'amazinglb.lucky_block.default.place'
+        crafting:
+            - "SPONGE SPONGE SPONGE"
+            - "SPONGE AIR SPONGE"
+            - "SPONGE SPONGE SPONGE"
+        outcome_packs:
+            - default_pack.yml;100
+    default2:
+        name: '&6&lLuckyBlock'
+        lore:
+            - '&3This is a lucky block'
+            - '&bEnjoy it'
+        material: ''
+        textureID: '4b92cb43333aa621c70eef4ebf299ba412b446fe12e341ccc582f3192189'
+        permissions:
+            break:
+                enable: false
+                permission: 'amazinglb.lucky_block.default2.break'
+            place:
+                enable: false
+                permission: 'amazinglb.lucky_block.default2.place'
+        crafting:
+            - "SPONGE SPONGE SPONGE"
+            - "SPONGE WET_SPONGE SPONGE"
+            - "SPONGE SPONGE SPONGE"
+        outcome_packs:
+            - default_pack.yml;100
+    other:
+        name: '&3&lOther &6&lLuckyBlock'
+        lore:
+            - '&bThis is another lucky block'
+        material: ''
+        textureID: 'f1185615d5cc7c700eabcb7db097ed721d589fdfeef9f033336c26c988e4be46'
+        permissions:
+            break:
+                enable: false
+                permission: 'amazinglb.lucky_block.other.break'
+            place:
+                enable: false
+                permission: 'amazinglb.lucky_block.other.place'
+        crafting:
+            - "WET_SPONGE WET_SPONGE WET_SPONGE"
+            - "WET_SPONGE AIR WET_SPONGE"
+            - "WET_SPONGE WET_SPONGE WET_SPONGE"
+        outcome_packs:
+            - default_pack.yml;50
+            - example_pack.yml;50
+            

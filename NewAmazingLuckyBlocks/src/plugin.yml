@@ -1,0 +1,12 @@
+name: NewAmazingLuckyBlocks
+main: me.i2000c.newalb.NewAmazingLuckyBlocks
+version: 3.0.0_34
+description: A new incredible LuckyBlock plugin
+author: I2000C
+commands:
+   alb:
+        description: The main command of New Amazing Lucky Blocks.
+   nalb:
+        description: The main command of New Amazing Lucky Blocks.
+softdepend: [Multiverse-Core, UhcCore, USkyWars, WorldEdit, WorldMania]
+api-version: 1.13
