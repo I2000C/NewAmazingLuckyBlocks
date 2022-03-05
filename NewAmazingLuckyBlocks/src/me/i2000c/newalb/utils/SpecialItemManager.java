@@ -208,7 +208,11 @@ public class SpecialItemManager{
 
         public static SpecialItemName fromString(String str){
             try{
-                return SpecialItemName.valueOf(str.replace("%", ""));
+                if(str.charAt(0) == '%' && str.charAt(str.length() - 1) == '%'){
+                    return SpecialItemName.valueOf(str.substring(1, str.length()-1));
+                }else{
+                    return null;
+                }                    
             }catch(IllegalArgumentException ex){
                 return null;
             }
