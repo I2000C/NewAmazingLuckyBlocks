@@ -918,8 +918,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     if("objects".startsWith(args[1].toLowerCase())){
                         ls.add("objects");
                     }
-                    if("luckyblock".startsWith(args[1].toLowerCase())){
-                        ls.add("luckyblock");
+                    if("luckyblocks".startsWith(args[1].toLowerCase())){
+                        ls.add("luckyblocks");
                     }
                     if("luckytool".startsWith(args[1].toLowerCase())){
                         ls.add("luckytool");
