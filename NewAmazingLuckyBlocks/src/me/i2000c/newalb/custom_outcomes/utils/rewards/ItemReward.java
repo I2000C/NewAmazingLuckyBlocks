@@ -223,12 +223,16 @@ public class ItemReward extends Reward{
         ItemStack stack;
         if(this.item.hasItemMeta() && this.item.getItemMeta().hasDisplayName()){
             String name = Logger.stripColor(this.item.getItemMeta().getDisplayName());
-            SpecialItem specialItem = SpecialItemManager.getSpecialItem(name);
-            if(specialItem != null){
-                stack = specialItem.getItem();
+            if(name.charAt(0) == '%' && name.charAt(name.length() - 1) == '%'){
+                SpecialItem specialItem = SpecialItemManager.getSpecialItem(name);
+                if(specialItem != null){
+                    stack = specialItem.getItem();
+                }else{
+                    stack = this.item;
+                }
             }else{
                 stack = this.item;
-            }
+            }                
         }else{
             stack = this.item;
         }
