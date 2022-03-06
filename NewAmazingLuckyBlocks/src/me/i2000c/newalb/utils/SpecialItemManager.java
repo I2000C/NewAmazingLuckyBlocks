@@ -115,7 +115,7 @@ public class SpecialItemManager{
         
         //Load LuckyTool
         item = new LuckyTool();
-        specialItems.put(SpecialItemName.lucky_tool, item);
+        specialItems.put(SpecialItemName.luckytool, item);
         
         //Register all events and load all special items
         specialItems.values().forEach(specialItem -> {
@@ -158,7 +158,7 @@ public class SpecialItemManager{
     }
     
     public static SpecialItem getLuckyTool(){
-        return specialItems.get(SpecialItemName.lucky_tool);
+        return specialItems.get(SpecialItemName.luckytool);
     }
     
     public static List<String> getSpecialNames(){
@@ -194,7 +194,7 @@ public class SpecialItemManager{
         homing_bow(false),
         hook_bow(false),
         
-        lucky_tool(false);
+        luckytool(false);
         
         private final boolean isWand;
         

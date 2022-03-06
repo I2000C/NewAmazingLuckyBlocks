@@ -4,22 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import me.i2000c.newalb.listeners.objects.AutoBow;
-import me.i2000c.newalb.listeners.objects.DarkHole;
-import me.i2000c.newalb.listeners.objects.EndermanSoup;
-import me.i2000c.newalb.listeners.objects.ExplosiveBow;
-import me.i2000c.newalb.listeners.objects.HomingBow;
-import me.i2000c.newalb.listeners.objects.HookBow;
-import me.i2000c.newalb.listeners.objects.HotPotato;
-import me.i2000c.newalb.listeners.objects.IceBow;
-import me.i2000c.newalb.listeners.objects.LuckyTool;
-import me.i2000c.newalb.listeners.objects.MiniVolcano;
-import me.i2000c.newalb.listeners.objects.MultiBow;
-import me.i2000c.newalb.listeners.objects.PlayerTracker;
 import me.i2000c.newalb.custom_outcomes.menus.GUIManager;
 import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
 import me.i2000c.newalb.custom_outcomes.menus.GUIPackManager;
+import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
@@ -173,6 +163,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     private boolean executeGive(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
         String permission;
+        String noConsoleMessage = "&cYou can't send this command from the console";
         if(args.length == 1){
             permission = ConfigManager.getConfig().getString("Commands.Give.GiveMenu");
             if(!sender.hasPermission(permission)){
@@ -181,200 +172,143 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 return false;
             }
             if(!(sender instanceof Player)){
-                Logger.log("&cYou can't send this command from the console");
+                Logger.log(noConsoleMessage);
                 return false;
             }else{
                 GiveMenu.reset();
                 GiveMenu.openGiveMenu((Player) sender);
                 return true;
             }
-        }else switch(args[1]){
-            case "wands":
-                permission = ConfigManager.getConfig().getString("Commands.Give.Wands");
-                if(args.length <= 3){
-                    if(sender.hasPermission(permission)){
-                        Player p;
-                        if(args.length == 3){
-                            p = Bukkit.getServer().getPlayer(args[2]);
-                            if(p == null){
-                                sender.sendMessage(Logger.color("&cPlayer " + args[2] + "&c is offline"));
-                                return false;
-                            }
-                        }else{
-                            if(!(sender instanceof Player)){
-                                Logger.log(plugin.name+ChatColor.RED+" You can't send this command from the console");
-                                return false;
-                            }
-                            p = (Player) sender;
-                        }
-                        
-                        SpecialItemManager.getWands().forEach(wand -> p.getInventory().addItem(wand.getItem()));
-                        
-                        String loadwands = Logger.color(LangLoader.getMessages().getString("LoadingWands"));
-                        sender.sendMessage(loadwands);
-                        return true;
-                    }else{
-                        sender.sendMessage(Logger.color(LangLoader.getMessages().getString("NoPermission")));
+        }else{
+            Player target;
+            int amount;
+            String selectedItem = args[1];
+            
+            switch(args.length){
+                case 2:
+                    amount = 1;
+                    if(!(sender instanceof Player)){
+                        Logger.log(noConsoleMessage);
                         return false;
                     }
-                }else{
-                    sender.sendMessage(Logger.color("&cUsage: &7/alb give wands [player]"));
-                    return false;
-                }
-                //break;
-            case "objects":
-                permission = ConfigManager.getConfig().getString("Commands.Give.Objects");
-                if(sender.hasPermission(permission)){
-                    int amount;
-                    Player p;
-                    switch (args.length) {
-                        case 2:
-                            if(!(sender instanceof Player)){
-                                Logger.log("&cYou can't send this command from the console");
-                                return false;
-                            }
-                            p = (Player) sender;
-                            amount = 1;
-                            break;
-                        case 4:
-                            try{
-                                amount = Integer.parseInt(args[2]);
-                            }catch(IllegalArgumentException e){
-                                amount = 1;
-                            }
-                            p = Bukkit.getServer().getPlayer(args[3]);
-                            if(p == null){
-                                sender.sendMessage(Logger.color("&cPlayer " + args[3] + "&c is offline"));
-                                return false;
-                            }
-                            break;
-                        case 3:
-                            try{
-                                amount = Integer.parseInt(args[2]);
-                                if(!(sender instanceof Player)){
-                                    Logger.log(plugin.name+ChatColor.RED+" You can't send this command from the console");
-                                    return false;
-                                }
-                                p = (Player) sender;
-                            }catch(IllegalArgumentException e){
-                                amount = 1;
-                                p = Bukkit.getServer().getPlayer(args[2]);
-                                if(p == null){
-                                    sender.sendMessage(Logger.color("&cPlayer " + args[2] + "&c is offline"));
-                                    return false;
-                                }
-                            }
-                            break;
-                        default:
-                            sender.sendMessage(Logger.color("&cUsage: &7/alb give objects [amount] [player]"));
-                            return false;
-                    }
-                    
-                    for(SpecialItem object : SpecialItemManager.getObjects()){
-                        ItemStack stack = object.getItem();
-                        stack.setAmount(amount);
-                        p.getInventory().addItem(stack);
-                    }
-                    
-                    String loadobjects = Logger.color(LangLoader.getMessages().getString("LoadingObjects"));
-                    sender.sendMessage(loadobjects);
-                    return true;
-                }else{
-                    sender.sendMessage(Logger.color(LangLoader.getMessages().getString("NoPermission")));
-                    return false;
-                }
-                //break;
-            case "luckyblock":
-                permission = ConfigManager.getConfig().getString("Commands.Give.LuckyBlock");
-                if(sender.hasPermission(permission)){
-                    int amount;
-                    Player p;
-                    if(args.length == 2){
+                    target = (Player) sender;
+                    break;
+                case 3:
+                    try{
+                        amount = Integer.parseInt(args[2]);
                         if(!(sender instanceof Player)){
-                            Logger.log("&cYou can't send this command from the console");
+                            Logger.log(noConsoleMessage);
                             return false;
                         }
-                        p = (Player) sender;
+                        target = (Player) sender;
+                    }catch(NumberFormatException ex){
                         amount = 1;
-                    }else if(args.length == 4){
-                        try{
-                            amount = Integer.parseInt(args[2]);
-                        }catch(IllegalArgumentException e){
-                            amount = 1;
-                        }
-                        
-                        p = Bukkit.getServer().getPlayer(args[3]);
-                        if(p == null){
-                            sender.sendMessage(Logger.color("&cPlayer " + args[3] + "&c is offline"));
-                            return false;
-                        }
-                    }else if(args.length == 3){
-                        try{
-                            amount = Integer.parseInt(args[2]);
-                            if(!(sender instanceof Player)){
-                                Logger.log(plugin.name+ChatColor.RED+" You can't send this command from the console");
-                                return false;
-                            }
-                            p = (Player) sender;
-                        }catch(IllegalArgumentException e){
-                            amount = 1;
-                            p = Bukkit.getServer().getPlayer(args[2]);
-                            if(p == null){
-                                sender.sendMessage(Logger.color("&cPlayer " + args[2] + "&c is offline"));
-                                return false;
-                            }
-                        }
-                    }else{
-                        sender.sendMessage(Logger.color("&cUsage: &7/alb give luckyblock [amount] [player]"));
-                        return false;
-                    }
-                                      
-                    String loadblocks = Logger.color(LangLoader.getMessages().getString("LoadingBlocks"));                    
-                    sender.sendMessage(loadblocks);
-                    final int finalAmount = amount;
-                    final Player finalPlayer = p;
-                    TypeManager.getTypes().forEach(type -> {
-                        ItemStack stack = type.getItem();
-                        stack.setAmount(finalAmount);
-                        finalPlayer.getInventory().addItem(stack);
-                    });
-                    return true;
-                }else{
-                    sender.sendMessage(Logger.color(LangLoader.getMessages().getString("NoPermission")));
-                    return false;
-                }
-            case "luckytool":
-                permission = ConfigManager.getConfig().getString("Commands.Give.LuckyTool");
-                if(sender.hasPermission(permission)){
-                    Player p;
-                    if(args.length == 2){
-                        if(!(sender instanceof Player)){
-                            Logger.log("&cYou can't send this command from the console");
-                            return false;
-                        }
-                        p = (Player) sender;
-                    }else if(args.length == 3){
-                        p = Bukkit.getServer().getPlayer(args[2]);
-                        if(p == null){
+                        target = Bukkit.getPlayer(args[2]);
+                        if(target == null){
                             sender.sendMessage(Logger.color("&cPlayer " + args[2] + "&c is offline"));
                             return false;
                         }
-                    }else{
-                        sender.sendMessage(Logger.color("&cUsage: &7/alb give luckytool [player]"));
+                    }
+                    break;
+                case 4:
+                    target = Bukkit.getPlayer(args[2]);
+                    if(target == null){
+                        sender.sendMessage(Logger.color("&cPlayer " + args[2] + "&c is offline"));
                         return false;
                     }
-                                      
-                    String loadtool = Logger.color(LangLoader.getMessages().getString("LoadingLuckyTool"));                    
-                    sender.sendMessage(loadtool);                    
-                    p.getInventory().addItem(SpecialItemManager.getLuckyTool().getItem());
-                    return true;
-                }else{
-                    sender.sendMessage(Logger.color(LangLoader.getMessages().getString("NoPermission")));
+                    try{
+                        amount = Integer.parseInt(args[3]);
+                    }catch(NumberFormatException ex){
+                        amount = 1;
+                    }
+                    break;
+                default:
+                    Logger.sendMessage("&cUsage: &7/alb give <wands, objects, luckyblocks, luckytool, other_items...> [player | amount] [amount]", sender);
                     return false;
-                }
-            default:
-                sender.sendMessage(Logger.color(LangLoader.getMessages().getString("UnknownCommand")));
-                return false;
+            }
+            
+            switch(selectedItem){
+                case "wands":
+                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.Wands"))){
+                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender);
+                        return false;
+                    }
+                    
+                    String loadwands = LangLoader.getMessages().getString("LoadingWands");
+                    Logger.sendMessage(loadwands, sender);
+                    for(SpecialItem wand : SpecialItemManager.getWands()){
+                        ItemStack stack = wand.getItem();
+                        target.getInventory().addItem(stack);
+                    }
+                    break;
+                case "objects":
+                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.Objects"))){
+                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender);
+                        return false;
+                    }
+                    
+                    String loadobjects = LangLoader.getMessages().getString("LoadingObjects");                    
+                    Logger.sendMessage(loadobjects, sender);
+                    for(SpecialItem object : SpecialItemManager.getObjects()){
+                        ItemStack stack = object.getItem();
+                        stack.setAmount(amount);
+                        target.getInventory().addItem(stack);
+                    }
+                    break;
+                case "luckyblocks":
+                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.LuckyBlocks"))){
+                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender, false);
+                        return false;
+                    }
+                    
+                    String loadblocks = LangLoader.getMessages().getString("LoadingBlocks");
+                    Logger.sendMessage(loadblocks, sender);
+                    for(LuckyBlockType type : TypeManager.getTypes()){
+                        ItemStack stack = type.getItem();
+                        stack.setAmount(amount);
+                        target.getInventory().addItem(stack);
+                    }
+                    break;
+                case "luckytool":
+                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.LuckyTool"))){
+                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender, false);
+                        return false;
+                    }
+                    
+                    String loadtool = LangLoader.getMessages().getString("LoadingLuckyTool");
+                    Logger.sendMessage(loadtool, sender);
+                    target.getInventory().addItem(SpecialItemManager.getLuckyTool().getItem());
+                    break;
+                default:
+                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.OtherItems"))){
+                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender, false);
+                        return false;
+                    }
+                    
+                    ItemStack stack = null;
+                    SpecialItem specialItem = SpecialItemManager.getSpecialItem(selectedItem);
+                    if(specialItem == null){
+                        for(LuckyBlockType type : TypeManager.getTypes()){
+                            if(type.getTypeName().equals(selectedItem)){
+                                stack = type.getItem();
+                                break;
+                            }
+                        }
+                        
+                        if(stack == null){
+                            Logger.sendMessage("&cUsage: &7/alb give <wands, objects, luckyblocks, luckytool, other_items...> [player | amount] [amount]", sender);
+                            return false;
+                        }
+                    }else{
+                        stack = specialItem.getItem();
+                    }
+                    
+                    String loadSpecialItem = LangLoader.getMessages().getString("LoadingSpecialItem");
+                    Logger.sendMessage(loadSpecialItem, sender);                    
+                    stack.setAmount(amount);
+                    target.getInventory().addItem(stack);
+            }
+            return true;
         }
 //</editor-fold>
     }
@@ -875,8 +809,15 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     if("luckyblocks".startsWith(args[1].toLowerCase())){
                         ls.add("luckyblocks");
                     }
-                    if("luckytool".startsWith(args[1].toLowerCase())){
-                        ls.add("luckytool");
+                    for(String specialName : SpecialItemManager.getSpecialNames()){
+                        if(specialName.startsWith(args[1].toLowerCase())){
+                            ls.add(specialName);
+                        }
+                    }
+                    for(LuckyBlockType type : TypeManager.getTypes()){
+                        if(type.getTypeName().startsWith(args[1].toLowerCase())){
+                            ls.add(type.getTypeName());
+                        }
                     }
                 case "reload":
                 case "return":

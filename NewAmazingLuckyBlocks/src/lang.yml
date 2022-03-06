@@ -124,6 +124,7 @@ LoadingObjects: '&bLoading objects...'
 LoadingBlocks: '&6Loading luckyblocks...'
 PlacingBlocks: '&dPlacing random lucky blocks...'
 LoadingLuckyTool: '&eLoading LuckyTool...'
+LoadingSpecialItem: '&5Loading special item...'
 Loading:
   line1: "&aLoading &6NewAmazingLuckyBlocks&a..."
   line2: "&aLoading lang..."

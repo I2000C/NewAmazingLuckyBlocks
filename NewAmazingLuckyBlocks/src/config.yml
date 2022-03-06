@@ -187,8 +187,9 @@ Commands:
         GiveMenu: amazinglb.givemenu
         Wands: amazinglb.give.wands
         Objects: amazinglb.give.objects
-        LuckyBlock: amazinglb.give.luckyblock
+        LuckyBlocks: amazinglb.give.luckyblock
         LuckyTool: amazinglb.give.luckytool
+        OtherItems: amazinglb.give.otheritems
     RandomBlocks-permission: amazinglb.randomblocks
     Clear-permission: amazinglb.clear
     Menu-permission: amazinglb.menu

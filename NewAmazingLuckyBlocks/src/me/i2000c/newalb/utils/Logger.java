@@ -58,6 +58,18 @@ public class Logger{
         }
     }
     
+    public static void sendMessage(Object object, CommandSender sender, boolean withPrefix){
+        if(withPrefix){
+            sendMessage(object, sender);
+        }else{
+            if(ConfigManager.getConfig().getBoolean("ColoredLogger") || sender instanceof Player){
+                sender.sendMessage(Logger.color(object.toString()));
+            }else{
+                sender.sendMessage(ChatColor.stripColor(Logger.color(object.toString())));
+            }
+        }
+    }
+    
     public static void sendMessage(Object object, CommandSender sender){
         if(ConfigManager.getConfig().getBoolean("ColoredLogger") || sender instanceof Player){
             sender.sendMessage(Logger.color(PLUGIN.prefix + " " + object.toString()));
