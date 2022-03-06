@@ -2,7 +2,6 @@ package me.i2000c.newalb.listeners.inventories;
 
 import java.util.EnumMap;
 import java.util.Map;
-import me.i2000c.newalb.utils.Logger;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
