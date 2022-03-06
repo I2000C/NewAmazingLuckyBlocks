@@ -1,120 +1,100 @@
 package me.i2000c.newalb.listeners.objects;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.cryptomorin.xseries.XMaterial;
+import java.util.HashSet;
+import java.util.Set;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 
-public class MaterialChecker {
-    private static List<String> protectedMaterials = new ArrayList();
+public class MaterialChecker{
+    private static final Set<XMaterial> PROTECTED_MATERIALS = new HashSet<>();
     
     private static void addProtectedMaterials(){
-        protectedMaterials.add("CHEST");
-        protectedMaterials.add("TRAPPED_CHEST");
-        protectedMaterials.add("ENDER_CHEST");
+        PROTECTED_MATERIALS.add(XMaterial.CHEST);
+        PROTECTED_MATERIALS.add(XMaterial.TRAPPED_CHEST);
+        PROTECTED_MATERIALS.add(XMaterial.ENDER_CHEST);
         
-        protectedMaterials.add("FURNACE");
+        PROTECTED_MATERIALS.add(XMaterial.FURNACE);
         
-        protectedMaterials.add("ENCHANTING_TABLE");
+        PROTECTED_MATERIALS.add(XMaterial.ENCHANTING_TABLE);
         
-        protectedMaterials.add("ANVIL");
-        protectedMaterials.add("CHIPPED_ANVIL");
-        protectedMaterials.add("DAMAGED_ANVIL");
+        PROTECTED_MATERIALS.add(XMaterial.ANVIL);
+        PROTECTED_MATERIALS.add(XMaterial.CHIPPED_ANVIL);
+        PROTECTED_MATERIALS.add(XMaterial.DAMAGED_ANVIL);
         
-        protectedMaterials.add("WORKBENCH");
-        protectedMaterials.add("CRAFTING_TABLE");
+        PROTECTED_MATERIALS.add(XMaterial.CRAFTING_TABLE);
         
-        protectedMaterials.add("PAINTING");
-        protectedMaterials.add("SIGN");
-        protectedMaterials.add("SIGN_POST");
-        protectedMaterials.add("BED_BLOCK");
-        protectedMaterials.add("ITEM_FRAME");
+        PROTECTED_MATERIALS.add(XMaterial.PAINTING);
+        PROTECTED_MATERIALS.add(XMaterial.OAK_SIGN);
+        PROTECTED_MATERIALS.add(XMaterial.RED_BED);
+        PROTECTED_MATERIALS.add(XMaterial.ITEM_FRAME);
         
-        protectedMaterials.add("JUKEBOX");
-        protectedMaterials.add("NOTEBLOCK");
+        PROTECTED_MATERIALS.add(XMaterial.JUKEBOX);
+        PROTECTED_MATERIALS.add(XMaterial.NOTE_BLOCK);
         
-        protectedMaterials.add("BREWING_STAND");
+        PROTECTED_MATERIALS.add(XMaterial.BREWING_STAND);
         
-        protectedMaterials.add("DISPENSER");
-        protectedMaterials.add("LEVER");
-        protectedMaterials.add("STONE_BUTTON");
-        protectedMaterials.add("WOOD_BUTTON");
-        protectedMaterials.add("OAK_BUTTON");
-        protectedMaterials.add("SPRUCE_BUTTON");
-        protectedMaterials.add("BIRCH_BUTTON");
-        protectedMaterials.add("JUNGLE_BUTTON");
-        protectedMaterials.add("ACACIA_BUTTON");
-        protectedMaterials.add("DARK_OAK_BUTTON");
-        protectedMaterials.add("CRIMSON_BUTTON");
-        protectedMaterials.add("WARPED_BUTTON");
-        protectedMaterials.add("POLISHED_BLACKSTONE_BUTTON");        
+        PROTECTED_MATERIALS.add(XMaterial.DISPENSER);
+        PROTECTED_MATERIALS.add(XMaterial.LEVER);
+        PROTECTED_MATERIALS.add(XMaterial.STONE_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.OAK_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.SPRUCE_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.BIRCH_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.JUNGLE_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.ACACIA_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.DARK_OAK_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.CRIMSON_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.WARPED_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.POLISHED_BLACKSTONE_BUTTON);        
         
-        protectedMaterials.add("DAYLIGHT_DETECTOR");
-        protectedMaterials.add("DAYLIGHT_DETECTOR_INVERTED");
-        protectedMaterials.add("FENCE_GATE");
-        protectedMaterials.add("OAK_FENCE_GATE");
-        protectedMaterials.add("SPRUCE_FENCE_GATE");
-        protectedMaterials.add("BIRCH_FENCE_GATE");
-        protectedMaterials.add("JUNGLE_FENCE_GATE");
-        protectedMaterials.add("DARK_OAK_FENCE_GATE");
-        protectedMaterials.add("ACACIA_FENCE_GATE");
-        protectedMaterials.add("CRIMSON_FENCE_GATE");
-        protectedMaterials.add("WARPED_FENCE_GATE");
+        PROTECTED_MATERIALS.add(XMaterial.DAYLIGHT_DETECTOR);
+        PROTECTED_MATERIALS.add(XMaterial.OAK_FENCE_GATE);
+        PROTECTED_MATERIALS.add(XMaterial.SPRUCE_FENCE_GATE);
+        PROTECTED_MATERIALS.add(XMaterial.BIRCH_FENCE_GATE);
+        PROTECTED_MATERIALS.add(XMaterial.JUNGLE_FENCE_GATE);
+        PROTECTED_MATERIALS.add(XMaterial.DARK_OAK_FENCE_GATE);
+        PROTECTED_MATERIALS.add(XMaterial.ACACIA_FENCE_GATE);
+        PROTECTED_MATERIALS.add(XMaterial.CRIMSON_FENCE_GATE);
+        PROTECTED_MATERIALS.add(XMaterial.WARPED_FENCE_GATE);
         
-        protectedMaterials.add("WOODEN_DOOR");
-        protectedMaterials.add("OAK_DOOR");
-        protectedMaterials.add("IRON_DOOR");
-        protectedMaterials.add("SPRUCE_DOOR");
-        protectedMaterials.add("BIRCH_DOOR");
-        protectedMaterials.add("JUNGLE_DOOR");
-        protectedMaterials.add("ACACIA_DOOR");
-        protectedMaterials.add("DARK_OAK_DOOR");
-        protectedMaterials.add("CRIMSON_DOOR");
-        protectedMaterials.add("WARPED_DOOR");
-        protectedMaterials.add("TRAPDOOR");
-        protectedMaterials.add("IRON_TRAPDOOR");
-        protectedMaterials.add("OAK_TRAPDOOR");
-        protectedMaterials.add("WOODEN_TRAPDOOR");
-        protectedMaterials.add("SPRUCE_TRAPDOOR");
-        protectedMaterials.add("BIRCH_TRAPDOOR");
-        protectedMaterials.add("JUNGLE_TRAPDOOR");
-        protectedMaterials.add("ACACIA_TRAPDOOR");
-        protectedMaterials.add("DARK_OAK_TRAPDOOR");
-        protectedMaterials.add("CRIMSON_TRAPDOOR");
-        protectedMaterials.add("WARPED_TRAPDOOR");
-        protectedMaterials.add("HOPPER");
-        protectedMaterials.add("DROPPER");
+        PROTECTED_MATERIALS.add(XMaterial.OAK_DOOR);
+        PROTECTED_MATERIALS.add(XMaterial.IRON_DOOR);
+        PROTECTED_MATERIALS.add(XMaterial.SPRUCE_DOOR);
+        PROTECTED_MATERIALS.add(XMaterial.BIRCH_DOOR);
+        PROTECTED_MATERIALS.add(XMaterial.JUNGLE_DOOR);
+        PROTECTED_MATERIALS.add(XMaterial.ACACIA_DOOR);
+        PROTECTED_MATERIALS.add(XMaterial.DARK_OAK_DOOR);
+        PROTECTED_MATERIALS.add(XMaterial.CRIMSON_DOOR);
+        PROTECTED_MATERIALS.add(XMaterial.WARPED_DOOR);
+        PROTECTED_MATERIALS.add(XMaterial.IRON_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.OAK_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.SPRUCE_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.BIRCH_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.JUNGLE_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.ACACIA_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.DARK_OAK_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.CRIMSON_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.WARPED_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.HOPPER);
+        PROTECTED_MATERIALS.add(XMaterial.DROPPER);
         
-        protectedMaterials.add("REPEATER");
-        protectedMaterials.add("DIODE_BLOCK_ON");
-        protectedMaterials.add("DIODE_BLOCK_OFF");
-        protectedMaterials.add("COMPARATOR");
-        protectedMaterials.add("REDSTONE_COMPARATOR_ON");
-        protectedMaterials.add("REDSTONE_COMPARATOR_OFF");
+        PROTECTED_MATERIALS.add(XMaterial.REPEATER);
+        PROTECTED_MATERIALS.add(XMaterial.COMPARATOR);
         
-        protectedMaterials.add("COMMAND");
-        protectedMaterials.add("COMMAND_CHAIN");
-        protectedMaterials.add("COMMAND_REPEATING");
-        protectedMaterials.add("COMMAND_MINECART");
-        
-        protectedMaterials.add("COMMAND_BLOCK");
+        PROTECTED_MATERIALS.add(XMaterial.COMMAND_BLOCK);
+        PROTECTED_MATERIALS.add(XMaterial.COMMAND_BLOCK_MINECART);
     }
     
     public static boolean check(PlayerInteractEvent e){
-        if(protectedMaterials.isEmpty()){
+        if(PROTECTED_MATERIALS.isEmpty()){
             addProtectedMaterials();
-        }
+        }        
         
-        
-        try{
-            if(protectedMaterials.contains(e.getClickedBlock().getType().name())){
-                return !e.getPlayer().isSneaking();
-            }else{
-                //System.out.println(e.getClickedBlock().getType().name());
-                return false;
-            }
-        }catch(NullPointerException ex){
+        if(e.getClickedBlock() == null){
             return false;
         }
+        
+        XMaterial material = XMaterial.matchXMaterial(e.getClickedBlock().getType());
+        return PROTECTED_MATERIALS.contains(material) && !e.getPlayer().isSneaking();
     }
 }
