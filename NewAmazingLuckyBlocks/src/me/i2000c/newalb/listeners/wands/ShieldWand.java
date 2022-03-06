@@ -19,7 +19,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -35,8 +34,8 @@ public class ShieldWand extends SpecialItem{
     private final HashMap<UUID, Long> shieldcooldown = new HashMap<>();
     private ItemStack shieldItemStack;
     
-    @EventHandler
-    public void playerInteraction(PlayerInteractEvent e){
+    @Override
+    public void onPlayerInteract(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
         

@@ -1,10 +1,12 @@
 package me.i2000c.newalb.utils;
 
-import org.bukkit.event.Listener;
+import me.i2000c.newalb.listeners.interact.PlayerInteractListener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class SpecialItem implements Listener{
+public abstract class SpecialItem{
     private ItemStack item;
+    private int id = -1;
     
     public ItemStack getItem(){
         return this.item.clone();
@@ -12,7 +14,14 @@ public abstract class SpecialItem implements Listener{
     
     public void loadItem(){
         this.item = buildItem();
+        if(id == -1){
+            id = PlayerInteractListener.getNextFunctionID();
+        }
+        
+        this.item = PlayerInteractListener.setFunctionID(this.item, id);
     }
     
     public abstract ItemStack buildItem();
+    
+    public abstract void onPlayerInteract(PlayerInteractEvent e);
 }

@@ -24,8 +24,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 public class HotPotato extends SpecialItem{
     private static final String TAG = "hot_potato";
     
-    @EventHandler
-    private void onPlayerInteract(PlayerInteractEvent e){
+    @Override
+    public void onPlayerInteract(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack object = getItem();
         if(!OtherUtils.checkItemStack(object, e.getItem())){

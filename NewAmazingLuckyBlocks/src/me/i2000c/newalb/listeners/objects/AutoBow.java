@@ -16,7 +16,6 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -31,8 +30,9 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 
 public class AutoBow extends SpecialItem{
-    @EventHandler
-    public void playerInteraction(PlayerInteractEvent e){
+    
+    @Override
+    public void onPlayerInteract(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
         
@@ -128,7 +128,7 @@ public class AutoBow extends SpecialItem{
     private static Object pickupStatus = null;
     private static boolean initialized = false;
     
-    private void launchArrow(Player player, boolean infinityBow, boolean fireBow, ItemStack arrowStack){
+    private static void launchArrow(Player player, boolean infinityBow, boolean fireBow, ItemStack arrowStack){
         try{
             if(!initialized){
                 if(!NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){

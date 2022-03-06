@@ -16,7 +16,6 @@ import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils.Timer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -29,8 +28,8 @@ import org.bukkit.inventory.EquipmentSlot;
 public class FrostPathWand extends SpecialItem{
     private final HashMap<UUID, Long> frostcooldown = new HashMap();
     
-    @EventHandler
-    public void playerInteraction(PlayerInteractEvent e){
+    @Override
+    public void onPlayerInteract(PlayerInteractEvent e){
         Player player = e.getPlayer();
         Action action = e.getAction();
         

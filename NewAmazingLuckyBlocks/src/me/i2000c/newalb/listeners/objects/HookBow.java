@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.utils.BowItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.OtherUtils;
@@ -34,7 +34,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-public class HookBow extends SpecialItem{
+public class HookBow extends BowItem{
     private static final String TAG = "hook_bow";
     
     private static final HashMap<Player, HookData> players = new HashMap<>();
@@ -371,8 +371,8 @@ public class HookBow extends SpecialItem{
 //</editor-fold>
     }
     
-    @EventHandler
-    private void onPlayerInteract(PlayerInteractEvent e){
+    @Override
+    public void onPlayerInteract(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Player player = e.getPlayer();
         if(!WorldList.isRegistered(player.getWorld().getName())){

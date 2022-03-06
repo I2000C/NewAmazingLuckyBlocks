@@ -1,10 +1,10 @@
 package me.i2000c.newalb.listeners.objects;
 
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.utils.BowItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,7 +19,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 
-public class ExplosiveBow extends SpecialItem{
+public class ExplosiveBow extends BowItem{
     private static final String TAG = "explosive_bow";
     
     @EventHandler

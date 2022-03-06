@@ -9,7 +9,7 @@ import me.i2000c.newalb.utils.WorldList;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.utils.SpecialItem;
+import me.i2000c.newalb.utils.BowItem;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -28,7 +28,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.util.Vector;
 
-public class MultiBow extends SpecialItem{
+public class MultiBow extends BowItem{
     
     @EventHandler
     public void onArrowShooted(EntityShootBowEvent e){

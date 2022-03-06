@@ -1,9 +1,9 @@
 package me.i2000c.newalb.listeners.objects;
 
+import me.i2000c.newalb.utils.BowItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Material;
@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
-public class HomingBow extends SpecialItem{
+public class HomingBow extends BowItem{
   
     @EventHandler
     private void onArrowShooted(EntityShootBowEvent e){
@@ -39,7 +39,7 @@ public class HomingBow extends SpecialItem{
         }
     }
     
-    public void executeTask(Player player, Entity projectile){
+    private static void executeTask(Player player, Entity projectile){
         double radius = ConfigManager.getConfig().getDouble("Objects.HomingBow.arrowRadius");
         double radiusS = radius * radius;
         double multiplier = ConfigManager.getConfig().getDouble("Objects.HomingBow.velocityMultiplier");

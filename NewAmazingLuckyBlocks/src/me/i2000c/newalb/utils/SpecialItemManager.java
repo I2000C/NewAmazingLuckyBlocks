@@ -120,7 +120,9 @@ public class SpecialItemManager{
         //Register all events and load all special items
         specialItems.values().forEach(specialItem -> {
             specialItem.loadItem();
-            pm.registerEvents(specialItem, plugin);
+            if(specialItem instanceof BowItem){
+                pm.registerEvents((BowItem) specialItem, plugin);
+            }
         });
     }
     

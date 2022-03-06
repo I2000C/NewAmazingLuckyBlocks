@@ -3,16 +3,6 @@ package me.i2000c.newalb;
 import org.bukkit.ChatColor;
 import me.i2000c.newalb.listeners.BlockBreak;
 import me.i2000c.newalb.listeners.ChunkEvent;
-import me.i2000c.newalb.listeners.wands.FireWand;
-import me.i2000c.newalb.listeners.wands.InvWand;
-import me.i2000c.newalb.listeners.wands.LightningWand;
-import me.i2000c.newalb.listeners.wands.RegenWand;
-import me.i2000c.newalb.listeners.wands.SlimeWand;
-import me.i2000c.newalb.listeners.wands.TntWand;
-import me.i2000c.newalb.listeners.wands.ShieldWand;
-import me.i2000c.newalb.listeners.objects.DarkHole;
-import me.i2000c.newalb.listeners.objects.MiniVolcano;
-import me.i2000c.newalb.listeners.objects.IceBow;
 
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangLoader;
@@ -25,14 +15,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils.Updater;
 
-import me.i2000c.newalb.listeners.objects.AutoBow;
-import me.i2000c.newalb.listeners.objects.EndermanSoup;
-import me.i2000c.newalb.listeners.objects.ExplosiveBow;
-import me.i2000c.newalb.listeners.objects.HomingBow;
-import me.i2000c.newalb.listeners.objects.MultiBow;
-import me.i2000c.newalb.listeners.objects.PlayerTracker;
-import me.i2000c.newalb.listeners.wands.FrostPathWand;
-import me.i2000c.newalb.listeners.wands.PotionWand;
 import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
 import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
@@ -45,13 +27,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import me.i2000c.newalb.listeners.BlockPlace;
-import me.i2000c.newalb.listeners.objects.HookBow;
-import me.i2000c.newalb.listeners.objects.HotPotato;
-import me.i2000c.newalb.listeners.objects.LuckyTool;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
+import me.i2000c.newalb.listeners.interact.PlayerInteractListener;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.SpecialItemManager;
 import me.i2000c.newalb.utils2.Task;
@@ -102,7 +82,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         registerEvents();
         getCommand("alb").setExecutor(new CommandManager(this));
-        getCommand("nalb").setExecutor(new CommandManager(this));    
+        getCommand("nalb").setExecutor(new CommandManager(this));
         
         WorldList.reloadAll();
         
@@ -117,35 +97,6 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         Logger.log(LangLoader.getMessages().getString("Enable.line1").replace("%version%", version));
         Logger.log(LangLoader.getMessages().getString("Enable.line2").replace("%prefix%", ""));
     }
-    
-    /*public void loadWands(){
-        FireWand.loadWand();
-        FrostPathWand.loadWand();
-        InvWand.loadWand();
-        LightningWand.loadWand();
-        PotionWand.loadWand();
-        RegenWand.loadWand();
-        ShieldWand.loadWand();
-        SlimeWand.loadWand();
-        TntWand.loadWand();
-    }
-    
-    public void loadObjects(){
-        DarkHole.loadObject();
-        MiniVolcano.loadObject();        
-        PlayerTracker.loadObject();
-        EndermanSoup.loadObject();
-        HotPotato.loadObject();
-        
-        IceBow.loadObject();
-        AutoBow.loadObject();
-        MultiBow.loadObject();
-        ExplosiveBow.loadObject();        
-        HomingBow.loadObject();
-        HookBow.loadObject();
-        
-        LuckyTool.loadObject();
-    }*/
     
     private void registerEvents(){
         //<editor-fold defaultstate="collapsed" desc="Code">
@@ -164,6 +115,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         pm.registerEvents(new InventoryListener(), this);
         pm.registerEvents(new ChatListener(), this);
+        pm.registerEvents(new PlayerInteractListener(), this);
         
         pm.registerEvents(new TrapManager(), this);
         
