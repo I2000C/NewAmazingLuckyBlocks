@@ -15,10 +15,10 @@ public abstract class SpecialItem{
     public void loadItem(){
         this.item = buildItem();
         if(id == -1){
-            id = PlayerInteractListener.getNextFunctionID();
+            id = PlayerInteractListener.registerSpecialtem(this);
         }
         
-        this.item = PlayerInteractListener.setFunctionID(this.item, id);
+        this.item = PlayerInteractListener.setSpecialtemID(this.item, id);
     }
     
     public abstract ItemStack buildItem();

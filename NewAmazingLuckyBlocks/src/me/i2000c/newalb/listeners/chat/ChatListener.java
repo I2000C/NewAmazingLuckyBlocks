@@ -5,6 +5,7 @@ import java.util.Map;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 
@@ -30,7 +31,7 @@ public class ChatListener implements Listener{
         players.remove(player);
     }
     
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private static void onPlayerChat(PlayerChatEvent e){
         if(players.isEmpty()){
             return;

@@ -7,7 +7,6 @@ import me.i2000c.newalb.utils.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.TrapMenu;
 import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;

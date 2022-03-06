@@ -1,8 +1,6 @@
 package me.i2000c.newalb.utils;
 
 import me.i2000c.newalb.utils2.OtherUtils;
-import me.i2000c.newalb.listeners.objects.AutoBow;
-import me.i2000c.newalb.listeners.objects.MultiBow;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;

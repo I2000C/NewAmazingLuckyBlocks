@@ -1,6 +1,7 @@
 package me.i2000c.newalb.utils;
 
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.Material;
 
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Random;
 import java.util.Set;
@@ -261,7 +261,10 @@ public class Timer implements Listener{
         }
         final int w = width;
         
-        Set<Material> passableBlocks = EnumSet.of(Material.AIR, Material.WATER, Material.LAVA, Material.GRASS);
+        Set<Material> passableBlocks = EnumSet.of(XMaterial.AIR.parseMaterial(),
+                                                  XMaterial.WATER.parseMaterial(),
+                                                  XMaterial.LAVA.parseMaterial(),
+                                                  XMaterial.GRASS.parseMaterial());
         
         Location l = player.getLocation();
         Vector v = new Vector(endLoc.getBlockX()-l.getBlockX(),endLoc.getBlockY()-l.getBlockY(),endLoc.getBlockZ()-l.getBlockZ());
@@ -281,7 +284,7 @@ public class Timer implements Listener{
                         location.add(v);
                         if(passableBlocks.contains(location.getWorld().getBlockAt(location).getType())){
                             Block b = location.getWorld().getBlockAt(location);
-                            BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(b.getType()), player, true);
+                            BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(frostMaterial), player, true);
                             Bukkit.getPluginManager().callEvent(e2);
                             if(!e2.isCancelled()){                                
                                 b.setType(frostMaterial);
@@ -298,7 +301,7 @@ public class Timer implements Listener{
                                 //System.out.println("Yaw = " + yaw);
                                 if(passableBlocks.contains(location.getWorld().getBlockAt(location.clone().add(0,0,k)).getType())){
                                     b = location.getWorld().getBlockAt(location.clone().add(0,0,k));
-                                    BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(b.getType()), player, true);
+                                    BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(frostMaterial), player, true);
                                     Bukkit.getPluginManager().callEvent(e2);
                                     if(!e2.isCancelled()){                                
                                         b.setType(frostMaterial);
@@ -308,7 +311,7 @@ public class Timer implements Listener{
                                 }
                                 if(passableBlocks.contains(location.getWorld().getBlockAt(location.clone().add(0,0,-k)).getType())){
                                     b = location.getWorld().getBlockAt(location.clone().add(0,0,-k));
-                                    BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(b.getType()), player, true);
+                                    BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(frostMaterial), player, true);
                                     Bukkit.getPluginManager().callEvent(e2);
                                     if(!e2.isCancelled()){                                
                                         b.setType(frostMaterial);
@@ -321,7 +324,7 @@ public class Timer implements Listener{
                                 //System.out.println("Yaw = " + yaw);
                                 if(passableBlocks.contains(location.getWorld().getBlockAt(location.clone().add(k,0,0)).getType())){
                                     b = location.getWorld().getBlockAt(location.clone().add(k,0,0));
-                                    BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(b.getType()), player, true);
+                                    BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(frostMaterial), player, true);
                                     Bukkit.getPluginManager().callEvent(e2);
                                     if(!e2.isCancelled()){                                
                                         b.setType(frostMaterial);
@@ -331,7 +334,7 @@ public class Timer implements Listener{
                                 }
                                 if(passableBlocks.contains(location.getWorld().getBlockAt(location.clone().add(-k,0,0)).getType())){
                                     b = location.getWorld().getBlockAt(location.clone().add(-k,0,0));
-                                    BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(b.getType()), player, true);
+                                    BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, new ItemStack(frostMaterial), player, true);
                                     Bukkit.getPluginManager().callEvent(e2);
                                     if(!e2.isCancelled()){                                
                                         b.setType(frostMaterial);

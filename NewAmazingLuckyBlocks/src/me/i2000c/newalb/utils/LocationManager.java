@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import org.bukkit.Bukkit;
