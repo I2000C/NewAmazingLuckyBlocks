@@ -33,8 +33,8 @@ public class ItemStackBuilder{
         return this;
     }
     
-    public ItemStackBuilder withDurability(short durability){
-        item.setDurability(durability);
+    public ItemStackBuilder withDurability(int durability){
+        item.setDurability((short) durability);
         
         return this;
     }

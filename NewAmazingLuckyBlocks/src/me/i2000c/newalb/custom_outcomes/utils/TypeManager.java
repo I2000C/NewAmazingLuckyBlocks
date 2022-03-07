@@ -44,10 +44,23 @@ public class TypeManager{
     private static boolean requirePlacePermissionGlobal;
     private static String placePermissionGlobal;
     
-    static int currentRecipeID;
+    private static int currentRecipeID;
     
     static String getNextRecipeID(){
         return "NewAmazingLuckyBlocks." + (currentRecipeID++);
+    }
+    
+    public static String getGlobalBreakPermission(){
+        return breakPermissionGlobal;
+    }
+    public static String getGlobalPlacePermission(){
+        return placePermissionGlobal;
+    }
+    public static boolean isGlobalBreakPermissionEnabled(){
+        return requireBreakPermissionGlobal;
+    }
+    public static boolean isGlobalPlacePermissionEnabled(){
+        return requirePlacePermissionGlobal;
     }
     
     private static boolean checkBreakPermissionGlobal(Player player){

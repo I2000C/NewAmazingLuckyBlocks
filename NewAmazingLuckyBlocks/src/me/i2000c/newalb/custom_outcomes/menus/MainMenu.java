@@ -2,6 +2,7 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.CommandManager;
+import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
@@ -26,6 +27,7 @@ public class MainMenu{
     }
     
     public static void openMainMenu(Player p){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.MAIN_MENU, 9, "&a&lMain menu");
         
         ItemStack exit = ItemStackBuilder
@@ -35,11 +37,11 @@ public class MainMenu{
         
         ItemStack packsItem = ItemStackBuilder
                 .createNewItem(XMaterial.CRAFTING_TABLE)
-                .withDisplayName("&aManage outcome packs")
+                .withDisplayName("&3Manage outcome packs")
                 .build();
         
         ItemStack typesItem = ItemStackBuilder
-                .createNewItem(XMaterial.SPONGE)
+                .fromItem(TypeManager.getMenuItemStack())
                 .withDisplayName("&6Manage lucky block types")
                 .build();
         
@@ -49,6 +51,7 @@ public class MainMenu{
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
+//</editor-fold>
     }
     
     private static final InventoryFunction MAIN_MENU_FUNCTION = e -> {
