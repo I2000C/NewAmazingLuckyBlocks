@@ -142,7 +142,7 @@ public class TypeManager{
             while(iter2.hasNext()){
                 Recipe recipe = iter2.next();
                 if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-                    if(recipe.equals(type.getRecipe())){
+                    if(recipe.getResult().equals(type.getRecipe().getResult())){
                         iter2.remove();
                         break;
                     }

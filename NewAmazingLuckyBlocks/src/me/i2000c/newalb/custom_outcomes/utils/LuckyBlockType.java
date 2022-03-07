@@ -35,7 +35,7 @@ public class LuckyBlockType{
     
     private TextureManager.Texture texture;
     
-    private MaterialData[] crafting;
+    private List<ItemStack> crafting;
     private ShapedRecipe recipe;
     
     private HashMap<OutcomePack, Integer> packs;
@@ -57,7 +57,7 @@ public class LuckyBlockType{
         return luckyBlockItem.clone();
     }
     
-    public MaterialData[] getCrafting(){
+    public List<ItemStack> getCrafting(){
         return crafting;
     }
     public ShapedRecipe getRecipe(){
@@ -131,7 +131,7 @@ public class LuckyBlockType{
                                   recipeMaterialNames.get(1) + " " +
                                   recipeMaterialNames.get(2)).split(" ");
         
-        type.crafting = new MaterialData[9];
+        type.crafting = new ArrayList<>(9);
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             type.recipe = new ShapedRecipe(type.luckyBlockItem);
         }else{
@@ -154,20 +154,15 @@ public class LuckyBlockType{
         
         char ingredientChar = 'A';
         for(String materialAndData : materialNames){
-            String[] splitted = materialAndData.split(":");
-            Material material = Material.valueOf(splitted[0]);
-            if(splitted.length == 1 || !NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-                if(material != Material.AIR){
-                    type.recipe.setIngredient(ingredientChar, material);
+            ItemStack item = OtherUtils.parseMaterial(materialAndData);
+            if(item.getType() != Material.AIR){
+                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                    type.recipe.setIngredient(ingredientChar, item.getType(), item.getDurability());
+                }else{
+                    type.recipe.setIngredient(ingredientChar, item.getType());
                 }
-                type.crafting[ingredientChar - 'A'] = new MaterialData(material);
-            }else{
-                int durability = Integer.parseInt(splitted[1]);
-                if(material != Material.AIR){
-                    type.recipe.setIngredient(ingredientChar, material, durability);
-                }
-                type.crafting[ingredientChar - 'A'] = new MaterialData(material, (byte)durability);
             }
+            type.crafting.add(item);
             ingredientChar++;
         }
         
@@ -175,7 +170,7 @@ public class LuckyBlockType{
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             for(Iterator<Recipe> iter = Bukkit.recipeIterator(); iter.hasNext();){
                 Recipe recipe = iter.next();
-                if(recipe.equals(type.recipe)){
+                if(recipe.getResult().equals(type.recipe.getResult())){
                     iter.remove();
                     break;
                 }
@@ -193,7 +188,13 @@ public class LuckyBlockType{
             }
         }
         
-        Bukkit.addRecipe(type.recipe);
+        boolean emptyCrafting = true;
+        for(int i=0; emptyCrafting && i<type.crafting.size(); i++){
+            emptyCrafting = type.crafting.get(i).getType() == Material.AIR;
+        }
+        if(!emptyCrafting){
+            Bukkit.addRecipe(type.recipe);
+        }
         
         // Load outcome packs
         type.packs = new HashMap<>();
@@ -253,30 +254,15 @@ public class LuckyBlockType{
         config.set(path + ".textureID", texture != null ? texture.toString() : "");
         
         // Save crafting recipe
-        String row0;
-        String row1;
-        String row2;
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-            row0 = crafting[0].getItemType().name() + ":" + crafting[0].getData() + " " +
-                   crafting[1].getItemType().name() + ":" + crafting[1].getData() + " " +
-                   crafting[2].getItemType().name() + ":" + crafting[2].getData();
-            row1 = crafting[3].getItemType().name() + ":" + crafting[3].getData() + " " +
-                   crafting[4].getItemType().name() + ":" + crafting[4].getData() + " " +
-                   crafting[5].getItemType().name() + ":" + crafting[5].getData();
-            row2 = crafting[6].getItemType().name() + ":" + crafting[6].getData() + " " +
-                   crafting[7].getItemType().name() + ":" + crafting[7].getData() + " " +
-                   crafting[8].getItemType().name() + ":" + crafting[8].getData();
-        }else{
-            row0 = crafting[0].getItemType().name() + " " +
-                   crafting[1].getItemType().name()+ " " +
-                   crafting[2].getItemType().name();
-            row1 = crafting[3].getItemType().name() + " " +
-                   crafting[4].getItemType().name()+ " " +
-                   crafting[5].getItemType().name();
-            row2 = crafting[6].getItemType().name() + " " +
-                   crafting[7].getItemType().name() + " " +
-                   crafting[8].getItemType().name();
-        }
+        String row0 = OtherUtils.parseItemStack(crafting.get(0)) + " " +
+                      OtherUtils.parseItemStack(crafting.get(1)) + " " +
+                      OtherUtils.parseItemStack(crafting.get(2));
+        String row1 = OtherUtils.parseItemStack(crafting.get(3)) + " " +
+                      OtherUtils.parseItemStack(crafting.get(4)) + " " +
+                      OtherUtils.parseItemStack(crafting.get(5));
+        String row2 = OtherUtils.parseItemStack(crafting.get(6)) + " " +
+                      OtherUtils.parseItemStack(crafting.get(7)) + " " +
+                      OtherUtils.parseItemStack(crafting.get(8));
         config.set(path + ".crafting", Arrays.asList(row0, row1, row2));
         
         // Save outcome packs
