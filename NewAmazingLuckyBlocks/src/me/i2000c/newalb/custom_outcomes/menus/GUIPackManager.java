@@ -2,7 +2,6 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.CommandManager;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.utils.Logger;
@@ -41,8 +40,6 @@ public class GUIPackManager{
         renameMode = false;
         cloneMode = false;
         deleteMode = false;
-        
-        CommandManager.confirmMenu = false;
     }
     
     public static void openMainMenu(Player p){
@@ -99,9 +96,9 @@ public class GUIPackManager{
         deletePack.setItemMeta(meta);
         
         
-        ItemStack exit = new ItemStack(Material.IRON_DOOR);
+        ItemStack exit = new ItemStack(Material.ENDER_PEARL);
         meta = exit.getItemMeta();
-        meta.setDisplayName(Logger.color("&cExit"));
+        meta.setDisplayName(Logger.color("&2Back"));
         exit.setItemMeta(meta);
         
         ItemStack pages = new ItemStack(Material.BOOK);
@@ -119,19 +116,20 @@ public class GUIPackManager{
         meta.setDisplayName(Logger.color("&aNext page"));
         next.setItemMeta(meta);
         
+        
+        inv.setItem(45, exit);
         if(!renameMode && !cloneMode && !deleteMode){
-            inv.setItem(45, createPack);
+            inv.setItem(46, createPack);
         }
         if(!cloneMode && !deleteMode){
-            inv.setItem(46, renamePack);
+            inv.setItem(47, renamePack);
         }
         if(!renameMode && !deleteMode){
-            inv.setItem(47, clonePack);
+            inv.setItem(48, clonePack);
         }
         if(!renameMode && !cloneMode){
-            inv.setItem(48, deletePack);
-        }
-        inv.setItem(53, exit);
+            inv.setItem(49, deletePack);
+        }        
         
         //Not required for the moment
         //inv.setItem(51, back);
@@ -163,6 +161,11 @@ public class GUIPackManager{
 
             switch(e.getSlot()){
                 case 45:
+                    //Back to main menu
+                    MainMenu.reset();
+                    MainMenu.openMainMenu(p);
+                    break;
+                case 46:
                     //Create new pack
                     if(!renameMode && !cloneMode && !deleteMode){
                         ChatListener.registerPlayer(p, message -> {
@@ -180,33 +183,27 @@ public class GUIPackManager{
                         Logger.sendMessage("&3Write the new pack name in the chat", p);
                     }
                     break;
-                case 46:
+                case 47:
                     //Toggle rename mode
                     if(!cloneMode && !deleteMode){
                         renameMode = !renameMode;
                         openMainMenu(p);
                     }
                     break;
-                case 47:
+                case 48:
                     //Toggle clone mode
                     if(!renameMode && !deleteMode){
                         cloneMode = !cloneMode;
                         openMainMenu(p);
                     }
                     break;
-                case 48:
+                case 49:
                     //Toggle delete mode
                     if(!renameMode && !cloneMode){
                         deleteMode = !deleteMode;
                         openMainMenu(p);
                     }
-                    break;
-                case 53:
-                    //Exit
-                    reset();
-                    p.closeInventory();
-                    GUIManager.setCurrentInventory(null);
-                    break;
+                    break;                
                 default:
                     ItemStack sk = e.getCurrentItem();
                     if(sk != null && sk.getType() != Material.AIR

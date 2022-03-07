@@ -8,7 +8,6 @@ import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.CommandReward;
 import me.i2000c.newalb.utils.Logger;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +38,7 @@ public class CommandMenu{
             reward = new CommandReward(FinishMenu.getCurrentOutcome());
         }
         
-        List<String> lore = new ArrayList();
+        List<String> lore = new ArrayList<>();
         lore.add(Logger.color("&7Click here and then, write the command"));
         lore.add(Logger.color("&7in the chat without the first '&b&l/&7'&r"));
         lore.add("");

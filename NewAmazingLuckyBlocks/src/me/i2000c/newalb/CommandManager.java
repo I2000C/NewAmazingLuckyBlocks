@@ -4,15 +4,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.GUIManager;
 import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
-import me.i2000c.newalb.custom_outcomes.menus.GUIPackManager;
+import me.i2000c.newalb.custom_outcomes.menus.MainMenu;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
+import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
 import me.i2000c.newalb.utils.LangLoader;
@@ -110,23 +110,6 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         OffsetMenu.setCurrentData(new Offset(), null);
         OffsetMenu.openOffsetMenu(p);*/
         return true;
-    }
-    private void testPerformance(CommandSender sender, Runnable r1, Runnable r2, long times){
-        long timeA, timeB;
-        
-        timeA = System.currentTimeMillis();
-        for(long i=0;i<times;i++){
-            r1.run();
-        }
-        timeB = System.currentTimeMillis();
-        Logger.sendMessage("Runnable1 time: " + (timeB-timeA), sender);
-        
-        timeA = System.currentTimeMillis();
-        for(long i=0;i<times;i++){
-            r2.run();
-        }
-        timeB = System.currentTimeMillis();
-        Logger.sendMessage("Runnable2 time: " + (timeB-timeA), sender);
     }
     
     private boolean executeHelp(CommandSender sender, String[] args){
@@ -493,9 +476,12 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             confirmMenu = true;
         }
         
+        FinishMenu.testRewardsPlayerList.remove(player);
+        ChatListener.removePlayer(player);
+                
         //Open main menu
-        GUIPackManager.reset();
-        GUIPackManager.openMainMenu(player);
+        MainMenu.reset();
+        MainMenu.openMainMenu(player);
         
         return true;
 //</editor-fold>
@@ -513,8 +499,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             Logger.log("&cYou can't send this command from the console");
             return false;
         }
+        
         Player player = (Player) sender;
         FinishMenu.testRewardsPlayerList.remove(player);
+        ChatListener.removePlayer(player);
+        
         if(GUIManager.getCurrentInventory() == null){
             player.sendMessage(Logger.color("&cYou haven't opened any menu recently"));
             return false;

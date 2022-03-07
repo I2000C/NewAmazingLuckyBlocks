@@ -1,6 +1,16 @@
 package me.i2000c.newalb.listeners.inventories;
 
 public enum CustomInventoryType{
+    //Main menu
+    MAIN_MENU,
+    
+    //LuckyBlockTypesMenus
+    LUCKY_BLOCK_TYPES_MENU,
+    LUCKY_BLOCK_TYPE_EDIT_MENU,
+    PACK_MANAGE_MENU,
+    PACK_SELECT_MENU,
+    
+    
     ////////Rewards menus
     
     //ItemMenu menus
