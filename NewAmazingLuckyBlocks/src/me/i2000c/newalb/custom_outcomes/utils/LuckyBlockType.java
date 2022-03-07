@@ -220,11 +220,7 @@ public class LuckyBlockType{
             }
         }
         
-        boolean emptyCrafting = true;
-        for(int i=0; emptyCrafting && i<type.crafting.size(); i++){
-            emptyCrafting = type.crafting.get(i).getType() == Material.AIR;
-        }
-        if(!emptyCrafting){
+        if(type.crafting.stream().anyMatch(item -> item.getType() != Material.AIR)){
             Bukkit.addRecipe(type.recipe);
         }
         
