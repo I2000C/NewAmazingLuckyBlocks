@@ -43,7 +43,7 @@ public class OtherUtils{
         try{
             int materialID = Integer.parseInt(materialName);
             stack = new ItemStack(materialID);
-        }catch(NumberFormatException ex){
+        }catch(Exception ex){
             stack = new ItemStack(Material.valueOf(materialName));
         }        
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion() && splitted.length == 2){
@@ -58,6 +58,7 @@ public class OtherUtils{
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion() && stack.getDurability() > 0){
             materialNameAndDurability += ":" + stack.getDurability();
         }
+        
         return materialNameAndDurability;
     }
     
