@@ -460,7 +460,62 @@ public class LuckyBlockTypesMenu{
                     //Back to previous menu
                     openMainMenu(p);
                     break;
+                case 26:
+                    //Save current type
+                    TypeManager.addType(currentType);
+                    reset();
+                    openMainMenu(p);
+                    break;
+                case 2:
+                    //Set type item
+                    break;
+                case 3:
+                    //Set type name
+                    break;
+                case 4:
+                    //Set type item name
+                    break;
+                case 5:
+                    //Add type item lore
+                    break;
+                case 6:
+                    //Remove type item lore
+                    break;
+                case 8:
+                    //Open pack manage menu
+                    openPackManageMenu(p);
+                    break;
+                case 43:
+                    //Change place permission
+                    break;
+                case 44:
+                    //Change break permission
+                    break;
+                case 52:
+                    //Toggle place permission
+                    break;
+                case 53:
+                    //Toggle break permission
+                    break;
+                default:
+                    //Set crafting item
+                    int craftingID = -1;
+                    int slot = e.getSlot();
+                    if(slot >= 21 && slot <= 23){
+                        craftingID = slot - 21;
+                    }else if(slot >= 30 && slot <= 32){
+                        craftingID = slot - 27;
+                    }else if(slot >= 39 && slot <= 41){
+                        craftingID = slot - 33;
+                    }
+                    
+                    if(craftingID != -1){
+                        e.setCancelled(false);
+                        currentType.getCrafting().set(craftingID, e.getCursor());
+                    }
             }
+        }else{
+            e.setCancelled(false);
         }
 //</editor-fold>
     };
