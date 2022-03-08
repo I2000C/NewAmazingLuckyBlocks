@@ -3,9 +3,9 @@ package me.i2000c.newalb.custom_outcomes.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
@@ -19,7 +19,6 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -199,26 +198,7 @@ public class LuckyBlockType{
         }
         
         //Remove previous recipe if exists
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-            for(Iterator<Recipe> iter = Bukkit.recipeIterator(); iter.hasNext();){
-                Recipe recipe = iter.next();
-                if(recipe.getResult().equals(type.recipe.getResult())){
-                    iter.remove();
-                    break;
-                }
-            }
-        }else{
-            for(Iterator<Recipe> iter = Bukkit.recipeIterator(); iter.hasNext();){
-                Recipe recipe = iter.next();
-                if(recipe instanceof ShapedRecipe){
-                    ShapedRecipe sr = (ShapedRecipe) recipe;
-                    if(sr.getKey().equals(type.recipe.getKey())){
-                        iter.remove();
-                        break;
-                    }
-                }
-            }
-        }
+        TypeManager.removeRecipe(type.recipe);
         
         if(type.crafting.stream().anyMatch(item -> item.getType() != Material.AIR)){
             Bukkit.addRecipe(type.recipe);
@@ -353,4 +333,53 @@ public class LuckyBlockType{
         }
 //</editor-fold>
     }
+    
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 71 * hash + Objects.hashCode(this.typeName);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final LuckyBlockType other = (LuckyBlockType) obj;
+        return Objects.equals(this.typeName, other.typeName);
+    }
+    
+    public LuckyBlockType cloneType(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        LuckyBlockType clone = new LuckyBlockType(typeName);
+        
+        clone.luckyBlockItem = this.getItem();
+        
+        clone.requireBreakPermission = this.requireBreakPermission;
+        clone.breakPermission = this.breakPermission;
+        clone.requirePlacePermission = this.requirePlacePermission;
+        clone.placePermission = this.placePermission;
+        
+        clone.texture = this.texture;
+        
+        clone.crafting = new ArrayList<>(this.crafting);
+        clone.recipe = this.recipe;
+        
+        clone.packs = new HashMap<>(this.packs);
+        clone.totalProbability = this.totalProbability;
+        
+        clone.data = this.data;
+        
+        return clone;
+//</editor-fold>
+    }
+    
 }

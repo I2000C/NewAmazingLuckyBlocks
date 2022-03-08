@@ -53,14 +53,27 @@ public class TypeManager{
     public static String getGlobalBreakPermission(){
         return breakPermissionGlobal;
     }
+    public static void setGlobalBreakPermission(String permission){
+        breakPermissionGlobal = permission;
+    }
     public static String getGlobalPlacePermission(){
         return placePermissionGlobal;
     }
+    public static void setGlobalPlacePermission(String permission){
+        placePermissionGlobal = permission;
+    }
+    
     public static boolean isGlobalBreakPermissionEnabled(){
         return requireBreakPermissionGlobal;
     }
+    public static void setEnableGlobalBreakPermission(boolean enable){
+        requireBreakPermissionGlobal = enable;
+    }
     public static boolean isGlobalPlacePermissionEnabled(){
         return requirePlacePermissionGlobal;
+    }
+    public static void setEnableGlobalPlacePermission(boolean enable){
+        requirePlacePermissionGlobal = enable;
     }
     
     private static boolean checkBreakPermissionGlobal(Player player){
@@ -151,22 +164,7 @@ public class TypeManager{
         Iterator<LuckyBlockType> iter = luckyBlockTypes.iterator();
         while(iter.hasNext()){
             LuckyBlockType type = iter.next();
-            Iterator<Recipe> iter2 = Bukkit.recipeIterator();
-            while(iter2.hasNext()){
-                Recipe recipe = iter2.next();
-                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-                    if(recipe.getResult().equals(type.getRecipe().getResult())){
-                        iter2.remove();
-                        break;
-                    }
-                }else if(recipe instanceof ShapedRecipe){
-                    ShapedRecipe sr = (ShapedRecipe) recipe;
-                    if(sr.getKey().equals(type.getRecipe().getKey())){
-                        iter2.remove();
-                        break;
-                    }
-                }                    
-            }
+            removeRecipe(type.getRecipe());
             iter.remove();
         }
 
@@ -217,6 +215,78 @@ public class TypeManager{
             Logger.log("An error occurred while saving lucky block types config:");
             ex.printStackTrace();
         }
+//</editor-fold>
+    }
+    
+    static void removeRecipe(ShapedRecipe typeRecipe){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Iterator<Recipe> iter = Bukkit.recipeIterator();
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+            while(iter.hasNext()){
+                Recipe recipe = iter.next();
+                if(recipe.getResult().equals(typeRecipe.getResult())){
+                    iter.remove();
+                    break;
+                }
+            }
+        }else{
+            while(iter.hasNext()){
+                Recipe recipe = iter.next();
+                if(recipe instanceof ShapedRecipe){
+                    ShapedRecipe sr = (ShapedRecipe) recipe;
+                    if(sr.getKey().equals(typeRecipe.getKey())){
+                        iter.remove();
+                        break;
+                    }
+                }
+            }
+        }
+//</editor-fold>
+    }
+    
+    public static LuckyBlockType getType(int typeID){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(typeID > 0 && typeID < luckyBlockTypes.size()){
+            return luckyBlockTypes.get(typeID);
+        }else{
+            return null;
+        }
+//</editor-fold>
+    }
+    
+    public static LuckyBlockType getType(String typeName){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        for(LuckyBlockType type : luckyBlockTypes){
+            if(type.getTypeName().equals(typeName)){
+                return type;
+            }
+        }
+        return null;
+//</editor-fold>
+    }
+    
+    public static void removeType(int typeID){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(typeID < luckyBlockTypes.size()){
+            LuckyBlockType type = luckyBlockTypes.remove(typeID);
+            luckyBlockTypesAux.remove(type.getTypeData());
+            removeRecipe(type.getRecipe());
+            saveTypes();
+        }
+//</editor-fold>
+    }
+    
+    public static void addType(LuckyBlockType type){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        int typeID = luckyBlockTypes.indexOf(type);
+        if(typeID != -1){
+            removeRecipe(luckyBlockTypes.get(typeID).getRecipe());
+            luckyBlockTypes.set(typeID, type);
+        }else{
+            luckyBlockTypes.add(type);
+        }
+        saveTypes();
+        loadTypes();
 //</editor-fold>
     }
 }

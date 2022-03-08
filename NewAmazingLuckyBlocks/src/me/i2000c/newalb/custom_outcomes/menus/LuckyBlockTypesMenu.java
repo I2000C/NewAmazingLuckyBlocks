@@ -3,17 +3,21 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemStackBuilder;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class LuckyBlockTypesMenu{
+    private static boolean deleteMode;
+    
+    private static LuckyBlockType currentType;
     
     private static boolean inventoriesRegistered = false;
     
@@ -27,6 +31,10 @@ public class LuckyBlockTypesMenu{
             
             inventoriesRegistered = true;
         }
+        
+        deleteMode = false;
+        
+        currentType = null;
     }
     
     public static void openMainMenu(Player p){
@@ -62,10 +70,20 @@ public class LuckyBlockTypesMenu{
                 .withDisplayName("&aCreate new lucky block type")
                 .build();
         
-        ItemStack deleteType = ItemStackBuilder
+        ItemStack deleteType;
+        ItemStackBuilder builder = ItemStackBuilder
                 .createNewItem(XMaterial.BARRIER)
-                .withDisplayName("&cDelete existing lucky block type")
-                .build();
+                .withDisplayName("&cDelete existing lucky block type");
+        if(deleteMode){
+            builder.addLoreLine("&6Delete mode: &aenabled");
+            builder.addLoreLine("");
+            builder.addLoreLine("&4&lWARNING: &cIf this mode is enabled,");
+            builder.addLoreLine("&cwhen you click on a lucky block type,");
+            builder.addLoreLine("&cit will be deleted permanently");
+        }else{
+            builder.addLoreLine("&6Delete mode: &7disabled");
+        }
+        deleteType = builder.build();
         
         
         ItemStack placePermissionItem = ItemStackBuilder
@@ -118,15 +136,18 @@ public class LuckyBlockTypesMenu{
                     .build();
         }
         
-        inv.setItem(41, placePermissionItem);
-        inv.setItem(42, breakPermissionItem);
-        
         inv.setItem(45, back);
-        inv.setItem(46, createType);
         inv.setItem(47, deleteType);
         
-        inv.setItem(50, requirePlacePermission);
-        inv.setItem(51, requireBreakPermission);
+        if(!deleteMode){
+            inv.setItem(41, placePermissionItem);
+            inv.setItem(42, breakPermissionItem);        
+
+            inv.setItem(46, createType);        
+
+            inv.setItem(50, requirePlacePermission);
+            inv.setItem(51, requireBreakPermission);
+        }
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
@@ -134,7 +155,114 @@ public class LuckyBlockTypesMenu{
     }
     
     private static final InventoryFunction LUCKY_BLOCK_TYPES_MENU_FUNCTION = e -> {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Player p = (Player) e.getWhoClicked();
+        e.setCancelled(true);
         
+        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+            switch(e.getSlot()){
+                case 45:
+                    //Back to main menu
+                    MainMenu.reset();
+                    MainMenu.openMainMenu(p);
+                    break;
+                case 46:
+                    //Create new Lucky Block type
+                    if(deleteMode){
+                        break;
+                    }
+                    p.closeInventory();
+                    Logger.sendMessage("&3Enter the new lucky block type identifier and press ENTER", p);
+                    
+                    ChatListener.registerPlayer(p, message -> {
+                        if(TypeManager.getType(message) != null){
+                            Logger.sendMessage("&cThat identifier already exists", p, false);
+                        }else{
+                            ChatListener.removePlayer(p);
+                            currentType = new LuckyBlockType();
+                            currentType.setTypeName(message);
+                            openEditMenu(p);
+                        }
+                    }, false);
+                    break;
+                case 47:
+                    //Toggle delete types mode
+                    deleteMode = !deleteMode;
+                    openMainMenu(p);
+                    break;
+                    
+                case 41:
+                    //Change global place permission
+                    if(deleteMode){
+                        break;
+                    }
+                    
+                    p.closeInventory();
+                    Logger.sendMessage("&3Enter the new global &dplace &3permission and then press ENTER", p);
+                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", p);
+                    ChatListener.registerPlayer(p, message -> {
+                        TypeManager.setGlobalPlacePermission(message);
+                        TypeManager.saveTypes();
+                        openMainMenu(p);
+                    });
+                    break;
+                case 42:
+                    //Change global break permission
+                    if(deleteMode){
+                        break;
+                    }
+                    
+                    p.closeInventory();
+                    Logger.sendMessage("&3Enter the new global &dbreak &3permission and then press ENTER", p);
+                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", p);
+                    ChatListener.registerPlayer(p, message -> {
+                        TypeManager.setGlobalBreakPermission(message);
+                        TypeManager.saveTypes();
+                        openMainMenu(p);
+                    });
+                    break;
+                case 50:
+                    //Toggle global place permission
+                    if(deleteMode){
+                        break;
+                    }
+                    
+                    boolean requirePermission = TypeManager.isGlobalPlacePermissionEnabled();
+                    TypeManager.setEnableGlobalPlacePermission(!requirePermission);
+                    TypeManager.saveTypes();
+                    openMainMenu(p);
+                    break;
+                case 51:
+                    //Toggle global break permission
+                    if(deleteMode){
+                        break;
+                    }
+                    
+                    requirePermission = TypeManager.isGlobalBreakPermissionEnabled();
+                    TypeManager.setEnableGlobalBreakPermission(!requirePermission);
+                    TypeManager.saveTypes();
+                    openMainMenu(p);
+                    break;
+                default:
+                    if(e.getSlot() < 16){
+                        if(e.getSlot() < TypeManager.getTypes().size()){
+                            if(deleteMode){
+                                //Delete selected type
+                                TypeManager.removeType(e.getSlot());
+                                openMainMenu(p);
+                            }else{
+                                //Clone and edit selected type
+                                currentType = TypeManager.getType(e.getSlot());
+                                if(currentType != null){
+                                    currentType = currentType.cloneType();
+                                    openEditMenu(p);
+                                }
+                            }
+                        }
+                    }
+            }
+        }
+//</editor-fold>
     };
     
     private static void openEditMenu(Player p){

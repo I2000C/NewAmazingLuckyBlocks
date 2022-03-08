@@ -174,6 +174,8 @@ public class SpecialItemManager{
     }
     
     private static enum SpecialItemName{
+        luckytool(false),
+        
         regen_wand(true),
         inv_wand(true),
         tnt_wand(true),
@@ -194,9 +196,7 @@ public class SpecialItemManager{
         multi_bow(false),
         explosive_bow(false),
         homing_bow(false),
-        hook_bow(false),
-        
-        luckytool(false);
+        hook_bow(false);
         
         private final boolean isWand;
         

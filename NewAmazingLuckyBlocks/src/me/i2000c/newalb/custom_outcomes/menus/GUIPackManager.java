@@ -84,11 +84,11 @@ public class GUIPackManager{
         meta.setDisplayName(Logger.color("&cRemove packs"));
         List<String> loreList = new ArrayList();
         if(deleteMode){
+            loreList.add(Logger.color("&6Delete mode: &aenabled"));
+            loreList.add("");
             loreList.add(Logger.color("&4&lWARNING: &cIf this mode is enabled,"));
             loreList.add(Logger.color("&cwhen you click on a pack,"));
             loreList.add(Logger.color("&cit will be deleted permanently"));
-            loreList.add("");
-            loreList.add(Logger.color("&6Delete mode: &aenabled"));
         }else{
             loreList.add(Logger.color("&6Delete mode: &7disabled"));
         }
