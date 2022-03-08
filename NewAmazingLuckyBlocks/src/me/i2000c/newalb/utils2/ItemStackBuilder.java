@@ -61,6 +61,20 @@ public class ItemStackBuilder{
         
         return this;
     }
+    public ItemStackBuilder addLore(List<String> loreLines){
+        ItemMeta meta = item.getItemMeta();
+        List<String> lore;
+        if(meta.hasLore()){
+            lore = meta.getLore();
+        }else{
+            lore = new ArrayList<>();
+        }
+        lore.addAll(loreLines);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        
+        return this;
+    }
     public ItemStackBuilder withLore(String... lore){
         return withLore(Arrays.asList(lore));
     }

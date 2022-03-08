@@ -246,7 +246,7 @@ public class TypeManager{
     
     public static LuckyBlockType getType(int typeID){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(typeID > 0 && typeID < luckyBlockTypes.size()){
+        if(typeID >= 0 && typeID < luckyBlockTypes.size()){
             return luckyBlockTypes.get(typeID);
         }else{
             return null;
@@ -267,7 +267,7 @@ public class TypeManager{
     
     public static void removeType(int typeID){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(typeID < luckyBlockTypes.size()){
+        if(typeID >= 0 && typeID < luckyBlockTypes.size()){
             LuckyBlockType type = luckyBlockTypes.remove(typeID);
             luckyBlockTypesAux.remove(type.getTypeData());
             removeRecipe(type.getRecipe());

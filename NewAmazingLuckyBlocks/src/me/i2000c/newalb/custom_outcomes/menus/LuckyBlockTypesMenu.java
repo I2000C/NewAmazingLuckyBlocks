@@ -1,6 +1,8 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
+import java.util.ArrayList;
+import java.util.List;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
@@ -13,6 +15,7 @@ import me.i2000c.newalb.utils2.ItemStackBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class LuckyBlockTypesMenu{
     private static boolean deleteMode;
@@ -179,8 +182,7 @@ public class LuckyBlockTypesMenu{
                             Logger.sendMessage("&cThat identifier already exists", p, false);
                         }else{
                             ChatListener.removePlayer(p);
-                            currentType = new LuckyBlockType();
-                            currentType.setTypeName(message);
+                            currentType = new LuckyBlockType(message);
                             openEditMenu(p);
                         }
                     }, false);
@@ -266,11 +268,201 @@ public class LuckyBlockTypesMenu{
     };
     
     private static void openEditMenu(Player p){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.LUCKY_BLOCK_TYPE_EDIT_MENU, 54, "&eEdit Lucky Block type");
         
+        ItemStack glass = ItemStackBuilder
+                .createNewItem(XMaterial.MAGENTA_STAINED_GLASS_PANE)
+                .withDisplayName(" ")
+                .build();
+        
+        for(int i=11;i<=15;i++){
+            inv.setItem(i, glass);
+        }
+        for(int i=47;i<=51;i++){
+            inv.setItem(i, glass);
+        }
+        inv.setItem(20, glass);
+        inv.setItem(29, glass);
+        inv.setItem(38, glass);
+        inv.setItem(24, glass);
+        inv.setItem(33, glass);
+        inv.setItem(42, glass);
+        
+        
+        ItemStack back = ItemStackBuilder
+                .createNewItem(XMaterial.ENDER_PEARL)
+                .withDisplayName("&2Back")
+                .build();
+        
+        ItemStack next = ItemStackBuilder
+                .createNewItem(XMaterial.ANVIL)
+                .withDisplayName("&bNext")
+                .build();
+        
+        ItemStack crafting = ItemStackBuilder
+                .createNewItem(XMaterial.CRAFTING_TABLE)
+                .withDisplayName("&aLuckyType crafting")
+                .addLoreLine("&3Drag and drop items from your inventory")
+                .addLoreLine("  &3into the crafting area")
+                .build();
+        
+        ItemStack typeItem = ItemStackBuilder
+                .fromItem(currentType.getItem())
+                .withDisplayName("&5LuckyBlock item")
+                .withLore("&3Click to change material/texture")
+                .build();
+        
+        ItemStack typeName = ItemStackBuilder
+                .createNewItem(XMaterial.WRITABLE_BOOK)
+                .withDisplayName("&bCurrent identifier: &6" + currentType.getTypeName())
+                .addLoreLine("&3Click to change")
+                .build();
+        
+        String displayName;
+        List<String> lore;
+        if(currentType.getItem().hasItemMeta()){
+            ItemMeta meta = currentType.getItem().getItemMeta();
+            if(meta.hasDisplayName()){
+                displayName = meta.getDisplayName();
+            }else{
+                displayName = "";
+            }
+            if(meta.hasLore()){
+                lore = meta.getLore();
+            }else{
+                lore = new ArrayList<>();
+            }
+        }else{
+            displayName = "";
+            lore = new ArrayList<>();
+        }
+        
+        ItemStack typeItemName = ItemStackBuilder
+                .createNewItem(XMaterial.NAME_TAG)
+                .withDisplayName("&bCurrent item name: &r" + displayName)
+                .addLoreLine("&3Click to change")
+                .build();
+        
+        ItemStack typeItemLore = ItemStackBuilder
+                .createNewItem(XMaterial.OAK_SIGN)
+                .withDisplayName("&bClick to add lore line")
+                .addLoreLine("&2Current item lore:")
+                .addLoreLine("")
+                .addLore(lore)
+                .build();
+        
+        ItemStack removeItemLore = ItemStackBuilder
+                .createNewItem(XMaterial.BARRIER)
+                .withDisplayName("&cClick to remove item lore")
+                .build();
+        
+        ItemStackBuilder builder = ItemStackBuilder
+                .createNewItem(XMaterial.BOOKSHELF)
+                .withDisplayName("&bCurrent pack list:");
+        currentType.getPacks().forEach((pack, probability) -> builder.addLoreLine("  &2" + pack.getFilename() + ";" + probability));
+        ItemStack typePacks = builder.build();
+        
+        
+        ItemStack placePermissionItem = ItemStackBuilder
+                .createNewItem(XMaterial.STONE)
+                .withDisplayName("&dCurrent place permission:")
+                .addLoreLine("   &b" + currentType.getPlacePermission())
+                .addLoreLine(" ")
+                .addLoreLine("&3Click to change")
+                .build();
+        
+        ItemStack breakPermissionItem = ItemStackBuilder
+                .createNewItem(XMaterial.IRON_PICKAXE)
+                .withDisplayName("&dCurrent break permission:")
+                .addLoreLine("   &b" + currentType.getBreakPermission())
+                .addLoreLine(" ")
+                .addLoreLine("&3Click to change")
+                .build();
+        
+        ItemStack requirePlacePermission;
+        if(currentType.requirePlacePermission()){
+            requirePlacePermission = ItemStackBuilder
+                    .createNewItem(XMaterial.LIME_DYE)
+                    .withDisplayName("&dRequire place permission: &atrue")
+                    .addLoreLine(" ")
+                    .addLoreLine("&3Click to toggle")
+                    .build();
+        }else{
+            requirePlacePermission = ItemStackBuilder
+                    .createNewItem(XMaterial.GRAY_DYE)
+                    .withDisplayName("&dRequire place permission: &7false")
+                    .addLoreLine(" ")
+                    .addLoreLine("&3Click to toggle")
+                    .build();
+        }
+        
+        ItemStack requireBreakPermission;
+        if(currentType.requireBreakPermission()){
+            requireBreakPermission = ItemStackBuilder
+                    .createNewItem(XMaterial.LIME_DYE)
+                    .withDisplayName("&dRequire break permission: &atrue")
+                    .addLoreLine(" ")
+                    .addLoreLine("&3Click to toggle")
+                    .build();
+        }else{
+            requireBreakPermission = ItemStackBuilder
+                    .createNewItem(XMaterial.GRAY_DYE)
+                    .withDisplayName("&dRequire break permission: &7false")
+                    .addLoreLine(" ")
+                    .addLoreLine("&3Click to toggle")
+                    .build();
+        }
+        
+        
+        
+        inv.setItem(18, back);
+        inv.setItem(26, next);
+        
+        inv.setItem(46, crafting);
+        
+        inv.setItem(2, typeItem);
+        inv.setItem(3, typeName);
+        inv.setItem(4, typeItemName);
+        inv.setItem(5, typeItemLore);
+        inv.setItem(6, removeItemLore);
+        inv.setItem(8, typePacks);
+        
+        inv.setItem(43, placePermissionItem);
+        inv.setItem(44, breakPermissionItem);
+        inv.setItem(52, requirePlacePermission);
+        inv.setItem(53, requireBreakPermission);
+        
+        for(int i=0; i<currentType.getCrafting().size(); i++){
+            ItemStack item = currentType.getCrafting().get(i);
+            if(i>=0 && i<=2){
+                inv.setItem(i + 21, item);
+            }else if(i>=3 && i<=5){
+                inv.setItem(i + 27, item);
+            }else{
+                inv.setItem(i + 33, item);
+            }
+        }
+        
+        GUIManager.setCurrentInventory(inv);
+        p.openInventory(inv);
+//</editor-fold>
     }
     
     private static final InventoryFunction LUCKY_BLOCK_TYPE_EDIT_MENU_FUNCTION = e -> {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Player p = (Player) e.getWhoClicked();
+        e.setCancelled(true);
         
+        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+            switch(e.getSlot()){
+                case 18:
+                    //Back to previous menu
+                    openMainMenu(p);
+                    break;
+            }
+        }
+//</editor-fold>
     };
     
     private static void openPackManageMenu(Player p){

@@ -68,6 +68,32 @@ public class LuckyBlockType{
         return !requirePlacePermission || player.hasPermission(placePermission);
     }
     
+    public String getPlacePermission(){
+        return placePermission;
+    }
+    public void setPlacePermission(String permission){
+        placePermission = permission;
+    }
+    public String getBreakPermission(){
+        return breakPermission;
+    }
+    public void setBreakPermission(String permission){
+        breakPermission = permission;
+    }
+    
+    public boolean requirePlacePermission(){
+        return requirePlacePermission;
+    }
+    public void setRequirePlacePermission(boolean requirePermission){
+        requirePlacePermission = requirePermission;
+    }    
+    public boolean requireBreakPermission(){
+        return requireBreakPermission;
+    }
+    public void setRequireBreakPermission(boolean requirePermission){
+        requireBreakPermission = requirePermission;
+    }
+    
     public HashMap<OutcomePack, Integer> getPacks(){
         return packs;
     }
@@ -77,13 +103,9 @@ public class LuckyBlockType{
     }
     
     
-    public LuckyBlockType(){
+    public LuckyBlockType(String typeName){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        int aux = 1;
-        typeName = "newLuckyBlockType";
-        while(TypeManager.getTypes().stream().anyMatch(type -> type.getTypeName().equals(typeName))){
-            typeName = "newLuckyBlockType" + (++aux);
-        }
+        this.typeName = typeName;
         
         luckyBlockItem = new ItemStack(Material.SPONGE);
         
@@ -109,12 +131,13 @@ public class LuckyBlockType{
 //</editor-fold>
     }
     
-    private LuckyBlockType(String typeName){
-        this.typeName = typeName;
-    }    
+    private LuckyBlockType(){}    
+    
     public static LuckyBlockType loadFromConfig(FileConfiguration config, String key, String typeName){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        LuckyBlockType type = new LuckyBlockType(typeName);
+        LuckyBlockType type = new LuckyBlockType();
+        
+        type.typeName = typeName;
         
         String path = key + "." + typeName;
         
