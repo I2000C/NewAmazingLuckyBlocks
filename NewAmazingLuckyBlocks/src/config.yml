@@ -193,8 +193,9 @@ Commands:
     RandomBlocks-permission: amazinglb.randomblocks
     Clear-permission: amazinglb.clear
     Menu-permission: amazinglb.menu
+    GetSkull-permission: amazinglb.getskull
     Tab-completer: amazinglb.tabcompleter
-    Schematic: amazinglb.schematic
+    Schematic: amazinglb.schematic   
 ColoredLogger: true
 Update-checker: true
 Enable-openMenu-confirmation: true

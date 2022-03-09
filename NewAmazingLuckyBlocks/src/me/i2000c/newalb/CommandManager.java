@@ -24,6 +24,7 @@ import me.i2000c.newalb.utils.SpecialItemManager;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils.WorldMenu;
 import me.i2000c.newalb.utils2.Schematic;
+import me.i2000c.newalb.utils2.TextureManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -95,6 +96,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 return executeRemoveSchematic(sender, args);
             case "clear":
                 return executeClear(sender, args);
+            case "getSkull":
+                return getSkull(sender, args);
             case "debug":
                 return executeDebug(sender, args);
             default:
@@ -765,9 +768,41 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 //</editor-fold>
     }
     
+    private boolean getSkull(CommandSender sender, String[] args){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        String permission = ConfigManager.getConfig().getString("Commands.GetSkull-permission");
+        if(!sender.hasPermission(permission)){
+            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
+            sender.sendMessage(noperm);
+            return false;
+        }
+        
+        if(!(sender instanceof Player)){
+            sender.sendMessage(Logger.color("&cYou can't use this command from the Console"));
+            return false;
+        }
+        
+        if(args.length != 2){
+            Logger.sendMessage("&cUsage: &7/alb getSkull <textureID>", sender);
+            return false;
+        }
+        
+        try{
+            TextureManager.Texture texture = new TextureManager.Texture(args[1]);
+            ItemStack textureItem = TextureManager.getItemSkullStack();
+            TextureManager.setTexture(textureItem, texture);
+            ((Player) sender).getInventory().addItem(textureItem);
+            return true;
+        }catch(TextureManager.InvalidHeadException ex){
+            Logger.sendMessage("&cInvalid texture ID", sender);
+            return false;
+        }
+//</editor-fold>
+    }
+    
     private static final String[] CMD_LIST = {"help", "reload", "give", "randomblock", "menu", "return", "worlds", 
         "loadSchematic", "loadSchem", "loadS", "saveSchematic", "saveSchem", "saveS", 
-        "removeSchematic", "removeSchem", "removeS", "clear"};
+        "removeSchematic", "removeSchem", "removeS", "clear", "getSkull"};
     
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
