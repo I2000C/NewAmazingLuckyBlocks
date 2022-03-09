@@ -481,8 +481,8 @@ public class LuckyBlockTypesMenu{
                         ItemStack cursor = e.getCursor();
                         if(cursor.getType() != Material.AIR && 
                                 (cursor.getType().isBlock() || TextureManager.isSkull(cursor.getType()))){
-                            String displayName = null;
-                            List<String> lore = null;
+                            String displayName = "";
+                            List<String> lore = new ArrayList<>();
                             if(currentType.getItem().hasItemMeta()){
                                 ItemMeta meta = currentType.getItem().getItemMeta();
                                 if(meta.hasDisplayName()){

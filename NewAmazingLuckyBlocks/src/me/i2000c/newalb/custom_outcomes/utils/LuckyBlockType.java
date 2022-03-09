@@ -2,10 +2,10 @@ package me.i2000c.newalb.custom_outcomes.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
@@ -57,6 +57,7 @@ public class LuckyBlockType{
     }
     public void setItem(ItemStack item){
         this.luckyBlockItem = item;
+        this.texture = TextureManager.getTexture(item);
     }
     
     public List<ItemStack> getCrafting(){
@@ -285,7 +286,7 @@ public class LuckyBlockType{
         // Save item
         ItemMeta meta = luckyBlockItem.getItemMeta();
         String name = meta.hasDisplayName() ? Logger.deColor(meta.getDisplayName()) : "";
-        List<String> lore = meta.hasLore() ? Logger.deColor(meta.getLore()) : new ArrayList<>();
+        List<String> lore = meta.hasLore() ? Logger.deColor(meta.getLore()) : Collections.EMPTY_LIST;
         config.set(path + ".name", name);
         config.set(path + ".lore", lore);
         config.set(path + ".material", texture == null ? OtherUtils.parseItemStack(luckyBlockItem) : "");

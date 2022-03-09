@@ -17,7 +17,7 @@ public class ItemStackBuilder{
         this.item = material.parseItem();
     }
     private ItemStackBuilder(ItemStack item){
-        this.item = item;
+        this.item = item.clone();
     }
     
     public static ItemStackBuilder createNewItem(XMaterial material){
