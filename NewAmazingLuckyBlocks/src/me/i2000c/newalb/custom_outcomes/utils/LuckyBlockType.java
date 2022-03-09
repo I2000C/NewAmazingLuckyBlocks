@@ -23,6 +23,8 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class LuckyBlockType{
+    private int ID;
+    
     private String typeName;
     
     private ItemStack luckyBlockItem;
@@ -52,6 +54,9 @@ public class LuckyBlockType{
     
     public ItemStack getItem(){
         return luckyBlockItem.clone();
+    }
+    public void setItem(ItemStack item){
+        this.luckyBlockItem = item;
     }
     
     public List<ItemStack> getCrafting(){
@@ -106,6 +111,7 @@ public class LuckyBlockType{
     public LuckyBlockType(String typeName){
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.typeName = typeName;
+        this.ID = -1;
         
         luckyBlockItem = new ItemStack(Material.SPONGE);
         
@@ -138,6 +144,7 @@ public class LuckyBlockType{
         LuckyBlockType type = new LuckyBlockType();
         
         type.typeName = typeName;
+        type.ID = TypeManager.getNextTypeID();
         
         String path = key + "." + typeName;
         
@@ -189,7 +196,7 @@ public class LuckyBlockType{
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             type.recipe = new ShapedRecipe(type.luckyBlockItem);
         }else{
-            type.recipe = new ShapedRecipe(new NamespacedKey(NewAmazingLuckyBlocks.getInstance(), TypeManager.getNextRecipeID()), type.luckyBlockItem);
+            type.recipe = new ShapedRecipe(new NamespacedKey(NewAmazingLuckyBlocks.getInstance(), "NewAmazingLuckyBlocks." + type.ID), type.luckyBlockItem);
         }        
         
         String char0 = materialNames[0].startsWith("AIR") ? " " : "A";
@@ -361,7 +368,7 @@ public class LuckyBlockType{
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 71 * hash + Objects.hashCode(this.typeName);
+        hash = 71 * hash + this.ID;
         return hash;
     }
 
@@ -377,12 +384,14 @@ public class LuckyBlockType{
             return false;
         }
         final LuckyBlockType other = (LuckyBlockType) obj;
-        return Objects.equals(this.typeName, other.typeName);
+        return this.ID == other.ID;
     }
     
     public LuckyBlockType cloneType(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         LuckyBlockType clone = new LuckyBlockType(typeName);
+        
+        clone.ID = this.ID;
         
         clone.luckyBlockItem = this.getItem();
         

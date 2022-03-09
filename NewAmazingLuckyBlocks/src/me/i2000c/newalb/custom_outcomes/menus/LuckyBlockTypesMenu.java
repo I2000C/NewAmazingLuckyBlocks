@@ -2,6 +2,7 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
@@ -12,12 +13,16 @@ import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemStackBuilder;
+import me.i2000c.newalb.utils2.TextureManager;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class LuckyBlockTypesMenu{
+    private static final int[] CRAFTING_SLOTS = {21, 22, 23, 30, 31, 32, 39, 40, 41};
+    
     private static boolean deleteMode;
     
     private static LuckyBlockType currentType;
@@ -200,7 +205,7 @@ public class LuckyBlockTypesMenu{
                     }
                     
                     p.closeInventory();
-                    Logger.sendMessage("&3Enter the new global &dplace &3permission and then press ENTER", p);
+                    Logger.sendMessage("&3Enter the new global &dplace &3permission and then press ENTER.", p);
                     Logger.sendMessage("&bTo return without change the permission, type &a/alb return", p);
                     ChatListener.registerPlayer(p, message -> {
                         TypeManager.setGlobalPlacePermission(message);
@@ -215,7 +220,7 @@ public class LuckyBlockTypesMenu{
                     }
                     
                     p.closeInventory();
-                    Logger.sendMessage("&3Enter the new global &dbreak &3permission and then press ENTER", p);
+                    Logger.sendMessage("&3Enter the new global &dbreak &3permission and then press ENTER.", p);
                     Logger.sendMessage("&bTo return without change the permission, type &a/alb return", p);
                     ChatListener.registerPlayer(p, message -> {
                         TypeManager.setGlobalBreakPermission(message);
@@ -310,7 +315,7 @@ public class LuckyBlockTypesMenu{
         ItemStack typeItem = ItemStackBuilder
                 .fromItem(currentType.getItem())
                 .withDisplayName("&5LuckyBlock item")
-                .withLore("&3Click to change material/texture")
+                .withLore("&3Click with an item to change material/texture")
                 .build();
         
         ItemStack typeName = ItemStackBuilder
@@ -433,19 +438,22 @@ public class LuckyBlockTypesMenu{
         inv.setItem(52, requirePlacePermission);
         inv.setItem(53, requireBreakPermission);
         
-        for(int i=0; i<currentType.getCrafting().size(); i++){
+        for(int i=0; i<9; i++){
             ItemStack item = currentType.getCrafting().get(i);
-            if(i>=0 && i<=2){
-                inv.setItem(i + 21, item);
-            }else if(i>=3 && i<=5){
-                inv.setItem(i + 27, item);
-            }else{
-                inv.setItem(i + 33, item);
-            }
+            inv.setItem(CRAFTING_SLOTS[i], item);
         }
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
+//</editor-fold>
+    }    
+    
+    private static void saveCrafting(LuckyBlockType type, Inventory inv){
+        //<editor-fold defaultstate="collapsed" desc="Code">        
+        for(int i=0; i<9; i++){
+            ItemStack item = inv.getItem(CRAFTING_SLOTS[i]);
+            type.getCrafting().set(i, item != null ? item : new ItemStack(Material.AIR));
+        }
 //</editor-fold>
     }
     
@@ -462,57 +470,153 @@ public class LuckyBlockTypesMenu{
                     break;
                 case 26:
                     //Save current type
+                    saveCrafting(currentType, e.getClickedInventory());
                     TypeManager.addType(currentType);
                     reset();
                     openMainMenu(p);
                     break;
                 case 2:
                     //Set type item
+                    if(e.getCursor() != null){
+                        ItemStack cursor = e.getCursor();
+                        if(cursor.getType() != Material.AIR && 
+                                (cursor.getType().isBlock() || TextureManager.isSkull(cursor.getType()))){
+                            String displayName = null;
+                            List<String> lore = null;
+                            if(currentType.getItem().hasItemMeta()){
+                                ItemMeta meta = currentType.getItem().getItemMeta();
+                                if(meta.hasDisplayName()){
+                                    displayName = meta.getDisplayName();
+                                }
+                                if(meta.hasLore()){
+                                    lore = meta.getLore();
+                                }
+                            }
+                            
+                            currentType.setItem(ItemStackBuilder.fromItem(cursor.clone())
+                                .withAmount(1)
+                                .withDisplayName(displayName)
+                                .withLore(lore)
+                                .withEnchantments(Collections.EMPTY_MAP)
+                                .build());
+                            
+                            ItemStack typeItem = ItemStackBuilder
+                                .fromItem(currentType.getItem())
+                                .withDisplayName("&5LuckyBlock item")
+                                .withLore("&3Click with an item to change material/texture")
+                                .build();
+                            
+                            e.getClickedInventory().setItem(e.getSlot(), typeItem);
+                        }
+                    }
                     break;
                 case 3:
                     //Set type name
+                    saveCrafting(currentType, e.getClickedInventory());
+                    p.closeInventory();
+                    Logger.sendMessage("&3Enter the new identifier for this lucky block type.", p);
+                    Logger.sendMessage("  &3If you don't want to change it, use &a/alb return", p);
+                    ChatListener.registerPlayer(p, message -> {
+                        if(TypeManager.getType(message) != null){
+                            Logger.sendMessage("&cThat identifier already exists", p, false);
+                        }else{
+                            ChatListener.removePlayer(p);
+                            currentType.setTypeName(message);
+                            openEditMenu(p);
+                        }
+                    }, false);
                     break;
                 case 4:
                     //Set type item name
+                    saveCrafting(currentType, e.getClickedInventory());
+                    p.closeInventory();
+                    Logger.sendMessage("&3Enter the new item name for this lucky block type.", p);
+                    Logger.sendMessage("  &3You can use color codes.", p);
+                    Logger.sendMessage("  &3To remove the display name, type &cnull&3.", p);
+                    Logger.sendMessage("  &3If you don't want to change it, use &a/alb return", p);
+                    ChatListener.registerPlayer(p, message -> {
+                        currentType.setItem(ItemStackBuilder
+                                .fromItem(currentType.getItem())
+                                .withDisplayName(message.equals("null") ? null : message)
+                                .build());
+                        openEditMenu(p);
+                    });
                     break;
                 case 5:
                     //Add type item lore
+                    saveCrafting(currentType, e.getClickedInventory());
+                    p.closeInventory();
+                    Logger.sendMessage("&3Enter the new lore line for this lucky block type.", p);
+                    Logger.sendMessage("  &3You can use color codes.", p);
+                    Logger.sendMessage("  &3If you don't want add it, use &a/alb return", p);
+                    ChatListener.registerPlayer(p, message -> {
+                        currentType.setItem(ItemStackBuilder
+                                .fromItem(currentType.getItem())
+                                .addLoreLine(message)
+                                .build());
+                        openEditMenu(p);
+                    });
                     break;
                 case 6:
                     //Remove type item lore
+                    saveCrafting(currentType, e.getClickedInventory());
+                    currentType.setItem(ItemStackBuilder
+                            .fromItem(currentType.getItem())
+                            .withLore()
+                            .build());
+                    openEditMenu(p);
                     break;
                 case 8:
                     //Open pack manage menu
+                    saveCrafting(currentType, e.getClickedInventory());
                     openPackManageMenu(p);
                     break;
                 case 43:
                     //Change place permission
+                    saveCrafting(currentType, e.getClickedInventory());
+                    p.closeInventory();
+                    Logger.sendMessage("&3Enter the new &dplace &3permission and then press ENTER", p);
+                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", p);
+                    ChatListener.registerPlayer(p, message -> {
+                        currentType.setPlacePermission(message);
+                        openEditMenu(p);
+                    });
                     break;
                 case 44:
                     //Change break permission
+                    saveCrafting(currentType, e.getClickedInventory());
+                    p.closeInventory();
+                    Logger.sendMessage("&3Enter the new &dbreak &3permission and then press ENTER", p);
+                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", p);
+                    ChatListener.registerPlayer(p, message -> {
+                        currentType.setBreakPermission(message);
+                        openEditMenu(p);
+                    });
                     break;
                 case 52:
                     //Toggle place permission
+                    saveCrafting(currentType, e.getClickedInventory());
+                    currentType.setRequirePlacePermission(!currentType.requirePlacePermission());
+                    openEditMenu(p);
                     break;
                 case 53:
                     //Toggle break permission
+                    saveCrafting(currentType, e.getClickedInventory());
+                    currentType.setRequireBreakPermission(!currentType.requireBreakPermission());
+                    openEditMenu(p);
                     break;
-                default:
+                case 21:
+                case 22:
+                case 23:
+                case 30:
+                case 31:
+                case 32:
+                case 39:
+                case 40:
+                case 41:
                     //Set crafting item
-                    int craftingID = -1;
-                    int slot = e.getSlot();
-                    if(slot >= 21 && slot <= 23){
-                        craftingID = slot - 21;
-                    }else if(slot >= 30 && slot <= 32){
-                        craftingID = slot - 27;
-                    }else if(slot >= 39 && slot <= 41){
-                        craftingID = slot - 33;
-                    }
-                    
-                    if(craftingID != -1){
-                        e.setCancelled(false);
-                        currentType.getCrafting().set(craftingID, e.getCursor());
-                    }
+                    e.setCancelled(false);
+                    break;
             }
         }else{
             e.setCancelled(false);

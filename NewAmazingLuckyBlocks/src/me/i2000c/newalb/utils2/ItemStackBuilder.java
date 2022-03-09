@@ -4,8 +4,8 @@ import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import me.i2000c.newalb.utils.Logger;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -91,7 +91,8 @@ public class ItemStackBuilder{
         
         return this;
     }
-    public ItemStackBuilder withEnchantments(HashMap<Enchantment, Integer> enchantments){
+    public ItemStackBuilder withEnchantments(Map<Enchantment, Integer> enchantments){
+        item.getEnchantments().forEach((enchantment, level) -> item.removeEnchantment(enchantment));
         item.addUnsafeEnchantments(enchantments);
         
         return this;

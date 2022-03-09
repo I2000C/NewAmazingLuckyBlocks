@@ -46,8 +46,8 @@ public class TypeManager{
     
     private static int currentRecipeID;
     
-    static String getNextRecipeID(){
-        return "NewAmazingLuckyBlocks." + (currentRecipeID++);
+    static int getNextTypeID(){
+        return ++currentRecipeID;
     }
     
     public static String getGlobalBreakPermission(){
@@ -158,7 +158,7 @@ public class TypeManager{
     
     public static void loadTypes(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        currentRecipeID = 0;
+        currentRecipeID = -1;
         
         // Remove all previously used recipes
         Iterator<LuckyBlockType> iter = luckyBlockTypes.iterator();
@@ -220,6 +220,10 @@ public class TypeManager{
     
     static void removeRecipe(ShapedRecipe typeRecipe){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(typeRecipe == null){
+            return;
+        }
+        
         Iterator<Recipe> iter = Bukkit.recipeIterator();
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             while(iter.hasNext()){
