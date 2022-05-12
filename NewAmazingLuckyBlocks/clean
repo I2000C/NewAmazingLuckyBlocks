@@ -1,0 +1,38 @@
+#!/bin/bash
+# File generated with BuildXMLCreator
+
+libDir=lib
+
+baseDir=~/.ant
+librariesDir=$baseDir/cached_libraries
+antDirName=apache-ant
+antDir=$baseDir/$antDirName
+antFile=$antDir/bin/ant
+tempDir=$baseDir/temp
+
+ant=$(which ant)
+if [ $? != 0 ]
+then
+    if [ -f "$antFile" ]
+    then
+        chmod u+x "$antFile"
+        ant="$antFile"
+    else
+        rm -r "$antDir" &>/dev/null
+        rm -r "$tempDir/$antDirName" &>/dev/null
+        java -jar utils/FileDownloader.jar -u "$tempDir/$antDirName" http://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.zip
+        if [ $? != 0 ]
+        then
+            echo "An error occurred while downloading ant" 1>&2
+            exit 2
+        else
+            mv "$tempDir/$antDirName/apache-ant-1.10.12" "$antDir"
+            rmdir "$tempDir/$antDirName"
+            chmod u+x "$antFile"
+            ant="$antFile"
+        fi
+    fi
+fi
+
+echo "Cleaning project..."
+$ant clean

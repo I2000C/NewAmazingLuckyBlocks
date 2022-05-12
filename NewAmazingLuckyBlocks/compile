@@ -1,0 +1,118 @@
+#!/bin/bash
+# File generated with BuildXMLCreator
+
+libDir=lib
+
+baseDir=~/.ant
+librariesDir=$baseDir/cached_libraries
+antDirName=apache-ant
+antDir=$baseDir/$antDirName
+antFile=$antDir/bin/ant
+tempDir=$baseDir/temp
+
+mkdir "$libDir" &>/dev/null
+cd "$libDir"
+
+echo "Downloading libraries..."
+
+if [ ! -f "spigot-1.12.2.jar" ]
+then
+    if [ -f "$librariesDir/spigot-1.12.2.jar" ]
+    then
+        cp "$librariesDir/spigot-1.12.2.jar" .
+    else
+        java -jar ../utils/FileDownloader.jar "$tempDir/spigot-1.12.2.jar" https://hub.spigotmc.org/nexus/content/repositories/snapshots/org/spigotmc/spigot-api/1.12.2-R0.1-SNAPSHOT/spigot-api-1.12.2-R0.1-20180712.012057-156.jar
+        if [ $? != 0 ]
+        then
+            echo "An error occurred while downloading spigot-1.12.2.jar" 1>&2
+            exit 1
+        else
+            mkdir -p "$librariesDir"
+            mv "$tempDir/spigot-1.12.2.jar" "$librariesDir/spigot-1.12.2.jar"
+            cp "$librariesDir/spigot-1.12.2.jar" .
+        fi
+    fi
+fi
+if [ ! -f "spigot-1.8.8-R0.1-SNAPSHOT-latest.jar" ]
+then
+    if [ -f "$librariesDir/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar" ]
+    then
+        cp "$librariesDir/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar" .
+    else
+        java -jar ../utils/FileDownloader.jar "$tempDir/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar" https://cdn.getbukkit.org/spigot/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar
+        if [ $? != 0 ]
+        then
+            echo "An error occurred while downloading spigot-1.8.8-R0.1-SNAPSHOT-latest.jar" 1>&2
+            exit 1
+        else
+            mkdir -p "$librariesDir"
+            mv "$tempDir/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar" "$librariesDir/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar"
+            cp "$librariesDir/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar" .
+        fi
+    fi
+fi
+if [ ! -f "worldedit-bukkit-7.2.2.jar" ]
+then
+    if [ -f "$librariesDir/worldedit-bukkit-7.2.2.jar" ]
+    then
+        cp "$librariesDir/worldedit-bukkit-7.2.2.jar" .
+    else
+        java -jar ../utils/FileDownloader.jar "$tempDir/worldedit-bukkit-7.2.2.jar" https://dev.bukkit.org/projects/worldedit/files/3172946/download
+        if [ $? != 0 ]
+        then
+            echo "An error occurred while downloading worldedit-bukkit-7.2.2.jar" 1>&2
+            exit 1
+        else
+            mkdir -p "$librariesDir"
+            mv "$tempDir/worldedit-bukkit-7.2.2.jar" "$librariesDir/worldedit-bukkit-7.2.2.jar"
+            cp "$librariesDir/worldedit-bukkit-7.2.2.jar" .
+        fi
+    fi
+fi
+if [ ! -f "worldedit-bukkit-6.1.9.jar" ]
+then
+    if [ -f "$librariesDir/worldedit-bukkit-6.1.9.jar" ]
+    then
+        cp "$librariesDir/worldedit-bukkit-6.1.9.jar" .
+    else
+        java -jar ../utils/FileDownloader.jar "$tempDir/worldedit-bukkit-6.1.9.jar" https://dev.bukkit.org/projects/worldedit/files/2597538/download
+        if [ $? != 0 ]
+        then
+            echo "An error occurred while downloading worldedit-bukkit-6.1.9.jar" 1>&2
+            exit 1
+        else
+            mkdir -p "$librariesDir"
+            mv "$tempDir/worldedit-bukkit-6.1.9.jar" "$librariesDir/worldedit-bukkit-6.1.9.jar"
+            cp "$librariesDir/worldedit-bukkit-6.1.9.jar" .
+        fi
+    fi
+fi
+
+cd ..
+
+ant=$(which ant)
+if [ $? != 0 ]
+then
+    if [ -f "$antFile" ]
+    then
+        chmod u+x "$antFile"
+        ant="$antFile"
+    else
+        rm -r "$antDir" &>/dev/null
+        rm -r "$tempDir/$antDirName" &>/dev/null
+        java -jar utils/FileDownloader.jar -u "$tempDir/$antDirName" http://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.zip
+        if [ $? != 0 ]
+        then
+            echo "An error occurred while downloading ant" 1>&2
+            exit 2
+        else
+            mv "$tempDir/$antDirName/apache-ant-1.10.12" "$antDir"
+            rmdir "$tempDir/$antDirName"
+            chmod u+x "$antFile"
+            ant="$antFile"
+        fi
+    fi
+fi
+
+echo "Compiling project..."
+$ant

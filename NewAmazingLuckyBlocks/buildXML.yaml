@@ -1,0 +1,9 @@
+jarName: NewAmazingLuckyBlocks
+mainClassName: NewAmazingLuckyBlocks
+mainClassPackage: me.i2000c.newalb
+libraries:
+  spigot-1.12.2.jar: https://hub.spigotmc.org/nexus/content/repositories/snapshots/org/spigotmc/spigot-api/1.12.2-R0.1-SNAPSHOT/spigot-api-1.12.2-R0.1-20180712.012057-156.jar
+  spigot-1.8.8-R0.1-SNAPSHOT-latest.jar: https://cdn.getbukkit.org/spigot/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar
+  worldedit-bukkit-7.2.2.jar: https://dev.bukkit.org/projects/worldedit/files/3172946/download
+  worldedit-bukkit-6.1.9.jar: https://dev.bukkit.org/projects/worldedit/files/2597538/download
+librariesToPack: []
