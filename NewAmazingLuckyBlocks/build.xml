@@ -23,6 +23,7 @@
         <pathelement location="${libDir}/worldedit-bukkit-7.2.2.jar"/>
         <pathelement location="${libDir}/worldedit-bukkit-6.1.9.jar"/>
     </path>
+
     <target name="init">
         <mkdir dir="${buildDir}"/>
         <mkdir dir="${build_META_INF_Dir}"/>
@@ -33,17 +34,21 @@
             </fileset>
         </copy>
     </target>
+
     <target name="clean">
         <delete dir="${buildDir}"/>
         <delete dir="${distDir}"/>
     </target>
+
     <target depends="clean" name="cleanall"/>
+
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="${buildDir}" includeantruntime="false">
             <src path="${srcDir}"/>
             <classpath refid="Project.classpath"/>
             <compilerarg value="-Xlint:-unchecked"/>
+            <compilerarg value="-parameters"/>
         </javac>
     </target>
 
