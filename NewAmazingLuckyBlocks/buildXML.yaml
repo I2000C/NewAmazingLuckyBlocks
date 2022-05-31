@@ -1,3 +1,5 @@
+isRunnable: false
+javaVersion: 8
 jarName: NewAmazingLuckyBlocks
 mainClassName: NewAmazingLuckyBlocks
 mainClassPackage: me.i2000c.newalb
