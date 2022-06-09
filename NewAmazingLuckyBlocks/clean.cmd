@@ -15,7 +15,7 @@ set tempDir=%baseDir%\temp
 
 where ant 1>nul 2>nul
 if "!errorlevel!"=="0" (
-    for /f "delims=" %%i in ('where ant') do set ant=%%i
+    set ant=ant
 ) else (
     if exist "%antFile%" (
         set ant="%antFile%"
