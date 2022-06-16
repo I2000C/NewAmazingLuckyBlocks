@@ -1,9 +1,7 @@
 package me.i2000c.newalb.listeners.interact;
 
 import io.github.bananapuncher714.nbteditor.NBTEditor;
-import java.util.HashMap;
-import java.util.Map;
-import me.i2000c.newalb.utils.Logger;
+import java.util.ArrayList;
 import me.i2000c.newalb.utils.SpecialItem;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,11 +12,11 @@ import org.bukkit.inventory.ItemStack;
 public class PlayerInteractListener implements Listener{
     private static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
     private static int GLOBAL_ID = -1;
-    private static final Map<Integer, SpecialItem> EVENTS = new HashMap<>();
+    private static final ArrayList<SpecialItem> EVENTS = new ArrayList<>();
     
     public static int registerSpecialtem(SpecialItem specialItem){
-        EVENTS.put(++GLOBAL_ID, specialItem);
-        return GLOBAL_ID;
+        EVENTS.add(specialItem);
+        return ++GLOBAL_ID;
     }
     
     public static ItemStack setSpecialtemID(ItemStack stack, int specialItemID){
@@ -37,9 +35,11 @@ public class PlayerInteractListener implements Listener{
         ItemStack stack = e.getItem();
         if(stack != null){
             int specialItemID = getSpecialItemID(stack);
-            SpecialItem specialItem = EVENTS.get(specialItemID);
-            if(specialItem != null){
-                specialItem.onPlayerInteract(e);
+            if(specialItemID >= 0 && specialItemID < EVENTS.size()){
+                SpecialItem specialItem = EVENTS.get(specialItemID);
+                if(specialItem != null){
+                    specialItem.onPlayerInteract(e);
+                }
             }
         }
     }
