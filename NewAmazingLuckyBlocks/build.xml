@@ -42,7 +42,7 @@
 
     <target name="build" depends="init">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${buildDir}" includeantruntime="false" source="8" target="8">
+        <javac encoding="utf8" debug="true" debuglevel="${debuglevel}" destdir="${buildDir}" includeantruntime="false" source="8" target="8">
             <src path="${srcDir}"/>
             <classpath refid="Project.classpath"/>
             <compilerarg value="-Xlint:-unchecked"/>
