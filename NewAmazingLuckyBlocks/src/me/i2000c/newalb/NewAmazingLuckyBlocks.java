@@ -125,8 +125,10 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
     
     @Override
     public void onDisable(){
-        FinishMenu.testRewardsPlayerList.clear();
-        LocationManager.saveLocations();
+        if(minecraftVersion != null){
+            FinishMenu.testRewardsPlayerList.clear();
+            LocationManager.saveLocations();
+        }
         Logger.log(LangLoader.getMessages().getString("Disable.line1").replace("%prefix%", ""));
     }
     
