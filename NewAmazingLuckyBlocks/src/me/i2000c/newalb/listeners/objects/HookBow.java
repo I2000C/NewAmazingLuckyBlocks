@@ -152,7 +152,12 @@ public class HookBow extends BowItem{
             throw new IllegalArgumentException("Loc 1 and loc 2 must be in the same world");
         }
         
-        if(loc1.getBlock().getLocation().equals(loc2.getBlock().getLocation())){
+        int x1 = loc1.getBlockX();
+        int x2 = loc2.getBlockX();
+        int z1 = loc1.getBlockZ();
+        int z2 = loc2.getBlockZ();
+        if(x1 == x2 && z1 == z2){
+            // If loc1 is in the same column than loc2, return a vertical vector
             return new Vector(0, 1, 0);
         }
         
