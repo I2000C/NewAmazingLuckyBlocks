@@ -28,6 +28,7 @@ public class BlockReplacingSphereReward extends Reward{
     private int maxRadius;
     private int ticksBetweenLayers;
     private boolean usePlayerLoc;
+    private boolean replaceLiquids;
     private Map<ItemStack, Integer> materials;
     private int totalProbability;
     
@@ -37,6 +38,7 @@ public class BlockReplacingSphereReward extends Reward{
         maxRadius = 5;
         ticksBetweenLayers = 10;
         usePlayerLoc = false;
+        replaceLiquids = false;
         materials = new LinkedHashMap<>();
         totalProbability = 0;
     }
@@ -64,6 +66,12 @@ public class BlockReplacingSphereReward extends Reward{
     }
     public void setUsePlayerLoc(boolean usePlayerLoc){
         this.usePlayerLoc = usePlayerLoc;
+    }
+    public boolean isReplaceLiquids(){
+        return this.replaceLiquids;
+    }
+    public void setReplaceLiquids(boolean replaceLiquids){
+        this.replaceLiquids = replaceLiquids;
     }
     
     public void addItemStack(ItemStack stack){
@@ -138,6 +146,11 @@ public class BlockReplacingSphereReward extends Reward{
         loreList.add("&dMax radius: &3" + this.maxRadius);
         loreList.add("&dTicks between layers: &3" + this.ticksBetweenLayers);
         if(this.usePlayerLoc){
+            loreList.add("&dReplace liquids: &atrue");
+        }else{
+            loreList.add("&dReplace liquids: &cfalse");
+        }
+        if(this.replaceLiquids){
             loreList.add("&dUse player location: &atrue");
         }else{
             loreList.add("&dUse player location: &cfalse");
@@ -156,6 +169,7 @@ public class BlockReplacingSphereReward extends Reward{
         config.set(path + ".maxRadius", this.maxRadius);
         config.set(path + ".ticksBetweenLayers", this.ticksBetweenLayers);
         config.set(path + ".usePlayerLoc", this.usePlayerLoc);
+        config.set(path + ".replaceLiquids", this.replaceLiquids);
         
         List<String> aux = new ArrayList<>();
         materials.keySet().stream()
@@ -170,6 +184,7 @@ public class BlockReplacingSphereReward extends Reward{
         this.maxRadius = config.getInt(path + ".maxRadius");
         this.ticksBetweenLayers = config.getInt(path + ".ticksBetweenLayers");
         this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
+        this.replaceLiquids = config.getBoolean(path + ".replaceLiquids");
         this.totalProbability = 0;
         
         if(this.materials == null){
@@ -220,6 +235,10 @@ public class BlockReplacingSphereReward extends Reward{
                         for(int z=minZ; z<=maxZ; z++){
                             Block block = source.getWorld().getBlockAt(x, y, z);
                             if(block.getType() == Material.AIR || !block.getType().isBlock()){
+                                continue;
+                            }
+                            
+                            if(!replaceLiquids && block.isLiquid()){
                                 continue;
                             }
                             
@@ -289,6 +308,7 @@ public class BlockReplacingSphereReward extends Reward{
         reward.maxRadius = this.maxRadius;
         reward.ticksBetweenLayers = this.ticksBetweenLayers;
         reward.usePlayerLoc = this.usePlayerLoc;
+        reward.replaceLiquids = this.replaceLiquids;
         reward.materials = new LinkedHashMap<>(this.materials);
         reward.totalProbability = this.totalProbability;
         return reward;

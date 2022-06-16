@@ -11,17 +11,13 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.BlockReplacingSphereReward;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EffectReward;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
 
 public class BlockReplacingSphereMenu{
     public static BlockReplacingSphereReward reward = null;
@@ -96,6 +92,19 @@ public class BlockReplacingSphereMenu{
         meta.setLore(Logger.color(Arrays.asList("&3Click to toggle")));
         usePlayerLocItem.setItemMeta(meta);
         
+        ItemStack replaceLiquids;
+        if(reward.isReplaceLiquids()){
+            replaceLiquids = XMaterial.WATER_BUCKET.parseItem();
+            meta = usePlayerLocItem.getItemMeta();
+            meta.setDisplayName(Logger.color("&bReplace liquids: &atrue"));
+        }else{
+            replaceLiquids = XMaterial.STONE.parseItem();
+            meta = usePlayerLocItem.getItemMeta();
+            meta.setDisplayName(Logger.color("&bReplace liquids: &cfalse"));
+        }
+        meta.setLore(Logger.color(Arrays.asList("&3Click to toggle")));
+        replaceLiquids.setItemMeta(meta);
+        
         ItemStack removeMaterialsItem = new ItemStack(Material.BARRIER);
         meta = removeMaterialsItem.getItemMeta();
         meta.setDisplayName(Logger.color("&cClick to remove all materials"));
@@ -159,9 +168,11 @@ public class BlockReplacingSphereMenu{
         inv.setItem(10, back);
         inv.setItem(16, next);
         
+        inv.setItem(4, removeMaterialsItem);
+        
         inv.setItem(12, usePlayerLocItem);
         inv.setItem(13, materialsItem);
-        inv.setItem(14, removeMaterialsItem);
+        inv.setItem(14, replaceLiquids);
         
         inv.setItem(19, minus100);
         inv.setItem(20, minus10);
@@ -222,6 +233,11 @@ public class BlockReplacingSphereMenu{
                     openBRSMenu(p);
                     break;
                 case 14:
+                    //Toggle replace liquids option
+                    reward.setReplaceLiquids(!reward.isReplaceLiquids());
+                    openBRSMenu(p);
+                    break;
+                case 4:
                     //Remove all materials
                     reward.clearMaterials();
                     openBRSMenu(p);
