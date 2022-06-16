@@ -13,7 +13,8 @@ public enum MinecraftVersion{
     v1_15(false, false),
     v1_16(false, false),
     v1_17(false, true),
-    v1_18(false, true);
+    v1_18(false, true),
+    v1_19(false, true);
     
     public static MinecraftVersion getCurrentVersion(){
         String version = Bukkit.getServer().getClass().getPackage().getName();
