@@ -1,0 +1,65 @@
+{
+  "isRunnable": false,
+  "isGradleProject": true,
+  "copyJarToProjectDir": false,
+  "javaVersion": 8,
+  "jarName": "NewAmazingLuckyBlocks",
+  "mainClassName": "NewAmazingLuckyBlocks",
+  "mainClassPackage": "me.i2000c.newalb",
+  "localLibraries": [],
+  "urlLibraries": [
+    {
+      "url": "https://dev.bukkit.org/projects/worldedit/files/3172946/download",
+      "name": "worldedit-bukkit-7.2.2.jar",
+      "packIntoJar": false
+    },
+    {
+      "url": "https://dev.bukkit.org/projects/worldedit/files/2597538/download",
+      "name": "worldedit-bukkit-6.1.9.jar",
+      "packIntoJar": false
+    }
+  ],
+  "gradleLibraries": [
+    {
+      "downloadJavadoc": true,
+      "downloadSources": true,
+      "name": "io.github.bananapuncher714:nbteditor:+",
+      "packIntoJar": true
+    },
+    {
+      "downloadJavadoc": true,
+      "downloadSources": true,
+      "name": "com.github.cryptomorin:XSeries:+",
+      "packIntoJar": true
+    },
+    {
+      "downloadJavadoc": true,
+      "downloadSources": true,
+      "name": "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT",
+      "packIntoJar": false
+    },
+    {
+      "downloadJavadoc": false,
+      "downloadSources": false,
+      "name": "com.mojang:authlib:1.5.21",
+      "packIntoJar": false
+    },
+    {
+      "downloadJavadoc": true,
+      "downloadSources": true,
+      "name": "xyz.xenondevs:particle:+",
+      "packIntoJar": true
+    }
+  ],
+  "gradleRepositories": [
+    {
+      "url": "https://repo.codemc.org/repository/maven-public/"
+    },
+    {
+      "url": "https://hub.spigotmc.org/nexus/content/repositories/snapshots"
+    },
+    {
+      "url": "https://libraries.minecraft.net"
+    }
+  ]
+}
