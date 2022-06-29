@@ -2,23 +2,23 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.Arrays;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
+import me.i2000c.newalb.custom_outcomes.utils.PackManager;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapReward;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
-import me.i2000c.newalb.custom_outcomes.utils.PackManager;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapReward;
 import me.i2000c.newalb.utils.Logger;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class TrapMenu{
     public static TrapReward reward = null;
@@ -223,7 +223,7 @@ public class TrapMenu{
         inv.setItem(0, back);
         
         int i=0;
-        for(OutcomePack pack : PackManager.getManager().getPacks()){
+        for(OutcomePack pack : PackManager.getPacks()){
             if(i >= 54){
                 break;
             }
@@ -255,7 +255,7 @@ public class TrapMenu{
             }else if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 //Open select outcome menu
                 String packName = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-                auxPack = PackManager.getManager().getPack(packName);
+                auxPack = PackManager.getPack(packName);
                 if(auxPack != null){
                     index = 0;
                     if(auxPack.getOutcomes().size() % MENU_SIZE == 0){

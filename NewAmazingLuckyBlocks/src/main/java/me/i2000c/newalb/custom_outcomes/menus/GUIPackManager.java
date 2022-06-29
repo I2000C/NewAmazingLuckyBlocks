@@ -1,19 +1,19 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.CommandManager;
-import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
-import me.i2000c.newalb.custom_outcomes.utils.PackManager;
-import me.i2000c.newalb.utils.Logger;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import me.i2000c.newalb.CommandManager;
+import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
+import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -136,7 +136,7 @@ public class GUIPackManager{
         //inv.setItem(52, pages);
         //inv.setItem(53, next);
         
-        List<OutcomePack> packList = PackManager.getManager().getPacks();
+        List<OutcomePack> packList = PackManager.getPacks();
         packList.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getFilename().compareTo(pack2.getFilename()));
         
         int i = 0;
@@ -176,7 +176,7 @@ public class GUIPackManager{
                             File newFile = new File(PackManager.OUTCOMES_FOLDER, filename);
                             OutcomePack pack = new OutcomePack(newFile);
                             pack.saveOutcomes();
-                            PackManager.getManager().addNewPack(pack, p);
+                            PackManager.addNewPack(pack, p);
                             openMainMenu(p);
                         });
                         p.closeInventory();
@@ -224,26 +224,26 @@ public class GUIPackManager{
                                 if(!filename.endsWith(".yml")){
                                     filename += ".yml";
                                 }
-                                PackManager.getManager().renamePack(packName, filename, p);
+                                PackManager.renamePack(packName, filename, p);
                                 openMainMenu(p);
                             });
                             p.closeInventory();
                             Logger.sendMessage(Logger.color("&3Write the new pack name in the chat"), p);
                         }else if(cloneMode){
                             //Clone pack
-                            PackManager.getManager().clonePack(packName, p);
+                            PackManager.clonePack(packName, p);
                             openMainMenu(p);
                         }else if(deleteMode){
                             //Delete pack
-                            PackManager.getManager().removePack(packName, p);
+                            PackManager.removePack(packName, p);
                             openMainMenu(p);
                         }else{
                             //Edit pack
                             /*FinishMenu.reset();
-                            FinishMenu.setCurrentPack(PackManager.getManager().getPack(packName));
+                            FinishMenu.setCurrentPack(PackManager.getPack(packName));
                             GUIManager.reset();
                             GUIManager.openMainMenu(p);*/
-                            OutcomePack pack = PackManager.getManager().getPack(packName);
+                            OutcomePack pack = PackManager.getPack(packName);
                             OutcomeListMenu.reset();
                             OutcomeListMenu.openOutcomeListMenu(p, pack);
                         }

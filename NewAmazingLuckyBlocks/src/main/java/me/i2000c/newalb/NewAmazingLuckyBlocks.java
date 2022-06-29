@@ -1,41 +1,38 @@
 package me.i2000c.newalb;
 
-import org.bukkit.ChatColor;
-import me.i2000c.newalb.listeners.BlockBreak;
-import me.i2000c.newalb.listeners.ChunkEvent;
-
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.LangLoader;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import me.i2000c.newalb.utils.WorldList;
-import me.i2000c.newalb.utils.Updater;
-
-import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
-import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
-import me.i2000c.newalb.custom_outcomes.utils.PackManager;
-import me.i2000c.newalb.utils.BlockProtect;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.Timer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import me.i2000c.newalb.listeners.BlockPlace;
-import me.i2000c.newalb.listeners.chat.ChatListener;
-import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
+import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
+import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
+import me.i2000c.newalb.listeners.BlockBreak;
+import me.i2000c.newalb.listeners.BlockPlace;
+import me.i2000c.newalb.listeners.ChunkEvent;
+import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.PlayerInteractListener;
+import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.utils.BlockProtect;
+import me.i2000c.newalb.utils.ConfigManager;
+import me.i2000c.newalb.utils.LangLoader;
 import me.i2000c.newalb.utils.LocationManager;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.SpecialItemManager;
+import me.i2000c.newalb.utils.Timer;
+import me.i2000c.newalb.utils.Updater;
+import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils2.Task;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 
 public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
@@ -86,7 +83,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         WorldList.reloadAll();
         
-        PackManager.getManager().loadPacks();
+        PackManager.loadPacks();
         TrapManager.loadTraps();
         TypeManager.loadTypes();
         

@@ -1,33 +1,28 @@
 package me.i2000c.newalb.custom_outcomes.utils;
 
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.command.CommandSender;
 
 public class PackManager{
-    private static PackManager manager;
-    public static PackManager getManager(){
-        if(manager == null){
-            manager = new PackManager();
-        }
-        
-        return manager;
-    }
     private PackManager(){
-        this.packList = new LinkedHashMap<>();
+    }
+    
+    static{
+        packList = new LinkedHashMap<>();
     }
     
     private static final NewAmazingLuckyBlocks PLUGIN = NewAmazingLuckyBlocks.getInstance();
     public static final File OUTCOMES_FOLDER = new File(PLUGIN.getDataFolder(), "outcome_packs");
     
-    private final Map<String, OutcomePack> packList;
+    private static final Map<String, OutcomePack> packList;
     
-    public void loadPacks(){
+    public static void loadPacks(){
         if(!OUTCOMES_FOLDER.exists()){
             OUTCOMES_FOLDER.mkdirs();
             copyDefaultPacks();
@@ -48,15 +43,15 @@ public class PackManager{
         }
     }
     
-    public OutcomePack getPack(String filename){
+    public static OutcomePack getPack(String filename){
         return packList.get(filename);
     }
     
-    public List<OutcomePack> getPacks(){
+    public static List<OutcomePack> getPacks(){
         return new ArrayList(packList.values());
     }
     
-    public void addNewPack(OutcomePack pack, CommandSender sender){
+    public static void addNewPack(OutcomePack pack, CommandSender sender){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(packList.containsKey(pack.getFilename())){
             Logger.sendMessage("&cPack &6\"" + pack.getFilename() + "\" &calready exists", sender);
@@ -65,7 +60,7 @@ public class PackManager{
         }
 //</editor-fold>
     }
-    public void clonePack(String name, CommandSender sender){
+    public static void clonePack(String name, CommandSender sender){
         //<editor-fold defaultstate="collapsed" desc="Code">
         String nameWithoutYml = name.split("\\.yml")[0];
         name = nameWithoutYml + ".yml";
@@ -93,7 +88,7 @@ public class PackManager{
         }
 //</editor-fold>
     }
-    public void renamePack(String oldName, String newName, CommandSender sender){
+    public static void renamePack(String oldName, String newName, CommandSender sender){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(!newName.endsWith(".yml")){
             newName += ".yml";
@@ -111,7 +106,7 @@ public class PackManager{
         }
 //</editor-fold>
     }    
-    public void removePack(String name, CommandSender sender){
+    public static void removePack(String name, CommandSender sender){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(!name.endsWith(".yml")){
             name += ".yml";
@@ -128,7 +123,7 @@ public class PackManager{
     }
     
     
-    private void copyDefaultPacks(){
+    private static void copyDefaultPacks(){
         File examplePackFile = new File(OUTCOMES_FOLDER, "example_pack.yml");
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             NewAmazingLuckyBlocks.getInstance().copyResource("example_pack_legacy.yml", examplePackFile);

@@ -249,7 +249,7 @@ public class LuckyBlockType{
                 packProbability = 0;
             }
             
-            OutcomePack pack = PackManager.getManager().getPack(packName);
+            OutcomePack pack = PackManager.getPack(packName);
             if(pack == null){
                 Logger.log(String.format("Pack \"%s\" doesn't exist", packName));
             }else{

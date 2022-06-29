@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import me.i2000c.newalb.custom_outcomes.menus.GUIManager;
 import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
+import me.i2000c.newalb.custom_outcomes.menus.GUIManager;
 import me.i2000c.newalb.custom_outcomes.menus.MainMenu;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
+import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.utils.ConfigManager;
@@ -313,7 +313,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             
             SpecialItemManager.reloadSpecialItems();
             
-            PackManager.getManager().loadPacks();
+            PackManager.loadPacks();
             TrapManager.loadTraps();
             TypeManager.loadTypes();
             
