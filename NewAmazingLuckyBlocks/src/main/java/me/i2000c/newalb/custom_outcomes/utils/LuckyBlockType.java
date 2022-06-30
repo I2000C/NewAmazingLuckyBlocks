@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -39,7 +40,7 @@ public class LuckyBlockType{
     private List<ItemStack> crafting;
     private ShapedRecipe recipe;
     
-    private HashMap<OutcomePack, Integer> packs;
+    private Map<OutcomePack, Integer> packs;
     private int totalProbability;
     
     private TypeData data;
@@ -100,7 +101,7 @@ public class LuckyBlockType{
         requireBreakPermission = requirePermission;
     }
     
-    public HashMap<OutcomePack, Integer> getPacks(){
+    public Map<OutcomePack, Integer> getPacks(){
         return packs;
     }
     
@@ -131,7 +132,7 @@ public class LuckyBlockType{
         
         recipe = null;
         
-        packs = new HashMap<>();
+        packs = new LinkedHashMap<>();
         totalProbability = 0;
         
         data = null;
@@ -314,7 +315,7 @@ public class LuckyBlockType{
     public Integer getProbabilityPack(OutcomePack pack){
         return packs.get(pack);
     }
-    public void setProbabilityPack(OutcomePack pack, int probability){
+    public void addProbabilityPack(OutcomePack pack, int probability){
         packs.put(pack, probability);
     }
     public void removePack(OutcomePack pack){

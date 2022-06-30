@@ -3,8 +3,13 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
+import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
+import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
@@ -25,9 +30,17 @@ public class LuckyBlockTypesMenu{
     
     private static boolean deleteMode;
     
+    private static boolean deletePackMode;
+    private static boolean editPackMode;
+    
     private static LuckyBlockType currentType;
+    private static final Map<OutcomePack, Integer> auxPacks;
     
     private static boolean inventoriesRegistered = false;
+    
+    static{
+        auxPacks = new LinkedHashMap<>();
+    }
     
     public static void reset(){
         if(!inventoriesRegistered){
@@ -41,6 +54,9 @@ public class LuckyBlockTypesMenu{
         }
         
         deleteMode = false;
+        
+        deletePackMode = false;
+        editPackMode = false;
         
         currentType = null;
     }
@@ -569,6 +585,8 @@ public class LuckyBlockTypesMenu{
                 case 8:
                     //Open pack manage menu
                     saveCrafting(currentType, e.getClickedInventory());
+                    auxPacks.clear();
+                    auxPacks.putAll(currentType.getPacks());
                     openPackManageMenu(p);
                     break;
                 case 43:
@@ -619,24 +637,243 @@ public class LuckyBlockTypesMenu{
                     break;
             }
         }else{
+            // Click player inventory
             e.setCancelled(false);
         }
 //</editor-fold>
     };
     
     private static void openPackManageMenu(Player p){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.PACK_MANAGE_MENU, 54, "&bCurrent packs");
         
+        int i = 0;
+        for(Map.Entry<OutcomePack, Integer> entry : auxPacks.entrySet()){
+            if(i >= 36){
+                break;
+            }
+            
+            OutcomePack pack = entry.getKey();
+            int probability = entry.getValue();
+            
+            ItemStack packItem = ItemStackBuilder
+                    .fromItem(pack.getItemToDisplay())
+                    .addLoreLine("")
+                    .addLoreLine("&eProbability: &2" + probability)
+                    .build();
+            
+            inv.setItem(i, packItem);            
+            i++;
+        }
+        
+        ItemStack glass = ItemStackBuilder
+                .createNewItem(XMaterial.ORANGE_STAINED_GLASS_PANE)
+                .withDisplayName(" ")
+                .build();
+        
+        for(i=36; i<45; i++){
+            inv.setItem(i, glass);
+        }
+        
+        ItemStack back = ItemStackBuilder
+                .createNewItem(XMaterial.ENDER_PEARL)
+                .withDisplayName("&2Back")
+                .build();
+        
+        ItemStack next = ItemStackBuilder
+                .createNewItem(XMaterial.ANVIL)
+                .withDisplayName("&bNext")
+                .build();
+        
+        ItemStack addPack = ItemStackBuilder
+                .createNewItem(XMaterial.SLIME_BALL)
+                .withDisplayName("&aAdd outcome pack")
+                .build();
+        
+        ItemStack editPack;
+        ItemStackBuilder builder = ItemStackBuilder
+                .createNewItem(XMaterial.GLOWSTONE_DUST)
+                .withDisplayName("&eEdit pack probability");
+        if(editPackMode){
+            builder.addLoreLine("&6Edit probability mode: &aenabled");
+            builder.addLoreLine("");
+            builder.addLoreLine("&3If this mode is enabled,");
+            builder.addLoreLine("&3you will be able to change");
+            builder.addLoreLine("&3the probability of a pack");
+            builder.addLoreLine("&3if you click on it");
+        }else{
+            builder.addLoreLine("&6Edit probability mode: &7disabled");
+        }
+        editPack = builder.build();
+        
+        ItemStack deletePack;
+        builder = ItemStackBuilder
+                .createNewItem(XMaterial.BARRIER)
+                .withDisplayName("&cDelete packs");
+        if(deletePackMode){
+            builder.addLoreLine("&6Delete mode: &aenabled");
+            builder.addLoreLine("");
+            builder.addLoreLine("&4&lWARNING: &cIf this mode is enabled,");
+            builder.addLoreLine("&cwhen you click on a pack,");
+            builder.addLoreLine("&cit will be removed from the pack list");
+            builder.addLoreLine("&cof the selected lucky block type");
+        }else{
+            builder.addLoreLine("&6Delete mode: &7disabled");
+        }
+        deletePack = builder.build();
+        
+        inv.setItem(45, back);
+        inv.setItem(53, next);
+        
+        if(!deletePackMode && !editPackMode){
+            inv.setItem(48, addPack);
+        }
+        if(!deletePackMode){
+            inv.setItem(49, editPack);
+        }
+        if(!editPackMode){
+            inv.setItem(50, deletePack);
+        }
+        
+        GUIManager.setCurrentInventory(inv);
+        p.openInventory(inv);
+//</editor-fold>
     }
     
     private static final InventoryFunction PACK_MANAGE_MENU_FUNCTION = e -> {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Player p = (Player) e.getWhoClicked();
+        e.setCancelled(true);
         
+        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+            switch(e.getSlot()){
+                case 45:
+                    //Back to edit LuckyBlock type menu
+                    deletePackMode = false;
+                    editPackMode = false;
+                    auxPacks.clear();
+                    openEditMenu(p);                    
+                    break;
+                case 53:
+                    // Save auxPacks into currentType
+                    currentType.getPacks().clear();
+                    currentType.getPacks().putAll(auxPacks);
+                    deletePackMode = false;
+                    editPackMode = false;
+                    auxPacks.clear();
+                    openEditMenu(p);
+                    break;
+                case 48:
+                    // Add new pack
+                    if(!deletePackMode && !editPackMode){
+                        openPackSelectMenu(p);
+                    }
+                    break;
+                case 49:
+                    // Toggle edit pack mode
+                    if(!deletePackMode){
+                        editPackMode = !editPackMode;
+                        openPackManageMenu(p);
+                    }
+                    break;
+                case 50:
+                    // Togle delete pack mode
+                    if(!editPackMode){
+                        deletePackMode = !deletePackMode;
+                        openPackManageMenu(p);
+                    }
+                    break;
+                default:
+                    if(e.getSlot() < 36){
+                        if(e.getSlot() < auxPacks.size()){
+                            if(deletePackMode || editPackMode){
+                                int i = 0;
+                                Iterator<OutcomePack> iterator = auxPacks.keySet().iterator();
+                                while(iterator.hasNext()){
+                                    OutcomePack pack = iterator.next();
+                                    if(i == e.getSlot()){
+                                        if(deletePackMode){
+                                            iterator.remove();
+                                            openPackManageMenu(p);
+                                        }else{
+                                            p.closeInventory();
+                                            Logger.sendMessage(String.format("&3Enter the new pack probability for the pack &e%s&r", pack.getFilename()), p);
+                                            ChatListener.registerPlayer(p, message -> {
+                                                try{
+                                                    int probability = Integer.parseInt(message);
+                                                    if(probability < 0){
+                                                        Logger.sendMessage("&cThe probability cannot be negative", p);
+                                                    }else{
+                                                        ChatListener.removePlayer(p);
+                                                        auxPacks.put(pack, probability);
+                                                        openPackManageMenu(p);
+                                                    }
+                                                }catch(NumberFormatException ex){
+                                                    Logger.sendMessage("&cThe probability must be a number not: &6" + message, p);
+                                                }
+                                            }, false);
+                                        }
+                                        break;
+                                    }else{
+                                        i++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+            }
+        }
+//</editor-fold>
     };
     
     private static void openPackSelectMenu(Player p){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.PACK_SELECT_MENU, 54, "&3&lPack menu");
+        List<OutcomePack> packList = PackManager.getPacks();
+        packList.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getFilename().compareTo(pack2.getFilename()));
         
+        ItemStack back = ItemStackBuilder
+                .createNewItem(XMaterial.ENDER_PEARL)
+                .withDisplayName("&2Back")
+                .build();
+        
+        inv.setItem(45, back);
+        
+        int i = 0;
+        for(OutcomePack pack : packList){
+            if(i >= 45){
+                break;
+            }
+            inv.setItem(i, pack.getItemToDisplay());
+            i++;
+        }
+        
+        GUIManager.setCurrentInventory(inv);
+        p.openInventory(inv);        
+//</editor-fold>
     }
     
     private static final InventoryFunction PACK_SELECT_MENU_FUNCTION = e -> {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Player p = (Player) e.getWhoClicked();
+        e.setCancelled(true);
         
+        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+            if(e.getSlot() == 45){
+                // Back to previous menu
+                openPackManageMenu(p);
+            }else{
+                // Add selected pack if it wasn't present in auxPacks
+                ItemStack sk = e.getCurrentItem();
+                if(sk != null && sk.getType() != Material.AIR
+                        && sk.hasItemMeta() && sk.getItemMeta().hasDisplayName()){
+                    String packName = Logger.stripColor(sk.getItemMeta().getDisplayName());
+                    OutcomePack pack = PackManager.getPack(packName);
+                    auxPacks.putIfAbsent(pack, 100);
+                    openPackManageMenu(p);
+                }
+            }
+        }
+//</editor-fold>
     };
 }
