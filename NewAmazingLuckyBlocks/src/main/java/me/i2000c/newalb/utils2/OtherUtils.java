@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.LangLoader;
+import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

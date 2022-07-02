@@ -1,11 +1,12 @@
-package me.i2000c.newalb.utils;
+package me.i2000c.newalb.lang_utils;
 
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -42,7 +43,7 @@ public class LangLoader{
             ex.printStackTrace();
         }
         langCfg.options().copyDefaults(true);
-        saveMessages();        
+        saveMessages();
     }
     
     private static void saveMessages(){

@@ -18,7 +18,7 @@ import me.i2000c.newalb.listeners.interact.PlayerInteractListener;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.BlockProtect;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.LangLoader;
+import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.SpecialItemManager;

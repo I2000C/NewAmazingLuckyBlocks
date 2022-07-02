@@ -7,8 +7,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.i2000c.newalb.MinecraftVersion;
@@ -16,23 +18,36 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class YamlConfigurationUTF8 extends YamlConfiguration{
-    public static YamlConfiguration loadConfiguration(File file){
+    public static YamlConfiguration loadConfiguration(InputStream input){
+        return loadConfiguration(new InputStreamReader(input));
+    }
+    
+    public static YamlConfiguration loadConfiguration(Reader reader){
+        YamlConfiguration config;
         if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
-            YamlConfigurationUTF8 config = new YamlConfigurationUTF8();
-            InputStreamReader input = null;
             try{
-                input = new InputStreamReader(new FileInputStream(file), "UTF-8");
-                config.load(input);
+                config = new YamlConfigurationUTF8();
+                config.load(reader);
             }catch(Exception ex){
-                ex.printStackTrace();
                 config = null;
             }finally{
-                try{
-                    input.close();
-                }catch(Exception ex2){}
+                try{reader.close();}catch(Exception ex){}                
             }
-
-            return config;
+        }else{
+            config = YamlConfiguration.loadConfiguration(reader);
+        }
+        
+        return config;
+    }
+    
+    public static YamlConfiguration loadConfiguration(File file){
+        if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+            try{
+                InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
+                return loadConfiguration(reader);
+            }catch(IOException ex){
+                return null;
+            }
         }else{
             return YamlConfiguration.loadConfiguration(file);
         }        

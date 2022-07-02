@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.LangLoader;
+import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils2.OtherUtils;

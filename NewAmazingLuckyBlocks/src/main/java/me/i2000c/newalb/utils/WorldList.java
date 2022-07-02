@@ -1,5 +1,6 @@
 package me.i2000c.newalb.utils;
 
+import me.i2000c.newalb.lang_utils.LangLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

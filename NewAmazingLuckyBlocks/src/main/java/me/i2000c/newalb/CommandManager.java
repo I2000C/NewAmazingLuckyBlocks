@@ -15,7 +15,7 @@ import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
-import me.i2000c.newalb.utils.LangLoader;
+import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.RandomBlocks;
