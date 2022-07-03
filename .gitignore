@@ -1,3 +1,5 @@
+### Ignore
+
 # Compiled class file
 *.class
 
@@ -10,17 +12,27 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package Files
+*.jar
 *.war
 *.nar
 *.ear
 *.zip
+*.tar
 *.tar.gz
 *.rar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-/NewAmazingLuckyBlocks/.gradle/
-/NewAmazingLuckyBlocks/.nb-gradle/
-/NewAmazingLuckyBlocks/build/
-/NewAmazingLuckyBlocks/lib/
+
+
+# Project compile and cache folders
+build/
+.gradle/
+.nb-gradle/
+
+
+### Allow
+
+# Gradle wrapper file
+!gradle/wrapper/gradle-wrapper.jar

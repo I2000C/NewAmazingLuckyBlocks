@@ -1,5 +1,3 @@
 #!/bin/bash
-# File generated with CompilerHelper
-
 chmod u+x gradlew
 ./gradlew clean

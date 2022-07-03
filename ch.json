@@ -2,6 +2,7 @@
   "isRunnable": false,
   "isGradleProject": true,
   "copyJarToProjectDir": false,
+  "generateGitignore": true,
   "javaVersion": 8,
   "jarName": "NewAmazingLuckyBlocks",
   "mainClassName": "NewAmazingLuckyBlocks",
@@ -23,13 +24,13 @@
     {
       "downloadJavadoc": true,
       "downloadSources": true,
-      "name": "io.github.bananapuncher714:nbteditor:+",
+      "name": "io.github.bananapuncher714:nbteditor:7.18.3",
       "packIntoJar": true
     },
     {
       "downloadJavadoc": true,
       "downloadSources": true,
-      "name": "com.github.cryptomorin:XSeries:+",
+      "name": "com.github.cryptomorin:XSeries:9.0.0",
       "packIntoJar": true
     },
     {
@@ -47,7 +48,7 @@
     {
       "downloadJavadoc": true,
       "downloadSources": true,
-      "name": "xyz.xenondevs:particle:+",
+      "name": "xyz.xenondevs:particle:1.8.1",
       "packIntoJar": true
     }
   ],
