@@ -1,4 +1,4 @@
 @echo off
 setlocal enabledelayedexpansion
-call .\gradlew.bat --refresh-dependencies jar
+call .\gradlew.bat jar
 pause
