@@ -2,12 +2,12 @@ plugins{
     id 'java'
     id 'application'
     id 'de.undercouch.download' version '5.1.0'
-    id 'maven-publish'
+    //id 'maven-publish'
 }
 
 mainClassName = 'me.i2000c.newalb.NewAmazingLuckyBlocks'
-group = 'com.github.I2000C'
-version = '3.0.0_34'
+//group = 'com.github.I2000C'
+//version = '3.0.0_34'
 
 repositories{
     mavenCentral()
@@ -61,10 +61,10 @@ jar{
     
     
     // https://github.com/gradle/gradle/issues/1278#issuecomment-412912658
-    into("META-INF/maven/$project.group/$project.name") {
+    /*into("META-INF/maven/$project.group/$project.name") {
         from { generatePomFileForMavenJavaPublication }
         rename ".*", "pom.xml"
-    }    
+    }*/
     
     /*def props = project.file('build/tmp/pom.properties')
     props.delete()
@@ -96,7 +96,7 @@ task downloadLibraries{
 [jar]*.dependsOn downloadLibraries
 [compileJava]*.dependsOn downloadLibraries
 
-publishing {
+/*publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
@@ -134,5 +134,5 @@ publishing {
             url = layout.buildDirectory.dir("repo")
         }
     }
-}
+}*/
 
