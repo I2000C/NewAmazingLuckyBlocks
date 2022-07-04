@@ -26,8 +26,6 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
@@ -38,15 +36,6 @@ import org.bukkit.plugin.Plugin;
 
 public class Schematic{
     private static final Plugin WORLDEDIT_PLUGIN = NewAmazingLuckyBlocks.getWorldEditPlugin();
-    
-    private static final String GET_ORIGIN = "getOrigin";
-    private static final String GET_DIMENSIONS = "getDimensions";
-    private static final String GET_MINIMUM_POINT = "getMinimumPoint";
-    private static final String GET_MAXIMUM_POINT = "getMaximumPoint";
-    private static final String GET_BLOCK = "getBlock";
-    private static final String SET_BLOCK = "setBlock";    
-    
-    private static final Map<String, Method> METHOD_CACHE = new HashMap<>();
     
     private static Class worldDataClass;
     private static Class vectorClass;
@@ -230,54 +219,6 @@ public class Schematic{
 //</editor-fold>
     }
     
-    //Source: Method place(...) of class CuboidClipboard of WorldEdit
-    /*private void pasteClipboardLegacy2(EditSession editSession, CuboidClipboard c, Location loc, boolean replaceBlocks, boolean placeAirBlocks) throws MaxChangedBlocksException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, WorldEditException{
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        BaseBlock[][][] data;
-        Vector size;
-        Vector offset;
-        
-        Field f = c.getClass().getDeclaredField("data");
-        f.setAccessible(true);
-        data = (BaseBlock[][][]) f.get(c);
-        
-        f = c.getClass().getDeclaredField("size");
-        f.setAccessible(true);
-        size = (Vector) f.get(c);
-        
-        f = c.getClass().getDeclaredField("offset");
-        f.setAccessible(true);
-        offset = (Vector) f.get(c);
-        
-        Vector newOrigin = (new Vector(loc.getX(), loc.getY(), loc.getZ())).add(offset);
-        
-        for(int x=0; x<size.getBlockX(); x++){
-            for(int y=0; y<size.getBlockY(); y++){
-                for(int z=0; z<size.getBlockZ(); z++){
-                    BaseBlock block = data[x][y][z];
-                    if(block != null){
-                        if(!placeAirBlocks){
-                            if(block.isAir()){
-                                continue;
-                            }
-                        }
-                        Vector targetVector = new Vector(x, y, z).add(newOrigin);
-                        Location l = new Location(loc.getWorld(), targetVector.getX(), targetVector.getY(), targetVector.getZ());
-                        if(!replaceBlocks){
-                            if(!l.getBlock().isEmpty()){
-                                continue;
-                            }
-                        }
-                        Method method = editSession.getClass().getMethod("setBlock", Vector.class, BaseBlock.class);
-                        method.invoke(editSession, targetVector, block);
-                        //editSession.setBlock(targetVector, block);
-                    }
-                }
-            }
-        }
-//</editor-fold>
-    }*/
-    
     private void pasteClipboardLegacy(EditSession editSession, Clipboard clipboard, Location loc, boolean replaceBlocks, boolean placeAirBlocks) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, InstantiationException {
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(!initialized){
@@ -359,55 +300,4 @@ public class Schematic{
         session.flushSession();
 //</editor-fold>
     }
-    
-    /*private CuboidClipboard clipboardToCuboid(Clipboard c){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        try{
-            Method getOrigin = METHOD_CACHE.get(GET_ORIGIN);
-            if(getOrigin == null){
-                getOrigin = c.getClass().getMethod(GET_ORIGIN);
-                METHOD_CACHE.put(GET_ORIGIN, getOrigin);
-            }
-            Method getDimensions = METHOD_CACHE.get(GET_DIMENSIONS);
-            if(getDimensions == null){
-                getDimensions = c.getClass().getMethod(GET_DIMENSIONS);
-                METHOD_CACHE.put(GET_DIMENSIONS, getDimensions);
-            }
-            
-            Method getBlock = METHOD_CACHE.get(GET_BLOCK);
-            if(getBlock == null){
-                getBlock = c.getClass().getMethod(GET_BLOCK, Vector.class);
-                METHOD_CACHE.put(GET_BLOCK, getBlock);
-            }
-            Method getMinimumPoint = METHOD_CACHE.get(GET_MINIMUM_POINT);
-            if(getMinimumPoint == null){
-                getMinimumPoint = c.getClass().getMethod(GET_MINIMUM_POINT);
-                METHOD_CACHE.put(GET_MINIMUM_POINT, getMinimumPoint);
-            }
-            
-            Vector origin = (Vector) getOrigin.invoke(c);
-            Vector dimensions = (Vector) getDimensions.invoke(c);
-            
-            CuboidClipboard cc = new CuboidClipboard(dimensions, origin);
-            Logger.log(dimensions);
-            for(int x=0;x<dimensions.getBlockX();x++){
-                for(int y=0;y<dimensions.getBlockY();y++){
-                    for(int z=0;z<dimensions.getBlockZ();z++){
-                        Vector v = new Vector(x,y,z);
-                        
-                        Vector min = (Vector) getMinimumPoint.invoke(c.getRegion());
-                        BaseBlock block = (BaseBlock) getBlock.invoke(c, min.add(v));
-                        
-                        cc.setBlock(v, block);
-                    }
-                }
-            }
-            return cc;
-        }catch(Exception ex){
-            Logger.log("An error occurred:", Logger.LogLevel.ERROR);
-            ex.printStackTrace();
-            return null;
-        }
-//</editor-fold>
-    }*/
 }
