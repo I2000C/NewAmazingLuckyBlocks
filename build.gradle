@@ -2,24 +2,16 @@ plugins{
     id 'java'
     id 'application'
     id 'de.undercouch.download' version '5.1.0'
-    //id 'maven-publish'
 }
 
 mainClassName = 'me.i2000c.newalb.NewAmazingLuckyBlocks'
-//group = 'com.github.I2000C'
-//version = '3.0.0_34'
 
 repositories{
     mavenCentral()
-    maven{
-        url 'https://repo.codemc.org/repository/maven-public/'
-    }
-    maven{
-        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots'
-    }
-    maven{
-        url 'https://libraries.minecraft.net'
-    }
+    maven { url 'https://repo.codemc.org/repository/maven-public/' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
+    maven { url 'https://libraries.minecraft.net' }
+    maven { url 'https://maven.enginehub.org/repo/' }
 }
 
 compileJava.options.encoding = 'UTF-8'
@@ -45,8 +37,9 @@ dependencies{
     implementation 'xyz.xenondevs:particle:1.8.1'
     implementation 'xyz.xenondevs:particle:1.8.1:javadoc'
     implementation 'xyz.xenondevs:particle:1.8.1:sources'
-    implementation files(libDirName + '/worldedit-bukkit-7.2.2.jar')
-    implementation files(libDirName + '/worldedit-bukkit-6.1.9.jar')
+    implementation 'com.sk89q.worldedit:worldedit-core:7.2.2'
+    implementation 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'
+    implementation 'com.sk89q.worldedit:worldedit-core:7.2.2:sources'
     
     runtimeLibraries 'io.github.bananapuncher714:nbteditor:7.18.3', 'com.github.cryptomorin:XSeries:9.0.0', 'xyz.xenondevs:particle:1.8.1' 
 }
@@ -57,82 +50,4 @@ jar{
     
     from sourceSets.main.output
     from configurations.runtimeLibraries.collect{ zipTree(it) }
-    
-    
-    
-    // https://github.com/gradle/gradle/issues/1278#issuecomment-412912658
-    /*into("META-INF/maven/$project.group/$project.name") {
-        from { generatePomFileForMavenJavaPublication }
-        rename ".*", "pom.xml"
-    }*/
-    
-    /*def props = project.file('build/tmp/pom.properties')
-    props.delete()
-    props << 'groupId=com.github.I2000C\n'
-    props << 'artifactId=NewAmazingLuckyBlocks\n'
-    props << 'version=3.0.0_34\n'
-    into ("META-INF/maven/$project.group/$project.name") {
-        from props
-    }*/
 }
-
-// Libraries with URL
-ext.customLibraries = [
-    'https://dev.bukkit.org/projects/worldedit/files/3172946/download' : 'worldedit-bukkit-7.2.2.jar',
-    'https://dev.bukkit.org/projects/worldedit/files/2597538/download' : 'worldedit-bukkit-6.1.9.jar']
-task downloadLibraries{
-    doLast{
-        for(library in customLibraries){
-            download.run{
-                src library.key
-                dest new File(libDir, library.value)
-                overwrite true
-                onlyIfModified true
-            }
-        }
-    }
-}
-
-[jar]*.dependsOn downloadLibraries
-[compileJava]*.dependsOn downloadLibraries
-
-/*publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            pom.withXml{
-                asNode()
-                    .dependencies
-                    .dependency
-                    .findAll { dependency ->
-                      // find all dependencies with runtime scope
-                      dependency.scope.text() == 'runtime'
-                    }
-                    .each { dependency ->
-                      // set the scope to 'provided'
-                      dependency.scope*.value = 'provided'
-                    }
-                
-                //https://discuss.gradle.org/t/customising-the-pom-created-by-the-plugin-publish-plugin/9082/4
-                def repositoriesNode = asNode().appendNode 'repositories'
-                def repo1 = repositoriesNode.appendNode 'repository'
-                repo1.appendNode 'id', 'id1'
-                repo1.appendNode 'url', 'https://repo.codemc.org/repository/maven-public/'
-                def repo2 = repositoriesNode.appendNode 'repository'
-                repo2.appendNode 'id', 'id2'
-                repo2.appendNode 'url', 'https://hub.spigotmc.org/nexus/content/repositories/snapshots'
-                def repo3 = repositoriesNode.appendNode 'repository'
-                repo3.appendNode 'id', 'id3'
-                repo3.appendNode 'url', 'https://libraries.minecraft.net'
-            }
-        }
-    }
-    
-    repositories {
-        maven {
-            name = 'sampleRepo'
-            url = layout.buildDirectory.dir("repo")
-        }
-    }
-}*/
-

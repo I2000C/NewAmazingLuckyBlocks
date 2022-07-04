@@ -8,18 +8,7 @@
   "mainClassName": "NewAmazingLuckyBlocks",
   "mainClassPackage": "me.i2000c.newalb",
   "localLibraries": [],
-  "urlLibraries": [
-    {
-      "url": "https://dev.bukkit.org/projects/worldedit/files/3172946/download",
-      "name": "worldedit-bukkit-7.2.2.jar",
-      "packIntoJar": false
-    },
-    {
-      "url": "https://dev.bukkit.org/projects/worldedit/files/2597538/download",
-      "name": "worldedit-bukkit-6.1.9.jar",
-      "packIntoJar": false
-    }
-  ],
+  "urlLibraries": [],
   "gradleLibraries": [
     {
       "downloadJavadoc": true,
@@ -50,6 +39,12 @@
       "downloadSources": true,
       "name": "xyz.xenondevs:particle:1.8.1",
       "packIntoJar": true
+    },
+    {
+      "downloadJavadoc": true,
+      "downloadSources": true,
+      "name": "com.sk89q.worldedit:worldedit-core:7.2.2",
+      "packIntoJar": false
     }
   ],
   "gradleRepositories": [
@@ -61,6 +56,9 @@
     },
     {
       "url": "https://libraries.minecraft.net"
+    },
+    {
+      "url": "https://maven.enginehub.org/repo/"
     }
   ]
 }
