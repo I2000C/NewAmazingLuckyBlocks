@@ -1,27 +1,26 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityTowerReward;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import me.i2000c.newalb.custom_outcomes.utils.Executable;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityTowerReward;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.Reward;
-import me.i2000c.newalb.utils.Logger;
-import java.util.HashMap;
-import java.util.Map;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.custom_outcomes.utils.Executable;
+import me.i2000c.newalb.utils.Logger;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.entity.Player;
 
 public class FinishMenu{
     private static int index;
@@ -106,10 +105,11 @@ public class FinishMenu{
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.FINISH_MENU, 54, "&bRewards list");
         currentOutcome.sortRewards();
         
-        if(currentOutcome.getNumberOfRewards() % MENU_SIZE == 0){
-            max_pages = currentOutcome.getNumberOfRewards() / MENU_SIZE;
+        int numberOfRewards = currentOutcome.getNumberOfRewards();
+        if(numberOfRewards > 0 && numberOfRewards % MENU_SIZE == 0){
+            max_pages = numberOfRewards / MENU_SIZE;
         }else{
-            max_pages = currentOutcome.getNumberOfRewards() / MENU_SIZE + 1;
+            max_pages = numberOfRewards / MENU_SIZE + 1;
         }
         
         int n = Integer.min(currentOutcome.getNumberOfRewards() - MENU_SIZE*index, MENU_SIZE);

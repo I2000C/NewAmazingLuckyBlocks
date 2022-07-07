@@ -1,16 +1,16 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
-import me.i2000c.newalb.utils.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -53,10 +53,11 @@ public class OutcomeListMenu{
         if(currentPack == null){
             currentPack = pack;
             
-            if(pack.getOutcomes().size() % MENU_SIZE == 0){
-                max_pages = (pack.getOutcomes().size() / MENU_SIZE);
+            int numberOfOutcomes = pack.getOutcomes().size();
+            if(numberOfOutcomes > 0 && numberOfOutcomes % MENU_SIZE == 0){
+                max_pages = numberOfOutcomes / MENU_SIZE;
             }else{
-                max_pages = (pack.getOutcomes().size() / MENU_SIZE) + 1;
+                max_pages = numberOfOutcomes / MENU_SIZE + 1;
             }
         }
         
