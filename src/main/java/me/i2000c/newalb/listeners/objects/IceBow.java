@@ -1,29 +1,28 @@
 package me.i2000c.newalb.listeners.objects;
 
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.BowItem;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils.Timer;
+import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.entity.Entity;
-
-import me.i2000c.newalb.utils.WorldList;
-import me.i2000c.newalb.utils2.Task;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Damageable;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
 
@@ -80,6 +79,10 @@ public class IceBow extends BowItem{
                 }
             }*/
             Task.runTask(() -> {
+                if(entity.getMetadata(TAG).isEmpty()){
+                    return;
+                }
+                
                 boolean blockHit = entity.getMetadata(TAG).get(0).asBoolean();
                 if(blockHit){
                     double radius = ConfigManager.getConfig().getDouble("Objects.IceBow.snowRadius");

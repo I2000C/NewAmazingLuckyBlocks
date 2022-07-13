@@ -366,6 +366,10 @@ public class HookBow extends BowItem{
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(e.getEntity() instanceof Arrow && e.getEntity().hasMetadata(TAG)){
             Task.runTask(() -> {
+                if(e.getEntity().getMetadata(TAG).isEmpty()){
+                    return;
+                }
+                
                 if(e.getEntity().getMetadata(TAG).get(0).asBoolean()){
                     Arrow arrow = (Arrow) e.getEntity();
                     placeLeash(arrow, arrow.getLocation());
