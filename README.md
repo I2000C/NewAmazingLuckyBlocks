@@ -19,6 +19,6 @@ You can go to the wiki: https://github.com/I2000C/NewAmazingLuckyBlocks/wiki in 
 ### Compile from source
 If you want to compile the plugin code from source, you need to clone this repository<br>
 and then, execute the compilation script (`compile.cmd` in Windows and `compile` in Linux).<br>
-The jar will be generated int the build/libs directory.
+The jar will be generated in the build/libs directory.
 
 Note: Make sure that you have installed Java JDK 8 or newer.
