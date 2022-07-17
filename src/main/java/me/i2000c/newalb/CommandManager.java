@@ -109,7 +109,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 return executeGive(sender, args);
             case "reload":
                 return executeReload(sender, args);
-            case "randomblock":
+            case "randomblocks":
                 return executeRandomBlocks(sender, args);
             case "menu":
                 return executeMenu(sender, args);
@@ -384,7 +384,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 
                 RandomBlocks.taskID = 0;
             }else{
-                Logger.sendMessage("&cThere isn't any randomblock task running at the moment", sender);
+                Logger.sendMessage("&cThere isn't any randomblocks task running at the moment", sender);
             }
 
             return false;
@@ -472,8 +472,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 return false;
             }
         }else{
-            Logger.sendMessage("&cThere already is a randomblock task running", sender);
-            Logger.sendMessage("&cWait until it finish or use: &a/alb randomblock stop", sender);
+            Logger.sendMessage("&cThere already is a randomblocks task running", sender);
+            Logger.sendMessage("&cWait until it finish or use: &a/alb randomblocks stop", sender);
             return false;
         }
 //</editor-fold>
@@ -789,7 +789,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 //</editor-fold>
     }
     
-    private static final String[] CMD_LIST = {"help", "reload", "give", "randomblock", "menu", "return", "worlds", 
+    private static final String[] CMD_LIST = {"help", "reload", "give", "randomblocks", "menu", "return", "worlds", 
         "loadSchematic", "loadSchem", "loadS", "saveSchematic", "saveSchem", "saveS", 
         "removeSchematic", "removeSchem", "removeS", "clear", "getSkull"};
     
@@ -836,7 +836,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 case "return":
                 case "menu":
                     break;
-                case "randomblock":
+                case "randomblocks":
                     if("stop".startsWith(args[1].toLowerCase())){
                         ls.add("stop");
                     }
@@ -890,7 +890,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 return ls;
             }
             
-            if(args[0].equalsIgnoreCase("randomblock")){
+            if(args[0].equalsIgnoreCase("randomblocks")){
                 try{
                     int test = Integer.parseInt(args[1]);
                     ls.add("5");
@@ -912,7 +912,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     }
             }
         }else if(args.length == 4){
-            if(args[0].equalsIgnoreCase("randomblock")){
+            if(args[0].equalsIgnoreCase("randomblocks")){
                 ls.add("5");
             }else if(args[0].equalsIgnoreCase("worlds") && args[1].equalsIgnoreCase("set")){
                 if("enabled".startsWith(args[3].toLowerCase())){
@@ -929,7 +929,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 }
             }
         }else if(args.length == 5){
-            if(args[0].equalsIgnoreCase("randomblock")){
+            if(args[0].equalsIgnoreCase("randomblocks")){
                 ls.add("5");
             }else{
                 for(Player p : Bukkit.getOnlinePlayers()){
@@ -939,7 +939,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 }
             }
         }else if(args.length == 6){
-            if(args[0].equalsIgnoreCase("randomblock")){
+            if(args[0].equalsIgnoreCase("randomblocks")){
                 if("true".startsWith(args[5].toLowerCase())){
                     ls.add("true");
                 }
