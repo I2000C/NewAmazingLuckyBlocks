@@ -56,6 +56,41 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     }
   
     public static boolean confirmMenu = false;
+    
+    private static final String NO_CONSOLE_MSG = "&cYou can't send this command from the console";
+    
+    private static boolean checkHasPermission(CommandSender sender, String permissionPath){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        String noPermissionMessage = LangLoader.getMessages().getString("NoPermission");
+        String permission = ConfigManager.getConfig().getString(permissionPath);
+        if(sender.hasPermission(permission)){
+            return true;
+        }else{
+            Logger.sendMessage(noPermissionMessage, sender, false);
+            return false;
+        }
+//</editor-fold>
+    }
+    private static boolean checkNotConsole(CommandSender sender){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(sender instanceof Player){
+            return true;
+        }else{
+            Logger.sendMessage(NO_CONSOLE_MSG, sender);
+            return false;
+        }
+//</editor-fold>
+    }
+    private static Player getOnlinePlayer(CommandSender sender, String playerName){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Player player = Bukkit.getPlayer(playerName);
+        if(player == null){
+            Logger.sendMessage("&cPlayer " + playerName + "&c is offline", sender);
+        }
+        
+        return player;
+//</editor-fold>
+    }
   
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -64,8 +99,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         if(args.length == 0){
-            sender.sendMessage(plugin.name + " " + ChatColor.GREEN + plugin.version);
-            sender.sendMessage(Logger.color(LangLoader.getMessages().getString("HelpMessage")));
+            Logger.sendMessage(plugin.name + " &a" + plugin.version, sender);
+            Logger.sendMessage(LangLoader.getMessages().getString("HelpMessage"), sender);
             return true;
         }else switch(args[0]){
             case "help":
@@ -101,14 +136,17 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             case "debug":
                 return executeDebug(sender, args);
             default:
-                sender.sendMessage(Logger.color(LangLoader.getMessages().getString("UnknownCommand")));
+                Logger.sendMessage(LangLoader.getMessages().getString("UnknownCommand"), sender);
                 return false;
         }
     }
     
     private boolean executeDebug(CommandSender sender, String[] args){
-        Player p = Bukkit.getPlayer("I2000C");
-        Logger.sendMessage(p.getItemInHand().getType(), p);
+        Player p = getOnlinePlayer(sender, "I2000C");
+        if(p != null){
+            Logger.sendMessage(p.getItemInHand().getType(), p);
+        }
+        
         /*OffsetMenu.reset();
         OffsetMenu.setCurrentData(new Offset(), null);
         OffsetMenu.openOffsetMenu(p);*/
@@ -121,7 +159,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         if(args.length == 1){
             help_n = 1;
         }else if(args.length > 2){
-            sender.sendMessage(Logger.color("&cUsage: &7/alb help [number]"));
+            Logger.sendMessage("&cUsage: &7/alb help [number]", sender);
             return false;
         }else{
             try{
@@ -135,12 +173,12 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             key = key + help_n;
         }
         if(!LangLoader.getMessages().isConfigurationSection(key)){
-            sender.sendMessage(Logger.color("&cThat page doesn't exist"));
+            Logger.sendMessage("&cThat page doesn't exist", sender);
             return false;
         }
         for(String str : LangLoader.getMessages().getConfigurationSection(key).getKeys(false)){
             String text = LangLoader.getMessages().getString(key + "." + str);
-            sender.sendMessage(Logger.color(text.replaceAll("%prefix%", NewAmazingLuckyBlocks.getInstance().prefix)));
+            Logger.sendMessage(text.replace("%prefix%", NewAmazingLuckyBlocks.getInstance().prefix), sender);
         }
         return true;
 //</editor-fold>
@@ -148,23 +186,18 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeGive(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission;
-        String noConsoleMessage = "&cYou can't send this command from the console";
         if(args.length == 1){
-            permission = ConfigManager.getConfig().getString("Commands.Give.GiveMenu");
-            if(!sender.hasPermission(permission)){
-                String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-                sender.sendMessage(noperm);
+            if(!checkHasPermission(sender, "Commands.Give.GiveMenu")){
                 return false;
             }
-            if(!(sender instanceof Player)){
-                Logger.log(noConsoleMessage);
+            
+            if(!checkNotConsole(sender)){
                 return false;
-            }else{
-                GiveMenu.reset();
-                GiveMenu.openGiveMenu((Player) sender);
-                return true;
             }
+                        
+            GiveMenu.reset();
+            GiveMenu.openGiveMenu((Player) sender);
+            return true;
         }else{
             Player target;
             int amount;
@@ -173,33 +206,31 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             switch(args.length){
                 case 2:
                     amount = 1;
-                    if(!(sender instanceof Player)){
-                        Logger.log(noConsoleMessage);
+                    if(!checkNotConsole(sender)){
                         return false;
                     }
+                    
                     target = (Player) sender;
                     break;
                 case 3:
                     try{
                         amount = Integer.parseInt(args[2]);
-                        if(!(sender instanceof Player)){
-                            Logger.log(noConsoleMessage);
+                        if(!checkNotConsole(sender)){
                             return false;
                         }
+                        
                         target = (Player) sender;
                     }catch(NumberFormatException ex){
                         amount = 1;
-                        target = Bukkit.getPlayer(args[2]);
+                        target = getOnlinePlayer(sender, args[2]);
                         if(target == null){
-                            sender.sendMessage(Logger.color("&cPlayer " + args[2] + "&c is offline"));
                             return false;
                         }
                     }
                     break;
                 case 4:
-                    target = Bukkit.getPlayer(args[2]);
+                    target = getOnlinePlayer(sender, args[2]);
                     if(target == null){
-                        sender.sendMessage(Logger.color("&cPlayer " + args[2] + "&c is offline"));
                         return false;
                     }
                     try{
@@ -209,14 +240,13 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     }
                     break;
                 default:
-                    Logger.sendMessage("&cUsage: &7/alb give <wands, objects, luckyblocks, luckytool, other_items...> [player | amount] [amount]", sender);
+                    Logger.sendMessage("&cUsage: &7/alb give <wands, objects, luckyblocks, luckytool, other_items...> [player] [amount]", sender);
                     return false;
             }
             
             switch(selectedItem){
                 case "wands":
-                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.Wands"))){
-                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender);
+                    if(!checkHasPermission(sender, "Commands.Give.Wands")){
                         return false;
                     }
                     
@@ -224,12 +254,12 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     Logger.sendMessage(loadwands, sender);
                     for(SpecialItem wand : SpecialItemManager.getWands()){
                         ItemStack stack = wand.getItem();
+                        stack.setAmount(amount);
                         target.getInventory().addItem(stack);
                     }
                     break;
                 case "objects":
-                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.Objects"))){
-                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender);
+                    if(!checkHasPermission(sender, "Commands.Give.Objects")){
                         return false;
                     }
                     
@@ -242,8 +272,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     }
                     break;
                 case "luckyblocks":
-                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.LuckyBlocks"))){
-                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender, false);
+                    if(!checkHasPermission(sender, "Commands.Give.LuckyBlocks")){
                         return false;
                     }
                     
@@ -256,23 +285,27 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     }
                     break;
                 case "luckytool":
-                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.LuckyTool"))){
-                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender, false);
+                    if(!checkHasPermission(sender, "Commands.Give.LuckyTool")){
                         return false;
                     }
                     
                     String loadtool = LangLoader.getMessages().getString("LoadingLuckyTool");
                     Logger.sendMessage(loadtool, sender);
-                    target.getInventory().addItem(SpecialItemManager.getLuckyTool().getItem());
+                    ItemStack luckyToolItem = SpecialItemManager.getLuckyTool().getItem();
+                    luckyToolItem.setAmount(amount);
+                    target.getInventory().addItem(luckyToolItem);
                     break;
                 default:
-                    if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Give.OtherItems"))){
-                        Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), sender, false);
+                    if(!checkHasPermission(sender, "Commands.Give.OtherItems")){
                         return false;
                     }
                     
                     ItemStack stack = null;
+                    
+                    // Get special item
                     SpecialItem specialItem = SpecialItemManager.getSpecialItem(selectedItem);
+                    
+                    // If selected item is not a special item, check if it is a LuckyBlockType
                     if(specialItem == null){
                         for(LuckyBlockType type : TypeManager.getTypes()){
                             if(type.getTypeName().equals(selectedItem)){
@@ -301,155 +334,146 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeReload(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.Reload-permission");
-        if(sender.hasPermission(permission)){
-            GUIManager.setCurrentInventory(null);
-            
-            ConfigManager.reloadConfig();
-            ConfigManager.saveConfig();
-            LangLoader.reloadMessages();
-            
-            WorldList.reloadAll();
-            
-            SpecialItemManager.reloadSpecialItems();
-            
-            PackManager.loadPacks();
-            TrapManager.loadTraps();
-            TypeManager.loadTypes();
-            
-            LocationManager.saveLocations();
-            
-            FinishMenu.testRewardsPlayerList.clear();
-            
-            String reload1 = Logger.color(LangLoader.getMessages().getString("Reload.line1"));
-            String reload2 = Logger.color(LangLoader.getMessages().getString("Reload.line2"));
-            String reload3 = Logger.color(LangLoader.getMessages().getString("Reload.line3"));
-            Logger.sendMessage(reload1, sender);
-            Logger.sendMessage(reload2, sender);
-            Logger.sendMessage(reload3, sender);
-            
-            plugin.prefix = LangLoader.getMessages().getString("InGamePrefix");
-            return true;
-        }else{
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+        if(!checkHasPermission(sender, "Commands.Reload-permission")){
             return false;
         }
+        
+        GUIManager.setCurrentInventory(null);
+
+        ConfigManager.reloadConfig();
+        ConfigManager.saveConfig();
+        LangLoader.reloadMessages();
+
+        WorldList.reloadAll();
+
+        SpecialItemManager.reloadSpecialItems();
+
+        PackManager.loadPacks();
+        TrapManager.loadTraps();
+        TypeManager.loadTypes();
+
+        LocationManager.saveLocations();
+
+        FinishMenu.testRewardsPlayerList.clear();
+
+        String reload1 = LangLoader.getMessages().getString("Reload.line1");
+        String reload2 = LangLoader.getMessages().getString("Reload.line2");
+        String reload3 = LangLoader.getMessages().getString("Reload.line3");
+        Logger.sendMessage(reload1, sender);
+        Logger.sendMessage(reload2, sender);
+        Logger.sendMessage(reload3, sender);
+
+        plugin.prefix = LangLoader.getMessages().getString("InGamePrefix");
+        return true;
 //</editor-fold>
     }
     
     private boolean executeRandomBlocks(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.RandomBlocks-permission");
-        if(sender.hasPermission(permission)){
-            Player player;
-            if(args.length == 2 && args[1].equalsIgnoreCase("stop")){
-                if(RandomBlocks.taskID != 0){
-                    Bukkit.getScheduler().cancelTask(RandomBlocks.taskID);
-                    
-                    sender.sendMessage(Logger.color("&cRandomblock task has been cancelled"));
-                    sender.sendMessage(Logger.color("&b" + RandomBlocks.blocks_placed + " &aBlocks have been placed"));
-                    
-                    RandomBlocks.taskID = 0;
-                }else{
-                    sender.sendMessage(Logger.color("&cThere isn't any randomblock task running at the moment"));
-                }
-                
-                return false;
-            }else if(args.length == 6){
-                if(!(sender instanceof Player)){
-                    Logger.log("&cYou can't send this command from the console");
-                    return false;
-                }
-                player = (Player) sender;
-            }else if(args.length == 7){
-                player = Bukkit.getServer().getPlayer(args[6]);
-                if(player == null){
-                    sender.sendMessage(Logger.color("&cPlayer " + args[6] + "&c is offline"));
-                    return false;
-                }
+        if(!checkHasPermission(sender, "Commands.RandomBlocks-permission")){
+            return false;
+        }
+        
+        Player player;
+        if(args.length == 2 && args[1].equalsIgnoreCase("stop")){
+            if(RandomBlocks.taskID != 0){
+                Bukkit.getScheduler().cancelTask(RandomBlocks.taskID);
+
+                Logger.sendMessage("&cRandomblock task has been cancelled", sender);
+                Logger.sendMessage("&b" + RandomBlocks.blocks_placed + " &aBlocks have been placed", sender);
+
+                RandomBlocks.taskID = 0;
             }else{
-                sender.sendMessage(Logger.color("&7Usage: " + LangLoader.getMessages().getString("Helpmenu.line3")));
+                Logger.sendMessage("&cThere isn't any randomblock task running at the moment", sender);
+            }
+
+            return false;
+        }else if(args.length == 6){
+            if(!checkNotConsole(sender)){
                 return false;
             }
-            
-            if(RandomBlocks.taskID == 0){
-                int radx;
-                int rady;
-                int radz;
-                int blocks;
-                try{
-                    radx = Integer.parseInt(args[1]);
-                }catch(NumberFormatException numberFormatException){
-                    sender.sendMessage(Logger.color(plugin.prefix + " &cargs[1] must be an &ainteger&c, not &6" + args[1]));
-                    return false;
-                }
-                
-                try{
-                    rady = Integer.parseInt(args[2]);
-                }catch(NumberFormatException numberFormatException){
-                    sender.sendMessage(Logger.color(plugin.prefix + " &cargs[2] must be an &ainteger&c, not &6" + args[2]));
-                    return false;
-                }
-                
-                try{
-                    radz = Integer.parseInt(args[3]);
-                }catch(NumberFormatException numberFormatException){
-                    sender.sendMessage(Logger.color(plugin.prefix + " &cargs[3] must be an &ainteger&c, not &6" + args[3]));
-                    return false;
-                }
-                
-                try{
-                    blocks = Integer.parseInt(args[4]);
-                }catch (NumberFormatException numberFormatException){
-                    sender.sendMessage(Logger.color(plugin.prefix + " &cargs[4] must be an &ainteger&c, not &6" + args[4]));
-                    return false;
-                }
-                boolean floating_blocks;
-                boolean forceMode;
-                switch(args[5]){
-                    case "true":
-                        floating_blocks = true;
-                        forceMode = false;
-                        break;
-                    case "false":
-                        floating_blocks = false;
-                        forceMode = false;
-                        break;
-                    case "force":
-                        floating_blocks = false;
-                        forceMode = true;
-                        break;
-                    default:
-                        sender.sendMessage(Logger.color(plugin.prefix + " &cargs[5] must be &atrue&c, &afalse &cor &aforce&c, not &6" + args[5]));
-                        return false;
-                }
-                
-                
-                String placeblocks = Logger.color(LangLoader.getMessages().getString("PlacingBlocks"));
-                sender.sendMessage(placeblocks);
-                
-                boolean isPlayer = sender instanceof Player;
-                
-                
-                String world = player.getWorld().getName();
-                
-                if(WorldList.isRegistered(world)){
-                    RandomBlocks rb = new RandomBlocks(radx,rady,radz,blocks,floating_blocks,forceMode,player,isPlayer,sender);
-                    rb.generatePackets();
-                    return true;
-                }else{
-                    sender.sendMessage(Logger.color("&cThe world &b" + world + " &cisn't in the worlds list"));
-                    return false;
-                }
-            }else{
-                sender.sendMessage(ChatColor.RED + "There already is a randomblock task running");
-                sender.sendMessage(ChatColor.RED + "Wait until it finish or use: " + ChatColor.AQUA + "/alb randomblock stop");
+            player = (Player) sender;
+        }else if(args.length == 7){
+            player = getOnlinePlayer(sender, args[6]);
+            if(player == null){
                 return false;
             }
         }else{
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+            Logger.sendMessage("&7Usage: " + LangLoader.getMessages().getString("Helpmenu.line3"), sender);
+            return false;
+        }
+
+        if(RandomBlocks.taskID == 0){
+            int radx;
+            int rady;
+            int radz;
+            int blocks;
+            try{
+                radx = Integer.parseInt(args[1]);
+            }catch(NumberFormatException numberFormatException){
+                Logger.sendMessage(plugin.prefix + " &cargs[1] must be an &ainteger&c, not &6" + args[1], sender);
+                return false;
+            }
+
+            try{
+                rady = Integer.parseInt(args[2]);
+            }catch(NumberFormatException numberFormatException){
+                Logger.sendMessage(plugin.prefix + " &cargs[2] must be an &ainteger&c, not &6" + args[2], sender);
+                return false;
+            }
+
+            try{
+                radz = Integer.parseInt(args[3]);
+            }catch(NumberFormatException numberFormatException){
+                Logger.sendMessage(plugin.prefix + " &cargs[3] must be an &ainteger&c, not &6" + args[3], sender);
+                return false;
+            }
+
+            try{
+                blocks = Integer.parseInt(args[4]);
+            }catch (NumberFormatException numberFormatException){
+                Logger.sendMessage(plugin.prefix + " &cargs[4] must be an &ainteger&c, not &6" + args[4], sender);
+                return false;
+            }
+            boolean floating_blocks;
+            boolean forceMode;
+            switch(args[5]){
+                case "true":
+                    floating_blocks = true;
+                    forceMode = false;
+                    break;
+                case "false":
+                    floating_blocks = false;
+                    forceMode = false;
+                    break;
+                case "force":
+                    floating_blocks = false;
+                    forceMode = true;
+                    break;
+                default:
+                    Logger.sendMessage(plugin.prefix + " &cargs[5] must be &atrue&c, &afalse &cor &aforce&c, not &6" + args[5], sender);
+                    return false;
+            }
+
+            String placeblocks = LangLoader.getMessages().getString("PlacingBlocks");
+            Logger.sendMessage(placeblocks, sender);
+
+            boolean isPlayer = sender instanceof Player;
+
+
+            String world = player.getWorld().getName();
+
+            if(WorldList.isRegistered(world)){
+                RandomBlocks rb = new RandomBlocks(radx,rady,radz,blocks,floating_blocks,forceMode,player,isPlayer,sender);
+                rb.generatePackets();
+                return true;
+            }else{
+                Logger.sendMessage("&cThe world &b" + world + " &cisn't in the worlds list", sender);
+                return false;
+            }
+        }else{
+            Logger.sendMessage("&cThere already is a randomblock task running", sender);
+            Logger.sendMessage("&cWait until it finish or use: &a/alb randomblock stop", sender);
             return false;
         }
 //</editor-fold>
@@ -457,22 +481,19 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeMenu(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.Menu-permission");
-        if(!sender.hasPermission(permission)){
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+        if(!checkHasPermission(sender, "Commands.Menu-permission")){
             return false;
         }
-        if(!(sender instanceof Player)){
-            Logger.log(plugin.name+ChatColor.RED+" You can't send this command from the console");
+        
+        if(!checkNotConsole(sender)){
             return false;
         }
         
         Player player = (Player) sender;
         if(confirmMenu && ConfigManager.getConfig().getBoolean("Enable-openMenu-confirmation")){
-            player.sendMessage(Logger.color(LangLoader.getMessages().getString("MenuConfirmation.line1")));
-            player.sendMessage(Logger.color(LangLoader.getMessages().getString("MenuConfirmation.line2")));
-            player.sendMessage(Logger.color(LangLoader.getMessages().getString("MenuConfirmation.line3")));
+            Logger.sendMessage(LangLoader.getMessages().getString("MenuConfirmation.line1"), sender);
+            Logger.sendMessage(LangLoader.getMessages().getString("MenuConfirmation.line2"), sender);
+            Logger.sendMessage(LangLoader.getMessages().getString("MenuConfirmation.line3"), sender);
             confirmMenu = false;
             return false;
         }else{
@@ -492,14 +513,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeReturn(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.Menu-permission");
-        if(!sender.hasPermission(permission)){
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+        if(!checkHasPermission(sender, "Commands.Menu-permission")){
             return false;
         }
-        if(!(sender instanceof Player)){
-            Logger.log("&cYou can't send this command from the console");
+        
+        if(!checkNotConsole(sender)){
             return false;
         }
         
@@ -508,7 +526,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         ChatListener.removePlayer(player);
         
         if(GUIManager.getCurrentInventory() == null){
-            player.sendMessage(Logger.color("&cYou haven't opened any menu recently"));
+            Logger.sendMessage("&cYou haven't opened any menu recently", sender);
             return false;
         }else{
             confirmMenu = true;
@@ -520,10 +538,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeWorlds(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.Worlds-permission");
-        if(!sender.hasPermission(permission)){
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+        if(!checkHasPermission(sender, "Commands.World-permission")){
             return false;
         }
         
@@ -531,23 +546,20 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             case 1:
                 // /alb worlds
                 //Open worlds menu
-                if(sender instanceof Player){
-                    WorldMenu.reset();
-                    WorldMenu.openWorldsMenu((Player) sender);
-                    return true;
-                }else{
-                    sender.sendMessage(Logger.color("&cYou can't use this command from the Console"));
+                if(!checkNotConsole(sender)){
                     return false;
                 }
-                //break;
+                WorldMenu.reset();
+                WorldMenu.openWorldsMenu((Player) sender);
+                return true;
             case 2:
                 // /alb worlds list
-                if(args[1].equalsIgnoreCase("list")){
+                if(args[1].equals("list")){
                     WorldList.updateWorlds(false);
-                    sender.sendMessage(Logger.color(LangLoader.getMessages().getString("World-management1.line1")));
-                    sender.sendMessage(Logger.color(LangLoader.getMessages().getString("World-management1.line2")));
+                    Logger.sendMessage(LangLoader.getMessages().getString("World-management1.line1"), sender);
+                    Logger.sendMessage(LangLoader.getMessages().getString("World-management1.line2"), sender);
                     WorldList.getWorlds().forEach((worldName, worldType) -> {
-                        String message = (LangLoader.getMessages().getString("World-management1.worldName").replace("%world%", worldName));
+                        String message = LangLoader.getMessages().getString("World-management1.worldName").replace("%world%", worldName);
                         if(worldType){
                             message += LangLoader.getMessages().getString("World-management1.enabledWorld");
                         }else{
@@ -557,63 +569,54 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     });
                     return true;
                 }else{
-                    sender.sendMessage(Logger.color("&cUsage: &7/alb worlds list"));
+                    Logger.sendMessage("&cUsage: &7/alb worlds list", sender);
                     return false;
                 }
-                
-                //break;
             case 4:
                 // /alb worlds set <world> <type>
-                if(args[1].equalsIgnoreCase("set")){
+                if(args[1].equals("set")){
                     String worldName = args[2];
                     String worldEnabled = args[3];
                     if(!args[3].equals("enabled") && !args[3].equals("disabled")){
-                        sender.sendMessage(Logger.color("&cUsage: /alb set <world> <enabled/disabled>"));
+                        Logger.sendMessage("&cUsage: /alb set <world> <enabled/disabled>", sender);
                         return false;
                     }
                     
                     boolean enabled = worldEnabled.equals("enabled");
                     
-                    String message = LangLoader.getMessages().getString("World-management2.line1").replaceAll("%world%", worldName);
+                    String message = LangLoader.getMessages().getString("World-management2.line1").replace("%world%", worldName);
                     if(Bukkit.getWorld(worldName) != null){
                         if(enabled){
                             message += LangLoader.getMessages().getString("World-management1.enabledWorld");
                         }else{
                             message += LangLoader.getMessages().getString("World-management1.disabledWorld");
                         }
-                        sender.sendMessage(Logger.color(message));
+                        Logger.sendMessage(message, sender);
                         WorldList.setWorldEnabled(worldName, enabled);
                         return true;
                     }else{
-                        sender.sendMessage(Logger.color(LangLoader.getMessages().getString("World-management2.line4").replaceAll("%world%", worldName)));
+                        Logger.sendMessage(LangLoader.getMessages().getString("World-management2.line4").replace("%world%", worldName), sender);
                         return false;
                     }
                 }else{
-                    sender.sendMessage(Logger.color("&cUsage: /alb set <world> <enabled/disabled>"));
+                    Logger.sendMessage("&cUsage: /alb set <world> <enabled/disabled>", sender);
                     return false;
                 }
-                
-                //break;
             default:
-                String unknowncommand = Logger.color(LangLoader.getMessages().getString("UnknownCommand"));
-                sender.sendMessage(unknowncommand);
+                String unknowncommand = LangLoader.getMessages().getString("UnknownCommand");
+                Logger.sendMessage(unknowncommand, sender);
                 return false;
-                //break;
         }
 //</editor-fold>
     }
     
     private boolean executeLoadSchematic(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.Schematic");
-        if(!sender.hasPermission(permission)){
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+        if(!checkHasPermission(sender, "Commands.Schematic")){
             return false;
         }
         
-        if(!(sender instanceof Player)){
-            Logger.sendMessage("&cYou can't use this command from the Console", sender);
+        if(!checkNotConsole(sender)){
             return false;
         }
         
@@ -623,7 +626,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         if(args.length != 2){
-            sender.sendMessage(Logger.color("&cUse: &7/alb " + args[0] + " <schematicName>"));
+            Logger.sendMessage("&cUse: &7/alb " + args[0] + " <schematicName>", sender);
             return false;
         }
         
@@ -651,15 +654,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeSaveSchematic(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.Schematic");
-        if(!sender.hasPermission(permission)){
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+        if(!checkHasPermission(sender, "Commands.Schematic")){
             return false;
         }
         
-        if(!(sender instanceof Player)){
-            Logger.sendMessage("&cYou can't use this command from the Console", sender);
+        if(!checkNotConsole(sender)){
             return false;
         }
         
@@ -669,18 +668,18 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         if(args.length != 2){
-            sender.sendMessage(Logger.color("&cUse: &7/alb " + args[0] + " <schematicName>"));
+            Logger.sendMessage("&cUse: &7/alb " + args[0] + " <schematicName>", sender);
             return false;
         }
         
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             if(!args[1].endsWith(".schematic")){
-                sender.sendMessage(Logger.color("&cSchematic files must end in &6.schematic"));
+                Logger.sendMessage("&cSchematic files must end in &6.schematic", sender);
                 return false;
             }
         }else{
             if(!args[1].endsWith(".schem")){
-                sender.sendMessage(Logger.color("&cSchematic files must end in &6.schem"));
+                Logger.sendMessage("&cSchematic files must end in &6.schem", sender);
                 return false;
             }
         }
@@ -709,10 +708,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeRemoveSchematic(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.Schematic");
-        if(!sender.hasPermission(permission)){
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+        if(!checkHasPermission(sender, "Commands.Schematic")){
             return false;
         }
         
@@ -722,13 +718,13 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         if(args.length != 2){
-            sender.sendMessage(Logger.color("&cUse: &7/alb " + args[0] + " <schematicName>"));
+            Logger.sendMessage("&cUse: &7/alb " + args[0] + " <schematicName>", sender);
             return false;
         }
         
         File file = new File(NewAmazingLuckyBlocks.getInstance().getDataFolder(), "schematics" + File.separator + args[1]);
         if(!file.exists()){
-            sender.sendMessage(Logger.color("&cSchematic &6\"" + args[1] + "\" &cdoesn't exist"));
+            Logger.sendMessage("&cSchematic &6\"" + args[1] + "\" &cdoesn't exist", sender);
             return false;
         }
         
@@ -744,41 +740,34 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeClear(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.Clear-permission");
-        if(!sender.hasPermission(permission)){
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+        if(!checkHasPermission(sender, "Commands.Clear-permission")){
             return false;
         }
         
         if(args.length == 1){
             LocationManager.removeLocations();
-            sender.sendMessage(Logger.color("&aAll LuckyBlocks were removed"));
+            Logger.sendMessage("&aAll LuckyBlocks were removed", sender);
             return true;
         }
         String world = args[1];
         if(WorldList.isRegistered(world)){
             LocationManager.removeLocations(Bukkit.getWorld(world));
-            sender.sendMessage(Logger.color("&aAll LuckyBlocks of the world &b" + world + " &awere removed"));
+            Logger.sendMessage("&aAll LuckyBlocks of the world &b" + world + " &awere removed", sender);
             return true;
         }
         
-        sender.sendMessage(Logger.color("&cThe world &b" + world + " &cisn't in the world list"));
+        Logger.sendMessage("&cThe world &b" + world + " &cisn't in the world list", sender);
         return false;
 //</editor-fold>
     }
     
     private boolean getSkull(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String permission = ConfigManager.getConfig().getString("Commands.GetSkull-permission");
-        if(!sender.hasPermission(permission)){
-            String noperm = Logger.color(LangLoader.getMessages().getString("NoPermission"));
-            sender.sendMessage(noperm);
+        if(!checkHasPermission(sender, "Commands.GetSkull-permission")){
             return false;
         }
         
-        if(!(sender instanceof Player)){
-            sender.sendMessage(Logger.color("&cYou can't use this command from the Console"));
+        if(!checkNotConsole(sender)){
             return false;
         }
         
@@ -813,7 +802,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         
         List<String> ls = new ArrayList<>();
         
-        if(args[0].equalsIgnoreCase("")){
+        if(args[0].isEmpty()){
             ls = Arrays.asList(CMD_LIST);
         }else if(args.length == 1){
             for(String str : CMD_LIST){
