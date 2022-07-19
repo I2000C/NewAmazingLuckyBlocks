@@ -247,7 +247,7 @@ public class OutcomeListMenu{
                             FinishMenu.setCurrentOutcome(outcome.cloneOutcome());
                             GUIManager.reset();
                             GUIManager.outcomeName = outcome.getName();
-                            GUIManager.outcomeProb = outcome.getProbability() + "";
+                            GUIManager.outcomeProb = outcome.getProbability();
                             GUIManager.outcomeIcon = outcome.getIcon();
                             GUIManager.editMode = true;
                             GUIManager.newOutcome(p);

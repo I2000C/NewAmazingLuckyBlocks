@@ -11,6 +11,7 @@ import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemStackBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -28,8 +29,8 @@ public class GUIManager{
         return currentINV;
     }
     
-    protected static String outcomeName = "&7Write name";
-    protected static String outcomeProb = "&6Select probability";
+    protected static String outcomeName;
+    protected static int outcomeProb;
     protected static ItemStack outcomeIcon;
     
     protected static boolean editMode = false;
@@ -44,8 +45,8 @@ public class GUIManager{
             inventoriesRegistered = true;
         }
         
-        outcomeName = "&7Write name";
-        outcomeProb = "&6Select probability";
+        outcomeName = "New outcome " + FinishMenu.getCurrentPack().getOutcomes().size();
+        outcomeProb = 100;
         outcomeIcon = Outcome.getDefaultIcon();
         
         editMode = false;
@@ -53,51 +54,46 @@ public class GUIManager{
     
     static void newOutcome(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv;
+        String inventoryName;
         if(editMode){
-            inv = GUIFactory.createInventory(CustomInventoryType.NEW_OUTCOME_MENU, 27, "&e&lEdit outcome");
+            inventoryName = "&e&lEdit outcome";
         }else{
-            inv = GUIFactory.createInventory(CustomInventoryType.NEW_OUTCOME_MENU, 27, "&a&lCreate new outcome");
+            inventoryName = "&a&lCreate new outcome";
         }
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.NEW_OUTCOME_MENU, 27, inventoryName);
         
-        ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = ItemStackBuilder.createNewItem(XMaterial.CYAN_STAINED_GLASS_PANE)
+                .withDisplayName(" ").build();
         
-        ItemStack name = XMaterial.OAK_SIGN.parseItem();
-        meta = name.getItemMeta();
-        if(outcomeName.equals("&7Write name")){
-            meta.setDisplayName(Logger.color(outcomeName));
+        ItemStack name = ItemStackBuilder.createNewItem(XMaterial.OAK_SIGN)
+                .withDisplayName("&7Outcome name: &r" + outcomeName)
+                .withLore("&3Click to change")
+                .build();
+        
+        ItemStack icon = ItemStackBuilder.fromItem(outcomeIcon)
+                .withDisplayName("&dOutcome icon")
+                .withLore("&bClick on an item of your inventory",
+                          "&b   to select the icon of the outcome.",
+                          "&bBy default it's CHEST"
+                ).build();
+        
+        
+        ItemStackBuilder builder = ItemStackBuilder.createNewItem(XMaterial.GLOWSTONE_DUST);
+        if(outcomeProb < 0){
+            builder.withDisplayName("&cProbability must be a positive integer or 0");
         }else{
-            meta.setDisplayName(Logger.color("&7Outcome name: &r" + outcomeName));
+            builder.withDisplayName("&6Outcome probability: &r" + outcomeProb);
         }
-        name.setItemMeta(meta);
+        builder.withLore("&3Click to change");
+        ItemStack prob = builder.build();
         
-        ItemStack icon = outcomeIcon.clone();
-        meta = icon.getItemMeta();
-        meta.setDisplayName(Logger.color("&dOutcome icon"));
-        meta.setLore(Logger.color(Arrays.asList("&bClick on an item of your inventory", "&b   to select the icon of the outcome.", "&bBy default it's CHEST")));
-        icon.setItemMeta(meta);
+        ItemStack back = ItemStackBuilder.createNewItem(XMaterial.ENDER_PEARL)
+                .withDisplayName("&2Back")
+                .build();
         
-        ItemStack prob = new ItemStack(Material.GLOWSTONE_DUST);
-        meta = prob.getItemMeta();
-        if(outcomeProb.equals("&6Select probability") || outcomeProb.equals("&cProbability must be a positive integer")){
-            meta.setDisplayName(Logger.color(outcomeProb));
-        }else{
-            meta.setDisplayName(Logger.color("&6Outcome probability: &r" + outcomeProb));
-        }
-        prob.setItemMeta(meta);
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
-        next.setItemMeta(meta);
+        ItemStack next = ItemStackBuilder.createNewItem(XMaterial.ANVIL)
+                .withDisplayName("&bNext")
+                .build();
         
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
@@ -143,31 +139,32 @@ public class GUIManager{
                 case 14:
                     ChatListener.registerPlayer(p, message -> {
                         try{
-                            if(Integer.parseInt(message) > 0){
-                                outcomeProb = message;
+                            int prob = Integer.parseInt(message);
+                            if(prob >= 0){
+                                outcomeProb = prob;
                             }else{
-                                outcomeProb = "&cProbability must be a positive integer";
+                                outcomeProb = -1;
                             }
                         }catch(NumberFormatException ex){
-                            outcomeProb = "&cProbability must be a positive integer";
+                            outcomeProb = -2;
                         }
                         newOutcome(p);
                     });
                     p.closeInventory();
                     break;
                 case 16:
-                    if(!outcomeName.equals("&7Write name") && !(outcomeProb.equals("&6Select probability") || outcomeProb.equals("&cProbability must be a positive integer"))){
+                    if(outcomeProb >= 0){
                         //Open next inventory
                         if(editMode){
                             editMode = false;
                             FinishMenu.getCurrentOutcome().setName(outcomeName);
-                            FinishMenu.getCurrentOutcome().setProbability(Integer.parseInt(outcomeProb));
+                            FinishMenu.getCurrentOutcome().setProbability(outcomeProb);
                         }else{
                             if(FinishMenu.getCurrentOutcome() == null){
-                                FinishMenu.setCurrentOutcome(new Outcome(outcomeName, Integer.parseInt(outcomeProb), -1, FinishMenu.getCurrentPack()));
+                                FinishMenu.setCurrentOutcome(new Outcome(outcomeName, outcomeProb, -1, FinishMenu.getCurrentPack()));
                             }else{
                                 FinishMenu.getCurrentOutcome().setName(outcomeName);
-                                FinishMenu.getCurrentOutcome().setProbability(Integer.parseInt(outcomeProb));
+                                FinishMenu.getCurrentOutcome().setProbability(outcomeProb);
                             }
                         }
                         FinishMenu.getCurrentOutcome().setIcon(outcomeIcon);
