@@ -42,9 +42,12 @@ public class CommandMenu{
         lore.add(Logger.color("&7Click here and then, write the command"));
         lore.add(Logger.color("&7in the chat without the first '&b&l/&7'&r"));
         lore.add("");
-        lore.add(Logger.color("&7Use &a%player% &7if you want to use the player's name in a command,"));
-        lore.add(Logger.color("&7    &a%x%&7, &a%y%, &a%z% &7if you want to use the player's coordinates"));
-        lore.add(Logger.color("&7    or &a%bx%&7, &a%by%, &a%bz% &7if you want to use the LuckyBlock's coordinates"));
+        lore.add(Logger.color("&7Use &a%player% &7if you want to use"));
+        lore.add(Logger.color("&7  the player's name in the command,"));
+        lore.add(Logger.color("&7&a%x%&7, &a%y%, &a%z% &7if you want"));
+        lore.add(Logger.color("&7  to use the player's coordinates"));
+        lore.add(Logger.color("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want"));
+        lore.add(Logger.color("&7  to use the LuckyBlock's coordinates"));
         
         ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
         ItemMeta meta = glass.getItemMeta();
