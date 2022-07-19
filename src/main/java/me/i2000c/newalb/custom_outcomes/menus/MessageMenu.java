@@ -7,9 +7,9 @@ import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.MessageReward;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemStackBuilder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.Material;
@@ -38,59 +38,69 @@ public class MessageMenu{
             reward = new MessageReward(FinishMenu.getCurrentOutcome());
         }
         
-        ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = ItemStackBuilder.createNewItem(XMaterial.CYAN_STAINED_GLASS_PANE)
+                .withDisplayName(" ").build();
         
-        ItemStack titleItem = new ItemStack(Material.BOOK);
-        meta = titleItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&bSelect title"));
-        meta.setLore(Logger.color(Arrays.asList("&3Selected title: &r\"" + reward.getTitle() + "&r\"")));
-        titleItem.setItemMeta(meta);
+        ItemStack titleItem = ItemStackBuilder.createNewItem(XMaterial.BOOK)
+                .withDisplayName("&bSelect title")
+                .addLoreLine("&3Selected title: &r\"" + reward.getTitle() + "&r\"")
+                .addLoreLine("&eClick to change")
+                .addLoreLine("")
+                .addLoreLine("&7Use &a%player% &7if you want to use")
+                .addLoreLine("&7  the player's name in the message,")
+                .addLoreLine("&7&a%x%&7, &a%y%, &a%z% &7if you want")
+                .addLoreLine("&7  to use the player's coordinates")
+                .addLoreLine("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want")
+                .addLoreLine("&7  to use the LuckyBlock's coordinates")
+                .build();
         
-        ItemStack subtitleItem = new ItemStack(Material.BOOK);
-        meta = subtitleItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&bSelect subtitle"));
-        meta.setLore(Logger.color(Arrays.asList("&3Selected subtitle: &r\"" + reward.getSubtitle() + "&r\"", "&6The subtitle only is used", "&6  when message type is TITLE")));
-        subtitleItem.setItemMeta(meta);
+        ItemStack subtitleItem = ItemStackBuilder.createNewItem(XMaterial.BOOK)
+                .withDisplayName("&bSelect subtitle")
+                .addLoreLine("&3Selected subtitle: &r\"" + reward.getSubtitle() + "&r\"")
+                .addLoreLine("&eClick to change")
+                .addLoreLine("")
+                .addLoreLine("&6The subtitle only is used")
+                .addLoreLine("&6  when message type is TITLE")
+                .addLoreLine("")
+                .addLoreLine("&7Use &a%player% &7if you want to use")
+                .addLoreLine("&7  the player's name in the message,")
+                .addLoreLine("&7&a%x%&7, &a%y%, &a%z% &7if you want")
+                .addLoreLine("&7  to use the player's coordinates")
+                .addLoreLine("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want")
+                .addLoreLine("&7  to use the LuckyBlock's coordinates")
+                .build();
         
-        ItemStack typeItem;
+        ItemStackBuilder builder;
         switch(reward.getMessageType()){
             case TITLE:
-                typeItem = new ItemStack(Material.PAINTING);
+                builder = ItemStackBuilder.createNewItem(XMaterial.PAINTING);
                 break;
             case ACTION_BAR:
-                typeItem = new ItemStack(Material.NAME_TAG);
+                builder = ItemStackBuilder.createNewItem(XMaterial.NAME_TAG);
                 break;
             default:
             //case CHAT:
-                typeItem = XMaterial.OAK_SIGN.parseItem();
-        }
-        meta = typeItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&aSelect message type"));
-        meta.setLore(Logger.color(Arrays.asList("&3Selected message type: &5" + reward.getMessageType().name())));
-        typeItem.setItemMeta(meta);
+                builder = ItemStackBuilder.createNewItem(XMaterial.OAK_SIGN);
+        }        
+        builder.withDisplayName("&aSelect message type");
+        builder.withLore("&3Selected message type: &5" + reward.getMessageType().name());
+        ItemStack typeItem = builder.build();
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
-        back.setItemMeta(meta);
+        ItemStack back = ItemStackBuilder.createNewItem(XMaterial.ENDER_PEARL)
+                .withDisplayName("&7Back")
+                .build();
         
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
-        next.setItemMeta(meta);
+        ItemStack next = ItemStackBuilder.createNewItem(XMaterial.ANVIL)
+                .withDisplayName("&bNext")
+                .build();
         
-        ItemStack deleteTitle = new ItemStack(Material.BARRIER);
-        meta = deleteTitle.getItemMeta();
-        meta.setDisplayName(Logger.color("&cRemove title"));
-        deleteTitle.setItemMeta(meta);
+        ItemStack deleteTitle = ItemStackBuilder.createNewItem(XMaterial.BARRIER)
+                .withDisplayName("&cRemove title")
+                .build();
         
-        ItemStack deleteSubtitle = new ItemStack(Material.BARRIER);
-        meta = deleteSubtitle.getItemMeta();
-        meta.setDisplayName(Logger.color("&cRemove subtitle"));
-        deleteSubtitle.setItemMeta(meta);
+        ItemStack deleteSubtitle = ItemStackBuilder.createNewItem(XMaterial.BARRIER)
+                .withDisplayName("&cRemove subtitle")
+                .build();
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.MESSAGE_MENU, 27, Logger.color("&7&lMessage Reward"));
         for(int i=0;i<9;i++){

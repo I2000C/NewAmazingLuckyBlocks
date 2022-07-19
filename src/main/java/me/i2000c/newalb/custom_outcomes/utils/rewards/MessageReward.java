@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.MessageMenu;
 import me.i2000c.newalb.utils2.ActionBarUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -78,17 +77,34 @@ public class MessageReward extends Reward{
     
     @Override
     public void execute(Player player, Location location){
+        String x = String.valueOf(player.getLocation().getBlockX());
+        String y = String.valueOf(player.getLocation().getBlockY());
+        String z = String.valueOf(player.getLocation().getBlockZ());
+        String bx = String.valueOf(location.getBlockX());
+        String by = String.valueOf(location.getBlockY());
+        String bz = String.valueOf(location.getBlockZ());
+        
+        String replacedTitle = title
+                .replace("%player%", player.getName())
+                .replace("%x%", x).replace("%y%", y).replace("%z%", z)
+                .replace("%bx%", bx).replace("%by%", by).replace("%bz%", bz);
+        
+        String replacedSubtitle = subtitle
+                .replace("%player%", player.getName())
+                .replace("%x%", x).replace("%y%", y).replace("%z%", z)
+                .replace("%bx%", bx).replace("%by%", by).replace("%bz%", bz);
+        
         switch(type){
             case TITLE:
-                String titleAux = title.isEmpty() ? "&o" : title;
-                String subtitleAux = subtitle.isEmpty() ? "&o" : subtitle;
+                String titleAux = replacedTitle.isEmpty() ? "&o" : replacedTitle;
+                String subtitleAux = replacedSubtitle.isEmpty() ? "&o" : replacedSubtitle;
                 player.sendTitle(Logger.color(titleAux), Logger.color(subtitleAux));
                 break;
             case ACTION_BAR:
-                ActionBarUtils.sendMessage(player, title);
+                ActionBarUtils.sendMessage(player, replacedTitle);
                 break;
             case CHAT:
-                player.sendMessage(Logger.color(title));
+                player.sendMessage(Logger.color(replacedTitle));
                 break;
         }        
     }
