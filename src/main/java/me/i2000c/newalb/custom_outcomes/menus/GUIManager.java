@@ -11,7 +11,7 @@ import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemStackBuilder;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -62,15 +62,15 @@ public class GUIManager{
         }
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.NEW_OUTCOME_MENU, 27, inventoryName);
         
-        ItemStack glass = ItemStackBuilder.createNewItem(XMaterial.CYAN_STAINED_GLASS_PANE)
+        ItemStack glass = ItemBuilder.newItem(XMaterial.CYAN_STAINED_GLASS_PANE)
                 .withDisplayName(" ").build();
         
-        ItemStack name = ItemStackBuilder.createNewItem(XMaterial.OAK_SIGN)
+        ItemStack name = ItemBuilder.newItem(XMaterial.OAK_SIGN)
                 .withDisplayName("&7Outcome name: &r" + outcomeName)
                 .withLore("&3Click to change")
                 .build();
         
-        ItemStack icon = ItemStackBuilder.fromItem(outcomeIcon)
+        ItemStack icon = ItemBuilder.fromItem(outcomeIcon)
                 .withDisplayName("&dOutcome icon")
                 .withLore("&bClick on an item of your inventory",
                           "&b   to select the icon of the outcome.",
@@ -78,7 +78,7 @@ public class GUIManager{
                 ).build();
         
         
-        ItemStackBuilder builder = ItemStackBuilder.createNewItem(XMaterial.GLOWSTONE_DUST);
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.GLOWSTONE_DUST);
         if(outcomeProb < 0){
             builder.withDisplayName("&cProbability must be a positive integer or 0");
         }else{
@@ -87,11 +87,11 @@ public class GUIManager{
         builder.withLore("&3Click to change");
         ItemStack prob = builder.build();
         
-        ItemStack back = ItemStackBuilder.createNewItem(XMaterial.ENDER_PEARL)
+        ItemStack back = ItemBuilder.newItem(XMaterial.ENDER_PEARL)
                 .withDisplayName("&2Back")
                 .build();
         
-        ItemStack next = ItemStackBuilder.createNewItem(XMaterial.ANVIL)
+        ItemStack next = ItemBuilder.newItem(XMaterial.ANVIL)
                 .withDisplayName("&bNext")
                 .build();
         

@@ -7,7 +7,7 @@ import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.utils2.ItemStackBuilder;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -30,17 +30,17 @@ public class MainMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.MAIN_MENU, 9, "&a&lMain menu");
         
-        ItemStack exit = ItemStackBuilder
-                .createNewItem(XMaterial.IRON_DOOR)
+        ItemStack exit = ItemBuilder
+                .newItem(XMaterial.IRON_DOOR)
                 .withDisplayName("&cExit")
                 .build();
         
-        ItemStack packsItem = ItemStackBuilder
-                .createNewItem(XMaterial.CRAFTING_TABLE)
+        ItemStack packsItem = ItemBuilder
+                .newItem(XMaterial.CRAFTING_TABLE)
                 .withDisplayName("&3Manage outcome packs")
                 .build();
         
-        ItemStack typesItem = ItemStackBuilder
+        ItemStack typesItem = ItemBuilder
                 .fromItem(TypeManager.getMenuItemStack())
                 .withDisplayName("&6Manage lucky block types")
                 .build();

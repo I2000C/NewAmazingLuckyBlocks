@@ -9,7 +9,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.MessageReward;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemStackBuilder;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.Material;
@@ -38,10 +38,10 @@ public class MessageMenu{
             reward = new MessageReward(FinishMenu.getCurrentOutcome());
         }
         
-        ItemStack glass = ItemStackBuilder.createNewItem(XMaterial.CYAN_STAINED_GLASS_PANE)
+        ItemStack glass = ItemBuilder.newItem(XMaterial.CYAN_STAINED_GLASS_PANE)
                 .withDisplayName(" ").build();
         
-        ItemStack titleItem = ItemStackBuilder.createNewItem(XMaterial.BOOK)
+        ItemStack titleItem = ItemBuilder.newItem(XMaterial.BOOK)
                 .withDisplayName("&bSelect title")
                 .addLoreLine("&3Selected title: &r\"" + reward.getTitle() + "&r\"")
                 .addLoreLine("&eClick to change")
@@ -54,7 +54,7 @@ public class MessageMenu{
                 .addLoreLine("&7  to use the LuckyBlock's coordinates")
                 .build();
         
-        ItemStack subtitleItem = ItemStackBuilder.createNewItem(XMaterial.BOOK)
+        ItemStack subtitleItem = ItemBuilder.newItem(XMaterial.BOOK)
                 .withDisplayName("&bSelect subtitle")
                 .addLoreLine("&3Selected subtitle: &r\"" + reward.getSubtitle() + "&r\"")
                 .addLoreLine("&eClick to change")
@@ -70,35 +70,35 @@ public class MessageMenu{
                 .addLoreLine("&7  to use the LuckyBlock's coordinates")
                 .build();
         
-        ItemStackBuilder builder;
+        ItemBuilder builder;
         switch(reward.getMessageType()){
             case TITLE:
-                builder = ItemStackBuilder.createNewItem(XMaterial.PAINTING);
+                builder = ItemBuilder.newItem(XMaterial.PAINTING);
                 break;
             case ACTION_BAR:
-                builder = ItemStackBuilder.createNewItem(XMaterial.NAME_TAG);
+                builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
                 break;
             default:
             //case CHAT:
-                builder = ItemStackBuilder.createNewItem(XMaterial.OAK_SIGN);
+                builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
         }        
         builder.withDisplayName("&aSelect message type");
         builder.withLore("&3Selected message type: &5" + reward.getMessageType().name());
         ItemStack typeItem = builder.build();
         
-        ItemStack back = ItemStackBuilder.createNewItem(XMaterial.ENDER_PEARL)
+        ItemStack back = ItemBuilder.newItem(XMaterial.ENDER_PEARL)
                 .withDisplayName("&7Back")
                 .build();
         
-        ItemStack next = ItemStackBuilder.createNewItem(XMaterial.ANVIL)
+        ItemStack next = ItemBuilder.newItem(XMaterial.ANVIL)
                 .withDisplayName("&bNext")
                 .build();
         
-        ItemStack deleteTitle = ItemStackBuilder.createNewItem(XMaterial.BARRIER)
+        ItemStack deleteTitle = ItemBuilder.newItem(XMaterial.BARRIER)
                 .withDisplayName("&cRemove title")
                 .build();
         
-        ItemStack deleteSubtitle = ItemStackBuilder.createNewItem(XMaterial.BARRIER)
+        ItemStack deleteSubtitle = ItemBuilder.newItem(XMaterial.BARRIER)
                 .withDisplayName("&cRemove subtitle")
                 .build();
         

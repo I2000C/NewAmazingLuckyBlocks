@@ -10,36 +10,36 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class ItemStackBuilder{
+public class ItemBuilder{
     private final ItemStack item;
     
-    private ItemStackBuilder(XMaterial material){
+    private ItemBuilder(XMaterial material){
         this.item = material.parseItem();
     }
-    private ItemStackBuilder(ItemStack item){
+    private ItemBuilder(ItemStack item){
         this.item = item.clone();
     }
     
-    public static ItemStackBuilder createNewItem(XMaterial material){
-        return new ItemStackBuilder(material);
+    public static ItemBuilder newItem(XMaterial material){
+        return new ItemBuilder(material);
     }
-    public static ItemStackBuilder fromItem(ItemStack item){
-        return new ItemStackBuilder(item);
+    public static ItemBuilder fromItem(ItemStack item){
+        return new ItemBuilder(item);
     }
     
-    public ItemStackBuilder withAmount(int amount){
+    public ItemBuilder withAmount(int amount){
         item.setAmount(amount);
         
         return this;
     }
     
-    public ItemStackBuilder withDurability(int durability){
+    public ItemBuilder withDurability(int durability){
         item.setDurability((short) durability);
         
         return this;
     }
     
-    public ItemStackBuilder withDisplayName(String displayName){
+    public ItemBuilder withDisplayName(String displayName){
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(Logger.color(displayName));
         item.setItemMeta(meta);
@@ -47,7 +47,7 @@ public class ItemStackBuilder{
         return this;
     }
     
-    public ItemStackBuilder addLoreLine(String loreLine){
+    public ItemBuilder addLoreLine(String loreLine){
         ItemMeta meta = item.getItemMeta();
         List<String> lore;
         if(meta.hasLore()){
@@ -61,7 +61,7 @@ public class ItemStackBuilder{
         
         return this;
     }
-    public ItemStackBuilder addLore(List<String> loreLines){
+    public ItemBuilder addLore(List<String> loreLines){
         ItemMeta meta = item.getItemMeta();
         List<String> lore;
         if(meta.hasLore()){
@@ -75,10 +75,10 @@ public class ItemStackBuilder{
         
         return this;
     }
-    public ItemStackBuilder withLore(String... lore){
+    public ItemBuilder withLore(String... lore){
         return withLore(Arrays.asList(lore));
     }
-    public ItemStackBuilder withLore(List<String> lore){
+    public ItemBuilder withLore(List<String> lore){
         ItemMeta meta = item.getItemMeta();
         meta.setLore(Logger.color(lore));
         item.setItemMeta(meta);
@@ -86,19 +86,19 @@ public class ItemStackBuilder{
         return this;
     }
     
-    public ItemStackBuilder addEnchantmnet(Enchantment enchantment, int level){
+    public ItemBuilder addEnchantmnet(Enchantment enchantment, int level){
         item.addUnsafeEnchantment(enchantment, level);
         
         return this;
     }
-    public ItemStackBuilder withEnchantments(Map<Enchantment, Integer> enchantments){
+    public ItemBuilder withEnchantments(Map<Enchantment, Integer> enchantments){
         item.getEnchantments().forEach((enchantment, level) -> item.removeEnchantment(enchantment));
         item.addUnsafeEnchantments(enchantments);
         
         return this;
     }
     
-    public ItemStackBuilder withTextureID(String textureID){
+    public ItemBuilder withTextureID(String textureID){
         try{
             TextureManager.Texture texture = new TextureManager.Texture(textureID);
             return withTexture(texture);
@@ -106,7 +106,7 @@ public class ItemStackBuilder{
             return this;
         }
     }
-    public ItemStackBuilder withTexture(TextureManager.Texture texture){
+    public ItemBuilder withTexture(TextureManager.Texture texture){
         TextureManager.setTexture(item, texture);
         
         return this;
