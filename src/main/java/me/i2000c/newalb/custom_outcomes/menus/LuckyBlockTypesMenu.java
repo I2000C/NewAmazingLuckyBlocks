@@ -382,6 +382,8 @@ public class LuckyBlockTypesMenu{
                 .newItem(XMaterial.BOOKSHELF)
                 .withDisplayName("&bCurrent pack list:");
         currentType.getPacks().forEach((pack, probability) -> builder.addLoreLine("  &2" + pack.getFilename() + ";" + probability));
+        builder.addLoreLine("");
+        builder.addLoreLine("&3Click to change");
         ItemStack typePacks = builder.build();
         
         
