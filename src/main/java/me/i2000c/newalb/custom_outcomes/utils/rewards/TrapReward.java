@@ -65,7 +65,7 @@ public class TrapReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = XMaterial.OAK_PRESSURE_PLATE.parseItem();
+        ItemStack stack = new ItemStack(pressurePlateMaterial);
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(Logger.color("&5Trap"));
         meta.setLore(Logger.color(Arrays.asList("&3Name: &r" + this.trapName,
@@ -76,17 +76,17 @@ public class TrapReward extends Reward{
         return stack;
     }
     
-    private static List<Material> pressurePlateMaterials;
+    private static List<Material> PRESSURE_PLATE_MATERIALS;
     public static List<Material> getPressurePlateMaterials(){
-        if(pressurePlateMaterials == null){
-            pressurePlateMaterials = new ArrayList<>();
+        if(PRESSURE_PLATE_MATERIALS == null){
+            PRESSURE_PLATE_MATERIALS = new ArrayList<>();
             for(Material material : Material.values()){
                 if(material.isBlock() && material.name().contains("PLATE")){
-                    pressurePlateMaterials.add(material);
+                    PRESSURE_PLATE_MATERIALS.add(material);
                 }
             }
         }
-        return pressurePlateMaterials;
+        return PRESSURE_PLATE_MATERIALS;
     }
     
     @Override
@@ -172,4 +172,3 @@ public class TrapReward extends Reward{
         return reward;
     }
 }
-
