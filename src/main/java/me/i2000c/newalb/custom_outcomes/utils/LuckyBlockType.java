@@ -71,7 +71,7 @@ public class LuckyBlockType implements Displayable{
         
         ItemMeta meta = this.luckyBlockItem.getItemMeta();
         if(meta.hasDisplayName()){
-            builder.addLoreLine(String.format("&5Item name: &r\"%s&r\"", meta.getDisplayName()));
+            builder.addLoreLine(String.format("&5Item name: &r%s", meta.getDisplayName()));
         }else{
             builder.addLoreLine("&5Item name: &cnull");
         }
