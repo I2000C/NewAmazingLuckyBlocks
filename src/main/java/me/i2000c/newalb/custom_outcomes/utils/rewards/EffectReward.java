@@ -1,9 +1,9 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.Logger;
 import java.util.Arrays;
 import me.i2000c.newalb.custom_outcomes.menus.EffectMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -132,12 +132,12 @@ public class EffectReward extends Reward{
         if(this.clearEffects){
             player.getActivePotionEffects().forEach(pe -> player.removePotionEffect(pe.getType()));
         }else{
-            int durationAux = duration;
+            int durationAux = duration * 20;
             if(durationAux < 0){
-                durationAux = Integer.MAX_VALUE / 20;
+                durationAux = Integer.MAX_VALUE;
             }
 
-            player.addPotionEffect(new PotionEffect(potionEffect, durationAux * 20, amplifier, ambient, showParticles), true);
+            player.addPotionEffect(new PotionEffect(potionEffect, durationAux, amplifier, ambient, showParticles), true);
         }            
     }
     

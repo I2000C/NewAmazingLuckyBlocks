@@ -1,14 +1,14 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import com.cryptomorin.xseries.XMaterial;
+import java.util.ArrayList;
+import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.EntityMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.EnchantmentUtils;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.TextureManager;
-import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -246,7 +246,7 @@ public class EntityReward extends Reward{
             for(String effect : this.effects){
                 String[] effectData = effect.split(";");
                 PotionEffectType effectType = PotionEffectType.getByName(effectData[0]);
-                int time = Integer.parseInt(effectData[1]);
+                int time = Integer.parseInt(effectData[1]) * 20;
                 if(time < 0){
                     time = Integer.MAX_VALUE;
                 }
