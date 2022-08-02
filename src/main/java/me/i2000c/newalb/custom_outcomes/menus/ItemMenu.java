@@ -1,28 +1,28 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.ItemReward;
-import me.i2000c.newalb.utils.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.ItemReward;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.TextureManager;
 import org.bukkit.Color;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
@@ -289,7 +289,7 @@ public class ItemMenu{
             specialItem = new ItemStack(TextureManager.getItemSkullMaterial());
             meta = specialItem.getItemMeta();
             meta.setDisplayName(Logger.color("&5Click to set custom texture"));
-            meta.setLore(Logger.color(Arrays.asList("&3You can write 'null' if you want to remove the texture")));
+            meta.setLore(Logger.color(Arrays.asList("&3You can write 'null'", "&3  if you want to remove the texture")));
             specialItem.setItemMeta(meta);
             
             removeSpecialData = new ItemStack(Material.BARRIER);
