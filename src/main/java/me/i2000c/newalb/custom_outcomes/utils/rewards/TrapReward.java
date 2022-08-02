@@ -51,7 +51,7 @@ public class TrapReward extends Reward{
         this.trapName = trapName;
     }
     public Outcome getTrapOutcome(){
-        if(this.trapOutcome == null){
+        if(this.trapOutcome == null && this.trapOutcomePackName != null){
             OutcomePack pack = PackManager.getPack(trapOutcomePackName);
             trapOutcome = pack.getOutcome(trapOutcomeID);
         }
