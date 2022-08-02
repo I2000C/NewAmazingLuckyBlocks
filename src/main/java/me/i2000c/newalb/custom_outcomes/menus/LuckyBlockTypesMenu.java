@@ -71,7 +71,7 @@ public class LuckyBlockTypesMenu{
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.LUCKY_BLOCK_TYPES_MENU, 54, "&6&lLucky Block Types");
         
         for(int i=0; i<27 && i<TypeManager.getTypes().size(); i++){
-            ItemStack packItem = TypeManager.getTypes().get(i).getItem();
+            ItemStack packItem = TypeManager.getTypes().get(i).getItemToDisplay();
             inv.setItem(i, packItem);
         }
         
@@ -112,7 +112,7 @@ public class LuckyBlockTypesMenu{
         
         ItemStack placePermissionItem = ItemBuilder
                 .newItem(XMaterial.STONE)
-                .withDisplayName("&dCurrent place permission:")
+                .withDisplayName("&dCurrent global place permission:")
                 .addLoreLine("   &b" + placePermission)
                 .addLoreLine(" ")
                 .addLoreLine("&3Click to change")
@@ -120,7 +120,7 @@ public class LuckyBlockTypesMenu{
         
         ItemStack breakPermissionItem = ItemBuilder
                 .newItem(XMaterial.IRON_PICKAXE)
-                .withDisplayName("&dCurrent break permission:")
+                .withDisplayName("&dCurrent global break permission:")
                 .addLoreLine("   &b" + breakPermission)
                 .addLoreLine(" ")
                 .addLoreLine("&3Click to change")
@@ -130,14 +130,14 @@ public class LuckyBlockTypesMenu{
         if(placePermissionEnabled){
             requirePlacePermission = ItemBuilder
                     .newItem(XMaterial.LIME_DYE)
-                    .withDisplayName("&dRequire place permission: &atrue")
+                    .withDisplayName("&dRequire global place permission: &atrue")
                     .addLoreLine(" ")
                     .addLoreLine("&3Click to toggle")
                     .build();
         }else{
             requirePlacePermission = ItemBuilder
                     .newItem(XMaterial.GRAY_DYE)
-                    .withDisplayName("&dRequire place permission: &7false")
+                    .withDisplayName("&dRequire global place permission: &7false")
                     .addLoreLine(" ")
                     .addLoreLine("&3Click to toggle")
                     .build();
@@ -147,14 +147,14 @@ public class LuckyBlockTypesMenu{
         if(breakPermissionEnabled){
             requireBreakPermission = ItemBuilder
                     .newItem(XMaterial.LIME_DYE)
-                    .withDisplayName("&dRequire break permission: &atrue")
+                    .withDisplayName("&dRequire global break permission: &atrue")
                     .addLoreLine(" ")
                     .addLoreLine("&3Click to toggle")
                     .build();
         }else{
             requireBreakPermission = ItemBuilder
                     .newItem(XMaterial.GRAY_DYE)
-                    .withDisplayName("&dRequire break permission: &7false")
+                    .withDisplayName("&dRequire global break permission: &7false")
                     .addLoreLine(" ")
                     .addLoreLine("&3Click to toggle")
                     .build();

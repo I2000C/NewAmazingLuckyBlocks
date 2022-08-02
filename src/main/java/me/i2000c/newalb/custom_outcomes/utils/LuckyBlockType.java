@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.TextureManager;
 import org.bukkit.Bukkit;
@@ -23,7 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class LuckyBlockType{
+public class LuckyBlockType implements Displayable{
     private int ID;
     
     private String typeName;
@@ -53,6 +54,64 @@ public class LuckyBlockType{
         this.typeName = typeName;
     }
     
+    @Override
+    public ItemStack getItemToDisplay(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        ItemBuilder builder = ItemBuilder.fromItem(this.luckyBlockItem);
+        builder.withDisplayName("&bIdentifier: &6" + this.typeName);
+        builder.withLore();
+        builder.addLoreLine("&5Material: &a" + luckyBlockItem.getType().name());
+        
+        if(this.texture == null){
+           builder.addLoreLine("&5Texture: &cnull"); 
+        }else{
+            String textureString = this.texture.toString().substring(0, 8) + "...";
+            builder.addLoreLine("&5Texture: &b" + textureString);
+        }
+        
+        ItemMeta meta = this.luckyBlockItem.getItemMeta();
+        if(meta.hasDisplayName()){
+            builder.addLoreLine(String.format("&5Item name: &r\"%s&r\"", meta.getDisplayName()));
+        }else{
+            builder.addLoreLine("&5Item name: &cnull");
+        }
+        
+        if(meta.hasLore()){
+            builder.addLoreLine("&5Item lore:");
+            meta.getLore().forEach(line -> builder.addLoreLine("    " + line));
+        }else{
+            builder.addLoreLine("&5Item lore: &cnull");
+        }
+        
+        builder.addLoreLine("&5Place permission:");
+        builder.addLoreLine("    &b" + this.placePermission);
+        builder.addLoreLine("&5Break permission:");
+        builder.addLoreLine("    &b" + this.breakPermission);
+        builder.addLoreLine("&5Place permission required: " + (this.requirePlacePermission ? "&atrue" : "&7false"));        
+        builder.addLoreLine("&5Break permission required: " + (this.requireBreakPermission ? "&atrue" : "&7false"));
+        
+        builder.addLoreLine("&5Crafting:");
+        builder.addLoreLine(String.format("    &e%s %s %s", 
+                OtherUtils.parseItemStack(this.crafting.get(0)), 
+                OtherUtils.parseItemStack(this.crafting.get(1)), 
+                OtherUtils.parseItemStack(this.crafting.get(2))));
+        builder.addLoreLine(String.format("    &e%s %s %s", 
+                OtherUtils.parseItemStack(this.crafting.get(3)), 
+                OtherUtils.parseItemStack(this.crafting.get(4)), 
+                OtherUtils.parseItemStack(this.crafting.get(5))));
+        builder.addLoreLine(String.format("    &e%s %s %s", 
+                OtherUtils.parseItemStack(this.crafting.get(6)), 
+                OtherUtils.parseItemStack(this.crafting.get(7)), 
+                OtherUtils.parseItemStack(this.crafting.get(8))));
+        
+        builder.addLoreLine("&5Pack list:");
+        this.packs.forEach((pack, probability) -> {
+            builder.addLoreLine("    &2" + pack.getFilename() + ";" + probability);
+        });
+        
+        return builder.build();
+//</editor-fold>
+    }
     public ItemStack getItem(){
         return luckyBlockItem.clone();
     }
