@@ -6,6 +6,8 @@
 
 A new Lucky Blocks plugin in which you can create your own outcomes
 
+![NewAmazingLuckyBlocks](https://user-images.githubusercontent.com/29607352/182851506-994417d7-0e42-420e-98c8-d887971fa969.png)
+
 ### Instalation and usage
 In order to install this Minecraft plugin you need to follow these steps:
 
