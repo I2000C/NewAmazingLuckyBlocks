@@ -88,7 +88,9 @@ Wands:
         uses: 5
 Objects:
   DarkHole:
-    number-of-blocks: 5
+    #Depth of the dark hole.
+    #If this value is negative, an infinite depth will be used
+    depth: 5
     radius: 1.0
     #The time must be in ticks. 1 second = 20 ticks
     time-before-darkhole: 20

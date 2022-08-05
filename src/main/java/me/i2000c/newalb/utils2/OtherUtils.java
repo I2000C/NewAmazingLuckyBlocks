@@ -1,13 +1,16 @@
 package me.i2000c.newalb.utils2;
 
+import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.Random;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.lang_utils.LangLoader;
+import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -65,6 +68,28 @@ public class OtherUtils{
     public static int generateRandomInt(int min, int max){
         Random random = new Random();
         return random.nextInt((max - min) + 1) + min;
+    }
+    
+    private static Method getMinHeightMethod = null;
+    public static int getMinWorldHeight(World world){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_18) >= 0){
+            // In Minecraft 1.18+ the min height can be negative
+            try{
+                if(getMinHeightMethod == null){
+                    getMinHeightMethod = world.getClass().getMethod("getMinHeight");
+                }
+                return (Integer) getMinHeightMethod.invoke(world);
+            }catch(Exception ex){
+                Logger.log("An error occurred while getting min world height:", Logger.LogLevel.ERROR);
+                Logger.log(ex, Logger.LogLevel.ERROR);
+                return 0;
+            }
+        }else{
+            // In Minecraft 1.8-1.17 the min height is 0
+            return 0;
+        }
+//</editor-fold>
     }
     
     //Reflection Utils

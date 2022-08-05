@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -64,7 +65,7 @@ public class Timer implements Listener{
         
         effect = Effect.ENDER_SIGNAL;
         location.getWorld().playEffect(location, effect, 100); // pre 1.9 effects are here: https://www.spigotmc.org/wiki/effect-list-1-8-8/
-        
+                
         Task task = new Task(){
             double x = location.getX();
             double y = location.getY();
@@ -72,6 +73,8 @@ public class Timer implements Listener{
             
             int ceilRadius = (int) Math.ceil(radius);
             int i = height;
+            
+            final int minY = OtherUtils.getMinWorldHeight(location.getWorld());
             
             @Override
             public void run(){
@@ -95,7 +98,7 @@ public class Timer implements Listener{
                     }
                     y--;
                     i--;
-                    if(y < 0){
+                    if(y < minY){
                         cancel();
                     }
                 }
