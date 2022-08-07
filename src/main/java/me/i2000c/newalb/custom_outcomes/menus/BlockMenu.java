@@ -53,18 +53,11 @@ public class BlockMenu{
         
         ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(reward.getUsePlayerLoc());
 
-        ItemStack isFallingBlockStack;
-        if(reward.getIsFallingBlock()){
-            isFallingBlockStack = ItemBuilder.newItem(XMaterial.SAND)
-                    .withDisplayName("&5Is falling block: &atrue")
-                    .addLoreLine("&3Click to toggle")
-                    .build();
-        }else{
-            isFallingBlockStack = ItemBuilder.newItem(XMaterial.COBBLESTONE)
-                    .withDisplayName("&5Is falling block: &cfalse")
-                    .addLoreLine("&3Click to toggle")
-                    .build();
-        }
+        ItemStack isFallingBlockStack = GUIItem.getBooleanItem(
+                reward.getIsFallingBlock(), 
+                "&5Is falling block", 
+                XMaterial.SAND, 
+                XMaterial.COBBLESTONE);
         
         ItemStack offsetStack = reward.getOffset().getItemToDisplay();
         
