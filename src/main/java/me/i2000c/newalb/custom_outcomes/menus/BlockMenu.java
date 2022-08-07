@@ -51,10 +51,6 @@ public class BlockMenu{
         inv.setItem(26, glass);
         inv.setItem(27, glass);
         
-        ItemStack back = GUIItem.getBackItem();
-
-        ItemStack next = GUIItem.getNextItem();
-        
         ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(reward.getUsePlayerLoc());
 
         ItemStack isFallingBlockStack;
@@ -93,8 +89,8 @@ public class BlockMenu{
         }
         ItemStack blockItem = builder.build();
 
-        inv.setItem(10, back);
-        inv.setItem(16, next);
+        inv.setItem(10, GUIItem.getBackItem());
+        inv.setItem(16, GUIItem.getNextItem());
 
         inv.setItem(12, usePlayerLocStack);
         inv.setItem(13, isFallingBlockStack);
