@@ -14,7 +14,7 @@ import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Color;
@@ -505,7 +505,7 @@ public class ItemMenu{
                                 }
                                 
                                 openItemMenu2(p);
-                            }catch(InvalidHeadException ex){
+                            }catch(InvalidTextureException ex){
                                 Logger.sendMessage("&cInvalid texture", p);
                                 Logger.sendMessage("&bUse &7/alb return &bif you don't know any valid texture", p);
                             }

@@ -11,7 +11,7 @@ import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -232,7 +232,7 @@ public class LuckyBlockType implements Displayable{
                 type.texture = new Texture(textureID);
                 type.luckyBlockItem = TextureManager.getItemSkullStack();
                 TextureManager.setTexture(type.luckyBlockItem, type.texture);
-            }catch(InvalidHeadException ex){
+            }catch(InvalidTextureException ex){
                 Logger.log(String.format("Invalid texture for LuckyBlockType \"%s\"", 
                         type.typeName), LogLevel.INFO);
                 return null;

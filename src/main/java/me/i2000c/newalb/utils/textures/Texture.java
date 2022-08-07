@@ -15,7 +15,7 @@ public final class Texture{
     private String ID;
     private GameProfile profile;
 
-    public Texture(String ID) throws InvalidHeadException{
+    public Texture(String ID) throws InvalidTextureException{
         try{
             String textureURL = "http://textures.minecraft.net/texture/" + ID;
             URL url = new URL(textureURL);
@@ -23,7 +23,7 @@ public final class Texture{
             connection.setRequestMethod("GET");
             int code = connection.getResponseCode();
             if(code == 404){
-                throw new InvalidHeadException();
+                throw new InvalidTextureException();
             }
 
             this.ID = ID;

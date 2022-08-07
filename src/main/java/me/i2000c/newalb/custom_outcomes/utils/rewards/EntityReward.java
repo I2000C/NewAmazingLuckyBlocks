@@ -8,7 +8,7 @@ import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.EnchantmentUtils;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.Offset;
@@ -208,7 +208,7 @@ public class EntityReward extends Reward{
                             try{
                                 Texture texture = new Texture(textureID);
                                 TextureManager.setTexture(stack, texture);
-                            }catch(InvalidHeadException ex){
+                            }catch(InvalidTextureException ex){
                                 Logger.log("Item at " + fullPath + " contains an invalid HeadTexture");
                             }                            
                         }                    

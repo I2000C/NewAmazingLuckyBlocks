@@ -12,7 +12,7 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
 import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.SpecialItemManager;
-import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -125,7 +125,7 @@ public class ItemReward extends Reward{
             try{
                 Texture texture = new Texture(textureID);
                 TextureManager.setTexture(this.item, texture);
-            }catch(InvalidHeadException ex){
+            }catch(InvalidTextureException ex){
                 Logger.log("ItemReward at \"" + path + "\" contains an invalid HeadTexture");
             }
         }

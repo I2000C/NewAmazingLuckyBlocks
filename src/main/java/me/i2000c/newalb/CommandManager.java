@@ -24,7 +24,7 @@ import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils.WorldMenu;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.Schematic;
@@ -784,7 +784,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             TextureManager.setTexture(textureItem, texture);
             ((Player) sender).getInventory().addItem(textureItem);
             return true;
-        }catch(InvalidHeadException ex){
+        }catch(InvalidTextureException ex){
             Logger.sendMessage("&cInvalid texture ID", sender);
             return false;
         }
