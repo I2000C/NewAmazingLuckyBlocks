@@ -5,7 +5,7 @@ import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
 
-public class MenuItem{
+public class GUIItem{
     public static ItemStack getGlassItem(XMaterial glassMaterial){
         return ItemBuilder.newItem(glassMaterial)
                 .withDisplayName(" ")
@@ -28,10 +28,11 @@ public class MenuItem{
         if(isPlayerLoc){
             return ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
                     .withDisplayName("&aUse player location")
+                    .addLoreLine("&3Click to toggle")
                     .build();
         }else{
             return ItemBuilder.fromItem(TypeManager.getMenuItemStack(), false)
-                    .withDisplayName("&6Use lucky block location")
+                    .addLoreLine("&3Click to toggle")
                     .build();
         }
     }
