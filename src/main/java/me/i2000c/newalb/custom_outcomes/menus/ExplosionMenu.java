@@ -45,26 +45,17 @@ public class ExplosionMenu{
                 .addLoreLine("&3Click to reset")
                 .build();
         
-        ItemBuilder builder;
-        if(reward.isWithFire()){
-            builder = ItemBuilder.newItem(XMaterial.FIRE_CHARGE);
-            builder.withDisplayName("&6Generate fire: &atrue");
-        }else{
-            builder = ItemBuilder.newItem(XMaterial.FIREWORK_STAR);
-            builder.withDisplayName("&6Generate fire: &cfalse");
-        }
-        builder.addLoreLine("&3Click to toggle");
-        ItemStack fireItem = builder.build();
+        ItemStack fireItem = GUIItem.getBooleanItem(
+                reward.isWithFire(), 
+                "&6Generate fire", 
+                XMaterial.FIRE_CHARGE, 
+                XMaterial.FIREWORK_STAR);
         
-        if(reward.isBreakBlocks()){
-            builder = ItemBuilder.newItem(XMaterial.IRON_PICKAXE);
-            builder.withDisplayName("&6Break blocks: &atrue");
-        }else{
-            builder = ItemBuilder.newItem(XMaterial.STONE);
-            builder.withDisplayName("&6Break blocks: &cfalse");
-        }
-        builder.addLoreLine("&3Click to toggle");
-        ItemStack breakBlocksItem = builder.build();
+        ItemStack breakBlocksItem = GUIItem.getBooleanItem(
+                reward.isBreakBlocks(), 
+                "&6Break blocks", 
+                XMaterial.IRON_PICKAXE, 
+                XMaterial.STONE);
         
         for(int i=0;i<=9;i++){
             inv.setItem(i, glass);
