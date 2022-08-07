@@ -1,22 +1,21 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.Arrays;
+import me.i2000c.newalb.CommandManager;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.CommandManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.Material;
 
 public class GUIManager{
     private static Inventory currentINV = null;
@@ -62,8 +61,7 @@ public class GUIManager{
         }
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.NEW_OUTCOME_MENU, 27, inventoryName);
         
-        ItemStack glass = ItemBuilder.newItem(XMaterial.CYAN_STAINED_GLASS_PANE)
-                .withDisplayName(" ").build();
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
         ItemStack name = ItemBuilder.newItem(XMaterial.OAK_SIGN)
                 .withDisplayName("&7Outcome name: &r" + outcomeName)
@@ -87,14 +85,6 @@ public class GUIManager{
         builder.withLore("&3Click to change");
         ItemStack prob = builder.build();
         
-        ItemStack back = ItemBuilder.newItem(XMaterial.ENDER_PEARL)
-                .withDisplayName("&2Back")
-                .build();
-        
-        ItemStack next = ItemBuilder.newItem(XMaterial.ANVIL)
-                .withDisplayName("&bNext")
-                .build();
-        
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
         }
@@ -104,12 +94,12 @@ public class GUIManager{
         inv.setItem(9, glass);
         inv.setItem(17, glass);
         
-        inv.setItem(10, back);
+        inv.setItem(10, GUIItem.getBackItem());
+        inv.setItem(16, GUIItem.getNextItem());
         
         inv.setItem(12, name);
         inv.setItem(13, icon);
-        inv.setItem(14, prob);
-        inv.setItem(16, next);
+        inv.setItem(14, prob);        
         
         GUIManager.currentINV = inv;
         p.openInventory(inv);
