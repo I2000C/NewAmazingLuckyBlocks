@@ -72,7 +72,7 @@ public class EffectMenu{
             }else{
                 builder.withDisplayName("&bSelected effect: &d" + reward.getPotionEffect().getName());
                 builder.addPotionEffect(new PotionEffect(reward.getPotionEffect(), 0, 0));
-            }            
+            }
         }
         builder.addLoreLine("&3Click to select");
         ItemStack effectStack = builder.build();
