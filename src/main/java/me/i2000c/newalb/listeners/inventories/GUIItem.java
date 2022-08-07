@@ -60,4 +60,22 @@ public class GUIItem{
             } 
         }
     }
+    
+    public static ItemStack getBooleanItem(
+            boolean value, 
+            String displayText,
+            XMaterial materialIfTrue,
+            XMaterial materialIfFalse){
+        
+        ItemBuilder builder;
+        if(value){
+            builder = ItemBuilder.newItem(materialIfTrue);
+            builder.withDisplayName(displayText + ": &atrue");
+        }else{
+            builder = ItemBuilder.newItem(materialIfFalse);
+            builder.withDisplayName(displayText + ": &cfalse");
+        }
+        builder.addLoreLine("&3Click to toggle");
+        return builder.build();
+    }
 }
