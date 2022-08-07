@@ -1,10 +1,9 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import me.i2000c.newalb.custom_outcomes.menus.CommandMenu;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
+import me.i2000c.newalb.custom_outcomes.menus.CommandMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,20 +13,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class CommandReward extends Reward{
-    private String sender;
+    private boolean senderIsPlayer;
     private String cmd;
     
     public CommandReward(Outcome outcome){
         super(outcome);
-        sender = "Console";
+        senderIsPlayer = false;
         cmd = null;
     }
     
-    public String getSender(){
-        return this.sender;
+    public boolean getSenderIsPlayer(){
+        return this.senderIsPlayer;
     }
-    public void setSender(String sender){
-        this.sender = sender;
+    public void setSenderIsPlayer(boolean senderIsPlayer){
+        this.senderIsPlayer = senderIsPlayer;
     }
     public String getCommand(){
         return this.cmd;
@@ -40,10 +39,10 @@ public class CommandReward extends Reward{
     public ItemStack getItemToDisplay(){
         List<String> lore = new ArrayList<>();
         String senderName;
-        if(sender.equals("Console")){
-            senderName = "&8Console";
-        }else{
+        if(senderIsPlayer){
             senderName = "&2Player";
+        }else{
+            senderName = "&8Console";
         }
         lore.add("&5Sender: " + senderName);
         
@@ -59,13 +58,18 @@ public class CommandReward extends Reward{
     @Override
     public void saveRewardIntoConfig(FileConfiguration config, String path){
         config.set(path + ".cmd", this.cmd);
-        config.set(path + ".sender", this.sender);
+        if(this.senderIsPlayer){
+            config.set(path + ".sender", "Player");
+        }else{
+            config.set(path + ".sender", "Console");
+        }        
     }
     
     @Override
     public void loadRewardFromConfig(FileConfiguration config, String path){
         this.cmd = config.getString(path + ".cmd");
-        this.sender = config.getString(path + ".sender");
+        String sender = config.getString(path + ".sender");
+        this.senderIsPlayer = !sender.equals("Console");
     }
     
     @Override
@@ -81,10 +85,10 @@ public class CommandReward extends Reward{
                 .replace("%x%", x).replace("%y%", y).replace("%z%", z)
                 .replace("%bx%", bx).replace("%by%", by).replace("%bz%", bz);
         
-        if(sender.equals("Console")){
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-        }else{
+        if(senderIsPlayer){
             Bukkit.dispatchCommand(player, command);
+        }else{
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
     }
     
@@ -104,7 +108,7 @@ public class CommandReward extends Reward{
     public Reward cloneReward(){
         CommandReward reward = new CommandReward(this.getOutcome());
         
-        reward.sender = this.sender;
+        reward.senderIsPlayer = this.senderIsPlayer;
         reward.cmd = this.cmd;
         reward.setDelay(this.getDelay());
         return reward;
