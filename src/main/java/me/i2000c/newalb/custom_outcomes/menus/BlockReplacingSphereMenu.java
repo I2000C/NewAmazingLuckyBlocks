@@ -42,44 +42,13 @@ public class BlockReplacingSphereMenu{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.LIGHT_BLUE);
         
-        ItemStack minus1 = ItemBuilder.newItem(XMaterial.RED_STAINED_GLASS_PANE)
-                .withDisplayName("&c&l-1")
-                .build();
-        
-        ItemStack minus10 = ItemBuilder.newItem(XMaterial.RED_STAINED_GLASS_PANE)
-                .withDisplayName("&c&l-10")
-                .build();
-        
-        ItemStack minus100 = ItemBuilder.newItem(XMaterial.RED_STAINED_GLASS_PANE)
-                .withDisplayName("&c&l-100")
-                .build();
-        
-        ItemStack plus1 = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
-                .withDisplayName("&a&l+1")
-                .build();
-        
-        ItemStack plus10 = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
-                .withDisplayName("&a&l+10")
-                .build();
-        
-        ItemStack plus100 = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
-                .withDisplayName("&a&l+100")
-                .build();
-        
         ItemStack usePlayerLocItem = GUIItem.getUsePlayerLocItem(reward.isUsePlayerLoc());
         
-        ItemStack replaceLiquids;
-        if(reward.isReplaceLiquids()){
-            replaceLiquids = ItemBuilder.newItem(XMaterial.WATER_BUCKET)
-                    .withDisplayName("&bReplace liquids: &atrue")
-                    .addLoreLine("&3Click to toggle")
-                    .build();
-        }else{
-            replaceLiquids = ItemBuilder.newItem(XMaterial.WATER_BUCKET)
-                    .withDisplayName("&bReplace liquids: &cfalse")
-                    .addLoreLine("&3Click to toggle")
-                    .build();
-        }
+        ItemStack replaceLiquids = GUIItem.getBooleanItem(
+                reward.isReplaceLiquids(), 
+                "&bReplace liquids", 
+                XMaterial.WATER_BUCKET, 
+                XMaterial.BUCKET);
         
         ItemStack removeMaterialsItem = ItemBuilder.newItem(XMaterial.BARRIER)
                 .withDisplayName("&cClick to remove all materials")
@@ -132,29 +101,29 @@ public class BlockReplacingSphereMenu{
         inv.setItem(13, materialsItem);
         inv.setItem(14, replaceLiquids);
         
-        inv.setItem(19, minus100);
-        inv.setItem(20, minus10);
-        inv.setItem(21, minus1);
+        inv.setItem(19, GUIItem.getPlusLessItem(-100));
+        inv.setItem(20, GUIItem.getPlusLessItem(-10));
+        inv.setItem(21, GUIItem.getPlusLessItem(-1));
         inv.setItem(22, minRadiusItem);
-        inv.setItem(23, plus1);
-        inv.setItem(24, plus10);
-        inv.setItem(25, plus100);
+        inv.setItem(23, GUIItem.getPlusLessItem(+1));
+        inv.setItem(24, GUIItem.getPlusLessItem(+10));
+        inv.setItem(25, GUIItem.getPlusLessItem(+100));
 
-        inv.setItem(28, minus100);
-        inv.setItem(29, minus10);
-        inv.setItem(30, minus1);
+        inv.setItem(28, GUIItem.getPlusLessItem(-100));
+        inv.setItem(29, GUIItem.getPlusLessItem(-10));
+        inv.setItem(30, GUIItem.getPlusLessItem(-1));
         inv.setItem(31, maxRadiusItem);
-        inv.setItem(32, plus1);
-        inv.setItem(33, plus10);
-        inv.setItem(34, plus100);
+        inv.setItem(32, GUIItem.getPlusLessItem(+1));
+        inv.setItem(33, GUIItem.getPlusLessItem(+10));
+        inv.setItem(34, GUIItem.getPlusLessItem(+100));
         
-        inv.setItem(37, minus100);
-        inv.setItem(38, minus10);
-        inv.setItem(39, minus1);
+        inv.setItem(37, GUIItem.getPlusLessItem(-100));
+        inv.setItem(38, GUIItem.getPlusLessItem(-10));
+        inv.setItem(39, GUIItem.getPlusLessItem(-1));
         inv.setItem(40, ticksBetweenLayersItem);
-        inv.setItem(41, plus1);
-        inv.setItem(42, plus10);
-        inv.setItem(43, plus100);            
+        inv.setItem(41, GUIItem.getPlusLessItem(+1));
+        inv.setItem(42, GUIItem.getPlusLessItem(+10));
+        inv.setItem(43, GUIItem.getPlusLessItem(+100));            
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
