@@ -1,16 +1,20 @@
 package me.i2000c.newalb.utils2;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import me.i2000c.newalb.custom_outcomes.utils.Displayable;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
+import org.bukkit.inventory.ItemStack;
 
 @SerializableAs("Offset")
-public class Offset implements ConfigurationSerializable{
+public class Offset implements ConfigurationSerializable, Displayable, Cloneable{
     private Range offsetX;
     private Range offsetY;
     private Range offsetZ;
@@ -112,9 +116,37 @@ public class Offset implements ConfigurationSerializable{
         return new Offset(offsetX, offsetY, offsetZ);
     }
     
-    public Offset cloneOffset(){
-        Offset offset = new Offset(this.offsetX.cloneRange(), this.offsetY.cloneRange(), this.offsetZ.cloneRange());
-        return offset;
+    @Override
+    public ItemStack getItemToDisplay(){
+        return ItemBuilder.newItem(XMaterial.PISTON)
+                .withDisplayName("&3Configure offset")
+                .addLoreLine("&dCurrent offset:")
+                .addLoreLine("   &5X: &3" + offsetX)
+                .addLoreLine("   &5Y: &3" + offsetY)
+                .addLoreLine("   &5Z: &3" + offsetZ)
+                .build();
+    }
+    
+    @Override
+    public Offset clone(){
+        try{
+            Offset copy = (Offset) super.clone();
+            copy.offsetX = this.offsetX.clone();
+            copy.offsetY = this.offsetY.clone();
+            copy.offsetZ = this.offsetZ.clone();
+            return copy;
+        }catch(CloneNotSupportedException ex){
+            return null;
+        }            
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.offsetX);
+        hash = 67 * hash + Objects.hashCode(this.offsetY);
+        hash = 67 * hash + Objects.hashCode(this.offsetZ);
+        return hash;
     }
     
     @Override

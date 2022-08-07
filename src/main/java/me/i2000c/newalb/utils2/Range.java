@@ -2,7 +2,7 @@ package me.i2000c.newalb.utils2;
 
 import java.util.Random;
 
-public class Range{
+public class Range implements Cloneable{
     private final Random random;
     private int min;
     private int max;
@@ -96,6 +96,23 @@ public class Range{
             return min + "," + max;
         }
     }
+    
+    @Override
+    public Range clone(){
+        try{
+            return (Range) super.clone();
+        }catch(CloneNotSupportedException ex){
+            return null;
+        }
+    } 
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 13 * hash + this.min;
+        hash = 13 * hash + this.max;
+        return hash;
+    }
 
     @Override
     public boolean equals(Object object){
@@ -106,9 +123,4 @@ public class Range{
             return this.min == range.min && this.max == range.max;
         }
     }
-    
-    public Range cloneRange(){
-        return new Range(this.min, this.max);
-    }
-    
 }
