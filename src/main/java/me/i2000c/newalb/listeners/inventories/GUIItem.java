@@ -6,8 +6,8 @@ import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
 
 public class GUIItem{
-    public static ItemStack getGlassItem(XMaterial glassMaterial){
-        return ItemBuilder.newItem(glassMaterial)
+    public static ItemStack getGlassItem(GlassColor glassColor){
+        return ItemBuilder.newItem(glassColor.toMaterial())
                 .withDisplayName(" ")
                 .build();
     }
