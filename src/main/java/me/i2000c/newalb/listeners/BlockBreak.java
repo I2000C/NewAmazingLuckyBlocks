@@ -6,7 +6,7 @@ import me.i2000c.newalb.custom_outcomes.utils.Executable;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.lang_utils.LangLoader;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;

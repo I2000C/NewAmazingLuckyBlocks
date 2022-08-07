@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.TextureManager;
@@ -231,7 +232,7 @@ public class LuckyBlockType implements Displayable{
                 TextureManager.setTexture(type.luckyBlockItem, type.texture);
             }catch(TextureManager.InvalidHeadException ex){
                 Logger.log(String.format("Invalid texture for LuckyBlockType \"%s\"", 
-                        type.typeName), Logger.LogLevel.WARN);
+                        type.typeName), LogLevel.INFO);
                 return null;
             }
         }else{
@@ -320,10 +321,10 @@ public class LuckyBlockType implements Displayable{
         }
         if(type.packs.isEmpty()){
             Logger.log(String.format("LuckyBlockType \"%s\" doesn't contain any valid outcome pack", 
-                    type.typeName), Logger.LogLevel.WARN);
+                    type.typeName), LogLevel.INFO);
         }else if(type.totalProbability <= 0){
             Logger.log(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
-                    type.typeName), Logger.LogLevel.WARN);
+                    type.typeName), LogLevel.INFO);
         }
         
         type.data = new TypeData(type.luckyBlockItem);
@@ -408,7 +409,7 @@ public class LuckyBlockType implements Displayable{
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(totalProbability <= 0){
             Logger.log(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
-                    typeName), Logger.LogLevel.WARN);
+                    typeName), LogLevel.INFO);
         }else{
             Random r = new Random();
             int randomNumber = r.nextInt(totalProbability);

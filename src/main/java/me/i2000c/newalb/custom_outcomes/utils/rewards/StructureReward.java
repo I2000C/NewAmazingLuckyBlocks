@@ -1,14 +1,15 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.Schematic;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.Schematic;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -107,13 +108,13 @@ public class StructureReward extends Reward{
     @Override
     public void execute(Player player, Location location){
         if(NewAmazingLuckyBlocks.getWorldEditPlugin() == null){
-            Logger.log("You cannot execute Structure Rewards unless you have installed WorldEdit", Logger.LogLevel.ERROR);
+            Logger.log("You cannot execute Structure Rewards unless you have installed WorldEdit", LogLevel.INFO);
             return;
         }
         
         File schematicFile = new File(schematicsFolder, this.filename);
         if(!schematicFile.exists()){
-            Logger.log("Error: file \"" + this.filename + "\" doesn't exist", Logger.LogLevel.ERROR);
+            Logger.log("Error: file \"" + this.filename + "\" doesn't exist", LogLevel.INFO);
             return;
         }
         try{
@@ -127,7 +128,7 @@ public class StructureReward extends Reward{
             }            
             schematic.pasteAt(location, replaceBlocks, placeAirBlocks);
         }catch(Exception ex){
-            Logger.log("An error occurred while executing structure reward " + this.filename + ":", Logger.LogLevel.ERROR);
+            Logger.log("An error occurred while executing structure reward " + this.filename + ":", LogLevel.INFO);
             ex.printStackTrace();
         }
     }

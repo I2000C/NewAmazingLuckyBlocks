@@ -10,6 +10,7 @@ import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
+import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.listeners.BlockBreak;
 import me.i2000c.newalb.listeners.BlockPlace;
 import me.i2000c.newalb.listeners.ChunkEvent;
@@ -18,13 +19,13 @@ import me.i2000c.newalb.listeners.interact.PlayerInteractListener;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.BlockProtect;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.LocationManager;
-import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.SpecialItemManager;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils.Updater;
 import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -65,7 +66,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         prefix = Logger.color(LangLoader.getMessages().getString("InGamePrefix"));      
         if(minecraftVersion == null){
-            Logger.log("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version", Logger.LogLevel.ERROR);
+            Logger.log("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version", LogLevel.INFO);
             Logger.log("&cNewAmazingLuckyBlocks is going to shut down");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
@@ -137,8 +138,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
             output = new FileOutputStream(file);
             copy(input, output);
         }catch(IOException ex){
-            Logger.log("An error occurred while copying default file: " + '"' + filename + '"' + " to " + '"' + file.getName() + '"', Logger.LogLevel.ERROR);
-            Logger.log(ex, Logger.LogLevel.ERROR);
+            Logger.log("An error occurred while copying default file: " + '"' + filename + '"' + " to " + '"' + file.getName() + '"', LogLevel.INFO);
+            Logger.log(ex, LogLevel.INFO);
         }finally{
             try{
                 input.close();

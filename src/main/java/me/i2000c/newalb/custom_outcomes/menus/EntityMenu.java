@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward.Equipment;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import java.util.Arrays;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;

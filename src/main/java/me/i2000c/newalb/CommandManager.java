@@ -17,16 +17,16 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.LocationManager;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.RandomBlocks;
 import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.SpecialItemManager;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils.WorldMenu;
+import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils2.Schematic;
 import me.i2000c.newalb.utils2.TextureManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -645,7 +645,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return true;
         }catch(Exception ex){
             Logger.sendMessage("&cAn error occurred. More info in the Console", sender);
-            Logger.log("An error occurred:", Logger.LogLevel.ERROR);
+            Logger.log("An error occurred:", LogLevel.INFO);
             ex.printStackTrace();
             return false;
         }
@@ -698,7 +698,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 Logger.sendMessage("&cYour clipboard is empty", sender);
             }else{
                 Logger.sendMessage("&cAn error occurred. More info in the Console", sender);
-                Logger.log("An error occurred:", Logger.LogLevel.ERROR);
+                Logger.log("An error occurred:", LogLevel.INFO);
                 ex.printStackTrace();
             }                
             return false;

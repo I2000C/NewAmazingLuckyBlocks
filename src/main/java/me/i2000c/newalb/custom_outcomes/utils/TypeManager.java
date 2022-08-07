@@ -1,6 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.utils;
 
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

@@ -6,7 +6,8 @@ import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.EntityMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.EnchantmentUtils;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.TextureManager;
 import org.bukkit.Location;
@@ -230,7 +231,7 @@ public class EntityReward extends Reward{
         try{
             this.lastSpawnedEntity = target.getWorld().spawnEntity(target, this.type);
         }catch(Exception ex){
-            Logger.log("Entity " + this.type.name() + " couldn't be spawned", Logger.LogLevel.WARN);
+            Logger.log("Entity " + this.type.name() + " couldn't be spawned", LogLevel.INFO);
             return;
         }
         

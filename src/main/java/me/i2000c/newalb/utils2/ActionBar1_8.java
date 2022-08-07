@@ -3,7 +3,7 @@ package me.i2000c.newalb.utils2;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.entity.Player;
 
 class ActionBar1_8{

@@ -1,11 +1,11 @@
 package me.i2000c.newalb.utils2;
 
-import me.i2000c.newalb.utils.Logger;
 import java.util.HashMap;
 import java.util.Map;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
-
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 
@@ -88,24 +88,24 @@ public class Offset implements ConfigurationSerializable{
         try{
             offsetX = Range.fromString(map.get("offsetX").toString());
         }catch(IllegalArgumentException ex){
-            Logger.log("Invalid offset: " + map.get("offsetX").toString(), Logger.LogLevel.WARN);
-            Logger.log("It will be converted to '0'", Logger.LogLevel.WARN);
+            Logger.log("Invalid offset: " + map.get("offsetX").toString(), LogLevel.INFO);
+            Logger.log("It will be converted to '0'", LogLevel.INFO);
             offsetX = new Range();
         }
         
         try{
             offsetY = Range.fromString(map.get("offsetY").toString());
         }catch(IllegalArgumentException ex){
-            Logger.log("Invalid offset: " + map.get("offsetY").toString(), Logger.LogLevel.WARN);
-            Logger.log("It will be converted to '0'", Logger.LogLevel.WARN);
+            Logger.log("Invalid offset: " + map.get("offsetY").toString(), LogLevel.INFO);
+            Logger.log("It will be converted to '0'", LogLevel.INFO);
             offsetY = new Range();
         }
         
         try{
             offsetZ = Range.fromString(map.get("offsetZ").toString());
         }catch(IllegalArgumentException ex){
-            Logger.log("Invalid offset: " + map.get("offsetZ").toString(), Logger.LogLevel.WARN);
-            Logger.log("It will be converted to '0'", Logger.LogLevel.WARN);
+            Logger.log("Invalid offset: " + map.get("offsetZ").toString(), LogLevel.INFO);
+            Logger.log("It will be converted to '0'", LogLevel.INFO);
             offsetZ = new Range();
         }
         

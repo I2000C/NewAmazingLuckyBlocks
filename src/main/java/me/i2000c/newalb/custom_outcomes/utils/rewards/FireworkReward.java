@@ -3,7 +3,7 @@ package me.i2000c.newalb.custom_outcomes.utils.rewards;
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

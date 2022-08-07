@@ -1,5 +1,6 @@
 package me.i2000c.newalb.utils;
 
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger.LogLevel;
+import me.i2000c.newalb.utils.logger.LogLevel;
 import org.bukkit.Bukkit;
 
 public class WorldList{    

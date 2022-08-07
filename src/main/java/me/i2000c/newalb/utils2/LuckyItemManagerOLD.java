@@ -2,7 +2,7 @@ package me.i2000c.newalb.utils2;
 
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import java.util.List;
 import java.util.Objects;
 import org.bukkit.Material;

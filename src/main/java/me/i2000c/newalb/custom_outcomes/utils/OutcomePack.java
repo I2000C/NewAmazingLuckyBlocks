@@ -1,8 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.utils;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -201,8 +200,8 @@ public class OutcomePack implements Displayable{
             OutcomePack newPack = new OutcomePack(newFile);
             return newPack;
         }catch(IOException ex){
-            Logger.log("Couln't create file \"" + filename + "\"", Logger.LogLevel.ERROR);
-            Logger.log(ex, Logger.LogLevel.ERROR);
+            Logger.log("Couln't create file \"" + filename + "\"", LogLevel.INFO);
+            Logger.log(ex, LogLevel.INFO);
             return null;
         }        
     }

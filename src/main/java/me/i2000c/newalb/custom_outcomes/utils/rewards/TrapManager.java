@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.YamlConfigurationUTF8;

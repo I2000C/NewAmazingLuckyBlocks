@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.MessageMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ActionBarUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;

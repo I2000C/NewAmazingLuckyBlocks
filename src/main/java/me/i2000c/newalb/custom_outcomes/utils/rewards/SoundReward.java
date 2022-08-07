@@ -2,7 +2,7 @@ package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import me.i2000c.newalb.custom_outcomes.menus.SoundMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;

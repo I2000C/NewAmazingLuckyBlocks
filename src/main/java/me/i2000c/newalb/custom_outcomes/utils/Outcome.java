@@ -21,8 +21,8 @@ import me.i2000c.newalb.custom_outcomes.utils.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.SoundReward;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.StructureReward;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapReward;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.Logger.LogLevel;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
@@ -370,7 +370,7 @@ public class Outcome implements Displayable, Executable{
                 }
             }
         }else{
-            Logger.log("Outcome " + this.name + " doesn't have any rewards", Logger.LogLevel.WARN);
+            Logger.log("Outcome " + this.name + " doesn't have any rewards", LogLevel.INFO);
         }
 //</editor-fold>
     }

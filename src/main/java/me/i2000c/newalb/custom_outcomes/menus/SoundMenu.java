@@ -3,7 +3,7 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.SoundReward;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;

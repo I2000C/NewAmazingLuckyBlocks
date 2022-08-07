@@ -22,7 +22,7 @@ import me.i2000c.newalb.listeners.wands.TntWand;
 import me.i2000c.newalb.custom_outcomes.menus.ItemMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.EnchantmentUtils;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.TextureManager;
 import java.util.List;
 import me.i2000c.newalb.listeners.objects.HookBow;

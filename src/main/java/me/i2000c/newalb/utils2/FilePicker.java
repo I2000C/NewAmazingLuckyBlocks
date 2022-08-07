@@ -1,8 +1,7 @@
 package me.i2000c.newalb.utils2;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.Logger;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.math.BigDecimal;
@@ -14,6 +13,7 @@ import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.utils.logger.LogLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -56,7 +56,7 @@ public class FilePicker{
                 openFileMenu(player, rootPath.getAbsolutePath(), currentPath.getAbsolutePath(), filter);
             }
         }catch(NullPointerException ex){
-            Logger.log("File: \"" + currentPath + "\" doesn't have parent (Maybe it is the root)", Logger.LogLevel.WARN);
+            Logger.log("File: \"" + currentPath + "\" doesn't have parent (Maybe it is the root)", LogLevel.INFO);
         }
 //</editor-fold>
     }

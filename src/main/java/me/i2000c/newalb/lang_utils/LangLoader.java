@@ -6,7 +6,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -30,7 +31,7 @@ public class LangLoader{
             try{
                 langFile.createNewFile();
             }catch(IOException ex){
-                Logger.log("An error occurred:", Logger.LogLevel.ERROR);
+                Logger.log("An error occurred:", LogLevel.INFO);
                 ex.printStackTrace();
             }
         }
@@ -39,7 +40,7 @@ public class LangLoader{
             defConfigStream = new InputStreamReader(NewAmazingLuckyBlocks.getInstance().getResource("lang.yml"), "UTF8");
             langCfg.setDefaults(YamlConfigurationUTF8.loadConfiguration(defConfigStream));
         }catch(UnsupportedEncodingException ex){
-            Logger.log("An error occurred:", Logger.LogLevel.ERROR);
+            Logger.log("An error occurred:", LogLevel.INFO);
             ex.printStackTrace();
         }
         langCfg.options().copyDefaults(true);
@@ -50,7 +51,7 @@ public class LangLoader{
         try{
             langCfg.save(langFile);
         }catch(IOException ex){
-            Logger.log("An error occurred", Logger.LogLevel.ERROR);
+            Logger.log("An error occurred", LogLevel.INFO);
             ex.printStackTrace();
         }
     }

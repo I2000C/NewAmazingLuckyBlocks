@@ -28,7 +28,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.zip.GZIPOutputStream;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -121,7 +122,7 @@ public class Schematic{
             
             initialized = true;
         }catch(Exception ex){
-            Logger.log("An error ocurred while loading schematic classes:", Logger.LogLevel.ERROR);
+            Logger.log("An error ocurred while loading schematic classes:", LogLevel.INFO);
             ex.printStackTrace();
         }
 //</editor-fold>

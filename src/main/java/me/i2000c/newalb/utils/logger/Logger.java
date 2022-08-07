@@ -1,9 +1,10 @@
-package me.i2000c.newalb.utils;
+package me.i2000c.newalb.utils.logger;
 
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.utils.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -90,11 +91,5 @@ public class Logger{
             Logger.sendMessage(object, sender);
         }
         Logger.log(object, level);        
-    }    
-
-    public static enum LogLevel{
-        INFO,
-        WARN,
-        ERROR;
     }
 }

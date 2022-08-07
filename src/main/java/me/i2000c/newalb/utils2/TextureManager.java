@@ -3,8 +3,6 @@ package me.i2000c.newalb.utils2;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import java.io.IOException;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -16,6 +14,9 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -70,7 +71,7 @@ public class TextureManager{
             
             update = null;
         }catch(Exception ex){
-            Logger.log("An error ocurred while enabling TextureManager:", Logger.LogLevel.ERROR);
+            Logger.log("An error ocurred while enabling TextureManager:", LogLevel.INFO);
             ex.printStackTrace();
         }        
     }

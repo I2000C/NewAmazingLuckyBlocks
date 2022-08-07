@@ -1,5 +1,6 @@
 package me.i2000c.newalb.utils;
 
+import me.i2000c.newalb.utils.logger.Logger;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
