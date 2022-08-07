@@ -1,21 +1,17 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.BlockReward;
-import me.i2000c.newalb.utils.Logger;
-import java.util.ArrayList;
-import java.util.List;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class BlockMenu{
     public static BlockReward reward;
@@ -40,13 +36,10 @@ public class BlockMenu{
         }
                 
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.BLOCK_MENU, 45, "&d&lBlock Reward");
-
-        ItemMeta meta;
-
-        ItemStack glass = XMaterial.PURPLE_STAINED_GLASS_PANE.parseItem();
-        meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        
+        ItemStack glass = ItemBuilder.newItem(XMaterial.PURPLE_STAINED_GLASS_PANE)
+                .withDisplayName(" ")
+                .build();
 
         for(int i=0;i<=9;i++){
             inv.setItem(i, glass);
@@ -58,75 +51,65 @@ public class BlockMenu{
         inv.setItem(18, glass);
         inv.setItem(26, glass);
         inv.setItem(27, glass);
+        
+        ItemStack back = ItemBuilder.newItem(XMaterial.ENDER_PEARL)
+                .withDisplayName("&2Back")
+                .build();
 
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
-        back.setItemMeta(meta);
-
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
-        next.setItemMeta(meta);
-
+        ItemStack next = ItemBuilder.newItem(XMaterial.ENDER_EYE)
+                .withDisplayName("&bNext")
+                .build();
+        
         ItemStack usePlayerLocStack;
         if(reward.getUsePlayerLoc()){
-            usePlayerLocStack = XMaterial.PLAYER_HEAD.parseItem();
-            meta = usePlayerLocStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&aUse player location"));
+            usePlayerLocStack = ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
+                    .withDisplayName("&aUse player location")
+                    .build();
         }else{
-            usePlayerLocStack = TypeManager.getMenuItemStack();
-            meta = usePlayerLocStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&6Use lucky block location"));
-            meta.setLore(null);
+            usePlayerLocStack = ItemBuilder.fromItem(TypeManager.getMenuItemStack(), false)
+                    .withDisplayName("&6Use lucky block location")
+                    .build();
         }
-        usePlayerLocStack.setItemMeta(meta);
 
         ItemStack isFallingBlockStack;
         if(reward.getIsFallingBlock()){
-            isFallingBlockStack = new ItemStack(Material.SAND);
-            meta = isFallingBlockStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&5Is falling block: &atrue"));
+            isFallingBlockStack = ItemBuilder.newItem(XMaterial.SAND)
+                    .withDisplayName("&5Is falling block: &atrue")
+                    .build();
         }else{
-            isFallingBlockStack = new ItemStack(Material.COBBLESTONE);
-            meta = isFallingBlockStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&5Is falling block: &cfalse"));
+            isFallingBlockStack = ItemBuilder.newItem(XMaterial.COBBLESTONE)
+                    .withDisplayName("&5Is falling block: &cfalse")
+                    .build();
         }
-        isFallingBlockStack.setItemMeta(meta);
-
-        ItemStack offsetStack = XMaterial.PISTON.parseItem();
-        meta = offsetStack.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Configure offset"));
-        List<String> loreList = new ArrayList();
-        loreList.add(Logger.color("&dCurrent Offset:"));
-        loreList.add(Logger.color("   &5X: &3" + reward.getOffset().getOffsetX()));
-        loreList.add(Logger.color("   &5Y: &3" + reward.getOffset().getOffsetY()));
-        loreList.add(Logger.color("   &5Z: &3" + reward.getOffset().getOffsetZ()));
-        meta.setLore(loreList);
-        offsetStack.setItemMeta(meta);
         
-        ItemStack blockItem;
+        ItemStack offsetStack = ItemBuilder.newItem(XMaterial.PISTON)
+                .withDisplayName("&3Configure offset")
+                .addLoreLine("&dCurrent offset:")
+                .addLoreLine("   &5X: &3" + reward.getOffset().getOffsetX())
+                .addLoreLine("   &5Y: &3" + reward.getOffset().getOffsetY())
+                .addLoreLine("   &5Z: &3" + reward.getOffset().getOffsetZ())
+                .build();
+        
+        ItemBuilder builder;
         if(reward.getItemBlock() != null){
-            blockItem = reward.getItemBlock().clone();
-            switch(blockItem.getType()){
+            builder = ItemBuilder.fromItem(reward.getItemBlock());
+            switch(builder.getMaterial()){
                 case WATER:
-                    blockItem.setType(Material.WATER_BUCKET);
+                    builder.withMaterial(XMaterial.WATER_BUCKET);
                     break;
                 case LAVA:
-                    blockItem.setType(Material.LAVA_BUCKET);
+                    builder.withMaterial(XMaterial.LAVA_BUCKET);
                     break;
                 case FIRE:
-                    blockItem.setType(Material.FLINT_AND_STEEL);
+                    builder.withMaterial(XMaterial.FLINT_AND_STEEL);
                     break;
             }
-            meta = blockItem.getItemMeta();
-            meta.setDisplayName(Logger.color("&3Selected block"));
+            builder.withDisplayName("&3Selected block");
         }else{
-            blockItem = XMaterial.BLACK_STAINED_GLASS_PANE.parseItem();
-            meta = blockItem.getItemMeta();
-            meta.setDisplayName(Logger.color("&3Select a &6&lblock &3from your inventory"));
+            builder = ItemBuilder.newItem(XMaterial.BLACK_STAINED_GLASS_PANE)
+                    .withDisplayName("&3Select a &6&lblock &3from your inventory");
         }
-        blockItem.setItemMeta(meta);
+        ItemStack blockItem = builder.build();
 
         inv.setItem(10, back);
         inv.setItem(16, next);
