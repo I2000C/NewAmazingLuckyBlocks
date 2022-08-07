@@ -5,6 +5,7 @@ import me.i2000c.newalb.custom_outcomes.utils.rewards.BlockReward;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -37,7 +38,7 @@ public class BlockMenu{
                 
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.BLOCK_MENU, 45, "&d&lBlock Reward");
         
-        ItemStack glass = GUIItem.getGlassItem(XMaterial.PURPLE_STAINED_GLASS_PANE);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.PURPLE);
 
         for(int i=0;i<=9;i++){
             inv.setItem(i, glass);
