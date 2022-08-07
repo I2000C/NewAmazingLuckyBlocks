@@ -1,12 +1,11 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import me.i2000c.newalb.custom_outcomes.menus.SoundMenu;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import me.i2000c.newalb.custom_outcomes.menus.SoundMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -97,13 +96,8 @@ public class SoundReward extends Reward{
     }
 
     @Override
-    public Reward cloneReward(){
-        SoundReward reward = new SoundReward(this.getOutcome());
-        reward.type = this.type;
-        reward.volume = this.volume;
-        reward.pitch = this.pitch;
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        SoundReward copy = (SoundReward) super.clone();
+        return copy;
     }
 }

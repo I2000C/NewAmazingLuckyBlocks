@@ -159,16 +159,8 @@ public class TrapReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        TrapReward reward = new TrapReward(this.getOutcome());
-        reward.setDelay(this.getDelay());
-        
-        reward.pressurePlateMaterial = this.pressurePlateMaterial;
-        reward.trapName = this.trapName;
-        
-        reward.trapOutcomePackName = this.trapOutcomePackName;
-        reward.trapOutcomeID = this.trapOutcomeID;
-        reward.trapOutcome = this.trapOutcome;
-        return reward;
+    public Reward clone(){
+        TrapReward copy = (TrapReward) super.clone();
+        return copy;
     }
 }

@@ -2,14 +2,12 @@ package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import me.i2000c.newalb.custom_outcomes.menus.EntityTowerMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -106,11 +104,9 @@ public class EntityTowerReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        EntityTowerReward reward = new EntityTowerReward(this.getOutcome());
-        reward.setEntityList(this.entityList);
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        EntityTowerReward copy = (EntityTowerReward) super.clone();
+        copy.entityList = new ArrayList<>(this.entityList);
+        return copy;
     }
 }

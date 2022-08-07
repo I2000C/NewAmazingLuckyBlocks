@@ -6,12 +6,11 @@ import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public abstract class Reward implements Displayable, Executable{
+public abstract class Reward implements Displayable, Executable, Cloneable{
     public abstract RewardType getRewardType();
     public abstract void loadRewardFromConfig(FileConfiguration config, String path);
     public abstract void saveRewardIntoConfig(FileConfiguration config, String path);
     public abstract void edit(Player p);
-    public abstract Reward cloneReward();
 
     private final Outcome outcome;
     private int delay;
@@ -29,6 +28,15 @@ public abstract class Reward implements Displayable, Executable{
     }
     public void setDelay(int ticks){
         this.delay = ticks;
+    }
+    
+    @Override
+    public Reward clone(){
+        try{
+            return (Reward) super.clone();
+        }catch(CloneNotSupportedException ex){
+            return null;
+        }
     }
 
 

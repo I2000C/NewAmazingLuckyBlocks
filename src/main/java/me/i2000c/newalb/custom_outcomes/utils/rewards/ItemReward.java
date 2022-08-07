@@ -1,19 +1,19 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import java.util.ArrayList;
-import me.i2000c.newalb.custom_outcomes.menus.ItemMenu;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.EnchantmentUtils;
-import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils.textures.TextureManager;
 import java.util.List;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
+import me.i2000c.newalb.custom_outcomes.menus.ItemMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils.EnchantmentUtils;
 import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.SpecialItemManager;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -240,11 +240,9 @@ public class ItemReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        ItemReward reward = new ItemReward(this.getOutcome());
-        reward.item = this.item.clone();
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        ItemReward copy = (ItemReward) super.clone();
+        copy.item = this.item.clone();
+        return copy;
     }
 }

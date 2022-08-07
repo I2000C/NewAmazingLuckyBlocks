@@ -122,14 +122,9 @@ public class MessageReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        MessageReward reward = new MessageReward(this.getOutcome());
-        reward.setDelay(this.getDelay());
-        
-        reward.title = this.title;
-        reward.subtitle = this.subtitle;
-        reward.type = this.type;
-        return reward;
+    public Reward clone(){
+        MessageReward copy = (MessageReward) super.clone();
+        return copy;
     }
     
     public static enum MessageType{

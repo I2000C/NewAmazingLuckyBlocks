@@ -42,10 +42,8 @@ public class ParticleReward extends Reward{
     }
 
     @Override
-    public Reward cloneReward(){
-        ParticleReward reward = new ParticleReward(this.getOutcome());
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        ParticleReward copy = (ParticleReward) super.clone();
+        return copy;
     }
 }

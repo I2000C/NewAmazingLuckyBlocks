@@ -3,7 +3,6 @@ package me.i2000c.newalb.custom_outcomes.utils.rewards;
 import me.i2000c.newalb.custom_outcomes.menus.DarkHoleMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.Timer;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,14 +110,8 @@ public class DarkHoleReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        DarkHoleReward reward = new DarkHoleReward(this.getOutcome());
-        reward.depth = this.depth;
-        reward.radius = this.radius;
-        reward.ticks = this.ticks;
-        reward.squared = this.squared;
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        DarkHoleReward copy = (DarkHoleReward) super.clone();
+        return copy;
     }
 }

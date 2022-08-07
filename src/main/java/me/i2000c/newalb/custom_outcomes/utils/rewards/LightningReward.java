@@ -1,11 +1,11 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.utils2.Offset;
-import me.i2000c.newalb.custom_outcomes.menus.LightningMenu;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import java.util.ArrayList;
 import java.util.List;
+import me.i2000c.newalb.custom_outcomes.menus.LightningMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -109,13 +109,9 @@ public class LightningReward extends Reward{
     }
 
     @Override
-    public Reward cloneReward(){
-        LightningReward reward = new LightningReward(this.getOutcome());
-        reward.usePlayerLoc = this.usePlayerLoc;
-        reward.causeDamage = this.causeDamage;
-        reward.offset = this.offset.clone();
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        LightningReward copy = (LightningReward) super.clone();
+        copy.offset = this.offset.clone();
+        return copy;
     }
 }

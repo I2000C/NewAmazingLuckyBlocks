@@ -1,12 +1,11 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -34,8 +33,8 @@ public class FireworkReward extends Reward{
         this.trail = false;
         this.flicker = false;
         this.type = "BALL";
-        this.colorHEX = new ArrayList();
-        this.fadeHEX = new ArrayList();
+        this.colorHEX = new ArrayList<>();
+        this.fadeHEX = new ArrayList<>();
     }
     
     public int getAmount(){
@@ -72,13 +71,13 @@ public class FireworkReward extends Reward{
         return this.colorHEX;
     }
     public void setHEXColors(List<String> colorHEX){
-        this.colorHEX = new ArrayList(colorHEX);
+        this.colorHEX = new ArrayList<>(colorHEX);
     }
     public List<String> getHEXFadeColors(){
         return this.fadeHEX;
     }
     public void setHEXFadeColors(List<String> fadeHEX){
-        this.fadeHEX = new ArrayList(fadeHEX);
+        this.fadeHEX = new ArrayList<>(fadeHEX);
     }
 
     @Override
@@ -193,17 +192,10 @@ public class FireworkReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        FireworkReward reward = new FireworkReward(this.getOutcome());
-        reward.amount = this.amount;
-        reward.power = this.power;
-        reward.type = this.type;
-        reward.trail = this.trail;
-        reward.flicker = this.flicker;
-        reward.setHEXColors(this.colorHEX);
-        reward.setHEXFadeColors(this.fadeHEX);
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        FireworkReward copy = (FireworkReward) super.clone();
+        copy.colorHEX = new ArrayList<>(this.colorHEX);
+        copy.fadeHEX = new ArrayList<>(this.fadeHEX);
+        return copy;
     }
 }

@@ -105,12 +105,8 @@ public class CommandReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        CommandReward reward = new CommandReward(this.getOutcome());
-        
-        reward.senderIsPlayer = this.senderIsPlayer;
-        reward.cmd = this.cmd;
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        CommandReward copy = (CommandReward) super.clone();
+        return copy;
     }
 }

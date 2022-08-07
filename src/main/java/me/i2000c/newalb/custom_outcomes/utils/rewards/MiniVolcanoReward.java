@@ -1,12 +1,11 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
+import java.util.ArrayList;
+import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.MiniVolcanoMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.Timer;
-import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -132,16 +131,8 @@ public class MiniVolcanoReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        MiniVolcanoReward reward = new MiniVolcanoReward(this.getOutcome());
-        reward.height = this.height;
-        reward.baseMaterial = this.baseMaterial;
-        reward.lavaMaterial = this.lavaMaterial;
-        reward.ticks = this.ticks;
-        reward.squared = this.squared;
-        reward.throwBlocks = this.throwBlocks;
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        MiniVolcanoReward copy = (MiniVolcanoReward) super.clone();
+        return copy;
     }
 }

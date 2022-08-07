@@ -428,7 +428,7 @@ public class Outcome implements Displayable, Executable{
         outcome.rewardList = new ArrayList<>();
         
         for(Reward reward : this.rewardList){
-            Reward clone = reward.cloneReward();
+            Reward clone = reward.clone();
             outcome.rewardList.add(clone);
             if(reward instanceof EntityReward){
                 outcome.entityRewardList.add((EntityReward) clone);

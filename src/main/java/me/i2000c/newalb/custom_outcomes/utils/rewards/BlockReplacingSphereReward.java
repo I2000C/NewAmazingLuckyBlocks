@@ -1,9 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -12,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.BlockReplacingSphereMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
@@ -300,17 +298,9 @@ public class BlockReplacingSphereReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        BlockReplacingSphereReward reward = new BlockReplacingSphereReward(this.getOutcome());
-        reward.setDelay(this.getDelay());
-        
-        reward.minRadius = this.minRadius;
-        reward.maxRadius = this.maxRadius;
-        reward.ticksBetweenLayers = this.ticksBetweenLayers;
-        reward.usePlayerLoc = this.usePlayerLoc;
-        reward.replaceLiquids = this.replaceLiquids;
-        reward.materials = new LinkedHashMap<>(this.materials);
-        reward.totalProbability = this.totalProbability;
-        return reward;
+    public Reward clone(){
+        BlockReplacingSphereReward copy = (BlockReplacingSphereReward) super.clone();
+        copy.materials = new LinkedHashMap<>(this.materials);
+        return copy;
     }
 }

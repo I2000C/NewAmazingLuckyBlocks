@@ -146,14 +146,8 @@ public class StructureReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        StructureReward reward = new StructureReward(this.getOutcome());
-        reward.filename = this.filename;
-        reward.fromPlayer = this.fromPlayer;
-        reward.replaceBlocks = this.replaceBlocks;
-        reward.placeAirBlocks = this.placeAirBlocks;
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        StructureReward copy = (StructureReward) super.clone();
+        return copy;
     }
 }

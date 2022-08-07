@@ -1,11 +1,11 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import me.i2000c.newalb.utils2.Offset;
+import java.util.ArrayList;
+import java.util.List;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.BlockMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import java.util.ArrayList;
-import java.util.List;
+import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -154,14 +154,10 @@ public class BlockReward extends Reward{
     }
 
     @Override
-    public Reward cloneReward(){
-        BlockReward reward = new BlockReward(this.getOutcome());
-        reward.usePlayerLoc = this.usePlayerLoc;
-        reward.isFallingBlock = this.isFallingBlock;
-        reward.blockItem = this.blockItem.clone();
-        reward.offset = this.offset.clone();
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        BlockReward copy = (BlockReward) super.clone();
+        copy.blockItem = this.blockItem.clone();
+        copy.offset = this.offset.clone();
+        return copy;
     }
 }

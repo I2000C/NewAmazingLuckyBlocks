@@ -153,19 +153,8 @@ public class EffectReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        EffectReward reward = new EffectReward(this.getOutcome());
-        reward.setDelay(this.getDelay());
-        
-        reward.potionEffect = this.potionEffect;
-        reward.duration = this.duration;
-        reward.amplifier = this.amplifier;
-        reward.ambient = this.ambient;
-        reward.showParticles = this.showParticles;
-        reward.clearEffects = this.clearEffects;
-        
-        return reward;
+    public Reward clone(){
+        EffectReward copy = (EffectReward) super.clone();
+        return copy;
     }
-
-    
 }

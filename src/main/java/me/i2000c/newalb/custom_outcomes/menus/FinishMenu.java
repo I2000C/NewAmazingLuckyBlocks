@@ -405,7 +405,7 @@ public class FinishMenu{
                     }
                 }else if(editMode){
                     try{
-                        Reward r = currentOutcome.getReward(rewardID).cloneReward();
+                        Reward r = currentOutcome.getReward(rewardID).clone();
                         rewardEditID = rewardID;
                         r.edit(p);
                     }catch(IndexOutOfBoundsException ex){
@@ -416,12 +416,12 @@ public class FinishMenu{
                         if(r instanceof EntityTowerReward){
                             
                         }else if(r instanceof EntityReward){
-                            EntityReward er = (EntityReward) r.cloneReward();
+                            EntityReward er = (EntityReward) r.clone();
                             er.setID(currentOutcome.getEntityRewardList().size());
                             FinishMenu.currentOutcome.addReward(er);
                             openFinishInventory(p);
                         }else{
-                            FinishMenu.currentOutcome.addReward(r.cloneReward());
+                            FinishMenu.currentOutcome.addReward(r.clone());
                             openFinishInventory(p);
                         }
                     }catch(IndexOutOfBoundsException ex){

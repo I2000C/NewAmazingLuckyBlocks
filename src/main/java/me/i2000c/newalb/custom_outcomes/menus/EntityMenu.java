@@ -2,26 +2,26 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward.Equipment;
-import me.i2000c.newalb.utils.logger.Logger;
-import java.util.Arrays;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.utils.logger.Logger;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.EntityType;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class EntityMenu{
     public static EntityReward reward = null;
@@ -815,7 +815,7 @@ public class EntityMenu{
                     break;
                 case 27:
                     //Reset equipment
-                    equipment = reward.getEquipment().cloneEquipment();
+                    equipment = reward.getEquipment().clone();
                     openEntityMenu(p);
                     break;
             }

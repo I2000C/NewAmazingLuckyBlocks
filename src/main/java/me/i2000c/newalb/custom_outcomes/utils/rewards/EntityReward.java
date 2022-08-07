@@ -281,7 +281,7 @@ public class EntityReward extends Reward{
     public void edit(Player player){
         EntityMenu.reset();
         EntityMenu.reward = this;
-        EntityMenu.equipment = this.getEquipment().cloneEquipment();
+        EntityMenu.equipment = this.getEquipment().clone();
         EntityMenu.openEntityMenu(player);
     }
     
@@ -291,20 +291,16 @@ public class EntityReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        EntityReward reward = new EntityReward(this.getOutcome(), this.entityID);
-        reward.type = this.type;
-        reward.custom_name = this.custom_name;
-        reward.setEffects(this.effects);
-        reward.setEquipment(this.equipment);
-        reward.setOffset(this.offset.clone());
-        
-        reward.setDelay(this.getDelay());
-        return reward;
+    public Reward clone(){
+        EntityReward copy = (EntityReward) super.clone();
+        copy.effects = new ArrayList<>(this.effects);
+        copy.equipment = this.equipment.clone();
+        copy.offset = this.offset.clone();
+        return copy;
     }
     
     
-    public static class Equipment{
+    public static class Equipment implements Cloneable{
         public ItemStack helmet = null;
         public ItemStack chestplate = null;
         public ItemStack leggings = null;
@@ -351,34 +347,39 @@ public class EntityReward extends Reward{
             return list;
         }
         
-        public Equipment cloneEquipment(){
-            Equipment equip = new Equipment();
-            
-            if(this.helmet != null){
-                equip.helmet = this.helmet.clone();
-            }
-            if(this.chestplate != null){
-                equip.chestplate = this.chestplate.clone();
-            }
-            if(this.leggings != null){
-                equip.leggings = this.leggings.clone();
-            }
-            if(this.boots != null){
-                equip.boots = this.boots.clone(); 
-            }
-            if(this.itemInHand != null){
-                equip.itemInHand = this.itemInHand.clone();
-            }
-            
-            return equip;
-        }
-        
         public void resetEquipment(){
             this.helmet = null;
             this.chestplate = null;
             this.leggings = null;
             this.boots = null;
             this.itemInHand = null;
+        }
+        
+        @Override
+        public Equipment clone(){
+            try{
+                Equipment copy = (Equipment) super.clone();
+                
+                if(this.helmet != null){
+                    copy.helmet = this.helmet.clone();
+                }
+                if(this.chestplate != null){
+                    copy.chestplate = this.chestplate.clone();
+                }
+                if(this.leggings != null){
+                    copy.leggings = this.leggings.clone();
+                }
+                if(this.boots != null){
+                    copy.boots = this.boots.clone(); 
+                }
+                if(this.itemInHand != null){
+                    copy.itemInHand = this.itemInHand.clone();
+                }
+                
+                return copy;
+            }catch(CloneNotSupportedException ex){
+                return null;
+            }
         }
     }
 }

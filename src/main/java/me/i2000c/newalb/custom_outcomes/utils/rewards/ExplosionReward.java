@@ -1,9 +1,9 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.util.Arrays;
 import me.i2000c.newalb.custom_outcomes.menus.ExplosionMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -92,13 +92,8 @@ public class ExplosionReward extends Reward{
     }
     
     @Override
-    public Reward cloneReward(){
-        ExplosionReward reward = new ExplosionReward(this.getOutcome());
-        reward.setDelay(this.getDelay());
-        
-        reward.power = this.power;
-        reward.withFire = this.withFire;
-        reward.breakBlocks = this.breakBlocks;
-        return reward;
+    public Reward clone(){
+        ExplosionReward copy = (ExplosionReward) super.clone();
+        return copy;
     }
 }
