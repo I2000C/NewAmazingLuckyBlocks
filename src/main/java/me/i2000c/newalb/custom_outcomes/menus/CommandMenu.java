@@ -40,7 +40,7 @@ public class CommandMenu{
         
         ItemBuilder builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
         if(reward.getCommand() == null){
-            builder.withDisplayName("&6Write the command");
+            builder.withDisplayName("&6Command selected: &cnull");
         }else{
             builder.withDisplayName("&6Command selected: &r/" + reward.getCommand());
         }
