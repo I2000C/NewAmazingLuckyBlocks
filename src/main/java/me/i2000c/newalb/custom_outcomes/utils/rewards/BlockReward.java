@@ -4,7 +4,6 @@ import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.BlockMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.utils2.Task;
@@ -160,7 +159,7 @@ public class BlockReward extends Reward{
         reward.usePlayerLoc = this.usePlayerLoc;
         reward.isFallingBlock = this.isFallingBlock;
         reward.blockItem = this.blockItem.clone();
-        reward.offset = this.offset.cloneOffset();
+        reward.offset = this.offset.clone();
         
         reward.setDelay(this.getDelay());
         return reward;

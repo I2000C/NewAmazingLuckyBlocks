@@ -297,7 +297,7 @@ public class EntityReward extends Reward{
         reward.custom_name = this.custom_name;
         reward.setEffects(this.effects);
         reward.setEquipment(this.equipment);
-        reward.setOffset(this.offset.cloneOffset());
+        reward.setOffset(this.offset.clone());
         
         reward.setDelay(this.getDelay());
         return reward;

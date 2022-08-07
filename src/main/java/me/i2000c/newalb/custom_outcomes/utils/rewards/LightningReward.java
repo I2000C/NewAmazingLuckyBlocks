@@ -4,7 +4,6 @@ import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.custom_outcomes.menus.LightningMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
@@ -114,7 +113,7 @@ public class LightningReward extends Reward{
         LightningReward reward = new LightningReward(this.getOutcome());
         reward.usePlayerLoc = this.usePlayerLoc;
         reward.causeDamage = this.causeDamage;
-        reward.offset = this.offset.cloneOffset();
+        reward.offset = this.offset.clone();
         
         reward.setDelay(this.getDelay());
         return reward;
