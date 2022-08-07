@@ -30,6 +30,15 @@ public class ItemBuilder{
         return ItemBuilder.fromItem(item, true);
     }
     
+    public ItemBuilder withMaterial(XMaterial material){
+        material.setType(item);
+        
+        return this;
+    }
+    public XMaterial getMaterial(){
+        return XMaterial.matchXMaterial(item);
+    }
+    
     public ItemBuilder withAmount(int amount){
         item.setAmount(amount);
         
