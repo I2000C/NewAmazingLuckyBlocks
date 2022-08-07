@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -129,18 +132,18 @@ public class ItemBuilder{
     
     public ItemBuilder withTextureID(String textureID){
         try{
-            TextureManager.Texture texture = new TextureManager.Texture(textureID);
+            Texture texture = new Texture(textureID);
             return withTexture(texture);
-        }catch(TextureManager.InvalidHeadException ex){
+        }catch(InvalidHeadException ex){
             return this;
         }
     }
-    public ItemBuilder withTexture(TextureManager.Texture texture){
+    public ItemBuilder withTexture(Texture texture){
         TextureManager.setTexture(item, texture);
         
         return this;
     }
-    public TextureManager.Texture getTexture(){
+    public Texture getTexture(){
         return TextureManager.getTexture(item);
     }
     

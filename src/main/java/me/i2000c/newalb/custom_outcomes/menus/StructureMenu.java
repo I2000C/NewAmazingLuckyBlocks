@@ -14,7 +14,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.utils2.FilePicker;
-import me.i2000c.newalb.utils2.TextureManager;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

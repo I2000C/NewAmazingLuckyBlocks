@@ -11,9 +11,11 @@ import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
-import me.i2000c.newalb.utils2.TextureManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -37,7 +39,7 @@ public class LuckyBlockType implements Displayable{
     private boolean requirePlacePermission;
     private String placePermission;
     
-    private TextureManager.Texture texture;
+    private Texture texture;
     
     private List<ItemStack> crafting;
     private ShapedRecipe recipe;
@@ -227,10 +229,10 @@ public class LuckyBlockType implements Displayable{
             type.texture = null;
         }else if(!textureID.isEmpty() && materialName.isEmpty()){
             try{
-                type.texture = new TextureManager.Texture(textureID);
+                type.texture = new Texture(textureID);
                 type.luckyBlockItem = TextureManager.getItemSkullStack();
                 TextureManager.setTexture(type.luckyBlockItem, type.texture);
-            }catch(TextureManager.InvalidHeadException ex){
+            }catch(InvalidHeadException ex){
                 Logger.log(String.format("Invalid texture for LuckyBlockType \"%s\"", 
                         type.typeName), LogLevel.INFO);
                 return null;

@@ -14,7 +14,9 @@ import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils2.TextureManager;
+import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -498,12 +500,12 @@ public class ItemMenu{
                                 if(message.equals("null")){
                                     TextureManager.setTexture(reward.getItem(), null);
                                 }else{
-                                    TextureManager.Texture texture = new TextureManager.Texture(message);
+                                    Texture texture = new Texture(message);
                                     TextureManager.setTexture(reward.getItem(), texture);
                                 }
                                 
                                 openItemMenu2(p);
-                            }catch(TextureManager.InvalidHeadException ex){
+                            }catch(InvalidHeadException ex){
                                 Logger.sendMessage("&cInvalid texture", p);
                                 Logger.sendMessage("&bUse &7/alb return &bif you don't know any valid texture", p);
                             }

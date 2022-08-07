@@ -8,8 +8,10 @@ import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.EnchantmentUtils;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.Offset;
-import me.i2000c.newalb.utils2.TextureManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -164,7 +166,7 @@ public class EntityReward extends Reward{
                         if(meta.hasEnchants()){
                             config.set(fullFullPath + ".enchantments", EnchantmentUtils.getEnchantments(meta));
                         }
-                        TextureManager.Texture texture = TextureManager.getTexture(sk);
+                        Texture texture = TextureManager.getTexture(sk);
                         if(texture != null){
                             config.set(fullFullPath + ".textureID", texture.getID());
                         }
@@ -204,9 +206,9 @@ public class EntityReward extends Reward{
                         if(config.contains(fullPath + ".textureID")){
                             String textureID = config.getString(fullPath + ".textureID");
                             try{
-                                TextureManager.Texture texture = new TextureManager.Texture(textureID);
+                                Texture texture = new Texture(textureID);
                                 TextureManager.setTexture(stack, texture);
-                            }catch(TextureManager.InvalidHeadException ex){
+                            }catch(InvalidHeadException ex){
                                 Logger.log("Item at " + fullPath + " contains an invalid HeadTexture");
                             }                            
                         }                    

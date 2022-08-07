@@ -1,37 +1,19 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import java.util.ArrayList;
-import me.i2000c.newalb.listeners.objects.AutoBow;
-import me.i2000c.newalb.listeners.objects.DarkHole;
-import me.i2000c.newalb.listeners.objects.EndermanSoup;
-import me.i2000c.newalb.listeners.objects.ExplosiveBow;
-import me.i2000c.newalb.listeners.objects.HomingBow;
-import me.i2000c.newalb.listeners.objects.IceBow;
-import me.i2000c.newalb.listeners.objects.MiniVolcano;
-import me.i2000c.newalb.listeners.objects.MultiBow;
-import me.i2000c.newalb.listeners.objects.PlayerTracker;
-import me.i2000c.newalb.listeners.wands.FireWand;
-import me.i2000c.newalb.listeners.wands.FrostPathWand;
-import me.i2000c.newalb.listeners.wands.InvWand;
-import me.i2000c.newalb.listeners.wands.LightningWand;
-import me.i2000c.newalb.listeners.wands.PotionWand;
-import me.i2000c.newalb.listeners.wands.RegenWand;
-import me.i2000c.newalb.listeners.wands.ShieldWand;
-import me.i2000c.newalb.listeners.wands.SlimeWand;
-import me.i2000c.newalb.listeners.wands.TntWand;
 import me.i2000c.newalb.custom_outcomes.menus.ItemMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.EnchantmentUtils;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils2.TextureManager;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import java.util.List;
-import me.i2000c.newalb.listeners.objects.HookBow;
-import me.i2000c.newalb.listeners.objects.HotPotato;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
 import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.SpecialItemManager;
+import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.Texture;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -141,9 +123,9 @@ public class ItemReward extends Reward{
         if(config.contains(path + ".textureID")){
             String textureID = config.getString(path + ".textureID");
             try{
-                TextureManager.Texture texture = new TextureManager.Texture(textureID);
+                Texture texture = new Texture(textureID);
                 TextureManager.setTexture(this.item, texture);
-            }catch(TextureManager.InvalidHeadException ex){
+            }catch(InvalidHeadException ex){
                 Logger.log("ItemReward at \"" + path + "\" contains an invalid HeadTexture");
             }
         }
@@ -169,7 +151,7 @@ public class ItemReward extends Reward{
             }
             
             //Save texture
-            TextureManager.Texture texture = TextureManager.getTexture(this.item);
+            Texture texture = TextureManager.getTexture(this.item);
             if(texture != null){
                 config.set(path + ".textureID", texture.getID());
             }

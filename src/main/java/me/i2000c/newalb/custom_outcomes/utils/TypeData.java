@@ -2,7 +2,8 @@ package me.i2000c.newalb.custom_outcomes.utils;
 
 import java.util.Objects;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils2.TextureManager;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -10,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 public class TypeData{
     private final Material material;
     private final short durability;
-    private final TextureManager.Texture texture;
+    private final Texture texture;
     
     public TypeData(ItemStack stack){
         //<editor-fold defaultstate="collapsed" desc="Code">

@@ -12,20 +12,22 @@ import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
+import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
-import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.LocationManager;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.RandomBlocks;
 import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.SpecialItemManager;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils.WorldMenu;
 import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.Schematic;
-import me.i2000c.newalb.utils2.TextureManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -777,12 +779,12 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         try{
-            TextureManager.Texture texture = new TextureManager.Texture(args[1]);
+            Texture texture = new Texture(args[1]);
             ItemStack textureItem = TextureManager.getItemSkullStack();
             TextureManager.setTexture(textureItem, texture);
             ((Player) sender).getInventory().addItem(textureItem);
             return true;
-        }catch(TextureManager.InvalidHeadException ex){
+        }catch(InvalidHeadException ex){
             Logger.sendMessage("&cInvalid texture ID", sender);
             return false;
         }

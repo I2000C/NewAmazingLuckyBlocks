@@ -1,13 +1,15 @@
 package me.i2000c.newalb.utils2;
 
+import java.util.List;
+import java.util.Objects;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
-import java.util.List;
-import java.util.Objects;
+import me.i2000c.newalb.utils.textures.InvalidHeadException;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -17,7 +19,7 @@ public class LuckyItemManagerOLD{
     private static ItemStack itemHeadMode;
     private static ItemStack itemNoHeadMode;
     
-    private static TextureManager.Texture luckyBlockTexture;
+    private static Texture luckyBlockTexture;
     
     public static ItemStack getItem(){
         return (headMode == HeadMode.DISABLED) ? itemNoHeadMode.clone() : itemHeadMode.clone();
@@ -29,8 +31,8 @@ public class LuckyItemManagerOLD{
         if(headMode == HeadMode.ENABLED || headMode == HeadMode.BOTH){
             String ID = ConfigManager.getConfig().getString("LuckyBlock.HeadMode.skull-ID");
             try{
-                luckyBlockTexture = new TextureManager.Texture(ID);
-            }catch(TextureManager.InvalidHeadException ex){
+                luckyBlockTexture = new Texture(ID);
+            }catch(InvalidHeadException ex){
                 Logger.log("&cAn invalid head has been detected in config");
             }            
             itemHeadMode = new ItemStack(TextureManager.getItemSkullMaterial());
@@ -129,8 +131,8 @@ public class LuckyItemManagerOLD{
         if(headMode == HeadMode.DISABLED){
             return material2.equals(material);
         }else{
-            TextureManager.Texture texture1 = TextureManager.getTexture(item);
-            TextureManager.Texture texture2 = TextureManager.getTexture(stack);
+            Texture texture1 = TextureManager.getTexture(item);
+            Texture texture2 = TextureManager.getTexture(stack);
             return Objects.equals(texture1, texture2);
         }
     //</editor-fold>
