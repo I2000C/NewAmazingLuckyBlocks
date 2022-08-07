@@ -12,6 +12,8 @@ import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
 
 public class ItemBuilder{
     private final ItemStack item;
@@ -34,8 +36,7 @@ public class ItemBuilder{
     }
     
     public ItemBuilder withMaterial(XMaterial material){
-        material.setType(item);
-        
+        material.setType(item);        
         return this;
     }
     public XMaterial getMaterial(){
@@ -43,8 +44,7 @@ public class ItemBuilder{
     }
     
     public ItemBuilder withAmount(int amount){
-        item.setAmount(amount);
-        
+        item.setAmount(amount);        
         return this;
     }
     public int getAmount(){
@@ -52,8 +52,7 @@ public class ItemBuilder{
     }
     
     public ItemBuilder withDurability(int durability){
-        item.setDurability((short) durability);
-        
+        item.setDurability((short) durability);        
         return this;
     }
     public short getDurability(){
@@ -63,8 +62,7 @@ public class ItemBuilder{
     public ItemBuilder withDisplayName(String displayName){
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(Logger.color(displayName));
-        item.setItemMeta(meta);
-        
+        item.setItemMeta(meta);        
         return this;
     }
     public String getDisplayName(){
@@ -82,8 +80,7 @@ public class ItemBuilder{
         }
         lore.add(Logger.color(loreLine));
         meta.setLore(lore);
-        item.setItemMeta(meta);
-        
+        item.setItemMeta(meta);        
         return this;
     }
     public ItemBuilder addLore(List<String> loreLines){
@@ -96,8 +93,7 @@ public class ItemBuilder{
         }
         lore.addAll(loreLines);
         meta.setLore(lore);
-        item.setItemMeta(meta);
-        
+        item.setItemMeta(meta);        
         return this;
     }
     public ItemBuilder withLore(String... lore){
@@ -106,8 +102,7 @@ public class ItemBuilder{
     public ItemBuilder withLore(List<String> lore){
         ItemMeta meta = item.getItemMeta();
         meta.setLore(Logger.color(lore));
-        item.setItemMeta(meta);
-        
+        item.setItemMeta(meta);        
         return this;
     }
     public List<String> getLore(){
@@ -115,15 +110,13 @@ public class ItemBuilder{
         return meta.getLore();
     }
     
-    public ItemBuilder addEnchantmnet(Enchantment enchantment, int level){
-        item.addUnsafeEnchantment(enchantment, level);
-        
+    public ItemBuilder addEnchantment(Enchantment enchantment, int level){
+        item.addUnsafeEnchantment(enchantment, level);        
         return this;
     }
     public ItemBuilder withEnchantments(Map<Enchantment, Integer> enchantments){
         item.getEnchantments().forEach((enchantment, level) -> item.removeEnchantment(enchantment));
-        item.addUnsafeEnchantments(enchantments);
-        
+        item.addUnsafeEnchantments(enchantments);        
         return this;
     }
     public Map<Enchantment, Integer> getEnchantments(){
@@ -139,12 +132,20 @@ public class ItemBuilder{
         }
     }
     public ItemBuilder withTexture(Texture texture){
-        TextureManager.setTexture(item, texture);
-        
+        TextureManager.setTexture(item, texture);        
         return this;
     }
     public Texture getTexture(){
         return TextureManager.getTexture(item);
+    }
+    
+    public ItemBuilder addPotionEffect(PotionEffect potionEffect){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof PotionMeta){
+            PotionMeta pmeta = (PotionMeta) meta;
+            pmeta.addCustomEffect(potionEffect, true);
+        }
+        return this;
     }
     
     public ItemStack build(){
