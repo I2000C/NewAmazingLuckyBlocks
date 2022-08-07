@@ -1,23 +1,19 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.BlockReplacingSphereReward;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.BlockReplacingSphereReward;
-import me.i2000c.newalb.utils.logger.Logger;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class BlockReplacingSphereMenu{
     public static BlockReplacingSphereReward reward = null;
@@ -44,113 +40,80 @@ public class BlockReplacingSphereMenu{
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.BLOCK_REPLACING_SPHERE_MENU, 54, "&b&lBRS Reward");
         
-        ItemStack glass = XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.LIGHT_BLUE);
         
-        ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = minus1.getItemMeta();
-        meta.setDisplayName("&c&l-1");
-        minus1.setItemMeta(meta);
+        ItemStack minus1 = ItemBuilder.newItem(XMaterial.RED_STAINED_GLASS_PANE)
+                .withDisplayName("&c&l-1")
+                .build();
         
-        ItemStack minus10 = minus1.clone();
-        meta = minus10.getItemMeta();
-        meta.setDisplayName("&c&l-10");
-        minus10.setItemMeta(meta);
+        ItemStack minus10 = ItemBuilder.newItem(XMaterial.RED_STAINED_GLASS_PANE)
+                .withDisplayName("&c&l-10")
+                .build();
         
-        ItemStack minus100 = minus1.clone();
-        meta = minus100.getItemMeta();
-        meta.setDisplayName("&c&l-100");
-        minus100.setItemMeta(meta);
+        ItemStack minus100 = ItemBuilder.newItem(XMaterial.RED_STAINED_GLASS_PANE)
+                .withDisplayName("&c&l-100")
+                .build();
         
-        ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = minus1.getItemMeta();
-        meta.setDisplayName("&a&l+1");
-        plus1.setItemMeta(meta);
+        ItemStack plus1 = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+                .withDisplayName("&a&l+1")
+                .build();
         
-        ItemStack plus10 = plus1.clone();
-        meta = plus10.getItemMeta();
-        meta.setDisplayName("&a&l+10");
-        plus10.setItemMeta(meta);
+        ItemStack plus10 = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+                .withDisplayName("&a&l+10")
+                .build();
         
-        ItemStack plus100 = plus1.clone();
-        meta = plus100.getItemMeta();
-        meta.setDisplayName("&a&l+100");
-        plus100.setItemMeta(meta);
+        ItemStack plus100 = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+                .withDisplayName("&a&l+100")
+                .build();
         
-        ItemStack usePlayerLocItem;
-        if(reward.isUsePlayerLoc()){
-            usePlayerLocItem = XMaterial.PLAYER_HEAD.parseItem();
-            meta = usePlayerLocItem.getItemMeta();
-            meta.setDisplayName("&aUse player location");
-        }else{
-            usePlayerLocItem = TypeManager.getMenuItemStack();
-            meta = usePlayerLocItem.getItemMeta();
-            meta.setDisplayName("&6Use lucky block location");
-        }
-        meta.setLore(Arrays.asList("&3Click to toggle"));
-        usePlayerLocItem.setItemMeta(meta);
+        ItemStack usePlayerLocItem = GUIItem.getUsePlayerLocItem(reward.isUsePlayerLoc());
         
         ItemStack replaceLiquids;
         if(reward.isReplaceLiquids()){
-            replaceLiquids = XMaterial.WATER_BUCKET.parseItem();
-            meta = usePlayerLocItem.getItemMeta();
-            meta.setDisplayName("&bReplace liquids: &atrue");
+            replaceLiquids = ItemBuilder.newItem(XMaterial.WATER_BUCKET)
+                    .withDisplayName("&bReplace liquids: &atrue")
+                    .addLoreLine("&3Click to toggle")
+                    .build();
         }else{
-            replaceLiquids = XMaterial.STONE.parseItem();
-            meta = usePlayerLocItem.getItemMeta();
-            meta.setDisplayName("&bReplace liquids: &cfalse");
+            replaceLiquids = ItemBuilder.newItem(XMaterial.WATER_BUCKET)
+                    .withDisplayName("&bReplace liquids: &cfalse")
+                    .addLoreLine("&3Click to toggle")
+                    .build();
         }
-        meta.setLore(Arrays.asList("&3Click to toggle"));
-        replaceLiquids.setItemMeta(meta);
         
-        ItemStack removeMaterialsItem = new ItemStack(Material.BARRIER);
-        meta = removeMaterialsItem.getItemMeta();
-        meta.setDisplayName("&cClick to remove all materials");
-        removeMaterialsItem.setItemMeta(meta);
+        ItemStack removeMaterialsItem = ItemBuilder.newItem(XMaterial.BARRIER)
+                .withDisplayName("&cClick to remove all materials")
+                .build();
         
-        ItemStack materialsItem = new ItemStack(Material.DIAMOND_ORE);
-        meta = materialsItem.getItemMeta();
-        meta.setDisplayName("&6Sphere materials");
-        List<String> lore = new ArrayList<>();
-        lore.add("&bLeft click on an item of your inventory");
-        lore.add("&b   to add it to the list");
-        lore.add("&cRight click on an item of your inventory");
-        lore.add("&c   to remove it from the list");
-        lore.add("&2Current materials:");
-        lore.addAll(reward.getOrderedMaterialList());
-        meta.setLore(lore);
-        materialsItem.setItemMeta(meta);
+        ItemStack materialsItem = ItemBuilder.newItem(XMaterial.DIAMOND_ORE)
+                .withDisplayName("&6Sphere materials")
+                .addLoreLine("&bLeft click on an item of your inventory")
+                .addLoreLine("&b   to add it to the list")
+                .addLoreLine("&cRight click on an item of your inventory")
+                .addLoreLine("&c   to remove it from the list")
+                .addLoreLine("&2Current materials:")
+                .addLore(reward.getOrderedMaterialList())
+                .build();
         
-        ItemStack minRadiusItem = XMaterial.SNOWBALL.parseItem();
-        meta = minRadiusItem.getItemMeta();
-        meta.setDisplayName("&bMin radius: &6" + reward.getMinRadius());
-        meta.setLore(Arrays.asList("&3Click to reset"));
-        minRadiusItem.setItemMeta(meta);
+        ItemStack minRadiusItem = ItemBuilder.newItem(XMaterial.SNOWBALL)
+                .withDisplayName("&bMin radius: &6" + reward.getMinRadius())
+                .addLoreLine("&3Click to reset")
+                .build();
         
-        ItemStack maxRadiusItem = new ItemStack(Material.SLIME_BALL);
-        meta = maxRadiusItem.getItemMeta();
-        meta.setDisplayName("&bMax radius: &6" + reward.getMaxRadius());
-        meta.setLore(Arrays.asList("&3Click to reset"));
-        maxRadiusItem.setItemMeta(meta);
+        ItemStack maxRadiusItem = ItemBuilder.newItem(XMaterial.SLIME_BALL)
+                .withDisplayName("&bMax radius: &6" + reward.getMaxRadius())
+                .addLoreLine("&3Click to reset")
+                .build();
         
-        ItemStack ticksBetweenLayersItem = XMaterial.CLOCK.parseItem();
-        meta = ticksBetweenLayersItem.getItemMeta();
-        meta.setDisplayName("&bTicks between layer: &6" + reward.getTicksBetweenLayers());
-        meta.setLore(Arrays.asList("&3Click to reset"));
-        ticksBetweenLayersItem.setItemMeta(meta);
+        ItemStack ticksBetweenLayersItem = ItemBuilder.newItem(XMaterial.CLOCK)
+                .withDisplayName("&bTicks between layer: &6" + reward.getTicksBetweenLayers())
+                .addLoreLine("&3Click to reset")
+                .build();
         
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
+        ItemStack back = GUIItem.getBackItem();
         
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
+        ItemStack next = GUIItem.getNextItem();
         
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
