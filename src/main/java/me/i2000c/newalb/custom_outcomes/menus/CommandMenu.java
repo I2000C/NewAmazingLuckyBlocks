@@ -1,20 +1,18 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
-import java.util.List;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.CommandReward;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.CommandReward;
-import me.i2000c.newalb.utils.logger.Logger;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class CommandMenu{ 
     public static CommandReward reward = null;
@@ -38,58 +36,33 @@ public class CommandMenu{
             reward = new CommandReward(FinishMenu.getCurrentOutcome());
         }
         
-        List<String> lore = new ArrayList<>();
-        lore.add("&7Click here and then, write the command");
-        lore.add("&7in the chat without the first '&b&l/&7'&r");
-        lore.add("");
-        lore.add("&7Use &a%player% &7if you want to use");
-        lore.add("&7  the player's name in the command,");
-        lore.add("&7&a%x%&7, &a%y%, &a%z% &7if you want");
-        lore.add("&7  to use the player's coordinates");
-        lore.add("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want");
-        lore.add("&7  to use the LuckyBlock's coordinates");
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
-        ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
-        
-        ItemStack item = XMaterial.OAK_SIGN.parseItem();
-        item.setDurability((short) 0);
-        meta = item.getItemMeta();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
         if(reward.getCommand() == null){
-            meta.setDisplayName("&6Write the command");
+            builder.withDisplayName("&6Write the command");
         }else{
-            meta.setDisplayName("&6Command selected: &r/" + reward.getCommand());
+            builder.withDisplayName("&6Command selected: &r/" + reward.getCommand());
         }
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        
-        ItemStack sender_item;
-        if(reward.getSender().equals("Console")){
-            sender_item = XMaterial.COMMAND_BLOCK.parseItem();
+        builder.addLoreLine("&7Click here and then, write the command");
+        builder.addLoreLine("");
+        builder.addLoreLine("&7Use &a%player% &7if you want to use");
+        builder.addLoreLine("&7  the player's name in the command,");
+        builder.addLoreLine("&7&a%x%&7, &a%y%, &a%z% &7if you want");
+        builder.addLoreLine("&7  to use the player's coordinates");
+        builder.addLoreLine("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want");
+        builder.addLoreLine("&7  to use the LuckyBlock's coordinates");
+        ItemStack cmd_item = builder.build();
+                
+        if(reward.getSenderIsPlayer()){
+            builder = ItemBuilder.newItem(XMaterial.PLAYER_HEAD);
+            builder.withDisplayName("&dSender: &2Player");
         }else{
-            sender_item = XMaterial.PLAYER_HEAD.parseItem();
+            builder = ItemBuilder.newItem(XMaterial.COMMAND_BLOCK);
+            builder.withDisplayName("&dSender: &8Console");
         }
-        String senderName;
-        if(reward.getSender().equals("Console")){
-            senderName = "&8Console";
-        }else{
-            senderName = "&2Player";
-        }
-        meta = sender_item.getItemMeta();
-        meta.setDisplayName("&dSender: " + senderName);
-        sender_item.setItemMeta(meta);
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
+        builder.addLoreLine("&3Click to toggle");
+        ItemStack sender_item = builder.build();
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.COMMAND_MENU, 27, "&7&lCommand Reward");
         for(int i=0;i<9;i++){
@@ -102,9 +75,9 @@ public class CommandMenu{
         inv.setItem(17, glass);
         
         inv.setItem(11, sender_item);
-        inv.setItem(13, item);
-        inv.setItem(10, back);
-        inv.setItem(16, next);
+        inv.setItem(13, cmd_item);
+        inv.setItem(10, GUIItem.getBackItem());
+        inv.setItem(16, GUIItem.getNextItem());
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
@@ -127,11 +100,7 @@ public class CommandMenu{
                     }
                     break;
                 case 11:
-                    if(reward.getSender().equalsIgnoreCase("Console")){
-                        reward.setSender("Player");
-                    }else{
-                        reward.setSender("Console");
-                    }
+                    reward.setSenderIsPlayer(!reward.getSenderIsPlayer());
                     openCommandMenu(p);
                     break;
                 case 13:
