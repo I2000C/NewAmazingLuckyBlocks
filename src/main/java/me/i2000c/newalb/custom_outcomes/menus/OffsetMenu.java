@@ -1,9 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils2.Offset;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.util.Arrays;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
@@ -39,7 +37,7 @@ public class OffsetMenu{
     
     public static void setCurrentData(Offset offset, PlayerFunction function){
         oldOffset = offset;
-        newOffset = oldOffset.cloneOffset();
+        newOffset = oldOffset.clone();
         playerFunction = function;
     }
     
