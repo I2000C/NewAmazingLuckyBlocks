@@ -110,11 +110,6 @@ public class BlockReplacingSphereMenu{
                 .addLoreLine("&3Click to reset")
                 .build();
         
-        
-        ItemStack back = GUIItem.getBackItem();
-        
-        ItemStack next = GUIItem.getNextItem();
-        
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
         }
@@ -128,8 +123,8 @@ public class BlockReplacingSphereMenu{
             inv.setItem(i, glass);
         }
         
-        inv.setItem(10, back);
-        inv.setItem(16, next);
+        inv.setItem(10, GUIItem.getBackItem());
+        inv.setItem(16, GUIItem.getNextItem());
         
         inv.setItem(4, removeMaterialsItem);
         
@@ -159,8 +154,7 @@ public class BlockReplacingSphereMenu{
         inv.setItem(40, ticksBetweenLayersItem);
         inv.setItem(41, plus1);
         inv.setItem(42, plus10);
-        inv.setItem(43, plus100);
-            
+        inv.setItem(43, plus100);            
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
