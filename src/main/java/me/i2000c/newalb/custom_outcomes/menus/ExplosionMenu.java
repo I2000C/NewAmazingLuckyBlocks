@@ -1,19 +1,17 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.Arrays;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.ExplosionReward;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.ExplosionReward;
-import me.i2000c.newalb.utils.logger.Logger;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class ExplosionMenu{
     public static ExplosionReward reward = null;
@@ -40,88 +38,33 @@ public class ExplosionMenu{
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.EXPLOSION_MENU, 36, "&4&lExplosion Reward");
         
-        ItemStack glass = XMaterial.ORANGE_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.ORANGE);
         
-        ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = minus1.getItemMeta();
-        meta.setDisplayName("&c&l-1");
-        minus1.setItemMeta(meta);
+        ItemStack tntItem = ItemBuilder.newItem(XMaterial.TNT)
+                .withDisplayName("&6Explosion power: &e" + reward.getPower())
+                .addLoreLine("&3Click to reset")
+                .build();
         
-        ItemStack minus10 = minus1.clone();
-        meta = minus10.getItemMeta();
-        meta.setDisplayName("&c&l-10");
-        minus10.setItemMeta(meta);
-        
-        ItemStack minus100 = minus1.clone();
-        meta = minus100.getItemMeta();
-        meta.setDisplayName("&c&l-100");
-        minus100.setItemMeta(meta);
-        
-        ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = minus1.getItemMeta();
-        meta.setDisplayName("&a&l+1");
-        plus1.setItemMeta(meta);
-        
-        ItemStack plus10 = plus1.clone();
-        meta = plus10.getItemMeta();
-        meta.setDisplayName("&a&l+10");
-        plus10.setItemMeta(meta);
-        
-        ItemStack plus100 = plus1.clone();
-        meta = plus100.getItemMeta();
-        meta.setDisplayName("&a&l+100");
-        plus100.setItemMeta(meta);
-        
-        
-        ItemStack tntItem = new ItemStack(Material.TNT);
-        meta = tntItem.getItemMeta();
-        meta.setDisplayName("&6Explosion power: &e" + reward.getPower());
-        meta.setLore(Arrays.asList("&3Click to reset"));
-        tntItem.setItemMeta(meta);
-        
-        ItemStack fireItem;
+        ItemBuilder builder;
         if(reward.isWithFire()){
-            fireItem = XMaterial.FIRE_CHARGE.parseItem();
+            builder = ItemBuilder.newItem(XMaterial.FIRE_CHARGE);
+            builder.withDisplayName("&6Generate fire: &atrue");
         }else{
-            fireItem = XMaterial.FIREWORK_STAR.parseItem();
+            builder = ItemBuilder.newItem(XMaterial.FIREWORK_STAR);
+            builder.withDisplayName("&6Generate fire: &cfalse");
         }
-        meta = fireItem.getItemMeta();
-        if(reward.isWithFire()){
-            meta.setDisplayName("&6Generate fire: &atrue");
-        }else{
-            meta.setDisplayName("&6Generate fire: &cfalse");
-        }
-        meta.setLore(Arrays.asList("&3Click to toggle"));
-        fireItem.setItemMeta(meta);
+        builder.addLoreLine("&3Click to toggle");
+        ItemStack fireItem = builder.build();
         
-        ItemStack breakBlocksItem;
         if(reward.isBreakBlocks()){
-            breakBlocksItem = new ItemStack(Material.IRON_PICKAXE);
+            builder = ItemBuilder.newItem(XMaterial.IRON_PICKAXE);
+            builder.withDisplayName("&6Break blocks: &atrue");
         }else{
-            breakBlocksItem = new ItemStack(Material.STONE);
+            builder = ItemBuilder.newItem(XMaterial.STONE);
+            builder.withDisplayName("&6Break blocks: &cfalse");
         }
-        meta = breakBlocksItem.getItemMeta();
-        if(reward.isBreakBlocks()){
-            meta.setDisplayName("&6Break blocks: &atrue");
-        }else{
-            meta.setDisplayName("&6Break blocks: &cfalse");
-        }
-        meta.setLore(Arrays.asList("&3Click to toggle"));
-        breakBlocksItem.setItemMeta(meta);
-        
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
+        builder.addLoreLine("&3Click to toggle");
+        ItemStack breakBlocksItem = builder.build();
         
         for(int i=0;i<=9;i++){
             inv.setItem(i, glass);
@@ -133,19 +76,19 @@ public class ExplosionMenu{
             inv.setItem(i, glass);
         }
         
-        inv.setItem(19, back);
-        inv.setItem(25, next);
+        inv.setItem(19, GUIItem.getBackItem());
+        inv.setItem(25, GUIItem.getNextItem());
         
         inv.setItem(21, fireItem);
         inv.setItem(23, breakBlocksItem);
 
-        inv.setItem(10, minus100);
-        inv.setItem(11, minus10);
-        inv.setItem(12, minus1);
+        inv.setItem(10, GUIItem.getPlusLessItem(-100));
+        inv.setItem(11, GUIItem.getPlusLessItem(-10));
+        inv.setItem(12, GUIItem.getPlusLessItem(-1));
         inv.setItem(13, tntItem);
-        inv.setItem(14, plus1);
-        inv.setItem(15, plus10);
-        inv.setItem(16, plus100);
+        inv.setItem(14, GUIItem.getPlusLessItem(+1));
+        inv.setItem(15, GUIItem.getPlusLessItem(+10));
+        inv.setItem(16, GUIItem.getPlusLessItem(+100));
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
