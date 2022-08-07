@@ -36,4 +36,28 @@ public class GUIItem{
                     .build();
         }
     }
+    
+    public static ItemStack getPlusLessItem(float amount){
+        if(amount >= 0){
+            if(amount % 1 == 0){
+                return ItemBuilder.newItem(GlassColor.LIME.toMaterial())
+                    .withDisplayName(String.format("&a&l+%.2f" + amount))
+                    .build();
+            }else{
+                return ItemBuilder.newItem(GlassColor.LIME.toMaterial())
+                    .withDisplayName(String.format("&a&l+%.0f" + amount))
+                    .build();
+            }            
+        }else{
+            if((-amount) % 1 == 0){
+                return ItemBuilder.newItem(GlassColor.RED.toMaterial())
+                    .withDisplayName(String.format("&c&l%.2f" + amount))
+                    .build();
+            }else{
+                return ItemBuilder.newItem(GlassColor.RED.toMaterial())
+                    .withDisplayName(String.format("&c&l%.0f" + amount))
+                    .build();
+            } 
+        }
+    }
 }
