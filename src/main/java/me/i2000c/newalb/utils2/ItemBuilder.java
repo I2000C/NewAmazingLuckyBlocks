@@ -2,10 +2,10 @@ package me.i2000c.newalb.utils2;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
-import me.i2000c.newalb.utils.Logger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,14 +17,17 @@ public class ItemBuilder{
         this.item = material.parseItem();
     }
     private ItemBuilder(ItemStack item){
-        this.item = item.clone();
+        this.item = item;
     }
     
     public static ItemBuilder newItem(XMaterial material){
         return new ItemBuilder(material);
     }
+    public static ItemBuilder fromItem(ItemStack item, boolean clone){
+        return new ItemBuilder(clone ? item.clone() : item);
+    }
     public static ItemBuilder fromItem(ItemStack item){
-        return new ItemBuilder(item);
+        return ItemBuilder.fromItem(item, true);
     }
     
     public ItemBuilder withAmount(int amount){
@@ -32,11 +35,17 @@ public class ItemBuilder{
         
         return this;
     }
+    public int getAmount(){
+        return item.getAmount();
+    }
     
     public ItemBuilder withDurability(int durability){
         item.setDurability((short) durability);
         
         return this;
+    }
+    public short getDurability(){
+        return item.getDurability();
     }
     
     public ItemBuilder withDisplayName(String displayName){
@@ -45,6 +54,10 @@ public class ItemBuilder{
         item.setItemMeta(meta);
         
         return this;
+    }
+    public String getDisplayName(){
+        ItemMeta meta = item.getItemMeta();
+        return meta.getDisplayName();
     }
     
     public ItemBuilder addLoreLine(String loreLine){
@@ -85,6 +98,10 @@ public class ItemBuilder{
         
         return this;
     }
+    public List<String> getLore(){
+        ItemMeta meta = item.getItemMeta();
+        return meta.getLore();
+    }
     
     public ItemBuilder addEnchantmnet(Enchantment enchantment, int level){
         item.addUnsafeEnchantment(enchantment, level);
@@ -96,6 +113,9 @@ public class ItemBuilder{
         item.addUnsafeEnchantments(enchantments);
         
         return this;
+    }
+    public Map<Enchantment, Integer> getEnchantments(){
+        return item.getEnchantments();
     }
     
     public ItemBuilder withTextureID(String textureID){
@@ -110,6 +130,9 @@ public class ItemBuilder{
         TextureManager.setTexture(item, texture);
         
         return this;
+    }
+    public TextureManager.Texture getTexture(){
+        return TextureManager.getTexture(item);
     }
     
     public ItemStack build(){
