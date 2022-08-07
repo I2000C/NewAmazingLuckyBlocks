@@ -78,4 +78,21 @@ public class GUIItem{
         builder.addLoreLine("&3Click to toggle");
         return builder.build();
     }
+    
+    public static ItemStack getPreviousPageItem(){
+        return ItemBuilder.newItem(XMaterial.ENDER_EYE)
+                .withDisplayName("&2Previous page")
+                .build();
+    }
+    public static ItemStack getNextPageItem(){
+        return ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
+                .withDisplayName("&2Next page")
+                .build();
+    }
+    public static ItemStack getCurrentPageItem(int currentPage, int maxPages){
+        return ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
+                .withDisplayName("&6Page &3" + currentPage + " &a/ &3" + maxPages)
+                .addLoreLine("&bClick to go to page 1")
+                .build();
+    }
 }
