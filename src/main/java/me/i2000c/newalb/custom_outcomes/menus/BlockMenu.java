@@ -4,9 +4,9 @@ import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.BlockReward;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.listeners.inventories.MenuItem;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,7 +37,7 @@ public class BlockMenu{
                 
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.BLOCK_MENU, 45, "&d&lBlock Reward");
         
-        ItemStack glass = MenuItem.getGlassItem(XMaterial.PURPLE_STAINED_GLASS_PANE);
+        ItemStack glass = GUIItem.getGlassItem(XMaterial.PURPLE_STAINED_GLASS_PANE);
 
         for(int i=0;i<=9;i++){
             inv.setItem(i, glass);
@@ -50,30 +50,26 @@ public class BlockMenu{
         inv.setItem(26, glass);
         inv.setItem(27, glass);
         
-        ItemStack back = MenuItem.getBackItem();
+        ItemStack back = GUIItem.getBackItem();
 
-        ItemStack next = MenuItem.getNextItem();
+        ItemStack next = GUIItem.getNextItem();
         
-        ItemStack usePlayerLocStack = MenuItem.getUsePlayerLocItem(reward.getUsePlayerLoc());
+        ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(reward.getUsePlayerLoc());
 
         ItemStack isFallingBlockStack;
         if(reward.getIsFallingBlock()){
             isFallingBlockStack = ItemBuilder.newItem(XMaterial.SAND)
                     .withDisplayName("&5Is falling block: &atrue")
+                    .addLoreLine("&3Click to toggle")
                     .build();
         }else{
             isFallingBlockStack = ItemBuilder.newItem(XMaterial.COBBLESTONE)
                     .withDisplayName("&5Is falling block: &cfalse")
+                    .addLoreLine("&3Click to toggle")
                     .build();
         }
         
-        ItemStack offsetStack = ItemBuilder.newItem(XMaterial.PISTON)
-                .withDisplayName("&3Configure offset")
-                .addLoreLine("&dCurrent offset:")
-                .addLoreLine("   &5X: &3" + reward.getOffset().getOffsetX())
-                .addLoreLine("   &5Y: &3" + reward.getOffset().getOffsetY())
-                .addLoreLine("   &5Z: &3" + reward.getOffset().getOffsetZ())
-                .build();
+        ItemStack offsetStack = reward.getOffset().getItemToDisplay();
         
         ItemBuilder builder;
         if(reward.getItemBlock() != null){
