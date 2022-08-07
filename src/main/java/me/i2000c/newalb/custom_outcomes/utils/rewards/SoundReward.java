@@ -50,13 +50,13 @@ public class SoundReward extends Reward{
     public ItemStack getItemToDisplay(){
         List<String> lore = new ArrayList();
         double truncated = BigDecimal.valueOf(this.volume).setScale(3, RoundingMode.HALF_UP).doubleValue();
-        lore.add(Logger.color("&3Volume: &6" + truncated));
+        lore.add("&3Volume: &6" + truncated);
         truncated = BigDecimal.valueOf(this.pitch).setScale(3, RoundingMode.HALF_UP).doubleValue();
-        lore.add(Logger.color("&3Pitch: &6" + truncated));
+        lore.add("&3Pitch: &6" + truncated);
         
         ItemStack stack = new ItemStack(Material.NOTE_BLOCK);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&dSound: &e" + this.type));
+        meta.setDisplayName("&dSound: &e" + this.type);
         meta.setLore(lore);
         stack.setItemMeta(meta);
         

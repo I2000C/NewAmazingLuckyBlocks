@@ -42,31 +42,31 @@ public class GiveMenu{
         if(playerItem == null){
             playerItem = XMaterial.PLAYER_HEAD.parseItem();
             SkullMeta sk = (SkullMeta) playerItem.getItemMeta();
-            sk.setDisplayName(Logger.color("&2Player Selected:"));
-            sk.setLore(Logger.color(Arrays.asList("&b" + target.getName())));
+            sk.setDisplayName("&2Player Selected:");
+            sk.setLore(Arrays.asList("&b" + target.getName()));
             sk.setOwner(target.getName());
             playerItem.setItemMeta(sk);
         }
         
         ItemStack wands = XMaterial.MUSIC_DISC_FAR.parseItem();
         ItemMeta meta = wands.getItemMeta();
-        meta.setDisplayName(Logger.color("&aGive Wands"));
+        meta.setDisplayName("&aGive Wands");
         wands.setItemMeta(meta);
         
         ItemStack objects = new ItemStack(Material.BUCKET);
         meta = objects.getItemMeta();
-        meta.setDisplayName(Logger.color("&bGive Objects"));
+        meta.setDisplayName("&bGive Objects");
         objects.setItemMeta(meta);
         
         ItemStack luckyBlocks = TypeManager.getMenuItemStack();
         meta = luckyBlocks.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Give LuckyBlocks"));
+        meta.setDisplayName("&6Give LuckyBlocks");
         meta.setLore(null);
         luckyBlocks.setItemMeta(meta);
         
         ItemStack luckyTool = SpecialItemManager.getLuckyTool().getItem();
         meta = luckyTool.getItemMeta();
-        meta.setDisplayName(Logger.color("&eGive the LuckyTool"));
+        meta.setDisplayName("&eGive the LuckyTool");
         meta.setLore(null);
         luckyTool.setItemMeta(meta);
         
@@ -134,17 +134,17 @@ public class GiveMenu{
         
         ItemStack previous = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = previous.getItemMeta();
-        meta.setDisplayName(Logger.color("&dPrevious"));
+        meta.setDisplayName("&dPrevious");
         previous.setItemMeta(meta);
         
         ItemStack page = new ItemStack(Material.MAGMA_CREAM);
         meta = page.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Page &b(&e" + inventoryPage + "&b/&e" + maxPages + "&b)"));
+        meta.setDisplayName("&6Page &b(&e" + inventoryPage + "&b/&e" + maxPages + "&b)");
         page.setItemMeta(meta);
         
         ItemStack next = XMaterial.ENDER_EYE.parseItem();
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&dNext"));
+        meta.setDisplayName("&dNext");
         next.setItemMeta(meta);
         
         inv.setItem(51, previous);
@@ -155,7 +155,7 @@ public class GiveMenu{
         ItemStack player = XMaterial.PLAYER_HEAD.parseItem();
         SkullMeta sk = (SkullMeta) player.getItemMeta();
         for(int i=51*(inventoryPage-1);i<onlinePlayers.size();i++){
-            sk.setDisplayName(Logger.color("&2" + onlinePlayers.get(i)));
+            sk.setDisplayName("&2" + onlinePlayers.get(i));
             sk.setOwner(onlinePlayers.get(i));
             player.setItemMeta(sk);
             
@@ -207,8 +207,8 @@ public class GiveMenu{
                         
                         playerItem = XMaterial.PLAYER_HEAD.parseItem();
                         SkullMeta skmeta = (SkullMeta) playerItem.getItemMeta();
-                        skmeta.setDisplayName(Logger.color("&2Player Selected:"));
-                        skmeta.setLore(Logger.color(Arrays.asList("&b" + playerName)));
+                        skmeta.setDisplayName("&2Player Selected:");
+                        skmeta.setLore(Arrays.asList("&b" + playerName));
                         skmeta.setOwner(playerName);
                         playerItem.setItemMeta(skmeta);
                     }
@@ -224,12 +224,12 @@ public class GiveMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&dBack"));
+        meta.setDisplayName("&dBack");
         back.setItemMeta(meta);
         
         ItemStack close = new ItemStack(Material.MAGMA_CREAM);
         meta = close.getItemMeta();
-        meta.setDisplayName(Logger.color("&cClose"));
+        meta.setDisplayName("&cClose");
         close.setItemMeta(meta);
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.WANDS_MENU, 27, "&aGive Wands");
@@ -279,22 +279,22 @@ public class GiveMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&dBack"));
+        meta.setDisplayName("&dBack");
         back.setItemMeta(meta);
         
         ItemStack close = new ItemStack(Material.MAGMA_CREAM);
         meta = close.getItemMeta();
-        meta.setDisplayName(Logger.color("&cClose"));
+        meta.setDisplayName("&cClose");
         close.setItemMeta(meta);
         
         ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = plus.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+"));
+        meta.setDisplayName("&a&l+");
         plus.setItemMeta(meta);
         
         ItemStack less = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = less.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-"));
+        meta.setDisplayName("&c&l-");
         less.setItemMeta(meta);
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.OBJECTS_MENU, 27, "&bGive Objects");
@@ -364,22 +364,22 @@ public class GiveMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&dBack"));
+        meta.setDisplayName("&dBack");
         back.setItemMeta(meta);
         
         ItemStack close = new ItemStack(Material.MAGMA_CREAM);
         meta = close.getItemMeta();
-        meta.setDisplayName(Logger.color("&cClose"));
+        meta.setDisplayName("&cClose");
         close.setItemMeta(meta);
         
         ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = plus.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+"));
+        meta.setDisplayName("&a&l+");
         plus.setItemMeta(meta);
         
         ItemStack less = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = less.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-"));
+        meta.setDisplayName("&c&l-");
         less.setItemMeta(meta);
         
         //LuckyBlock

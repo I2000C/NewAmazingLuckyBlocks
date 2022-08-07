@@ -56,7 +56,7 @@ public class TrapMenu{
             reward = new TrapReward(FinishMenu.getCurrentOutcome());
         }
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_MENU, 27, Logger.color("&5&lTrap Reward"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_MENU, 27, "&5&lTrap Reward");
         
         ItemStack glass = XMaterial.PURPLE_STAINED_GLASS_PANE.parseItem();
         ItemMeta meta = glass.getItemMeta();
@@ -65,38 +65,38 @@ public class TrapMenu{
         
         ItemStack trapMaterialItem = new ItemStack(reward.getPressurePlateMaterial());
         meta = trapMaterialItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Selected pressure plate material: &a" + reward.getPressurePlateMaterial().name()));
-        meta.setLore(Logger.color(Arrays.asList("&3Click to change")));
+        meta.setDisplayName("&2Selected pressure plate material: &a" + reward.getPressurePlateMaterial().name());
+        meta.setLore(Arrays.asList("&3Click to change"));
         trapMaterialItem.setItemMeta(meta);
         
         ItemStack trapNameItem = new ItemStack(Material.NAME_TAG);
         meta = trapNameItem.getItemMeta();
         if(reward.getTrapName() == null){
-            meta.setDisplayName(Logger.color("&2Trap name: &cnull"));
+            meta.setDisplayName("&2Trap name: &cnull");
         }else{
-            meta.setDisplayName(Logger.color("&2Trap name: &r" + reward.getTrapName()));
+            meta.setDisplayName("&2Trap name: &r" + reward.getTrapName());
         }        
-        meta.setLore(Logger.color(Arrays.asList("&3Click to change")));
+        meta.setLore(Arrays.asList("&3Click to change"));
         trapNameItem.setItemMeta(meta);
         
         ItemStack trapOutcomeItem = new ItemStack(Material.CHEST);
         meta = trapOutcomeItem.getItemMeta();
         if(reward.getTrapOutcome() == null){
-            meta.setDisplayName(Logger.color("&2Selected trap outcome: &cnull"));
+            meta.setDisplayName("&2Selected trap outcome: &cnull");
         }else{
-            meta.setDisplayName(Logger.color("&2Selected trap outcome: &a" + reward.getTrapOutcome()));
+            meta.setDisplayName("&2Selected trap outcome: &a" + reward.getTrapOutcome());
         }
-        meta.setLore(Logger.color(Arrays.asList("&3Click to select")));
+        meta.setLore(Arrays.asList("&3Click to select"));
         trapOutcomeItem.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         for(int i=0;i<=9;i++){
@@ -166,11 +166,11 @@ public class TrapMenu{
     //Trap type inventory
     private static void openTrapTypeMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_TYPE_MENU, 27, Logger.color("&2&lTrap materials"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_TYPE_MENU, 27, "&2&lTrap materials");
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         inv.setItem(0, back);
@@ -213,11 +213,11 @@ public class TrapMenu{
     //Trap packs inventory
     private static void openTrapPacksMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_PACKS_MENU, 54, Logger.color("&3&lPack list"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_PACKS_MENU, 54, "&3&lPack list");
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         inv.setItem(0, back);
@@ -273,26 +273,26 @@ public class TrapMenu{
     //Trap outcomes inventory
     private static void openTrapOutcomesMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_OUTCOMES_MENU, 54, Logger.color("&3&lOutcomes list"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_OUTCOMES_MENU, 54, "&3&lOutcomes list");
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack currentPage = new ItemStack(Material.BOOK, (index+1));
         meta = currentPage.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Page &3" + (index+1) + " &a/ &3" + max_pages));
+        meta.setDisplayName("&6Page &3" + (index+1) + " &a/ &3" + max_pages);
         currentPage.setItemMeta(meta);
         
         ItemStack previousPage = XMaterial.ENDER_EYE.parseItem();
         meta = previousPage.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Previous page"));
+        meta.setDisplayName("&2Previous page");
         previousPage.setItemMeta(meta);
         
         ItemStack nextPage = new ItemStack(Material.MAGMA_CREAM);
         meta = nextPage.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Next page"));
+        meta.setDisplayName("&2Next page");
         nextPage.setItemMeta(meta);
         
         inv.setItem(45, back);

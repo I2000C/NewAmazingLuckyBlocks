@@ -85,22 +85,22 @@ public class FireworkReward extends Reward{
     public ItemStack getItemToDisplay(){
         ItemStack stack = XMaterial.FIREWORK_ROCKET.parseItem();
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Firework"));
+        meta.setDisplayName("&6Firework");
 
         List<String> lore = new ArrayList();
-        //lore.add(Logger.color("&bID: &r" + fireworkID));
-        lore.add(Logger.color("&bAmount: &r" + amount));
-        lore.add(Logger.color("&bPower: &r" + power));
-        lore.add(Logger.color("&bTrail: &r" + trail));
-        lore.add(Logger.color("&bFlicker: &r" + flicker));
-        lore.add(Logger.color("&bType: &r" + type));
-        lore.add(Logger.color("&bColorList:"));
+        //lore.add("&bID: &r" + fireworkID);
+        lore.add("&bAmount: &r" + amount);
+        lore.add("&bPower: &r" + power);
+        lore.add("&bTrail: &r" + trail);
+        lore.add("&bFlicker: &r" + flicker);
+        lore.add("&bType: &r" + type);
+        lore.add("&bColorList:");
         for(String str : colorHEX){
-            lore.add(Logger.color("  &r" + str));
+            lore.add("  &r" + str);
         }
-        lore.add(Logger.color("&bFadeColorList:"));
+        lore.add("&bFadeColorList:");
         for(String str : fadeHEX){
-            lore.add(Logger.color("  &r" + str));
+            lore.add("  &r" + str);
         }
 
         meta.setLore(lore);

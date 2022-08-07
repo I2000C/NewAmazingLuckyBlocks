@@ -61,7 +61,7 @@ public class FrostPathWand extends SpecialItem{
             if((stack.hasItemMeta()) && (stack.getItemMeta().getDisplayName().equals(frostName))){
                 if((this.frostcooldown.containsKey(player.getUniqueId())) && ((this.frostcooldown.get(player.getUniqueId())) > System.currentTimeMillis())){
                     long remainingTime = (this.frostcooldown.get(player.getUniqueId())) - System.currentTimeMillis();
-                    String cmsg = Logger.color(LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L)));
+                    String cmsg = LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L));
                     player.sendMessage(cmsg);
                 }else{
                     ItemMeta meta = stack.getItemMeta();
@@ -70,7 +70,7 @@ public class FrostPathWand extends SpecialItem{
                             List<String> loreList = meta.getLore();
                             int uses = Integer.parseInt(loreList.get(1));
                             if(uses == 0){
-                              player.sendMessage(Logger.color("&cThis wand has expired"));
+                              player.sendMessage("&cThis wand has expired");
                               return;
                             }else{
                               uses--;
@@ -124,7 +124,7 @@ public class FrostPathWand extends SpecialItem{
     public ItemStack buildItem(){
         ItemStack stack = XMaterial.MUSIC_DISC_WAIT.parseItem();        
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Wands.Frost.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Wands.Frost.name"));
         if(ConfigManager.getConfig().getBoolean("Wands.Frost.limited-uses.enable")){
             int uses = ConfigManager.getConfig().getInt("Wands.Frost.limited-uses.uses");
             List<String> loreList = new ArrayList();

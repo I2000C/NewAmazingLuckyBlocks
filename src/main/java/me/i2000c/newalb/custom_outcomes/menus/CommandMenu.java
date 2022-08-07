@@ -39,15 +39,15 @@ public class CommandMenu{
         }
         
         List<String> lore = new ArrayList<>();
-        lore.add(Logger.color("&7Click here and then, write the command"));
-        lore.add(Logger.color("&7in the chat without the first '&b&l/&7'&r"));
+        lore.add("&7Click here and then, write the command");
+        lore.add("&7in the chat without the first '&b&l/&7'&r");
         lore.add("");
-        lore.add(Logger.color("&7Use &a%player% &7if you want to use"));
-        lore.add(Logger.color("&7  the player's name in the command,"));
-        lore.add(Logger.color("&7&a%x%&7, &a%y%, &a%z% &7if you want"));
-        lore.add(Logger.color("&7  to use the player's coordinates"));
-        lore.add(Logger.color("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want"));
-        lore.add(Logger.color("&7  to use the LuckyBlock's coordinates"));
+        lore.add("&7Use &a%player% &7if you want to use");
+        lore.add("&7  the player's name in the command,");
+        lore.add("&7&a%x%&7, &a%y%, &a%z% &7if you want");
+        lore.add("&7  to use the player's coordinates");
+        lore.add("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want");
+        lore.add("&7  to use the LuckyBlock's coordinates");
         
         ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
         ItemMeta meta = glass.getItemMeta();
@@ -58,9 +58,9 @@ public class CommandMenu{
         item.setDurability((short) 0);
         meta = item.getItemMeta();
         if(reward.getCommand() == null){
-            meta.setDisplayName(Logger.color("&6Write the command"));
+            meta.setDisplayName("&6Write the command");
         }else{
-            meta.setDisplayName(Logger.color("&6Command selected: &r/" + reward.getCommand()));
+            meta.setDisplayName("&6Command selected: &r/" + reward.getCommand());
         }
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -78,20 +78,20 @@ public class CommandMenu{
             senderName = "&2Player";
         }
         meta = sender_item.getItemMeta();
-        meta.setDisplayName(Logger.color("&dSender: " + senderName));
+        meta.setDisplayName("&dSender: " + senderName);
         sender_item.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.COMMAND_MENU, 27, Logger.color("&7&lCommand Reward"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.COMMAND_MENU, 27, "&7&lCommand Reward");
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
         }
@@ -143,7 +143,7 @@ public class CommandMenu{
                     break;
                 case 16:
                     try{
-                        if(!reward.getCommand().equals(Logger.color("&6Write the command"))){
+                        if(!reward.getCommand().equals("&6Write the command")){
                             //Open next inventory
                             FinishMenu.addReward(reward);
                             reset();

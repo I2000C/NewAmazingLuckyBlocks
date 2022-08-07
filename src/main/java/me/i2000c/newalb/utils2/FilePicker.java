@@ -101,24 +101,24 @@ public class FilePicker{
             
             ItemStack back = new ItemStack(Material.ENDER_PEARL);
             ItemMeta meta = back.getItemMeta();
-            meta.setDisplayName(Logger.color("&2Previous page"));
+            meta.setDisplayName("&2Previous page");
             back.setItemMeta(meta);
             inv.setItem(50, back);
             
             ItemStack next = new ItemStack(Material.MAGMA_CREAM);
             meta = next.getItemMeta();
-            meta.setDisplayName(Logger.color("&5Next page"));
+            meta.setDisplayName("&5Next page");
             next.setItemMeta(meta);
             inv.setItem(52, next);
             
             ItemStack page = new ItemStack(Material.NAME_TAG);
             meta = page.getItemMeta();
-            meta.setDisplayName(Logger.color("&6Pag &3? &6of &5?"));
+            meta.setDisplayName("&6Pag &3? &6of &5?");
             page.setItemMeta(meta);
             
             ItemStack refresh = new ItemStack(Material.WATER_BUCKET);
             meta = refresh.getItemMeta();
-            meta.setDisplayName(Logger.color("&bRefresh data"));
+            meta.setDisplayName("&bRefresh data");
             refresh.setItemMeta(meta);
             inv.setItem(53, refresh);
             
@@ -154,7 +154,7 @@ public class FilePicker{
             }*/
             
             meta = page.getItemMeta();
-            meta.setDisplayName(Logger.color("&6Pag &3" + (index+1) + " &6of &5" + (maxPage+1)));
+            meta.setDisplayName("&6Pag &3" + (index+1) + " &6of &5" + (maxPage+1));
             page.setItemMeta(meta);
             inv.setItem(51, page);
             
@@ -166,26 +166,26 @@ public class FilePicker{
                 if(file.getName().equals("..")){
                     stack = new ItemStack(Material.ENDER_CHEST);
                     meta = stack.getItemMeta();
-                    meta.setDisplayName(Logger.color("&6Name: &b.."));
+                    meta.setDisplayName("&6Name: &b..");
                     stack.setItemMeta(meta);
                 }else if(file.isDirectory()){
                     stack = new ItemStack(extensionToMaterial(file));
                     meta = stack.getItemMeta();
-                    meta.setDisplayName(Logger.color("&6Name: &b" + file.getName()));
+                    meta.setDisplayName("&6Name: &b" + file.getName());
                     List<String> lore;
                     if(file.list() == null){
                         lore = Arrays.asList("&6Directory elements: &b?", "&6id: &b" + i);
                     }else{
                         lore = Arrays.asList("&6Directory elements: &b" + file.list().length, "&6id: &b" + i);
                     }
-                    meta.setLore(Logger.color(lore));
+                    meta.setLore(lore);
                     stack.setItemMeta(meta);
                 }else{
                     stack = new ItemStack(extensionToMaterial(file));
                     meta = stack.getItemMeta();
-                    meta.setDisplayName(Logger.color("&6Name: &b" + file.getName()));
+                    meta.setDisplayName("&6Name: &b" + file.getName());
                     List<String> lore = Arrays.asList("&6File size: " + getFormatedSize(file.length()), "&6id: &b" + i);
-                    meta.setLore(Logger.color(lore));
+                    meta.setLore(lore);
                     stack.setItemMeta(meta);
                 }
                 inv.setItem(i, stack);

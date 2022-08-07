@@ -42,7 +42,7 @@ public class BlockReplacingSphereMenu{
             reward = new BlockReplacingSphereReward(FinishMenu.getCurrentOutcome());
         }
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.BLOCK_REPLACING_SPHERE_MENU, 54, Logger.color("&b&lBRS Reward"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.BLOCK_REPLACING_SPHERE_MENU, 54, "&b&lBRS Reward");
         
         ItemStack glass = XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE.parseItem();
         ItemMeta meta = glass.getItemMeta();
@@ -51,68 +51,68 @@ public class BlockReplacingSphereMenu{
         
         ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-1"));
+        meta.setDisplayName("&c&l-1");
         minus1.setItemMeta(meta);
         
         ItemStack minus10 = minus1.clone();
         meta = minus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-10"));
+        meta.setDisplayName("&c&l-10");
         minus10.setItemMeta(meta);
         
         ItemStack minus100 = minus1.clone();
         meta = minus100.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-100"));
+        meta.setDisplayName("&c&l-100");
         minus100.setItemMeta(meta);
         
         ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+1"));
+        meta.setDisplayName("&a&l+1");
         plus1.setItemMeta(meta);
         
         ItemStack plus10 = plus1.clone();
         meta = plus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+10"));
+        meta.setDisplayName("&a&l+10");
         plus10.setItemMeta(meta);
         
         ItemStack plus100 = plus1.clone();
         meta = plus100.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+100"));
+        meta.setDisplayName("&a&l+100");
         plus100.setItemMeta(meta);
         
         ItemStack usePlayerLocItem;
         if(reward.isUsePlayerLoc()){
             usePlayerLocItem = XMaterial.PLAYER_HEAD.parseItem();
             meta = usePlayerLocItem.getItemMeta();
-            meta.setDisplayName(Logger.color("&aUse player location"));
+            meta.setDisplayName("&aUse player location");
         }else{
             usePlayerLocItem = TypeManager.getMenuItemStack();
             meta = usePlayerLocItem.getItemMeta();
-            meta.setDisplayName(Logger.color("&6Use lucky block location"));
+            meta.setDisplayName("&6Use lucky block location");
         }
-        meta.setLore(Logger.color(Arrays.asList("&3Click to toggle")));
+        meta.setLore(Arrays.asList("&3Click to toggle"));
         usePlayerLocItem.setItemMeta(meta);
         
         ItemStack replaceLiquids;
         if(reward.isReplaceLiquids()){
             replaceLiquids = XMaterial.WATER_BUCKET.parseItem();
             meta = usePlayerLocItem.getItemMeta();
-            meta.setDisplayName(Logger.color("&bReplace liquids: &atrue"));
+            meta.setDisplayName("&bReplace liquids: &atrue");
         }else{
             replaceLiquids = XMaterial.STONE.parseItem();
             meta = usePlayerLocItem.getItemMeta();
-            meta.setDisplayName(Logger.color("&bReplace liquids: &cfalse"));
+            meta.setDisplayName("&bReplace liquids: &cfalse");
         }
-        meta.setLore(Logger.color(Arrays.asList("&3Click to toggle")));
+        meta.setLore(Arrays.asList("&3Click to toggle"));
         replaceLiquids.setItemMeta(meta);
         
         ItemStack removeMaterialsItem = new ItemStack(Material.BARRIER);
         meta = removeMaterialsItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&cClick to remove all materials"));
+        meta.setDisplayName("&cClick to remove all materials");
         removeMaterialsItem.setItemMeta(meta);
         
         ItemStack materialsItem = new ItemStack(Material.DIAMOND_ORE);
         meta = materialsItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Sphere materials"));
+        meta.setDisplayName("&6Sphere materials");
         List<String> lore = new ArrayList<>();
         lore.add("&bLeft click on an item of your inventory");
         lore.add("&b   to add it to the list");
@@ -120,36 +120,36 @@ public class BlockReplacingSphereMenu{
         lore.add("&c   to remove it from the list");
         lore.add("&2Current materials:");
         lore.addAll(reward.getOrderedMaterialList());
-        meta.setLore(Logger.color(lore));
+        meta.setLore(lore);
         materialsItem.setItemMeta(meta);
         
         ItemStack minRadiusItem = XMaterial.SNOWBALL.parseItem();
         meta = minRadiusItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&bMin radius: &6" + reward.getMinRadius()));
-        meta.setLore(Logger.color(Arrays.asList("&3Click to reset")));
+        meta.setDisplayName("&bMin radius: &6" + reward.getMinRadius());
+        meta.setLore(Arrays.asList("&3Click to reset"));
         minRadiusItem.setItemMeta(meta);
         
         ItemStack maxRadiusItem = new ItemStack(Material.SLIME_BALL);
         meta = maxRadiusItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&bMax radius: &6" + reward.getMaxRadius()));
-        meta.setLore(Logger.color(Arrays.asList("&3Click to reset")));
+        meta.setDisplayName("&bMax radius: &6" + reward.getMaxRadius());
+        meta.setLore(Arrays.asList("&3Click to reset"));
         maxRadiusItem.setItemMeta(meta);
         
         ItemStack ticksBetweenLayersItem = XMaterial.CLOCK.parseItem();
         meta = ticksBetweenLayersItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&bTicks between layer: &6" + reward.getTicksBetweenLayers()));
-        meta.setLore(Logger.color(Arrays.asList("&3Click to reset")));
+        meta.setDisplayName("&bTicks between layer: &6" + reward.getTicksBetweenLayers());
+        meta.setLore(Arrays.asList("&3Click to reset"));
         ticksBetweenLayersItem.setItemMeta(meta);
         
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         for(int i=0;i<9;i++){

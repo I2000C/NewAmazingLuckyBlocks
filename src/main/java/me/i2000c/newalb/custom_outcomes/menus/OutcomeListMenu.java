@@ -70,61 +70,61 @@ public class OutcomeListMenu{
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
+        meta.setDisplayName("&2Back");
         back.setItemMeta(meta);
         
         ItemStack currentPage = new ItemStack(Material.BOOK, (index+1));
         meta = currentPage.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Page &3" + (index+1) + " &a/ &3" + max_pages));
+        meta.setDisplayName("&6Page &3" + (index+1) + " &a/ &3" + max_pages);
         currentPage.setItemMeta(meta);
         
         ItemStack previousPage = XMaterial.ENDER_EYE.parseItem();
         meta = previousPage.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Previous page"));
+        meta.setDisplayName("&2Previous page");
         previousPage.setItemMeta(meta);
         
         ItemStack nextPage = new ItemStack(Material.MAGMA_CREAM);
         meta = nextPage.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Next page"));
+        meta.setDisplayName("&2Next page");
         nextPage.setItemMeta(meta);
         
         ItemStack createOutcome = new ItemStack(Material.SLIME_BALL);
         meta = createOutcome.getItemMeta();
-        meta.setDisplayName(Logger.color("&aCreate new outcome"));
+        meta.setDisplayName("&aCreate new outcome");
         createOutcome.setItemMeta(meta);
         
         ItemStack editOutcome = new ItemStack(Material.ANVIL);
         meta = editOutcome.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Edit outcomes"));
+        meta.setDisplayName("&6Edit outcomes");
         if(editMode){
-            meta.setLore(Arrays.asList(Logger.color("&dEdit mode: &aenabled")));
+            meta.setLore(Arrays.asList("&dEdit mode: &aenabled"));
         }else{
-            meta.setLore(Arrays.asList(Logger.color("&dEdit mode: &7disabled")));
+            meta.setLore(Arrays.asList("&dEdit mode: &7disabled"));
         }
         editOutcome.setItemMeta(meta);
         
         ItemStack cloneOutcome = XMaterial.REPEATER.parseItem();
         meta = cloneOutcome.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Clone outcomes"));
+        meta.setDisplayName("&3Clone outcomes");
         if(cloneMode){
-            meta.setLore(Arrays.asList(Logger.color("&dClone mode: &aenabled")));
+            meta.setLore(Arrays.asList("&dClone mode: &aenabled"));
         }else{
-            meta.setLore(Arrays.asList(Logger.color("&dClone mode: &7disabled")));
+            meta.setLore(Arrays.asList("&dClone mode: &7disabled"));
         }
         cloneOutcome.setItemMeta(meta);
         
         ItemStack deleteOutcome = new ItemStack(Material.BARRIER);
         meta = deleteOutcome.getItemMeta();
-        meta.setDisplayName(Logger.color("&cDelete outcomes"));
+        meta.setDisplayName("&cDelete outcomes");
         List<String> loreList = new ArrayList();
         if(deleteMode){
-            loreList.add(Logger.color("&4&lWARNING: &cIf this mode is enabled,"));
-            loreList.add(Logger.color("&cwhen you click on an outcome,"));
-            loreList.add(Logger.color("&cit will be deleted permanently"));
+            loreList.add("&4&lWARNING: &cIf this mode is enabled,");
+            loreList.add("&cwhen you click on an outcome,");
+            loreList.add("&cit will be deleted permanently");
             loreList.add("");
-            loreList.add(Logger.color("&dDelete mode: &aenabled"));
+            loreList.add("&dDelete mode: &aenabled");
         }else{
-            loreList.add(Logger.color("&dDelete mode: &7disabled"));
+            loreList.add("&dDelete mode: &7disabled");
         }
         meta.setLore(loreList);
         deleteOutcome.setItemMeta(meta);

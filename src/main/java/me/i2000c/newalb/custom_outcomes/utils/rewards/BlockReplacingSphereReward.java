@@ -140,7 +140,7 @@ public class BlockReplacingSphereReward extends Reward{
     public ItemStack getItemToDisplay(){
         ItemStack stack = new ItemStack(Material.DIAMOND_ORE);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&bBlock Replacing Sphere"));
+        meta.setDisplayName("&bBlock Replacing Sphere");
         List<String> loreList = new ArrayList<>();
         loreList.add("&dMin radius: &3" + this.minRadius);
         loreList.add("&dMax radius: &3" + this.maxRadius);
@@ -157,7 +157,7 @@ public class BlockReplacingSphereReward extends Reward{
         }
         loreList.add("&dMaterials:");
         loreList.addAll(getOrderedMaterialList());
-        meta.setLore(Logger.color(loreList));
+        meta.setLore(loreList);
         stack.setItemMeta(meta);        
         
         return stack;

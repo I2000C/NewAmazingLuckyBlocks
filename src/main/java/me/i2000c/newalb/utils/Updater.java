@@ -53,11 +53,11 @@ public class Updater implements Listener{
         Player player = event.getPlayer();
         if((player.hasPermission(ConfigManager.getConfig().getString("Commands.Update-message-permission")))&&(update == true)){
             
-            player.sendMessage(Logger.color("&a========================================"));
-            player.sendMessage(Logger.color("&6New Amazing Lucky Blocks"));
-            player.sendMessage(Logger.color("&cThere is a new version available: &e("+ChatColor.GRAY+latestversion+"&e)"));
-            player.sendMessage(Logger.color("&cYou can download it at:&f https://www.spigotmc.org/resources/62644/"));
-            player.sendMessage(Logger.color("&a========================================"));
+            player.sendMessage("&a========================================");
+            player.sendMessage("&6New Amazing Lucky Blocks");
+            player.sendMessage("&cThere is a new version available: &e("+ChatColor.GRAY+latestversion+"&e)");
+            player.sendMessage("&cYou can download it at:&f https://www.spigotmc.org/resources/62644/");
+            player.sendMessage("&a========================================");
         }
     }
 }

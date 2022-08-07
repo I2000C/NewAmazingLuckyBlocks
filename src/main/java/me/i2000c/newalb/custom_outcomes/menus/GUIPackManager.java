@@ -54,43 +54,43 @@ public class GUIPackManager{
         
         ItemStack createPack = new ItemStack(Material.SLIME_BALL);
         meta = createPack.getItemMeta();
-        meta.setDisplayName(Logger.color("&aCreate new pack"));
+        meta.setDisplayName("&aCreate new pack");
         createPack.setItemMeta(meta);
         
         ItemStack renamePack = new ItemStack(Material.NAME_TAG);
         meta = renamePack.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Rename packs"));
+        meta.setDisplayName("&3Rename packs");
         if(renameMode){
-            lore = Logger.color("&6Rename mode: &aenabled");
+            lore = "&6Rename mode: &aenabled";
         }else{
-            lore = Logger.color("&6Rename mode: &7disabled");
+            lore = "&6Rename mode: &7disabled";
         }
         meta.setLore(Arrays.asList(lore));
         renamePack.setItemMeta(meta);
         
         ItemStack clonePack = XMaterial.REPEATER.parseItem();
         meta = clonePack.getItemMeta();
-        meta.setDisplayName(Logger.color("&bClone packs"));
+        meta.setDisplayName("&bClone packs");
         if(cloneMode){
-            lore = Logger.color("&6Clone mode: &aenabled");
+            lore = "&6Clone mode: &aenabled";
         }else{
-            lore = Logger.color("&6Clone mode: &7disabled");
+            lore = "&6Clone mode: &7disabled";
         }
         meta.setLore(Arrays.asList(lore));
         clonePack.setItemMeta(meta);
         
         ItemStack deletePack = new ItemStack(Material.BARRIER);
         meta = deletePack.getItemMeta();
-        meta.setDisplayName(Logger.color("&cRemove packs"));
+        meta.setDisplayName("&cRemove packs");
         List<String> loreList = new ArrayList();
         if(deleteMode){
-            loreList.add(Logger.color("&6Delete mode: &aenabled"));
+            loreList.add("&6Delete mode: &aenabled");
             loreList.add("");
-            loreList.add(Logger.color("&4&lWARNING: &cIf this mode is enabled,"));
-            loreList.add(Logger.color("&cwhen you click on a pack,"));
-            loreList.add(Logger.color("&cit will be deleted permanently"));
+            loreList.add("&4&lWARNING: &cIf this mode is enabled,");
+            loreList.add("&cwhen you click on a pack,");
+            loreList.add("&cit will be deleted permanently");
         }else{
-            loreList.add(Logger.color("&6Delete mode: &7disabled"));
+            loreList.add("&6Delete mode: &7disabled");
         }
         meta.setLore(loreList);
         deletePack.setItemMeta(meta);
@@ -98,22 +98,22 @@ public class GUIPackManager{
         
         ItemStack exit = new ItemStack(Material.ENDER_PEARL);
         meta = exit.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
+        meta.setDisplayName("&2Back");
         exit.setItemMeta(meta);
         
         ItemStack pages = new ItemStack(Material.BOOK);
         meta = pages.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Page ? / ?"));
+        meta.setDisplayName("&6Page ? / ?");
         pages.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Previous page"));
+        meta.setDisplayName("&2Previous page");
         back.setItemMeta(meta);
         
         ItemStack next = XMaterial.ENDER_EYE.parseItem();
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&aNext page"));
+        meta.setDisplayName("&aNext page");
         next.setItemMeta(meta);
         
         
@@ -215,7 +215,7 @@ public class GUIPackManager{
                             chat3 = true;
                             currentPackName = packName;
                             p.closeInventory();
-                            Logger.sendMessage(Logger.color("&3Write the new pack probability in the chat"), p);
+                            Logger.sendMessage("&3Write the new pack probability in the chat"), p;
                         }else */
                         if(renameMode){
                             //Rename pack
@@ -228,7 +228,7 @@ public class GUIPackManager{
                                 openMainMenu(p);
                             });
                             p.closeInventory();
-                            Logger.sendMessage(Logger.color("&3Write the new pack name in the chat"), p);
+                            Logger.sendMessage(("&3Write the new pack name in the chat"), p);
                         }else if(cloneMode){
                             //Clone pack
                             PackManager.clonePack(packName, p);

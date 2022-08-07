@@ -67,7 +67,7 @@ public class MiniVolcano extends SpecialItem{
         ItemStack stack = new ItemStack(Material.LAVA_BUCKET);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.MiniVolcano.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.MiniVolcano.name"));
         stack.setItemMeta(meta);
         
         return stack;

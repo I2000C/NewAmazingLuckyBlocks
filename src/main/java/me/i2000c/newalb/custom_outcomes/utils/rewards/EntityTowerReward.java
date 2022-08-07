@@ -33,7 +33,7 @@ public class EntityTowerReward extends Reward{
     public ItemStack getItemToDisplay(){
         ItemStack stack = new ItemStack(Material.ARMOR_STAND);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&eEntityTower"));
+        meta.setDisplayName("&eEntityTower");
 
         List<String> lore = new ArrayList();
         //lore.add(color("&bID: &r" + (entityTower_list.size()-1)));
@@ -44,7 +44,7 @@ public class EntityTowerReward extends Reward{
                 data += ",";
             }
         }
-        lore.add(Logger.color("&3Entities: &r" + data));
+        lore.add("&3Entities: &r" + data);
 
         meta.setLore(lore);
         stack.setItemMeta(meta);

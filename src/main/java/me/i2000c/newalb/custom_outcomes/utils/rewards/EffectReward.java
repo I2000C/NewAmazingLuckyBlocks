@@ -3,7 +3,6 @@ package me.i2000c.newalb.custom_outcomes.utils.rewards;
 import java.util.Arrays;
 import me.i2000c.newalb.custom_outcomes.menus.EffectMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -74,16 +73,16 @@ public class EffectReward extends Reward{
     public ItemStack getItemToDisplay(){
         ItemStack stack = new ItemStack(Material.POTION);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&5Effect"));
+        meta.setDisplayName("&5Effect");
         if(this.clearEffects){
-            meta.setLore(Logger.color(Arrays.asList("&dEffect name: &b" + CLEAR_EFFECTS_TAG)));
+            meta.setLore(Arrays.asList("&dEffect name: &b" + CLEAR_EFFECTS_TAG));
         }else{
             String durationString = duration > 0 ? duration + "" : "infinite";
-            meta.setLore(Logger.color(Arrays.asList("&dEffect name: &b" + this.potionEffect.getName(),
+            meta.setLore(Arrays.asList("&dEffect name: &b" + this.potionEffect.getName(),
                                                     "&dDuration: &b" + durationString + " &dseconds",
                                                     "&dAmplifier: &b" + this.amplifier,
                                                     "&dIsAmbient: &b" + this.ambient,
-                                                    "&dShowParticles: &b" + this.showParticles)));            
+                                                    "&dShowParticles: &b" + this.showParticles));            
         }
         stack.setItemMeta(meta);
         

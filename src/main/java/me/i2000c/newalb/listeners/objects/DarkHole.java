@@ -67,7 +67,7 @@ public class DarkHole extends SpecialItem{
         ItemStack stack = new ItemStack(Material.BUCKET);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.DarkHole.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.DarkHole.name"));
         stack.setItemMeta(meta);
         
         return stack;

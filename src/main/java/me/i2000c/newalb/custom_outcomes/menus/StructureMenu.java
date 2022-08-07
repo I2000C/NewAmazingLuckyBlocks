@@ -65,20 +65,20 @@ public class StructureMenu implements Listener{
         ItemStack pathItem = new ItemStack(Material.NAME_TAG);
         meta = pathItem.getItemMeta();
         if(reward.getSchematicName() == null){
-            meta.setDisplayName(Logger.color("&6Selected file: &cnull"));
+            meta.setDisplayName("&6Selected file: &cnull");
         }else{
-            meta.setDisplayName(Logger.color("&6Selected file: &3" + reward.getSchematicName()));
+            meta.setDisplayName("&6Selected file: &3" + reward.getSchematicName());
         }
         pathItem.setItemMeta(meta);
         
         ItemStack selectFromChat = new ItemStack(Material.SIGN);
         meta = selectFromChat.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Select file from chat"));
+        meta.setDisplayName("&6Select file from chat");
         selectFromChat.setItemMeta(meta);
         
         ItemStack selectFromMenu = new ItemStack(Material.CHEST);
         meta = selectFromMenu.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Select file from menu"));
+        meta.setDisplayName("&6Select file from menu");
         selectFromMenu.setItemMeta(meta);
         
         ItemStack fromPlayer;
@@ -89,9 +89,9 @@ public class StructureMenu implements Listener{
         }
         meta = fromPlayer.getItemMeta();
         if(reward.isFromPlayer()){
-            meta.setDisplayName(Logger.color("&3Source: &2Player location"));
+            meta.setDisplayName("&3Source: &2Player location");
         }else{
-            meta.setDisplayName(Logger.color("&3Source: &eLuckyBlock location"));
+            meta.setDisplayName("&3Source: &eLuckyBlock location");
         }
         meta.setLore(null);
         fromPlayer.setItemMeta(meta);
@@ -99,29 +99,29 @@ public class StructureMenu implements Listener{
         ItemStack replaceBlocks = XMaterial.BRICKS.parseItem();
         meta = replaceBlocks.getItemMeta();
         if(reward.isReplaceBlocks()){
-            meta.setDisplayName(Logger.color("&3Replace existing blocks: &atrue"));
+            meta.setDisplayName("&3Replace existing blocks: &atrue");
         }else{
-            meta.setDisplayName(Logger.color("&3Replace existing blocks: &7false"));
+            meta.setDisplayName("&3Replace existing blocks: &7false");
         }
         replaceBlocks.setItemMeta(meta);
         
         ItemStack placeAirBlocks = new ItemStack(Material.GLASS);
         meta = placeAirBlocks.getItemMeta();
         if(reward.isPlaceAirBlocks()){
-            meta.setDisplayName(Logger.color("&3Place air blocks: &atrue"));
+            meta.setDisplayName("&3Place air blocks: &atrue");
         }else{
-            meta.setDisplayName(Logger.color("&3Place air blocks: &7false"));
+            meta.setDisplayName("&3Place air blocks: &7false");
         }
         placeAirBlocks.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         inv.setItem(10, back);

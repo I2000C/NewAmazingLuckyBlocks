@@ -48,44 +48,44 @@ public class DelayerMenu{
         }
         ItemStack delay = XMaterial.CLOCK.parseItem();
         meta = delay.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Delay: &b" + delayValue + " &dtick(s)"));
-        meta.setLore(Logger.color(Arrays.asList("        &a" + delayValue/20.0 + " &dsecond(s)", "&3Click to reset")));
+        meta.setDisplayName("&6Delay: &b" + delayValue + " &dtick(s)");
+        meta.setLore(Arrays.asList("        &a" + delayValue/20.0 + " &dsecond(s)", "&3Click to reset"));
         delay.setItemMeta(meta);
         
         ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = plus.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+1"));
+        meta.setDisplayName("&a&l+1");
         plus.setItemMeta(meta);
         ItemStack plus10 = plus.clone();
         meta = plus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+10"));
+        meta.setDisplayName("&a&l+10");
         plus10.setItemMeta(meta);
         ItemStack plus100 = plus.clone();
         meta = plus100.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+100"));
+        meta.setDisplayName("&a&l+100");
         plus100.setItemMeta(meta);
         
         ItemStack less = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = less.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-1"));
+        meta.setDisplayName("&c&l-1");
         less.setItemMeta(meta);
         ItemStack less10 = less.clone();
         meta = less10.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-10"));
+        meta.setDisplayName("&c&l-10");
         less10.setItemMeta(meta);
         ItemStack less100 = less.clone();
         meta = less100.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-100"));
+        meta.setDisplayName("&c&l-100");
         less100.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         for(int i=0;i<=9;i++){

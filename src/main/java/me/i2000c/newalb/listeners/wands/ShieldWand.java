@@ -67,7 +67,7 @@ public class ShieldWand extends SpecialItem{
             if((stack.hasItemMeta()) && (stack.getItemMeta().getDisplayName().equals(shieldName))){
                 if((this.shieldcooldown.containsKey(player.getUniqueId())) && ((this.shieldcooldown.get(player.getUniqueId())) > System.currentTimeMillis())){
                     long remainingTime = (this.shieldcooldown.get(player.getUniqueId())) - System.currentTimeMillis();
-                    String cmsg = Logger.color(LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L)));
+                    String cmsg = LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L));
                     player.sendMessage(cmsg);
                 }else{
                     ItemMeta meta = stack.getItemMeta();
@@ -76,7 +76,7 @@ public class ShieldWand extends SpecialItem{
                             List<String> loreList = meta.getLore();
                             int uses = Integer.parseInt(loreList.get(1));
                             if(uses == 0){
-                                player.sendMessage(Logger.color("&cThis wand has expired"));
+                                player.sendMessage("&cThis wand has expired");
                                 return;
                             }else{
                                 uses--;
@@ -163,7 +163,7 @@ public class ShieldWand extends SpecialItem{
     public ItemStack buildItem(){
         ItemStack stack = XMaterial.MUSIC_DISC_STRAD.parseItem();
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Wands.Shield.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Wands.Shield.name"));
         if(ConfigManager.getConfig().getBoolean("Wands.Shield.limited-uses.enable")){
             int uses = ConfigManager.getConfig().getInt("Wands.Shield.limited-uses.uses");
             List<String> loreList = new ArrayList();
@@ -176,7 +176,7 @@ public class ShieldWand extends SpecialItem{
         try{
             shieldItemStack = OtherUtils.parseMaterial(ConfigManager.getConfig().getString("Wands.Shield.ShieldWandBlock"));
         }catch(Exception ex){
-            Logger.log(Logger.color("&cInvalid block in config at Wands.Shield.ShieldWandBlock"));
+            Logger.log("&cInvalid block in config at Wands.Shield.ShieldWandBlock");
         }
         
         return stack;

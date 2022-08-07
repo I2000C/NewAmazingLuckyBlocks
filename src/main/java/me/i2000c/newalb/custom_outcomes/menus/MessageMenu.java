@@ -99,7 +99,7 @@ public class MessageMenu{
                 .withDisplayName("&cRemove subtitle")
                 .build();
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.MESSAGE_MENU, 27, Logger.color("&7&lMessage Reward"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.MESSAGE_MENU, 27, "&7&lMessage Reward");
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
         }

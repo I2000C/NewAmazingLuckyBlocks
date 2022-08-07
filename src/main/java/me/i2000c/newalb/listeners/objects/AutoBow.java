@@ -225,7 +225,7 @@ public class AutoBow extends SpecialItem{
         ItemStack stack = new ItemStack(Material.BOW, 1);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.AutoBow.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.AutoBow.name"));
         meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
         stack.setItemMeta(meta);
         

@@ -125,7 +125,7 @@ public class FinishMenu{
                     lore = new ArrayList<>();
                 }
                 lore.add("");
-                lore.add(Logger.color("&6Reward Delay: &a" + reward.getDelay()));
+                lore.add("&6Reward Delay: &a" + reward.getDelay());
                 meta.setLore(lore);
                 itemToDisplay.setItemMeta(meta);
             }
@@ -133,117 +133,117 @@ public class FinishMenu{
         }
         
         List<String> lore = new ArrayList<>();
-        lore.add(Logger.color("&6The plugin will reload the custom outcomes list"));
-        lore.add(Logger.color("&6after you click this option"));
+        lore.add("&6The plugin will reload the custom outcomes list");
+        lore.add("&6after you click this option");
         
         ItemStack saveAndExit = new ItemStack(Material.MAGMA_CREAM);
         ItemMeta meta = saveAndExit.getItemMeta();
-        meta.setDisplayName(Logger.color("&dSave and exit"));
+        meta.setDisplayName("&dSave and exit");
         meta.setLore(lore);
         saveAndExit.setItemMeta(meta);
         
         ItemStack add = new ItemStack(Material.SLIME_BALL);
         meta = add.getItemMeta();
-        meta.setDisplayName(Logger.color("&aCreate new reward"));
+        meta.setDisplayName("&aCreate new reward");
         add.setItemMeta(meta);
         
         ItemStack testOutcome = new ItemStack(Material.BEACON);
         meta = testOutcome.getItemMeta();
-        meta.setDisplayName(Logger.color("&bTest the outcome"));
+        meta.setDisplayName("&bTest the outcome");
         testOutcome.setItemMeta(meta);
         
         lore.clear();
         lore.add("");
         if(testMode){
-            lore.add(Logger.color("&6TestMode: &aenabled"));
+            lore.add("&6TestMode: &aenabled");
         }else{
-            lore.add(Logger.color("&6TestMode: &7disabled"));
+            lore.add("&6TestMode: &7disabled");
         }
         ItemStack testReward = new ItemStack(Material.PAPER);
         meta = testReward.getItemMeta();
-        meta.setDisplayName(Logger.color("&eTest rewards"));
+        meta.setDisplayName("&eTest rewards");
         meta.setLore(lore);
         testReward.setItemMeta(meta);
         
         lore.clear();
         lore.add("");
-        lore.add(Logger.color("&5Click here to toggle reward deleteMode"));
-        lore.add(Logger.color("&5If this mode is enabled, you will be able"));
-        lore.add(Logger.color("&5to delete the reward which you click"));
+        lore.add("&5Click here to toggle reward deleteMode");
+        lore.add("&5If this mode is enabled, you will be able");
+        lore.add("&5to delete the reward which you click");
         lore.add("");
         if(deleteMode){
-            lore.add(Logger.color("&4DeleteMode: &aenabled"));
+            lore.add("&4DeleteMode: &aenabled");
         }else{
-            lore.add(Logger.color("&4DeleteMode: &7disabled"));
+            lore.add("&4DeleteMode: &7disabled");
         }
         ItemStack del = new ItemStack(Material.BARRIER);
         meta = del.getItemMeta();
-        meta.setDisplayName(Logger.color("&cDelete rewards"));
+        meta.setDisplayName("&cDelete rewards");
         meta.setLore(lore);
         del.setItemMeta(meta);
         
         ItemStack exit = new ItemStack(Material.IRON_DOOR);
         meta = exit.getItemMeta();
-        meta.setDisplayName(Logger.color("&cExit without saving"));
+        meta.setDisplayName("&cExit without saving");
         exit.setItemMeta(meta);
         
         lore.clear();
         lore.add("");
         if(editMode){
-            lore.add(Logger.color("&dEditMode: &aenabled"));
+            lore.add("&dEditMode: &aenabled");
         }else{
-            lore.add(Logger.color("&dEditMode: &7disabled"));
+            lore.add("&dEditMode: &7disabled");
         }
         ItemStack edit = new ItemStack(Material.ANVIL);
         meta = edit.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Edit rewards"));
+        meta.setDisplayName("&6Edit rewards");
         meta.setLore(lore);
         edit.setItemMeta(meta);
         
         lore.clear();
         lore.add("");
-        lore.add(Logger.color("&6You can clone rewards using this option."));
-        lore.add(Logger.color("&6However, you cannot clone &7EntityTowerRewards"));
+        lore.add("&6You can clone rewards using this option.");
+        lore.add("&6However, you cannot clone &7EntityTowerRewards");
         lore.add("");
         if(cloneMode){
-            lore.add(Logger.color("&eCloneMode: &aenabled"));
+            lore.add("&eCloneMode: &aenabled");
         }else{
-            lore.add(Logger.color("&eCloneMode: &7disabled"));
+            lore.add("&eCloneMode: &7disabled");
         }
         ItemStack clone = XMaterial.REPEATER.parseItem();
         meta = clone.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Clone Rewards"));
+        meta.setDisplayName("&3Clone Rewards");
         meta.setLore(lore);
         clone.setItemMeta(meta);
         
         lore.clear();
         lore.add("");
-        lore.add(Logger.color("&3Click here to configure the delay of a reward"));
+        lore.add("&3Click here to configure the delay of a reward");
         lore.add("");
         if(delayMode){
-            lore.add(Logger.color("&5DelayMode: &aenabled"));
+            lore.add("&5DelayMode: &aenabled");
         }else{
-            lore.add(Logger.color("&5DelayMode: &7disabled"));
+            lore.add("&5DelayMode: &7disabled");
         }
         ItemStack delay = XMaterial.CLOCK.parseItem();
         meta = delay.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Configure delay of Rewards"));
+        meta.setDisplayName("&6Configure delay of Rewards");
         meta.setLore(lore);
         delay.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Previous page"));
+        meta.setDisplayName("&2Previous page");
         back.setItemMeta(meta);
 
         ItemStack currentPage = new ItemStack(Material.BOOK, index+1);
         meta = currentPage.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Page &3" + (index+1) + " &a/ &3" + max_pages));
+        meta.setDisplayName("&6Page &3" + (index+1) + " &a/ &3" + max_pages);
         currentPage.setItemMeta(meta);
 
         ItemStack next = XMaterial.ENDER_EYE.parseItem();
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Next page"));
+        meta.setDisplayName("&2Next page");
         next.setItemMeta(meta);
 
         inv.setItem(PREVIOUS_PAGE_SLOT, back);
@@ -322,8 +322,8 @@ public class FinishMenu{
                 }
                 p.closeInventory();
                 testRewardsPlayerList.put(p, currentOutcome);
-                p.sendMessage(Logger.color("&6Every block that you break from now will behave as a LuckyBlock with the selected outcome"));
-                p.sendMessage(Logger.color("&3To leave testing mode, use &7/alb return&r"));
+                p.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected outcome");
+                p.sendMessage("&3To leave testing mode, use &7/alb return&r");
                 break;
             case TEST_REWARD_SLOT:
                 if(deleteMode || editMode || cloneMode || delayMode){
@@ -398,9 +398,9 @@ public class FinishMenu{
                     if(rewardID < currentOutcome.getNumberOfRewards()){
                         Reward reward = currentOutcome.getReward(rewardID);
                         testRewardsPlayerList.put(p, reward);
-                        p.sendMessage(Logger.color("&6Every block that you break from now will behave as a LuckyBlock with the selected reward"));
-                        p.sendMessage(Logger.color("&5Selected reward: &e" + e.getSlot()));
-                        p.sendMessage(Logger.color("&3To leave testing mode, use &7/alb return&r"));
+                        p.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected reward");
+                        p.sendMessage("&5Selected reward: &e" + e.getSlot());
+                        p.sendMessage("&3To leave testing mode, use &7/alb return&r");
                         p.closeInventory();
                     }
                 }else if(editMode){

@@ -116,7 +116,7 @@ public class HomingBow extends BowItem{
         ItemStack stack = new ItemStack(Material.BOW);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.HomingBow.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.HomingBow.name"));
         meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
         stack.setItemMeta(meta);
         

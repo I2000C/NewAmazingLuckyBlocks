@@ -38,7 +38,7 @@ public class ExplosionMenu{
             reward = new ExplosionReward(FinishMenu.getCurrentOutcome());
         }
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EXPLOSION_MENU, 36, Logger.color("&4&lExplosion Reward"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EXPLOSION_MENU, 36, "&4&lExplosion Reward");
         
         ItemStack glass = XMaterial.ORANGE_STAINED_GLASS_PANE.parseItem();
         ItemMeta meta = glass.getItemMeta();
@@ -47,39 +47,39 @@ public class ExplosionMenu{
         
         ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-1"));
+        meta.setDisplayName("&c&l-1");
         minus1.setItemMeta(meta);
         
         ItemStack minus10 = minus1.clone();
         meta = minus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-10"));
+        meta.setDisplayName("&c&l-10");
         minus10.setItemMeta(meta);
         
         ItemStack minus100 = minus1.clone();
         meta = minus100.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-100"));
+        meta.setDisplayName("&c&l-100");
         minus100.setItemMeta(meta);
         
         ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+1"));
+        meta.setDisplayName("&a&l+1");
         plus1.setItemMeta(meta);
         
         ItemStack plus10 = plus1.clone();
         meta = plus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+10"));
+        meta.setDisplayName("&a&l+10");
         plus10.setItemMeta(meta);
         
         ItemStack plus100 = plus1.clone();
         meta = plus100.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+100"));
+        meta.setDisplayName("&a&l+100");
         plus100.setItemMeta(meta);
         
         
         ItemStack tntItem = new ItemStack(Material.TNT);
         meta = tntItem.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Explosion power: &e" + reward.getPower()));
-        meta.setLore(Logger.color(Arrays.asList("&3Click to reset")));
+        meta.setDisplayName("&6Explosion power: &e" + reward.getPower());
+        meta.setLore(Arrays.asList("&3Click to reset"));
         tntItem.setItemMeta(meta);
         
         ItemStack fireItem;
@@ -90,11 +90,11 @@ public class ExplosionMenu{
         }
         meta = fireItem.getItemMeta();
         if(reward.isWithFire()){
-            meta.setDisplayName(Logger.color("&6Generate fire: &atrue"));
+            meta.setDisplayName("&6Generate fire: &atrue");
         }else{
-            meta.setDisplayName(Logger.color("&6Generate fire: &cfalse"));
+            meta.setDisplayName("&6Generate fire: &cfalse");
         }
-        meta.setLore(Logger.color(Arrays.asList("&3Click to toggle")));
+        meta.setLore(Arrays.asList("&3Click to toggle"));
         fireItem.setItemMeta(meta);
         
         ItemStack breakBlocksItem;
@@ -105,22 +105,22 @@ public class ExplosionMenu{
         }
         meta = breakBlocksItem.getItemMeta();
         if(reward.isBreakBlocks()){
-            meta.setDisplayName(Logger.color("&6Break blocks: &atrue"));
+            meta.setDisplayName("&6Break blocks: &atrue");
         }else{
-            meta.setDisplayName(Logger.color("&6Break blocks: &cfalse"));
+            meta.setDisplayName("&6Break blocks: &cfalse");
         }
-        meta.setLore(Logger.color(Arrays.asList("&3Click to toggle")));
+        meta.setLore(Arrays.asList("&3Click to toggle"));
         breakBlocksItem.setItemMeta(meta);
         
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         for(int i=0;i<=9;i++){

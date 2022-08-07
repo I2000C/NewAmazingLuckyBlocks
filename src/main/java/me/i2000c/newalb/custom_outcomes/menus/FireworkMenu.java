@@ -64,54 +64,54 @@ public class FireworkMenu{
         
         ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         ItemMeta meta = plus.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+"));
+        meta.setDisplayName("&a&l+");
         plus.setItemMeta(meta);
         
         ItemStack minus = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = minus.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-"));
+        meta.setDisplayName("&c&l-");
         minus.setItemMeta(meta);
         
         ItemStack amt = XMaterial.FIREWORK_ROCKET.parseItem();
         amt.setAmount(reward.getAmount());
         meta = amt.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Amount"));
+        meta.setDisplayName("&3Amount");
         amt.setItemMeta(meta);
         
         ItemStack pow = new ItemStack(Material.BLAZE_POWDER);
         pow.setAmount(reward.getPower());
         meta = pow.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Power"));
+        meta.setDisplayName("&6Power");
         pow.setItemMeta(meta);
         
         ItemStack withTrail = new ItemStack(Material.BLAZE_ROD);
         meta = withTrail.getItemMeta();
         if(reward.withTrail()){
-            meta.setDisplayName(Logger.color("&5Trail: &atrue"));
+            meta.setDisplayName("&5Trail: &atrue");
         }else{
-            meta.setDisplayName(Logger.color("&5Trail: &cfalse"));
+            meta.setDisplayName("&5Trail: &cfalse");
         }
         withTrail.setItemMeta(meta);
         
         ItemStack withFlicker = new ItemStack(Material.TNT);
         meta = withFlicker.getItemMeta();
         if(reward.withFlicker()){
-            meta.setDisplayName(Logger.color("&5Flicker: &atrue"));
+            meta.setDisplayName("&5Flicker: &atrue");
         }else{
-            meta.setDisplayName(Logger.color("&5Flicker: &cfalse"));
+            meta.setDisplayName("&5Flicker: &cfalse");
         }
         withFlicker.setItemMeta(meta);
         
         ItemStack fireworkType = typeMaterial.get(selectedType).clone();
         meta = fireworkType.getItemMeta();
-        meta.setDisplayName(Logger.color("&aFirework type: &b" + type[selectedType]));
+        meta.setDisplayName("&aFirework type: &b" + type[selectedType]);
         fireworkType.setItemMeta(meta);
         
         //Color list ItemStacks
         
         ItemStack colorBanner = XMaterial.LIME_BANNER.parseItem();
         meta = colorBanner.getItemMeta();
-        meta.setDisplayName(Logger.color("&aColor list"));
+        meta.setDisplayName("&aColor list");
         if(reward.getHEXColors().isEmpty()){
             meta.setLore(null);
         }else{
@@ -122,19 +122,19 @@ public class FireworkMenu{
         ItemStack addColor = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         addColor.setDurability((short) 5);
         meta = addColor.getItemMeta();
-        meta.setDisplayName(Logger.color("&aAdd color"));
+        meta.setDisplayName("&aAdd color");
         addColor.setItemMeta(meta);
         
         ItemStack resetColor = new ItemStack(Material.BARRIER);
         meta = resetColor.getItemMeta();
-        meta.setDisplayName(Logger.color("&cReset color list"));
+        meta.setDisplayName("&cReset color list");
         resetColor.setItemMeta(meta);
         
         //Fade color list ItemStacks
         
         ItemStack fadeBanner = XMaterial.RED_BANNER.parseItem();
         meta = fadeBanner.getItemMeta();
-        meta.setDisplayName(Logger.color("&cFade color list"));
+        meta.setDisplayName("&cFade color list");
         if(reward.getHEXFadeColors().isEmpty()){
             meta.setLore(null);
         }else{
@@ -144,28 +144,28 @@ public class FireworkMenu{
         
         ItemStack addFadeColor = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = addFadeColor.getItemMeta();
-        meta.setDisplayName(Logger.color("&aAdd fade color (opcional)"));
+        meta.setDisplayName("&aAdd fade color (opcional)");
         addFadeColor.setItemMeta(meta);
         
         ItemStack resetFadeColor = new ItemStack(Material.BARRIER);
         meta = resetFadeColor.getItemMeta();
-        meta.setDisplayName(Logger.color("&cReset fade color list"));
+        meta.setDisplayName("&cReset fade color list");
         resetFadeColor.setItemMeta(meta);
         
         //Back and Next ItemStacks
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.FIREWORK_MENU, 27, Logger.color("&b&lFirework Reward"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.FIREWORK_MENU, 27, "&b&lFirework Reward");
         
         inv.setItem(1, plus);
         inv.setItem(2, plus);
@@ -297,7 +297,7 @@ public class FireworkMenu{
         
         ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
         ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(Logger.color(" "));
+        meta.setDisplayName(" ");
         glass.setItemMeta(meta);
         
         for(int i=0;i<9;i++){
@@ -327,9 +327,9 @@ public class FireworkMenu{
         ItemStack leather = new ItemStack(Material.LEATHER_CHESTPLATE);
         LeatherArmorMeta lam = (LeatherArmorMeta) leather.getItemMeta();
         if(color == null || color.equals("ERROR")){
-            lam.setDisplayName(Logger.color("&dChosen color: &b" + "null"));
+            lam.setDisplayName("&dChosen color: &b" + "null");
         }else{
-            lam.setDisplayName(Logger.color("&dChosen color: &b" + color));
+            lam.setDisplayName("&dChosen color: &b" + color);
             lam.setColor(Color.fromRGB(getDecimalFromHex(color)));
         }
         leather.setItemMeta(lam);
@@ -337,20 +337,20 @@ public class FireworkMenu{
         ItemStack chooseCustomColor = XMaterial.OAK_SIGN.parseItem();
         meta = chooseCustomColor.getItemMeta();
         if(color != null && color.equals("ERROR")){
-            meta.setDisplayName(Logger.color("&cYou must enter a valid hex color"));
+            meta.setDisplayName("&cYou must enter a valid hex color");
         }else{
-            meta.setDisplayName(Logger.color("&3Choose custom color"));
+            meta.setDisplayName("&3Choose custom color");
         }
         chooseCustomColor.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&bBack"));
+        meta.setDisplayName("&bBack");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         inv.setItem(16, leather);
@@ -540,7 +540,7 @@ public class FireworkMenu{
             stack = new ItemStack(material);
         }
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&d" + colors[i] + ": &b" + hexValues[i]));
+        meta.setDisplayName("&d" + colors[i] + ": &b" + hexValues[i]);
         stack.setItemMeta(meta);
         return stack;
 //</editor-fold>

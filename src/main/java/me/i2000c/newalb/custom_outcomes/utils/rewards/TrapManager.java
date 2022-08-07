@@ -92,7 +92,7 @@ public class TrapManager implements Listener{
             
             ItemStack stack = new ItemStack(Material.valueOf(materialName));
             ItemMeta meta = stack.getItemMeta();
-            meta.setDisplayName(Logger.color(name));
+            meta.setDisplayName(name);
             stack.setItemMeta(meta);
             TrapReward.encryptOutcome(outcome, stack);
             

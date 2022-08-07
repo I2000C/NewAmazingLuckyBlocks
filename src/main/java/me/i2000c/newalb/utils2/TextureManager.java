@@ -245,7 +245,7 @@ public class TextureManager{
         ItemStack stack = getItemSkullStack();
         setTexture(stack, texture);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&bCustom head"));
+        meta.setDisplayName("&bCustom head");
         stack.setItemMeta(meta);
         return stack;
     }

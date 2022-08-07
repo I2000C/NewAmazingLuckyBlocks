@@ -23,34 +23,34 @@ public class RewardTypesMenu{
         
         ItemStack stack = new ItemStack(Material.IRON_INGOT);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&aCreate Item Rewards"));
+        meta.setDisplayName("&aCreate Item Rewards");
         stack.setItemMeta(meta);
         
         ItemStack stack2 = new ItemStack(Material.NAME_TAG);
         meta = stack2.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Create Command Rewards"));
+        meta.setDisplayName("&7Create Command Rewards");
         stack2.setItemMeta(meta);
         
         ItemStack stack3 = new ItemStack(Material.BONE);
         meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&5Create Entity Rewards"));
+        meta.setDisplayName("&5Create Entity Rewards");
         stack3.setItemMeta(meta);
         
         ItemStack stack4 = new ItemStack(Material.ARMOR_STAND);
         meta = stack4.getItemMeta();
-        meta.setDisplayName(Logger.color("&eCreate EntityTower Rewards"));
+        meta.setDisplayName("&eCreate EntityTower Rewards");
         if(FinishMenu.getCurrentOutcome().getEntityRewardList().size() < 2){
             List<String> lore2 = new ArrayList();
-            lore2.add(Logger.color("&cYou need to have created at least 2 entities"));
-            lore2.add(Logger.color("&cin order to use this reward"));
+            lore2.add("&cYou need to have created at least 2 entities");
+            lore2.add("&cin order to use this reward");
             
             meta.setLore(lore2);
         }else{
             int available_entities = FinishMenu.getCurrentOutcome().getEntitiesNotInTowerRewards();
             if(available_entities < 2){
                 List<String> lore2 = new ArrayList();
-                lore2.add(Logger.color("&cYou need to create more entities"));
-                lore2.add(Logger.color("&cin order to use this reward"));
+                lore2.add("&cYou need to create more entities");
+                lore2.add("&cin order to use this reward");
                 
                 meta.setLore(lore2);
             }
@@ -59,71 +59,71 @@ public class RewardTypesMenu{
         
         ItemStack stack5 = XMaterial.FIREWORK_ROCKET.parseItem();
         meta = stack5.getItemMeta();
-        meta.setDisplayName(Logger.color("&bCreate Firework Rewards"));
+        meta.setDisplayName("&bCreate Firework Rewards");
         stack5.setItemMeta(meta);
         
         ItemStack stack6 = new ItemStack(Material.JUKEBOX);
         meta = stack6.getItemMeta();
-        meta.setDisplayName(Logger.color("&dCreate Sound Rewards"));
+        meta.setDisplayName("&dCreate Sound Rewards");
         stack6.setItemMeta(meta);
         
         ItemStack stack7 = XMaterial.BRICKS.parseItem();
         meta = stack7.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Create Structure Rewards"));
+        meta.setDisplayName("&3Create Structure Rewards");
         if(NewAmazingLuckyBlocks.getWorldEditPlugin() == null){
             List<String> lore = Arrays.asList("&cYou need WorldEdit in order to use this reward");
-            meta.setLore(Logger.color(lore));
+            meta.setLore(lore);
         }
         stack7.setItemMeta(meta);
         
         ItemStack stack8 = XMaterial.BRICK.parseItem();
         meta = stack8.getItemMeta();
-        meta.setDisplayName(Logger.color("&dCreate block rewards"));
+        meta.setDisplayName("&dCreate block rewards");
         stack8.setItemMeta(meta);
         
         ItemStack stack9 = XMaterial.WHITE_WOOL.parseItem();
         meta = stack9.getItemMeta();
-        meta.setDisplayName(Logger.color("&eCreate lightning rewards"));
+        meta.setDisplayName("&eCreate lightning rewards");
         stack9.setItemMeta(meta);
         
         ItemStack stack10 = new ItemStack(Material.BUCKET);
         meta = stack10.getItemMeta();
-        meta.setDisplayName(Logger.color("&8Create dark hole rewards"));
+        meta.setDisplayName("&8Create dark hole rewards");
         stack10.setItemMeta(meta);
         
         ItemStack stack11 = new ItemStack(Material.LAVA_BUCKET);
         meta = stack11.getItemMeta();
-        meta.setDisplayName(Logger.color("&cCreate mini volcano rewards"));
+        meta.setDisplayName("&cCreate mini volcano rewards");
         stack11.setItemMeta(meta);
         
         ItemStack stack12 = new ItemStack(Material.BOOK);
         meta = stack12.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Create message rewards"));
+        meta.setDisplayName("&7Create message rewards");
         stack12.setItemMeta(meta);
         
         ItemStack stack13 = new ItemStack(Material.POTION);
         meta = stack13.getItemMeta();
-        meta.setDisplayName(Logger.color("&5Create effect rewards"));
+        meta.setDisplayName("&5Create effect rewards");
         stack13.setItemMeta(meta);
         
         ItemStack stack14 = new ItemStack(Material.TNT);
         meta = stack14.getItemMeta();
-        meta.setDisplayName(Logger.color("&4Create explosion rewards"));
+        meta.setDisplayName("&4Create explosion rewards");
         stack14.setItemMeta(meta);
         
         ItemStack stack15 = new ItemStack(Material.DIAMOND_ORE);
         meta = stack15.getItemMeta();
-        meta.setDisplayName(Logger.color("&bCreate block replacing sphere (BRS) rewards"));
+        meta.setDisplayName("&bCreate block replacing sphere (BRS) rewards");
         stack15.setItemMeta(meta);
         
         ItemStack stack16 = XMaterial.OAK_PRESSURE_PLATE.parseItem();
         meta = stack16.getItemMeta();
-        meta.setDisplayName(Logger.color("&5Create trap rewards"));
+        meta.setDisplayName("&5Create trap rewards");
         stack16.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
+        meta.setDisplayName("&2Back");
         back.setItemMeta(meta);
         
         inv.setItem(0, stack);

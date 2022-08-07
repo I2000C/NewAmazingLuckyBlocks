@@ -61,16 +61,16 @@ public class DarkHoleReward extends Reward{
     public ItemStack getItemToDisplay(){
         ItemStack stack = new ItemStack(Material.BUCKET);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&7DarkHole"));
+        meta.setDisplayName("&7DarkHole");
         List<String> loreList = new ArrayList<>();
         if(this.depth < 0){
-            loreList.add(Logger.color("&3Depth: &6infinite"));
+            loreList.add("&3Depth: &6infinite");
         }else{
-            loreList.add(Logger.color("&3Depth: &6" + this.depth));
+            loreList.add("&3Depth: &6" + this.depth);
         }
-        loreList.add(Logger.color("&3Radius: &6" + this.radius));
-        loreList.add(Logger.color("&3Ticks between blocks: &6" + this.ticks));
-        loreList.add(Logger.color("&3Is squared: &6" + this.squared));
+        loreList.add("&3Radius: &6" + this.radius);
+        loreList.add("&3Ticks between blocks: &6" + this.ticks);
+        loreList.add("&3Is squared: &6" + this.squared);
         meta.setLore(loreList);
         stack.setItemMeta(meta);
         

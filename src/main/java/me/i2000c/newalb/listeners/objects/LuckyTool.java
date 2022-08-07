@@ -70,7 +70,7 @@ public class LuckyTool extends SpecialItem{
             
             if((this.luckyToolCooldown.containsKey(player.getUniqueId())) && ((this.luckyToolCooldown.get(player.getUniqueId())) > System.currentTimeMillis())){
                 long remainingTime = this.luckyToolCooldown.get(player.getUniqueId()) - System.currentTimeMillis();
-                String cmsg = Logger.color(LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L)));
+                String cmsg = LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L));
                 player.sendMessage(cmsg);
                 return;
             }
@@ -91,7 +91,7 @@ public class LuckyTool extends SpecialItem{
         ItemStack stack = new ItemStack(Material.STICK);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.LuckyTool.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.LuckyTool.name"));
         stack.setItemMeta(meta);
         
         return stack;

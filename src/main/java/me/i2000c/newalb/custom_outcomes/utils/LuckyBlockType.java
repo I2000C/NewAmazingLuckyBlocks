@@ -240,10 +240,10 @@ public class LuckyBlockType implements Displayable{
         
         ItemMeta meta = type.luckyBlockItem.getItemMeta();
         if(!name.isEmpty()){
-            meta.setDisplayName(Logger.color(name));
+            meta.setDisplayName(name);
         }
         if(!lore.isEmpty()){
-            meta.setLore(Logger.color(lore));
+            meta.setLore(lore);
         }        
         type.luckyBlockItem.setItemMeta(meta);
         

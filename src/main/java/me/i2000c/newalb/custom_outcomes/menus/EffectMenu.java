@@ -45,7 +45,7 @@ public class EffectMenu{
             reward = new EffectReward(FinishMenu.getCurrentOutcome());
         }
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EFFECT_MENU, 45, Logger.color("&5&lEffect Reward"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EFFECT_MENU, 45, "&5&lEffect Reward");
         
         ItemStack glass = XMaterial.MAGENTA_STAINED_GLASS_PANE.parseItem();
         ItemMeta meta = glass.getItemMeta();
@@ -55,67 +55,67 @@ public class EffectMenu{
         ItemStack time = XMaterial.CLOCK.parseItem();
         meta = time.getItemMeta();
         if(reward.getDuration() < 0){
-            meta.setDisplayName(Logger.color("&6Effect time (seconds): &ainfinite"));
+            meta.setDisplayName("&6Effect time (seconds): &ainfinite");
         }else{
-            meta.setDisplayName(Logger.color("&6Effect time (seconds): &a" + reward.getDuration()));
+            meta.setDisplayName("&6Effect time (seconds): &a" + reward.getDuration());
         }
-        meta.setLore(Arrays.asList(Logger.color("&3Click to reset")));
+        meta.setLore(Arrays.asList("&3Click to reset"));
         time.setItemMeta(meta);
         
         ItemStack amplifier = new ItemStack(Material.BEACON);
         meta = amplifier.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Effect amplifier: &a" + reward.getAmplifier()));
-        meta.setLore(Arrays.asList(Logger.color("&3Click to reset")));
+        meta.setDisplayName("&6Effect amplifier: &a" + reward.getAmplifier());
+        meta.setLore(Arrays.asList("&3Click to reset"));
         amplifier.setItemMeta(meta);
         
         
         ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-1"));
+        meta.setDisplayName("&c&l-1");
         minus1.setItemMeta(meta);
         
         ItemStack minus10 = minus1.clone();
         meta = minus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-10"));
+        meta.setDisplayName("&c&l-10");
         minus10.setItemMeta(meta);
         
         ItemStack minus100 = minus1.clone();
         meta = minus100.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-100"));
+        meta.setDisplayName("&c&l-100");
         minus100.setItemMeta(meta);
         
         ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+1"));
+        meta.setDisplayName("&a&l+1");
         plus1.setItemMeta(meta);
         
         ItemStack plus10 = plus1.clone();
         meta = plus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+10"));
+        meta.setDisplayName("&a&l+10");
         plus10.setItemMeta(meta);
         
         ItemStack plus100 = plus1.clone();
         meta = plus100.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+100"));
+        meta.setDisplayName("&a&l+100");
         plus100.setItemMeta(meta);
         
         ItemStack effectStack;
         if(reward.isClearEffects()){
             effectStack = new ItemStack(Material.MILK_BUCKET);
             meta = effectStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&bSelected effect: &d" + EffectReward.CLEAR_EFFECTS_TAG));
+            meta.setDisplayName("&bSelected effect: &d" + EffectReward.CLEAR_EFFECTS_TAG);
         }else{
             effectStack = new ItemStack(Material.POTION);
             meta = effectStack.getItemMeta();
             if(reward.getPotionEffect() == null){
-                meta.setDisplayName(Logger.color("&bSelected effect: &dnull"));
+                meta.setDisplayName("&bSelected effect: &dnull");
             }else{
-                meta.setDisplayName(Logger.color("&bSelected effect: &d" + reward.getPotionEffect().getName()));
+                meta.setDisplayName("&bSelected effect: &d" + reward.getPotionEffect().getName());
                 PotionMeta pm = (PotionMeta) meta;
                 pm.addCustomEffect(new PotionEffect(reward.getPotionEffect(), 0, 0), true);
             }            
         }
-        meta.setLore(Logger.color(Arrays.asList("&3Click to select")));
+        meta.setLore(Arrays.asList("&3Click to select"));
         effectStack.setItemMeta(meta);
         
         ItemStack ambientItem;
@@ -126,11 +126,11 @@ public class EffectMenu{
         }        
         meta = ambientItem.getItemMeta();
         if(reward.isAmbient()){
-            meta.setDisplayName(Logger.color("&bIsAmbient: &atrue"));
+            meta.setDisplayName("&bIsAmbient: &atrue");
         }else{
-            meta.setDisplayName(Logger.color("&bIsAmbient: &cfalse"));
+            meta.setDisplayName("&bIsAmbient: &cfalse");
         }
-        meta.setLore(Logger.color(Arrays.asList("&3Click to toggle")));
+        meta.setLore(Arrays.asList("&3Click to toggle"));
         ambientItem.setItemMeta(meta);
         
         ItemStack showParticlesItem;
@@ -141,23 +141,23 @@ public class EffectMenu{
         }
         meta = showParticlesItem.getItemMeta();
         if(reward.isShowParticles()){
-            meta.setDisplayName(Logger.color("&bShowParticles: &atrue"));
+            meta.setDisplayName("&bShowParticles: &atrue");
         }else{
-            meta.setDisplayName(Logger.color("&bShowParticles: &cfalse"));
+            meta.setDisplayName("&bShowParticles: &cfalse");
         }
-        meta.setLore(Logger.color(Arrays.asList("&3Click to toggle")));
+        meta.setLore(Arrays.asList("&3Click to toggle"));
         showParticlesItem.setItemMeta(meta);
         
         
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         for(int i=0;i<9;i++){
@@ -382,7 +382,7 @@ public class EffectMenu{
     //Effects2 inventory
     private static void openEffectMenu2(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EFFECT_MENU_2, 54, Logger.color("&d&lEffect List"));
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EFFECT_MENU_2, 54, "&d&lEffect List");
         
         List<String> effectTypeNames = new ArrayList<>();
         for(PotionEffectType pe : PotionEffectType.values()){
@@ -396,7 +396,7 @@ public class EffectMenu{
         
         ItemStack clearEffects = new ItemStack(Material.MILK_BUCKET);
         ItemMeta meta = clearEffects.getItemMeta();
-        meta.setDisplayName(Logger.color("&d" + EffectReward.CLEAR_EFFECTS_TAG));
+        meta.setDisplayName("&d" + EffectReward.CLEAR_EFFECTS_TAG);
         clearEffects.setItemMeta(meta);
         
         inv.setItem(0, clearEffects);
@@ -406,7 +406,7 @@ public class EffectMenu{
             
             ItemStack sk = new ItemStack(Material.POTION);
             meta = sk.getItemMeta();
-            meta.setDisplayName(Logger.color("&d" + typeName));
+            meta.setDisplayName("&d" + typeName);
             PotionMeta pm = (PotionMeta) meta;
             pm.addCustomEffect(new PotionEffect(PotionEffectType.getByName(typeName), 0, 0), true);
             sk.setItemMeta(pm);
@@ -416,7 +416,7 @@ public class EffectMenu{
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         inv.setItem(45, back);

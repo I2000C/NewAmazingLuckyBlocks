@@ -59,7 +59,7 @@ public class EndermanSoup extends SpecialItem{
             int dw = ConfigManager.getConfig().getInt("Objects.EndermanSoup.cooldown-time");
             if((this.cooldown.containsKey(player.getUniqueId())) && ((this.cooldown.get(player.getUniqueId())) > System.currentTimeMillis())){
                 long remainingTime = (this.cooldown.get(player.getUniqueId())) - System.currentTimeMillis();
-                String cmsg = Logger.color(LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L)));
+                String cmsg = LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L));
                 player.sendMessage(cmsg);
                 return;
             }else{
@@ -91,7 +91,7 @@ public class EndermanSoup extends SpecialItem{
         ItemStack stack = new ItemStack(Material.RABBIT_STEW);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.EndermanSoup.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.EndermanSoup.name"));
         stack.setItemMeta(meta);
         
         return stack;

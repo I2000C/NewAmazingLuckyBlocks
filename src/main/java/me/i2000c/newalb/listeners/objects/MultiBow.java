@@ -267,7 +267,7 @@ public class MultiBow extends BowItem{
         ItemStack stack = new ItemStack(Material.BOW, 1);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.MultiBow.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.MultiBow.name"));
         meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
         stack.setItemMeta(meta);
         

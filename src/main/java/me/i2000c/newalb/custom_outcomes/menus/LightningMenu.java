@@ -57,23 +57,23 @@ public class LightningMenu{
 
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
+        meta.setDisplayName("&2Back");
         back.setItemMeta(meta);
 
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
 
         ItemStack usePlayerLocStack;
         if(reward.getUsePlayerLoc()){
             usePlayerLocStack = XMaterial.PLAYER_HEAD.parseItem();
             meta = usePlayerLocStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&aUse player location"));
+            meta.setDisplayName("&aUse player location");
         }else{
             usePlayerLocStack = TypeManager.getMenuItemStack();
             meta = usePlayerLocStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&6Use lucky block location"));
+            meta.setDisplayName("&6Use lucky block location");
             meta.setLore(null);
         }
         usePlayerLocStack.setItemMeta(meta);
@@ -82,22 +82,22 @@ public class LightningMenu{
         if(reward.getCauseDamage()){
             damagePlayerStack = new ItemStack(Material.LAVA_BUCKET);
             meta = damagePlayerStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&cCause damage"));
+            meta.setDisplayName("&cCause damage");
         }else{
             damagePlayerStack = new ItemStack(Material.WATER_BUCKET);
             meta = damagePlayerStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&bDon't cause damage"));            
+            meta.setDisplayName("&bDon't cause damage");            
         }
         damagePlayerStack.setItemMeta(meta);
 
         ItemStack offsetStack = XMaterial.PISTON.parseItem();
         meta = offsetStack.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Configure offset"));
+        meta.setDisplayName("&3Configure offset");
         List<String> loreList = new ArrayList<>();
-        loreList.add(Logger.color("&dCurrent Offset:"));
-        loreList.add(Logger.color("   &5X: &3" + reward.getOffset().getOffsetX()));
-        loreList.add(Logger.color("   &5Y: &3" + reward.getOffset().getOffsetY()));
-        loreList.add(Logger.color("   &5Z: &3" + reward.getOffset().getOffsetZ()));
+        loreList.add("&dCurrent Offset:");
+        loreList.add("   &5X: &3" + reward.getOffset().getOffsetX());
+        loreList.add("   &5Y: &3" + reward.getOffset().getOffsetY());
+        loreList.add("   &5Z: &3" + reward.getOffset().getOffsetZ());
         meta.setLore(loreList);
         offsetStack.setItemMeta(meta);
 

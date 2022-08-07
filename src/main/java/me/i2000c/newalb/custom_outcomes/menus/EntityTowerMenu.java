@@ -48,17 +48,17 @@ public class EntityTowerMenu{
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         ItemStack reset = new ItemStack(Material.BARRIER);
         meta = reset.getItemMeta();
-        meta.setDisplayName(Logger.color("&cReset tower"));
+        meta.setDisplayName("&cReset tower");
         reset.setItemMeta(meta);
         
         for(int i=7;i<54;i+=9){

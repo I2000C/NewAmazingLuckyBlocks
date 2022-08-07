@@ -50,22 +50,22 @@ public class LightningReward extends Reward{
     public ItemStack getItemToDisplay(){
         ItemStack stack = XMaterial.WHITE_WOOL.parseItem();
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&eLightning"));
+        meta.setDisplayName("&eLightning");
         List<String> loreList = new ArrayList<>();
         if(usePlayerLoc){
-            loreList.add(Logger.color("&bTarget location: &2player"));
+            loreList.add("&bTarget location: &2player");
         }else{
-            loreList.add(Logger.color("&bTarget location: &6lucky block"));
+            loreList.add("&bTarget location: &6lucky block");
         }
         if(causeDamage){
-            loreList.add(Logger.color("&cCause damage: &atrue"));
+            loreList.add("&cCause damage: &atrue");
         }else{
-            loreList.add(Logger.color("&cCause damage: &7false"));
+            loreList.add("&cCause damage: &7false");
         }
-        loreList.add(Logger.color("&dOffset:"));
-        loreList.add(Logger.color("   &5X: &3" + offset.getOffsetX()));
-        loreList.add(Logger.color("   &5Y: &3" + offset.getOffsetY()));
-        loreList.add(Logger.color("   &5Z: &3" + offset.getOffsetZ()));
+        loreList.add("&dOffset:");
+        loreList.add("   &5X: &3" + offset.getOffsetX());
+        loreList.add("   &5Y: &3" + offset.getOffsetY());
+        loreList.add("   &5Z: &3" + offset.getOffsetZ());
         meta.setLore(loreList);
         stack.setItemMeta(meta);
         

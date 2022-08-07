@@ -45,11 +45,11 @@ public class CommandReward extends Reward{
         }else{
             senderName = "&2Player";
         }
-        lore.add(Logger.color("&5Sender: " + senderName));
+        lore.add("&5Sender: " + senderName);
         
         ItemStack stack = new ItemStack(Material.NAME_TAG);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Command: &b/" + cmd));
+        meta.setDisplayName("&6Command: &b/" + cmd);
         meta.setLore(lore);
         stack.setItemMeta(meta);
         

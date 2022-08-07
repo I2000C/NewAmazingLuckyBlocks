@@ -58,32 +58,32 @@ public class DarkHoleMenu{
         
         ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = plus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+1"));
+        meta.setDisplayName("&a&l+1");
         plus1.setItemMeta(meta);
         
         ItemStack plus10 = plus1.clone();
         meta = plus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+10"));
+        meta.setDisplayName("&a&l+10");
         plus10.setItemMeta(meta);
         
         ItemStack plus0_5 = plus1.clone();
         meta = plus0_5.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+0.5"));
+        meta.setDisplayName("&a&l+0.5");
         plus0_5.setItemMeta(meta);
         
         ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-1"));
+        meta.setDisplayName("&c&l-1");
         minus1.setItemMeta(meta);
         
         ItemStack minus10 = minus1.clone();
         meta = minus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-10"));
+        meta.setDisplayName("&c&l-10");
         minus10.setItemMeta(meta);
         
         ItemStack minus0_5 = minus1.clone();
         meta = minus0_5.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-0.5"));
+        meta.setDisplayName("&c&l-0.5");
         minus0_5.setItemMeta(meta);
         
         
@@ -91,42 +91,42 @@ public class DarkHoleMenu{
         if(reward.isSquared()){
             squaredStack = new ItemStack(Material.SNOW_BLOCK);
             meta = squaredStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&bSquared: &atrue"));
+            meta.setDisplayName("&bSquared: &atrue");
         }else{
             squaredStack = XMaterial.SNOWBALL.parseItem();
             meta = squaredStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&bSquared: &7false"));
+            meta.setDisplayName("&bSquared: &7false");
         }
         squaredStack.setItemMeta(meta);
         
         ItemStack depthStack = new ItemStack(Material.BEDROCK);
         meta = depthStack.getItemMeta();
         if(reward.getDepth() < 0){
-            meta.setDisplayName(Logger.color("&3Depth: &binfinite"));
+            meta.setDisplayName("&3Depth: &binfinite");
         }else{
-            meta.setDisplayName(Logger.color("&3Depth: &b" + reward.getDepth()));
+            meta.setDisplayName("&3Depth: &b" + reward.getDepth());
         }
         depthStack.setItemMeta(meta);
         
         ItemStack radiusStack = new ItemStack(Material.HOPPER);
         meta = radiusStack.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Radius: &2" + reward.getRadius()));
+        meta.setDisplayName("&6Radius: &2" + reward.getRadius());
         radiusStack.setItemMeta(meta);
         
         ItemStack ticksStack = XMaterial.CLOCK.parseItem();
         meta = ticksStack.getItemMeta();
-        meta.setDisplayName(Logger.color("&5Ticks between blocks: &6" + reward.getTicks()));
+        meta.setDisplayName("&5Ticks between blocks: &6" + reward.getTicks());
         ticksStack.setItemMeta(meta);
         
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
+        meta.setDisplayName("&2Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         inv.setItem(18, back);

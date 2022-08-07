@@ -211,9 +211,9 @@ public class OutcomePack implements Displayable{
     public ItemStack getItemToDisplay(){
         ItemStack sk = XMaterial.CRAFTING_TABLE.parseItem();
         ItemMeta meta = sk.getItemMeta();
-        meta.setDisplayName(Logger.color("&6" + getFilename()));
+        meta.setDisplayName("&6" + getFilename());
         List<String> lore = new ArrayList<>();
-        lore.add(Logger.color("&aOutcome number: &d" + getOutcomes().size()));
+        lore.add("&aOutcome number: &d" + getOutcomes().size());
         meta.setLore(lore);
         sk.setItemMeta(meta);
         

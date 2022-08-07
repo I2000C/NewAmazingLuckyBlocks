@@ -67,7 +67,7 @@ public class TrapReward extends Reward{
     public ItemStack getItemToDisplay(){
         ItemStack stack = new ItemStack(pressurePlateMaterial);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&5Trap"));
+        meta.setDisplayName("&5Trap");
         meta.setLore(Logger.color(Arrays.asList("&3Name: &r" + this.trapName,
                                                 "&3Pressure Plate Material: &b" + OtherUtils.parseItemStack(stack),
                                                 "&3Trap Outcome: &b" + this.trapOutcomePackName + "/" + this.trapOutcomeID)));
@@ -109,7 +109,7 @@ public class TrapReward extends Reward{
     private ItemStack getItemToDrop(){
         ItemStack stack = new ItemStack(pressurePlateMaterial);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(trapName));
+        meta.setDisplayName(trapName);
         stack.setItemMeta(meta);
         
         stack = encryptOutcome(trapOutcomePackName, trapOutcomeID, stack);

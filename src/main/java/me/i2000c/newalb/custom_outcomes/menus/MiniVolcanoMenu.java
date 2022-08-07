@@ -2,7 +2,6 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.MiniVolcanoReward;
-import me.i2000c.newalb.utils.Logger;
 import java.util.Arrays;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
@@ -58,22 +57,22 @@ public class MiniVolcanoMenu{
         
         ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = plus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+1"));
+        meta.setDisplayName("&a&l+1");
         plus1.setItemMeta(meta);
         
         ItemStack plus10 = plus1.clone();
         meta = plus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+10"));
+        meta.setDisplayName("&a&l+10");
         plus10.setItemMeta(meta);
         
         ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-1"));
+        meta.setDisplayName("&c&l-1");
         minus1.setItemMeta(meta);
         
         ItemStack minus10 = minus1.clone();
         meta = minus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-10"));
+        meta.setDisplayName("&c&l-10");
         minus10.setItemMeta(meta);
         
         
@@ -81,28 +80,28 @@ public class MiniVolcanoMenu{
         if(reward.isSquared()){
             squaredStack = new ItemStack(Material.SNOW_BLOCK);
             meta = squaredStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&bSquared: &atrue"));
+            meta.setDisplayName("&bSquared: &atrue");
         }else{
             squaredStack = XMaterial.SNOWBALL.parseItem();
             meta = squaredStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&bSquared: &7false"));
+            meta.setDisplayName("&bSquared: &7false");
         }
         squaredStack.setItemMeta(meta);
         
         ItemStack heightStack = new ItemStack(Material.LADDER);
         meta = heightStack.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Height: &b" + reward.getHeight()));
+        meta.setDisplayName("&3Height: &b" + reward.getHeight());
         heightStack.setItemMeta(meta);
         
         ItemStack ticksStack = XMaterial.CLOCK.parseItem();
         meta = ticksStack.getItemMeta();
-        meta.setDisplayName(Logger.color("&5Ticks between blocks: &6" + reward.getTicks()));
+        meta.setDisplayName("&5Ticks between blocks: &6" + reward.getTicks());
         ticksStack.setItemMeta(meta);
         
         ItemStack baseMaterialStack = new ItemStack(reward.getBaseMaterial());
         meta = baseMaterialStack.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Base material: &b" + reward.getBaseMaterial().name()));
-        meta.setLore(Arrays.asList(Logger.color("&3Click on a &3&lblock &3of your inventory"), Logger.color("&3to change it")));
+        meta.setDisplayName("&6Base material: &b" + reward.getBaseMaterial().name());
+        meta.setLore(Arrays.asList("&3Click on a &3&lblock &3of your inventory", "&3to change it"));
         baseMaterialStack.setItemMeta(meta);
         
         ItemStack lavaMaterialStack;
@@ -118,31 +117,31 @@ public class MiniVolcanoMenu{
                 break;
         }
         meta = lavaMaterialStack.getItemMeta();
-        meta.setDisplayName(Logger.color("&cLava material: &b" + reward.getLavaMaterial().name()));
-        meta.setLore(Arrays.asList(Logger.color("&3Click to change")));
+        meta.setDisplayName("&cLava material: &b" + reward.getLavaMaterial().name());
+        meta.setLore(Arrays.asList("&3Click to change"));
         lavaMaterialStack.setItemMeta(meta);
         
         ItemStack throwBlocksStack;
         if(reward.isThrowBlocks()){
             throwBlocksStack = XMaterial.FIRE_CHARGE.parseItem();
             meta = throwBlocksStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&cThrow blocks: &atrue"));
+            meta.setDisplayName("&cThrow blocks: &atrue");
         }else{
             throwBlocksStack = new ItemStack(Material.LAPIS_BLOCK);
             meta = throwBlocksStack.getItemMeta();
-            meta.setDisplayName(Logger.color("&cThrow blocks: &7false"));
+            meta.setDisplayName("&cThrow blocks: &7false");
         }
         throwBlocksStack.setItemMeta(meta);
         
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
+        meta.setDisplayName("&2Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         inv.setItem(18, back);

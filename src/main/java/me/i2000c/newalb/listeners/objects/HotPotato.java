@@ -84,7 +84,7 @@ public class HotPotato extends SpecialItem{
         ItemStack stack = new ItemStack(Material.BAKED_POTATO);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.HotPotato.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.HotPotato.name"));
         meta.addEnchant(Enchantment.FIRE_ASPECT, 1, true);
         stack.setItemMeta(meta);
         

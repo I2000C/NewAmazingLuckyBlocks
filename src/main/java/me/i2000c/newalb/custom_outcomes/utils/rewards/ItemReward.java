@@ -72,11 +72,11 @@ public class ItemReward extends Reward{
         this.item = new ItemStack(material, amount, durability);
         ItemMeta meta = this.item.getItemMeta();
         if(config.contains(path + ".name")){
-            String displayName = Logger.color(config.getString(path + ".name"));
+            String displayName = config.getString(path + ".name");
             meta.setDisplayName(displayName);
         }
         if(config.contains(path + ".lore")){
-            List<String> lore = Logger.color(config.getStringList(path + ".lore"));
+            List<String> lore = config.getStringList(path + ".lore");
             meta.setLore(lore);
         }
         if(config.contains(path + ".enchantments")){

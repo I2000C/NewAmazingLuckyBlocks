@@ -52,22 +52,22 @@ public class WorldMenu{
         
         ItemStack exit = XMaterial.BARRIER.parseItem();
         ItemMeta meta = exit.getItemMeta();
-        meta.setDisplayName(Logger.color("&cExit"));
+        meta.setDisplayName("&cExit");
         exit.setItemMeta(meta);
         
         ItemStack save = XMaterial.MAGMA_CREAM.parseItem();
         meta = exit.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Save and exit"));
+        meta.setDisplayName("&6Save and exit");
         save.setItemMeta(meta);
         
         ItemStack allNormal = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = allNormal.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Set all worlds to &aENABLED"));
+        meta.setDisplayName("&3Set all worlds to &aENABLED");
         allNormal.setItemMeta(meta);
         
         ItemStack allDisabled = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = allDisabled.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Set all worlds to &cDISABLED"));
+        meta.setDisplayName("&3Set all worlds to &cDISABLED");
         allDisabled.setItemMeta(meta);
         
         inv.setItem(50, allNormal);
@@ -78,17 +78,17 @@ public class WorldMenu{
         if(worlds.size() > MENU_SIZE){
             ItemStack back = XMaterial.ENDER_PEARL.parseItem();
             meta = back.getItemMeta();
-            meta.setDisplayName(Logger.color("&2Previous page"));
+            meta.setDisplayName("&2Previous page");
             back.setItemMeta(meta);
             
             ItemStack currentPage = new ItemStack(Material.BOOK, index+1);
             meta = currentPage.getItemMeta();
-            meta.setDisplayName(Logger.color("&6Page &3" + (index+1) + " &a/ &3" + max_pages));
+            meta.setDisplayName("&6Page &3" + (index+1) + " &a/ &3" + max_pages);
             currentPage.setItemMeta(meta);
             
             ItemStack next = XMaterial.ENDER_EYE.parseItem();
             meta = next.getItemMeta();
-            meta.setDisplayName(Logger.color("&2Next page"));
+            meta.setDisplayName("&2Next page");
             next.setItemMeta(meta);
             
             inv.setItem(46, back);
@@ -105,7 +105,7 @@ public class WorldMenu{
             
             ItemStack w = new ItemStack(getMaterialByType(worldType));
             meta = w.getItemMeta();
-            meta.setDisplayName(Logger.color("&d" + worldName));
+            meta.setDisplayName("&d" + worldName);
             meta.setLore(getLoreByType(worldType));
             w.setItemMeta(meta);
             
@@ -127,9 +127,9 @@ public class WorldMenu{
     private static List<String> getLoreByType(boolean worldType){
         List<String> lore = new ArrayList<>();
         if(worldType){
-            lore.add(Logger.color("&aENABLED WORLD"));
+            lore.add("&aENABLED WORLD");
         }else{
-            lore.add(Logger.color("&cDISABLED WORLD"));
+            lore.add("&cDISABLED WORLD");
         }
         
         return lore;

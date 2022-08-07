@@ -80,14 +80,14 @@ public class MiniVolcanoReward extends Reward{
     public ItemStack getItemToDisplay(){        
         ItemStack stack = new ItemStack(Material.LAVA_BUCKET);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&cMiniVolcano"));
+        meta.setDisplayName("&cMiniVolcano");
         List<String> loreList = new ArrayList<>();
-        loreList.add(Logger.color("&bHeight: &6" + this.height));
-        loreList.add(Logger.color("&bBase material: &6" + this.baseMaterial));
-        loreList.add(Logger.color("&bLava material: &6" + this.lavaMaterial));
-        loreList.add(Logger.color("&bTicks between blocks: &6" + this.ticks));
-        loreList.add(Logger.color("&bIs squared: &6" + this.squared));
-        loreList.add(Logger.color("&bThrow blocks: &6" + this.throwBlocks));
+        loreList.add("&bHeight: &6" + this.height);
+        loreList.add("&bBase material: &6" + this.baseMaterial);
+        loreList.add("&bLava material: &6" + this.lavaMaterial);
+        loreList.add("&bTicks between blocks: &6" + this.ticks);
+        loreList.add("&bIs squared: &6" + this.squared);
+        loreList.add("&bThrow blocks: &6" + this.throwBlocks);
         meta.setLore(loreList);
         stack.setItemMeta(meta);
         

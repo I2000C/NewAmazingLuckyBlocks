@@ -51,7 +51,7 @@ public class OffsetMenu{
         
         ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-1"));
+        meta.setDisplayName("&c&l-1");
         minus1.setItemMeta(meta);
         for(int i=3;i<=48;i+=9){
             inv.setItem(i, minus1);
@@ -59,7 +59,7 @@ public class OffsetMenu{
         
         ItemStack minus10 = minus1.clone();
         meta = minus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-10"));
+        meta.setDisplayName("&c&l-10");
         minus10.setItemMeta(meta);
         for(int i=2;i<=47;i+=9){
             inv.setItem(i, minus10);
@@ -67,7 +67,7 @@ public class OffsetMenu{
         
         ItemStack minus100 = minus1.clone();
         meta = minus100.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-100"));
+        meta.setDisplayName("&c&l-100");
         minus100.setItemMeta(meta);
         for(int i=1;i<=46;i+=9){
             inv.setItem(i, minus100);
@@ -75,7 +75,7 @@ public class OffsetMenu{
         
         ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = minus1.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+1"));
+        meta.setDisplayName("&a&l+1");
         plus1.setItemMeta(meta);
         for(int i=5;i<=50;i+=9){
             inv.setItem(i, plus1);
@@ -83,7 +83,7 @@ public class OffsetMenu{
         
         ItemStack plus10 = plus1.clone();
         meta = plus10.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+10"));
+        meta.setDisplayName("&a&l+10");
         plus10.setItemMeta(meta);
         for(int i=6;i<=51;i+=9){
             inv.setItem(i, plus10);
@@ -91,7 +91,7 @@ public class OffsetMenu{
         
         ItemStack plus100 = plus1.clone();
         meta = plus100.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+100"));
+        meta.setDisplayName("&a&l+100");
         plus100.setItemMeta(meta);
         for(int i=7;i<=52;i+=9){
             inv.setItem(i, plus100);
@@ -99,45 +99,45 @@ public class OffsetMenu{
         
         ItemStack minX = XMaterial.GRASS_BLOCK.parseItem();
         meta = minX.getItemMeta();
-        meta.setDisplayName(Logger.color("&cMin X: &6" + newOffset.getOffsetX().getMin()));
-        meta.setLore(Arrays.asList(Logger.color("&3Click to reset")));
+        meta.setDisplayName("&cMin X: &6" + newOffset.getOffsetX().getMin());
+        meta.setLore(Arrays.asList("&3Click to reset"));
         minX.setItemMeta(meta);
         
         ItemStack maxX = minX.clone();
         meta = maxX.getItemMeta();
-        meta.setDisplayName(Logger.color("&cMax X: &6" + newOffset.getOffsetX().getMax()));
+        meta.setDisplayName("&cMax X: &6" + newOffset.getOffsetX().getMax());
         maxX.setItemMeta(meta);
         
         ItemStack minY = new ItemStack(Material.DIRT);
         meta = minY.getItemMeta();
-        meta.setDisplayName(Logger.color("&aMin Y: &6" + newOffset.getOffsetY().getMin()));
-        meta.setLore(Arrays.asList(Logger.color("&3Click to reset")));
+        meta.setDisplayName("&aMin Y: &6" + newOffset.getOffsetY().getMin());
+        meta.setLore(Arrays.asList("&3Click to reset"));
         minY.setItemMeta(meta);
         
         ItemStack maxY = minY.clone();
         meta = maxY.getItemMeta();
-        meta.setDisplayName(Logger.color("&aMax Y: &6" + newOffset.getOffsetY().getMax()));
+        meta.setDisplayName("&aMax Y: &6" + newOffset.getOffsetY().getMax());
         maxY.setItemMeta(meta);
         
         ItemStack minZ = new ItemStack(Material.STONE);
         meta = minZ.getItemMeta();
-        meta.setDisplayName(Logger.color("&bMin Z: &6" + newOffset.getOffsetZ().getMin()));
-        meta.setLore(Arrays.asList(Logger.color("&3Click to reset")));
+        meta.setDisplayName("&bMin Z: &6" + newOffset.getOffsetZ().getMin());
+        meta.setLore(Arrays.asList("&3Click to reset"));
         minZ.setItemMeta(meta);
         
         ItemStack maxZ = minZ.clone();
         meta = maxZ.getItemMeta();
-        meta.setDisplayName(Logger.color("&bMax Z: &6" + newOffset.getOffsetZ().getMax()));
+        meta.setDisplayName("&bMax Z: &6" + newOffset.getOffsetZ().getMax());
         maxZ.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
+        meta.setDisplayName("&2Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         inv.setItem(4, minX);

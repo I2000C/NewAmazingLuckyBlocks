@@ -64,42 +64,42 @@ public class SoundMenu{
         ItemStack sound = new ItemStack(Material.NOTE_BLOCK);
         meta = sound.getItemMeta();
         if(reward.getType() == null){
-            meta.setDisplayName(Logger.color("&6Select sound type"));
+            meta.setDisplayName("&6Select sound type");
         }else{
-            meta.setDisplayName(Logger.color("&6Selected type: &3" + reward.getType()));
+            meta.setDisplayName("&6Selected type: &3" + reward.getType());
         }
         sound.setItemMeta(meta);
         
         ItemStack volume = new ItemStack(Material.EMERALD);
         meta = volume.getItemMeta();
         double truncated = BigDecimal.valueOf(reward.getVolume()).setScale(3, RoundingMode.HALF_UP).doubleValue();
-        meta.setDisplayName(Logger.color("&aSound volume: &5" + truncated));
+        meta.setDisplayName("&aSound volume: &5" + truncated);
         volume.setItemMeta(meta);
         
         ItemStack pitch = new ItemStack(Material.GOLD_NUGGET);
         meta = pitch.getItemMeta();
         truncated = BigDecimal.valueOf(reward.getPitch()).setScale(3, RoundingMode.HALF_UP).doubleValue();
-        meta.setDisplayName(Logger.color("&eSound pitch: &5" + truncated));
+        meta.setDisplayName("&eSound pitch: &5" + truncated);
         pitch.setItemMeta(meta);
         
         ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
         meta = plus.getItemMeta();
-        meta.setDisplayName(Logger.color("&a&l+"));
+        meta.setDisplayName("&a&l+");
         plus.setItemMeta(meta);
         
         ItemStack less = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
         meta = less.getItemMeta();
-        meta.setDisplayName(Logger.color("&c&l-"));
+        meta.setDisplayName("&c&l-");
         less.setItemMeta(meta);
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Back"));
+        meta.setDisplayName("&7Back");
         back.setItemMeta(meta);
         
         ItemStack next = new ItemStack(Material.ANVIL);
         meta = next.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext"));
+        meta.setDisplayName("&bNext");
         next.setItemMeta(meta);
         
         inv.setItem(10, back);
@@ -199,29 +199,29 @@ public class SoundMenu{
         
         ItemStack back = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Back"));
+        meta.setDisplayName("&2Back");
         back.setItemMeta(meta);
         
         ItemStack previousPage = new ItemStack(Material.MAGMA_CREAM);
         meta = previousPage.getItemMeta();
-        meta.setDisplayName(Logger.color("&7Previous page"));
+        meta.setDisplayName("&7Previous page");
         previousPage.setItemMeta(meta);
         
         ItemStack nextPage = XMaterial.ENDER_EYE.parseItem();
         meta = nextPage.getItemMeta();
-        meta.setDisplayName(Logger.color("&bNext page"));
+        meta.setDisplayName("&bNext page");
         nextPage.setItemMeta(meta);
         
         ItemStack pages = new ItemStack(Material.BOOK);
         pages.setAmount(index+1);
         meta = pages.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Page &5" + (index+1) + " &6of &d" + max_pages));
+        meta.setDisplayName("&6Page &5" + (index+1) + " &6of &d" + max_pages);
         pages.setItemMeta(meta);
         
         if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) > 0){
             ItemStack stop = new ItemStack(Material.BARRIER);
             meta = stop.getItemMeta();
-            meta.setDisplayName(Logger.color("&cStop all sounds"));
+            meta.setDisplayName("&cStop all sounds");
             stop.setItemMeta(meta);
             
             inv.setItem(48, stop);
@@ -236,7 +236,7 @@ public class SoundMenu{
         for(int i=45*index;(i-45*index)<MENU_SIZE && i<soundList.length;i++){
             ItemStack stack = new ItemStack(Material.NOTE_BLOCK);
             meta = stack.getItemMeta();
-            meta.setDisplayName(Logger.color("&3" + soundList[i].name()));
+            meta.setDisplayName("&3" + soundList[i].name());
             if(reward.getType() != null && soundList[i].name().equalsIgnoreCase(reward.getType())){
                 meta.addEnchant(Enchantment.DURABILITY, 1, true);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

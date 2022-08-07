@@ -1,10 +1,10 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.MessageMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ActionBarUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,14 +48,14 @@ public class MessageReward extends Reward{
     public ItemStack getItemToDisplay(){
         ItemStack stack = new ItemStack(Material.BOOK);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Message"));
+        meta.setDisplayName("&6Message");
         
         List<String> lore = new ArrayList<>();
         lore.add("&3MessageType: &b" + type.name());
         lore.add("&3Title: &r\"" + title + "&r\"");
         lore.add("&3Subtitle: &r\"" + subtitle + "&r\"");
         
-        meta.setLore(Logger.color(lore));
+        meta.setLore(lore);
         stack.setItemMeta(meta);
         
         return stack;
@@ -104,7 +104,7 @@ public class MessageReward extends Reward{
                 ActionBarUtils.sendMessage(player, replacedTitle);
                 break;
             case CHAT:
-                player.sendMessage(Logger.color(replacedTitle));
+                player.sendMessage(replacedTitle);
                 break;
         }        
     }

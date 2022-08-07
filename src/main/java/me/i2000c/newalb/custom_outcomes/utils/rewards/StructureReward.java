@@ -61,7 +61,7 @@ public class StructureReward extends Reward{
         ItemStack stack = XMaterial.BRICKS.parseItem();
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&6Structure Reward"));
+        meta.setDisplayName("&6Structure Reward");
         List<String> lore = new ArrayList();
         lore.add("&3Schematic name: &b" + this.filename);
         if(this.fromPlayer){
@@ -79,7 +79,7 @@ public class StructureReward extends Reward{
         }else{
             lore.add("&3Place air blocks: &7false");
         }        
-        meta.setLore(Logger.color(lore));
+        meta.setLore(lore);
         stack.setItemMeta(meta);
         
         return stack;

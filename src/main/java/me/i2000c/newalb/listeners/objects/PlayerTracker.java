@@ -75,7 +75,7 @@ public class PlayerTracker extends SpecialItem{
                 if((this.trackercooldown.containsKey(player.getUniqueId())) && ((this.trackercooldown.get(player.getUniqueId())) > System.currentTimeMillis())){
                     e.setCancelled(true);
                     long remainingTime = (this.trackercooldown.get(player.getUniqueId())) - System.currentTimeMillis();
-                    String cmsg = Logger.color(LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L)));
+                    String cmsg = LangLoader.getMessages().getString("Cooldown-message").replace("%time%", String.valueOf(remainingTime / 1000L));
                     player.sendMessage(cmsg);
                 }else{
                     this.trackercooldown.put(player.getUniqueId(), System.currentTimeMillis() + lw * 1000);
@@ -135,7 +135,7 @@ public class PlayerTracker extends SpecialItem{
         ItemStack stack = new ItemStack(Material.COMPASS);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.PlayerTracker.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.PlayerTracker.name"));
         stack.setItemMeta(meta);
         
         return stack;

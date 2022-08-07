@@ -68,22 +68,22 @@ public class BlockReward extends Reward{
             stack.setType(Material.LAVA_BUCKET);
         }
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&9Block"));
+        meta.setDisplayName("&9Block");
         List<String> loreList = new ArrayList<>();
         if(usePlayerLoc){
-            loreList.add(Logger.color("&bTarget location: &2player"));
+            loreList.add("&bTarget location: &2player");
         }else{
-            loreList.add(Logger.color("&bTarget location: &6lucky block"));
+            loreList.add("&bTarget location: &6lucky block");
         }
         if(isFallingBlock){
-            loreList.add(Logger.color("&6IsFallingBlock: &atrue"));
+            loreList.add("&6IsFallingBlock: &atrue");
         }else{
-            loreList.add(Logger.color("&6IsFallingBlock: &7false"));
+            loreList.add("&6IsFallingBlock: &7false");
         }
-        loreList.add(Logger.color("&dOffset:"));
-        loreList.add(Logger.color("   &5X: &3" + offset.getOffsetX()));
-        loreList.add(Logger.color("   &5Y: &3" + offset.getOffsetY()));
-        loreList.add(Logger.color("   &5Z: &3" + offset.getOffsetZ()));
+        loreList.add("&dOffset:");
+        loreList.add("   &5X: &3" + offset.getOffsetX());
+        loreList.add("   &5Y: &3" + offset.getOffsetY());
+        loreList.add("   &5Z: &3" + offset.getOffsetZ());
         meta.setLore(loreList);
         stack.setItemMeta(meta);
         

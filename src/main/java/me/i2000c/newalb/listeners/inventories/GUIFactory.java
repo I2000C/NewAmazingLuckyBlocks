@@ -11,7 +11,7 @@ public final class GUIFactory implements InventoryHolder{
     private final Inventory inventory;
 
     public GUIFactory(CustomInventoryType inventoryType, int size, String title){
-        this.inventory = Bukkit.createInventory(this, size, Logger.color(title));
+        this.inventory = Bukkit.createInventory(this, size, title);
         this.inventoryType = inventoryType;
     }
     

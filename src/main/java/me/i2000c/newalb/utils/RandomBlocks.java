@@ -131,7 +131,7 @@ public class RandomBlocks {
                                 sender = Bukkit.getConsoleSender();
                             }
 
-                            sender.sendMessage(Logger.color("&b" + blocks_placed + " &aBlocks have been placed"));
+                            sender.sendMessage("&b" + blocks_placed + " &aBlocks have been placed");
                         }                        
 
                         sh.cancelTask(taskID2);
@@ -181,7 +181,7 @@ public class RandomBlocks {
                                 sender = Bukkit.getConsoleSender();
                             }
 
-                            sender.sendMessage(Logger.color("&b" + blocks_placed + " &aBlocks have been placed"));
+                            sender.sendMessage("&b" + blocks_placed + " &aBlocks have been placed");
                         }                        
 
                         sh.cancelTask(taskID);

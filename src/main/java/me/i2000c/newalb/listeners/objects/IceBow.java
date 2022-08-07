@@ -33,7 +33,7 @@ public class IceBow extends BowItem{
     public void onArrowHitEntity(EntityDamageByEntityEvent e){    
         Entity damagee = e.getEntity();
         Entity damager = e.getDamager();
-        String iceName = Logger.color(LangLoader.getMessages().getString("Objects.IceBow.name"));
+        String iceName = LangLoader.getMessages().getString("Objects.IceBow.name");
 
         if(damager instanceof Arrow){
             Arrow arrow = (Arrow) damager;
@@ -160,7 +160,7 @@ public class IceBow extends BowItem{
         ItemStack stack = new ItemStack(Material.BOW);
         
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color(LangLoader.getMessages().getString("Objects.IceBow.name")));
+        meta.setDisplayName(LangLoader.getMessages().getString("Objects.IceBow.name"));
         meta.addEnchant(Enchantment.DURABILITY, 5, true);
         stack.setItemMeta(meta);
         

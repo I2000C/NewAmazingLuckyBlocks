@@ -89,47 +89,47 @@ public class EntityReward extends Reward{
     @Override
     public ItemStack getItemToDisplay(){
         List<String> lore = new ArrayList();
-        lore.add(Logger.color("&bID: &r" + entityID));
-        lore.add(Logger.color("&btype: &e" + Logger.stripColor(this.type.name())));
-        lore.add(Logger.color("&bcustom-name: &r" + this.custom_name));
+        lore.add("&bID: &r" + entityID);
+        lore.add("&btype: &e" + Logger.stripColor(this.type.name()));
+        lore.add("&bcustom-name: &r" + this.custom_name);
         if(this.effects.isEmpty()){
-            lore.add(Logger.color("&beffects: &rnull"));
+            lore.add("&beffects: &rnull");
         }else{
-            lore.add(Logger.color("&beffects: &r"));
+            lore.add("&beffects: &r");
             this.effects.forEach((str) -> {
-                lore.add(Logger.color("   " + str));
+                lore.add("   " + str);
             });
         }                   
 
         if(this.equipment.isEmpty()){
-            lore.add(Logger.color("&bequipment: &rnull"));
+            lore.add("&bequipment: &rnull");
         }else{
-            lore.add(Logger.color("&bequipment: &r"));
+            lore.add("&bequipment: &r");
             try{
-                lore.add(Logger.color("   &6Helmet: &d" + this.equipment.helmet.getType().name()));
+                lore.add("   &6Helmet: &d" + this.equipment.helmet.getType().name());
             }catch(Exception ex){}
             try{
-                lore.add(Logger.color("   &6Chestplate: &d" + this.equipment.chestplate.getType().name()));
+                lore.add("   &6Chestplate: &d" + this.equipment.chestplate.getType().name());
             }catch(Exception ex){}    
             try{
-                lore.add(Logger.color("   &6Leggings: &d" + this.equipment.leggings.getType().name()));
+                lore.add("   &6Leggings: &d" + this.equipment.leggings.getType().name());
             }catch(Exception ex){}
             try{
-                lore.add(Logger.color("   &6Boots: &d" + this.equipment.boots.getType().name()));
+                lore.add("   &6Boots: &d" + this.equipment.boots.getType().name());
             }catch(Exception ex){}
             try{
-                lore.add(Logger.color("   &6Item in hand: &d" + this.equipment.itemInHand.getType().name()));
+                lore.add("   &6Item in hand: &d" + this.equipment.itemInHand.getType().name());
             }catch(Exception ex){}
         }
         
-        lore.add(Logger.color("&dOffset:"));
-        lore.add(Logger.color("   &5X: &3" + offset.getOffsetX()));
-        lore.add(Logger.color("   &5Y: &3" + offset.getOffsetY()));
-        lore.add(Logger.color("   &5Z: &3" + offset.getOffsetZ()));
+        lore.add("&dOffset:");
+        lore.add("   &5X: &3" + offset.getOffsetX());
+        lore.add("   &5Y: &3" + offset.getOffsetY());
+        lore.add("   &5Z: &3" + offset.getOffsetZ());
 
         ItemStack stack = XMaterial.GHAST_SPAWN_EGG.parseItem();
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&2Entity"));                        
+        meta.setDisplayName("&2Entity");                        
         meta.setLore(lore);
         stack.setItemMeta(meta);
         
@@ -190,10 +190,10 @@ public class EntityReward extends Reward{
                         ItemStack stack = new ItemStack(material, 1, durability);
                         ItemMeta meta = stack.getItemMeta();
                         if(config.contains(fullPath + ".name")){
-                            meta.setDisplayName(Logger.color(config.getString(fullPath + ".name")));
+                            meta.setDisplayName(config.getString(fullPath + ".name"));
                         }
                         if(config.contains(fullPath + ".lore")){
-                            meta.setLore(Logger.color(config.getStringList(fullPath + ".lore")));
+                            meta.setLore(config.getStringList(fullPath + ".lore"));
                         }
                         if(config.contains(fullPath + ".enchantments")){
                             List<String> enchantments = config.getStringList(fullPath + ".enchantments");
@@ -236,7 +236,7 @@ public class EntityReward extends Reward{
         
         
         if(this.custom_name != null){
-            this.lastSpawnedEntity.setCustomName(Logger.color(this.custom_name));
+            this.lastSpawnedEntity.setCustomName(this.custom_name);
             this.lastSpawnedEntity.setCustomNameVisible(true);
         }
         

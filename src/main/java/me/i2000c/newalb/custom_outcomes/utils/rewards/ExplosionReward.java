@@ -46,7 +46,7 @@ public class ExplosionReward extends Reward{
     public ItemStack getItemToDisplay(){
         ItemStack stack = new ItemStack(Material.TNT);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(Logger.color("&4Explosion"));
+        meta.setDisplayName("&4Explosion");
         String withFireString = this.withFire ? "&atrue" : "&cfalse";
         String breakBlocksString = this.breakBlocks ? "&atrue" : "&cfalse";
         meta.setLore(Logger.color(Arrays.asList("&6Power: &e" + this.power,

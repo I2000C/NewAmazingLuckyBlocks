@@ -409,10 +409,10 @@ public class Outcome implements Displayable, Executable{
     public ItemStack getItemToDisplay(){
         ItemStack sk = this.icon.clone();
         ItemMeta meta = sk.getItemMeta();
-        meta.setDisplayName(Logger.color("&3Outcome " + ID));
+        meta.setDisplayName("&3Outcome " + ID);
         List<String> lore = new ArrayList();
-        lore.add(Logger.color("&aName: &d" + this.name));
-        lore.add(Logger.color("&6Probability: &b" + this.probability));
+        lore.add("&aName: &d" + this.name);
+        lore.add("&6Probability: &b" + this.probability);
         meta.setLore(lore);
         sk.setItemMeta(meta);
         
