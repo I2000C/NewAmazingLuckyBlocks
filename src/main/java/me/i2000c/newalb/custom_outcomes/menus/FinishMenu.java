@@ -1,9 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.custom_outcomes.utils.Executable;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
@@ -13,14 +11,14 @@ import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityTowerReward;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.Reward;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.Logger;
-import org.bukkit.Material;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class FinishMenu{
     private static int index;
@@ -115,140 +113,93 @@ public class FinishMenu{
         int n = Integer.min(currentOutcome.getNumberOfRewards() - MENU_SIZE*index, MENU_SIZE);
         for(int i=0;i<n;i++){
             Reward reward = currentOutcome.getReward(i + index*MENU_SIZE);
-            ItemStack itemToDisplay = reward.getItemToDisplay();
+            ItemBuilder builder = ItemBuilder.fromItem(reward.getItemToDisplay(), false);
             if(delayMode){
-                ItemMeta meta = itemToDisplay.getItemMeta();
-                List<String> lore;
-                if(meta.hasLore()){
-                    lore = meta.getLore();
-                }else{
-                    lore = new ArrayList<>();
-                }
-                lore.add("");
-                lore.add("&6Reward Delay: &a" + reward.getDelay());
-                meta.setLore(lore);
-                itemToDisplay.setItemMeta(meta);
+                builder.addLoreLine("");
+                builder.addLoreLine("&6Reward Delay: &a" + reward.getDelay());
             }
-            inv.setItem(i, itemToDisplay);
+            inv.setItem(i, builder.build());
         }
         
-        List<String> lore = new ArrayList<>();
-        lore.add("&6The plugin will reload the custom outcomes list");
-        lore.add("&6after you click this option");
+        ItemStack saveAndExit = ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
+                .withDisplayName("&dSave and exit")
+                .addLoreLine("&6The plugin will reload the custom outcomes list")
+                .addLoreLine("&6after you click this option")
+                .build();
         
-        ItemStack saveAndExit = new ItemStack(Material.MAGMA_CREAM);
-        ItemMeta meta = saveAndExit.getItemMeta();
-        meta.setDisplayName("&dSave and exit");
-        meta.setLore(lore);
-        saveAndExit.setItemMeta(meta);
+        ItemStack add = ItemBuilder.newItem(XMaterial.SLIME_BALL)
+                .withDisplayName("&aCreate new reward")
+                .build();
         
-        ItemStack add = new ItemStack(Material.SLIME_BALL);
-        meta = add.getItemMeta();
-        meta.setDisplayName("&aCreate new reward");
-        add.setItemMeta(meta);
+        ItemStack testOutcome = ItemBuilder.newItem(XMaterial.BEACON)
+                .withDisplayName("&bTest the outcome")
+                .build();
         
-        ItemStack testOutcome = new ItemStack(Material.BEACON);
-        meta = testOutcome.getItemMeta();
-        meta.setDisplayName("&bTest the outcome");
-        testOutcome.setItemMeta(meta);
-        
-        lore.clear();
-        lore.add("");
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.PAPER);
+        builder.withDisplayName("&eTest rewards");
+        builder.addLoreLine("");
         if(testMode){
-            lore.add("&6TestMode: &aenabled");
+            builder.addLoreLine("&6TestMode: &aenabled");
         }else{
-            lore.add("&6TestMode: &7disabled");
+            builder.addLoreLine("&6TestMode: &7disabled");
         }
-        ItemStack testReward = new ItemStack(Material.PAPER);
-        meta = testReward.getItemMeta();
-        meta.setDisplayName("&eTest rewards");
-        meta.setLore(lore);
-        testReward.setItemMeta(meta);
+        ItemStack testReward = builder.build();
         
-        lore.clear();
-        lore.add("");
-        lore.add("&5Click here to toggle reward deleteMode");
-        lore.add("&5If this mode is enabled, you will be able");
-        lore.add("&5to delete the reward which you click");
-        lore.add("");
+        builder = ItemBuilder.newItem(XMaterial.BARRIER);
+        builder.withDisplayName("&cDelete rewards");
+        builder.addLoreLine("");
+        builder.addLoreLine("&5Click here to toggle reward deleteMode");
+        builder.addLoreLine("&5If this mode is enabled, you will be able");
+        builder.addLoreLine("&5to delete the reward which you click");
+        builder.addLoreLine("");
         if(deleteMode){
-            lore.add("&4DeleteMode: &aenabled");
+            builder.addLoreLine("&4DeleteMode: &aenabled");
         }else{
-            lore.add("&4DeleteMode: &7disabled");
+            builder.addLoreLine("&4DeleteMode: &7disabled");
         }
-        ItemStack del = new ItemStack(Material.BARRIER);
-        meta = del.getItemMeta();
-        meta.setDisplayName("&cDelete rewards");
-        meta.setLore(lore);
-        del.setItemMeta(meta);
+        ItemStack delete = builder.build();
         
-        ItemStack exit = new ItemStack(Material.IRON_DOOR);
-        meta = exit.getItemMeta();
-        meta.setDisplayName("&cExit without saving");
-        exit.setItemMeta(meta);
+        ItemStack exit = ItemBuilder.newItem(XMaterial.IRON_DOOR)
+                .withDisplayName("&cExit without saving")
+                .build();
         
-        lore.clear();
-        lore.add("");
+        builder = ItemBuilder.newItem(XMaterial.ANVIL);
+        builder.withDisplayName("&6Edit rewards");
+        builder.addLoreLine("");
         if(editMode){
-            lore.add("&dEditMode: &aenabled");
+            builder.addLoreLine("&dEditMode: &aenabled");
         }else{
-            lore.add("&dEditMode: &7disabled");
+            builder.addLoreLine("&dEditMode: &7disabled");
         }
-        ItemStack edit = new ItemStack(Material.ANVIL);
-        meta = edit.getItemMeta();
-        meta.setDisplayName("&6Edit rewards");
-        meta.setLore(lore);
-        edit.setItemMeta(meta);
+        ItemStack edit = builder.build();
         
-        lore.clear();
-        lore.add("");
-        lore.add("&6You can clone rewards using this option.");
-        lore.add("&6However, you cannot clone &7EntityTowerRewards");
-        lore.add("");
+        builder = ItemBuilder.newItem(XMaterial.REPEATER);
+        builder.withDisplayName("&3Clone rewards");
+        builder.addLoreLine("");
+        builder.addLoreLine("&6You can clone rewards using this option.");
+        builder.addLoreLine("&6However, you cannot clone &7EntityTowerRewards");
+        builder.addLoreLine("");
         if(cloneMode){
-            lore.add("&eCloneMode: &aenabled");
+            builder.addLoreLine("&eCloneMode: &aenabled");
         }else{
-            lore.add("&eCloneMode: &7disabled");
+            builder.addLoreLine("&eCloneMode: &7disabled");
         }
-        ItemStack clone = XMaterial.REPEATER.parseItem();
-        meta = clone.getItemMeta();
-        meta.setDisplayName("&3Clone Rewards");
-        meta.setLore(lore);
-        clone.setItemMeta(meta);
+        ItemStack clone = builder.build();
         
-        lore.clear();
-        lore.add("");
-        lore.add("&3Click here to configure the delay of a reward");
-        lore.add("");
+        builder = ItemBuilder.newItem(XMaterial.CLOCK);
+        builder.addLoreLine("");
+        builder.addLoreLine("&3Click here to configure the delay of a reward");
+        builder.addLoreLine("");
         if(delayMode){
-            lore.add("&5DelayMode: &aenabled");
+            builder.addLoreLine("&5DelayMode: &aenabled");
         }else{
-            lore.add("&5DelayMode: &7disabled");
+            builder.addLoreLine("&5DelayMode: &7disabled");
         }
-        ItemStack delay = XMaterial.CLOCK.parseItem();
-        meta = delay.getItemMeta();
-        meta.setDisplayName("&6Configure delay of Rewards");
-        meta.setLore(lore);
-        delay.setItemMeta(meta);
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&2Previous page");
-        back.setItemMeta(meta);
+        ItemStack delay = builder.build();
 
-        ItemStack currentPage = new ItemStack(Material.BOOK, index+1);
-        meta = currentPage.getItemMeta();
-        meta.setDisplayName("&6Page &3" + (index+1) + " &a/ &3" + max_pages);
-        currentPage.setItemMeta(meta);
-
-        ItemStack next = XMaterial.ENDER_EYE.parseItem();
-        meta = next.getItemMeta();
-        meta.setDisplayName("&2Next page");
-        next.setItemMeta(meta);
-
-        inv.setItem(PREVIOUS_PAGE_SLOT, back);
-        inv.setItem(CURRENT_PAGE_SLOT, currentPage);
-        inv.setItem(NEXT_PAGE_SLOT, next);
+        inv.setItem(PREVIOUS_PAGE_SLOT, GUIItem.getPreviousPageItem());
+        inv.setItem(CURRENT_PAGE_SLOT, GUIItem.getCurrentPageItem(index+1, max_pages));
+        inv.setItem(NEXT_PAGE_SLOT, GUIItem.getNextPageItem());
         
         if(!deleteMode && !testMode && !editMode && !cloneMode && !delayMode){
             inv.setItem(NEW_REWARD_SLOT, add);
@@ -257,7 +208,7 @@ public class FinishMenu{
             inv.setItem(TEST_REWARD_SLOT, testReward);
             inv.setItem(CLONE_REWARD_SLOT, clone);
             inv.setItem(EDIT_REWARD_SLOT, edit);
-            inv.setItem(REMOVE_REWARD_SLOT, del);
+            inv.setItem(REMOVE_REWARD_SLOT, delete);
             inv.setItem(EXIT_SLOT, exit);
             inv.setItem(SAVE_AND_EXIT_SLOT, saveAndExit);
         }else if(delayMode){
@@ -269,7 +220,7 @@ public class FinishMenu{
         }else if(editMode){
             inv.setItem(EDIT_REWARD_SLOT, edit);
         }else if(deleteMode){
-            inv.setItem(REMOVE_REWARD_SLOT, del);
+            inv.setItem(REMOVE_REWARD_SLOT, delete);
         }
         
         GUIManager.setCurrentInventory(inv);
