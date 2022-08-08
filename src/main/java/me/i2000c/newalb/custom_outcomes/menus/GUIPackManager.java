@@ -2,8 +2,6 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import me.i2000c.newalb.CommandManager;
 import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
@@ -11,14 +9,15 @@ import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class GUIPackManager{
     private static boolean renameMode;
@@ -49,75 +48,37 @@ public class GUIPackManager{
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.GUI_PACK_MANAGER_MENU, 54, "&3&lPack menu");
         
-        ItemMeta meta;
-        String lore;
+        ItemStack createPack = ItemBuilder.newItem(XMaterial.SLIME_BALL)
+                .withDisplayName("&aCreate new pack")
+                .build();
         
-        ItemStack createPack = new ItemStack(Material.SLIME_BALL);
-        meta = createPack.getItemMeta();
-        meta.setDisplayName("&aCreate new pack");
-        createPack.setItemMeta(meta);
+        ItemStack renamePack = GUIItem.getEnabledDisabledItem(
+                renameMode, 
+                "&3Rename packs", 
+                "&6Rename mode", 
+                XMaterial.NAME_TAG, 
+                XMaterial.NAME_TAG);
         
-        ItemStack renamePack = new ItemStack(Material.NAME_TAG);
-        meta = renamePack.getItemMeta();
-        meta.setDisplayName("&3Rename packs");
-        if(renameMode){
-            lore = "&6Rename mode: &aenabled";
-        }else{
-            lore = "&6Rename mode: &7disabled";
-        }
-        meta.setLore(Arrays.asList(lore));
-        renamePack.setItemMeta(meta);
+        ItemStack clonePack = GUIItem.getEnabledDisabledItem(
+                cloneMode, 
+                "&bClone packs", 
+                "&6Clone mode", 
+                XMaterial.REPEATER, 
+                XMaterial.REPEATER);
         
-        ItemStack clonePack = XMaterial.REPEATER.parseItem();
-        meta = clonePack.getItemMeta();
-        meta.setDisplayName("&bClone packs");
-        if(cloneMode){
-            lore = "&6Clone mode: &aenabled";
-        }else{
-            lore = "&6Clone mode: &7disabled";
-        }
-        meta.setLore(Arrays.asList(lore));
-        clonePack.setItemMeta(meta);
+        ItemStack deletePack = GUIItem.getEnabledDisabledItem(
+                deleteMode, 
+                "&cRemove packs", 
+                "&6Delete mode", 
+                XMaterial.BARRIER, 
+                XMaterial.BARRIER);
+        ItemBuilder.fromItem(deletePack, false)
+                .addLoreLine("")
+                .addLoreLine("&4&lWARNING: &cIf this mode is enabled,")
+                .addLoreLine("&cwhen you click on a pack,")
+                .addLoreLine("&cit will be deleted permanently");        
         
-        ItemStack deletePack = new ItemStack(Material.BARRIER);
-        meta = deletePack.getItemMeta();
-        meta.setDisplayName("&cRemove packs");
-        List<String> loreList = new ArrayList();
-        if(deleteMode){
-            loreList.add("&6Delete mode: &aenabled");
-            loreList.add("");
-            loreList.add("&4&lWARNING: &cIf this mode is enabled,");
-            loreList.add("&cwhen you click on a pack,");
-            loreList.add("&cit will be deleted permanently");
-        }else{
-            loreList.add("&6Delete mode: &7disabled");
-        }
-        meta.setLore(loreList);
-        deletePack.setItemMeta(meta);
-        
-        
-        ItemStack exit = new ItemStack(Material.ENDER_PEARL);
-        meta = exit.getItemMeta();
-        meta.setDisplayName("&2Back");
-        exit.setItemMeta(meta);
-        
-        ItemStack pages = new ItemStack(Material.BOOK);
-        meta = pages.getItemMeta();
-        meta.setDisplayName("&6Page ? / ?");
-        pages.setItemMeta(meta);
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&2Previous page");
-        back.setItemMeta(meta);
-        
-        ItemStack next = XMaterial.ENDER_EYE.parseItem();
-        meta = next.getItemMeta();
-        meta.setDisplayName("&aNext page");
-        next.setItemMeta(meta);
-        
-        
-        inv.setItem(45, exit);
+        inv.setItem(45, GUIItem.getBackItem());
         if(!renameMode && !cloneMode && !deleteMode){
             inv.setItem(46, createPack);
         }
@@ -132,9 +93,9 @@ public class GUIPackManager{
         }        
         
         //Not required for the moment
-        //inv.setItem(51, back);
-        //inv.setItem(52, pages);
-        //inv.setItem(53, next);
+        //inv.setItem(51, GUIItem.getPreviousPageItem());
+        //inv.setItem(52, GUIItem.getCurrentPageItem(0, 0));
+        //inv.setItem(53, GUIItem.getNextPageItem());
         
         List<OutcomePack> packList = PackManager.getPacks();
         packList.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getFilename().compareTo(pack2.getFilename()));
