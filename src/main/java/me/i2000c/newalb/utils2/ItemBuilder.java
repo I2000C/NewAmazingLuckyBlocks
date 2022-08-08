@@ -113,12 +113,12 @@ public class ItemBuilder{
     }
     
     public ItemBuilder addEnchantment(Enchantment enchantment, int level){
-        item.addUnsafeEnchantment(enchantment, level);        
+        item.addUnsafeEnchantment(enchantment, level);
         return this;
     }
     public ItemBuilder withEnchantments(Map<Enchantment, Integer> enchantments){
         item.getEnchantments().forEach((enchantment, level) -> item.removeEnchantment(enchantment));
-        item.addUnsafeEnchantments(enchantments);        
+        item.addUnsafeEnchantments(enchantments);
         return this;
     }
     public Map<Enchantment, Integer> getEnchantments(){

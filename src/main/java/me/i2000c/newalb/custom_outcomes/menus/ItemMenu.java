@@ -3,7 +3,7 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
@@ -11,12 +11,15 @@ import me.i2000c.newalb.custom_outcomes.utils.rewards.ItemReward;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureManager;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -25,7 +28,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionData;
@@ -79,52 +81,27 @@ public class ItemMenu{
     
     public static void openItemMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ITEM_MENU, 27, "&b&lItem Reward");
+        
         if(reward == null){
             reward = new ItemReward(FinishMenu.getCurrentOutcome());
         }
         
-        ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
+        ItemStack item = ItemBuilder.newItem(XMaterial.BRICKS)
+                .withDisplayName("&7Select an item from your inventory")
+                .build();
         
-        ItemStack item = XMaterial.BRICKS.parseItem();
-        meta = item.getItemMeta();
-        meta.setDisplayName("&7Select an item from your inventory");
-        item.setItemMeta(meta);
+        ItemStack amount_item = ItemBuilder.newItem(XMaterial.BLACK_STAINED_GLASS_PANE)
+                .withAmount(amount)
+                .withDisplayName("&bAmount: &r" + amount)
+                .build();
         
-        ItemStack minus = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = minus.getItemMeta();
-        meta.setDisplayName("&c&l-");
-        minus.setItemMeta(meta);
+        ItemStack creative = ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
+                .withDisplayName("&3Close menu to pick items from creative mode")
+                .build();
         
-        ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = plus.getItemMeta();
-        meta.setDisplayName("&a&l+");
-        plus.setItemMeta(meta);
-        
-        ItemStack amount_item = XMaterial.BLACK_STAINED_GLASS_PANE.parseItem();
-        amount_item.setAmount(amount);
-        meta = amount_item.getItemMeta();
-        meta.setDisplayName("&bAmount: &r" + amount);
-        amount_item.setItemMeta(meta);
-        
-        ItemStack creative = XMaterial.CRAFTING_TABLE.parseItem();
-        meta = creative.getItemMeta();
-        meta.setDisplayName("&3Close menu to pick items from creative mode");
-        creative.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
-        
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ITEM_MENU, 27, "&b&lItem Reward");
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
         }
@@ -141,11 +118,11 @@ public class ItemMenu{
         }else{
             inv.setItem(14, amount_item);
         }
-        inv.setItem(15, plus);
-        inv.setItem(13, minus);
+        inv.setItem(15, GUIItem.getPlusLessItem(+1));
+        inv.setItem(13, GUIItem.getPlusLessItem(-1));
         inv.setItem(12, creative);
-        inv.setItem(10, back);
-        inv.setItem(16, next);
+        inv.setItem(10, GUIItem.getBackItem());
+        inv.setItem(16, GUIItem.getNextItem());
         
         p.openInventory(inv);
         GUIManager.setCurrentInventory(inv);
@@ -205,76 +182,45 @@ public class ItemMenu{
     
     private static void openItemMenu2(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        ChatListener.removePlayer(p);
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ITEM_MENU_2, 36, "&b&lItem Reward 2");
+                
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
-        ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack name = ItemBuilder.newItem(XMaterial.NAME_TAG)
+                .withDisplayName("&aSet custom name")
+                .build();
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
+        ItemStack lore = ItemBuilder.newItem(XMaterial.OAK_SIGN)
+                .withDisplayName("&6Add lore line")
+                .build();
         
-        ItemStack name = new ItemStack(Material.NAME_TAG);
-        meta = name.getItemMeta();
-        meta.setDisplayName("&aSet custom name");
-        name.setItemMeta(meta);
+        ItemStack durability = ItemBuilder.newItem(XMaterial.IRON_PICKAXE)
+                .withDisplayName("&3Set durability")
+                .build();
         
-        ItemStack lore = XMaterial.OAK_SIGN.parseItem();
-        meta = lore.getItemMeta();
-        meta.setDisplayName("&6Add lore line");
-        lore.setItemMeta(meta);
-        
-        ItemStack durability = new ItemStack(Material.IRON_PICKAXE);
-        meta = durability.getItemMeta();
-        meta.setDisplayName("&3Set durability");
-        durability.setItemMeta(meta);
-        
-        ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = plus.getItemMeta();
-        meta.setDisplayName("&a&l+");
-        plus.setItemMeta(meta);
-        
-        ItemStack less = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = less.getItemMeta();
-        meta.setDisplayName("&c&l-");
-        less.setItemMeta(meta);
-        
-        ItemStack enchantments = XMaterial.ENCHANTING_TABLE.parseItem();
-        meta = enchantments.getItemMeta();
-        meta.setDisplayName("&dAdd enchantment");
-        enchantments.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
+        ItemStack enchantments = ItemBuilder.newItem(XMaterial.ENCHANTING_TABLE)
+                .withDisplayName("&dAdd enchantment")
+                .build();
         
         //Reset items
         
-        ItemStack resetName = new ItemStack(Material.BARRIER);
-        meta = resetName.getItemMeta();
-        meta.setDisplayName("&cReset custom name");
-        resetName.setItemMeta(meta);
+        ItemStack resetName = ItemBuilder.newItem(XMaterial.BARRIER)
+                .withDisplayName("&cReset custom name")
+                .build();
         
-        ItemStack resetLore = new ItemStack(Material.BARRIER);
-        meta = resetLore.getItemMeta();
-        meta.setDisplayName("&cReset lore");
-        resetLore.setItemMeta(meta);
+        ItemStack resetLore = ItemBuilder.newItem(XMaterial.BARRIER)
+                .withDisplayName("&cReset lore")
+                .build();
         
-        ItemStack resetDurability = new ItemStack(Material.BARRIER);
-        meta = resetDurability.getItemMeta();
-        meta.setDisplayName("&cReset durability");
-        resetDurability.setItemMeta(meta);
+        ItemStack resetDurability = ItemBuilder.newItem(XMaterial.BARRIER)
+                .withDisplayName("&cReset durability")
+                .build();
         
-        ItemStack resetEnchantments = new ItemStack(Material.BARRIER);
-        meta = resetEnchantments.getItemMeta();
-        meta.setDisplayName("&cReset enchantments");
-        resetEnchantments.setItemMeta(meta);
+        ItemStack resetEnchantments = ItemBuilder.newItem(XMaterial.BARRIER)
+                .withDisplayName("&cReset enchantments")
+                .build();
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ITEM_MENU_2, 36, "&b&lItem Reward 2");
+        
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
         }
@@ -288,63 +234,56 @@ public class ItemMenu{
         ItemStack setPotionColor = null;
         if(TextureManager.isSkull(reward.getItem().getType())){
             //TextureMeta
-            specialItem = new ItemStack(TextureManager.getItemSkullMaterial());
-            meta = specialItem.getItemMeta();
-            meta.setDisplayName("&5Click to set custom texture");
-            meta.setLore(Arrays.asList("&3You can write 'null'", "&3  if you want to remove the texture"));
-            specialItem.setItemMeta(meta);
+            specialItem = ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
+                    .withDisplayName("&5Click to set custom texture")
+                    .addLoreLine("&3You can write 'null'")
+                    .addLoreLine("&3  if you want to remove the texture")
+                    .build();
             
-            removeSpecialData = new ItemStack(Material.BARRIER);
-            meta = removeSpecialData.getItemMeta();
-            meta.setDisplayName("&cClick to remove custom texture");
-            removeSpecialData.setItemMeta(meta);
-        }else switch(reward.getItem().getType().name()){
-            case "POTION":
-            case "SPLASH_POTION":
-            case "LINGERING_POTION":
+            removeSpecialData = ItemBuilder.newItem(XMaterial.BARRIER)
+                    .withDisplayName("&cClick to remove custom texture")
+                    .build();
+        }else switch(XMaterial.matchXMaterial(reward.getItem().getType())){
+            case POTION:
+            case SPLASH_POTION:
+            case LINGERING_POTION:
                 //PotionMeta
-                specialItem = new ItemStack(Material.POTION);
-                meta = specialItem.getItemMeta();
-                meta.setDisplayName("&5Click to add custom potion effects");
-                specialItem.setItemMeta(meta);
+                specialItem = ItemBuilder.newItem(XMaterial.POTION)
+                        .withDisplayName("&5Click to add custom potion effects")
+                        .build();
                 
-                removeSpecialData = new ItemStack(Material.BARRIER);
-                meta = removeSpecialData.getItemMeta();
-                meta.setDisplayName("&cClick to remove all potion effects");
-                removeSpecialData.setItemMeta(meta);
+                removeSpecialData = ItemBuilder.newItem(XMaterial.BARRIER)
+                        .withDisplayName("&cClick to remove all potion effects")
+                        .build();
                 
-                changePotionType = XMaterial.BREWING_STAND.parseItem();
-                meta = changePotionType.getItemMeta();
-                meta.setDisplayName("&bClick to change potion type");
-                meta.setLore(Arrays.asList("&dCurrent type: &e" + PotionSplashType.getFromPotion(reward.getItem())));
-                changePotionType.setItemMeta(meta);
+                changePotionType = ItemBuilder.newItem(XMaterial.BREWING_STAND)
+                        .withDisplayName("&bClick to change potion type")
+                        .addLoreLine("&dCurrent type: &e" + PotionSplashType.getFromPotion(reward.getItem()))
+                        .build();
                 
                 if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
-                    setPotionColor = new ItemStack(Material.BLAZE_POWDER);
-                    meta = setPotionColor.getItemMeta();
-                    meta.setDisplayName("&dClick to set the potion color");
-                    setPotionColor.setItemMeta(meta);
+                    setPotionColor = ItemBuilder.newItem(XMaterial.BLAZE_POWDER)
+                            .withDisplayName("&dClick to set potion color")
+                            .build();
                 }
                 
                 break;
-            case "LEATHER_HELMET":
-            case "LEATHER_CHESTPLATE":
-            case "LEATHER_LEGGINGS":
-            case "LEATHER_BOOTS":
+            case LEATHER_HELMET:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_LEGGINGS:
+            case LEATHER_BOOTS:
                 //LeatherArmorMeta
-                specialItem = new ItemStack(Material.LEATHER);
-                meta = specialItem.getItemMeta();
-                meta.setDisplayName("&5Click to set custom armor color");
-                specialItem.setItemMeta(meta);
+                specialItem = ItemBuilder.newItem(XMaterial.LEATHER)
+                        .withDisplayName("&5Click to set custom armor color")
+                        .build();
                 
-                removeSpecialData = new ItemStack(Material.BARRIER);
-                meta = removeSpecialData.getItemMeta();
-                meta.setDisplayName("&cClick to reset armor color");
-                removeSpecialData.setItemMeta(meta);
+                removeSpecialData = ItemBuilder.newItem(XMaterial.BARRIER)
+                        .withDisplayName("&cClick to reset armor color")
+                        .build();
                 break;
         }
         
-        inv.setItem(9, back);
+        inv.setItem(9, GUIItem.getBackItem());
         inv.setItem(11, reward.getItem());
         inv.setItem(19, removeSpecialData);
         inv.setItem(20, changePotionType);
@@ -353,10 +292,10 @@ public class ItemMenu{
         inv.setItem(14, lore);
         inv.setItem(15, durability);
         inv.setItem(16, enchantments);
-        inv.setItem(17, next);
+        inv.setItem(17, GUIItem.getNextItem());
         
-        inv.setItem(6, plus);
-        inv.setItem(24, less);
+        inv.setItem(6, GUIItem.getPlusLessItem(+1));
+        inv.setItem(24, GUIItem.getPlusLessItem(-1));
         
         inv.setItem(31, resetName);
         inv.setItem(32, resetLore);
@@ -519,8 +458,8 @@ public class ItemMenu{
                             break;
                         case LEATHER:
                             //Open armor color menu
-                            LeatherArmorMeta lam = (LeatherArmorMeta) reward.getItem().getItemMeta();
-                            color = FireworkMenu.getHexFromDecimal(lam.getColor().asRGB());
+                            Color itemColor = ItemBuilder.fromItem(reward.getItem(), false).getColor();
+                            color = FireworkMenu.getHexFromDecimal(itemColor.asRGB());
                             openColorInventory(p);
                             break;
                     }
@@ -543,10 +482,10 @@ public class ItemMenu{
                     if(TextureManager.isSkull(reward.getItem().getType())){
                         TextureManager.setTexture(reward.getItem(), null);
                         openItemMenu2(p);
-                    }else switch(reward.getItem().getType().name()){
-                        case "POTION":
-                        case "SPLASH_POTION":
-                        case "LINGERING_POTION":
+                    }else switch(XMaterial.matchXMaterial(reward.getItem().getType())){
+                        case POTION:
+                        case SPLASH_POTION:
+                        case LINGERING_POTION:
                             //Remove all effects
                             PotionMeta potionMeta = (PotionMeta) reward.getItem().getItemMeta();
                             potionMeta.clearCustomEffects();
@@ -566,13 +505,11 @@ public class ItemMenu{
                             PotionSplashType.clearPotionSplashType(reward.getItem());
                             openItemMenu2(p);
                             break;
-                        case "LEATHER_HELMET":
-                        case "LEATHER_CHESTPLATE":
-                        case "LEATHER_LEGGINGS":
-                        case "LEATHER_BOOTS":
-                            LeatherArmorMeta lam = (LeatherArmorMeta) reward.getItem().getItemMeta();
-                            lam.setColor(null);
-                            reward.getItem().setItemMeta(lam);
+                        case LEATHER_HELMET:
+                        case LEATHER_CHESTPLATE:
+                        case LEATHER_LEGGINGS:
+                        case LEATHER_BOOTS:
+                            ItemBuilder.fromItem(reward.getItem(), false).withColor(null);
                             openItemMenu2(p);
                             break;
                     }
@@ -584,51 +521,26 @@ public class ItemMenu{
         
     private static void openEnchantmentsMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        ItemStack glass = XMaterial.PURPLE_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.PURPLE);
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        ItemStack enchantment = new ItemStack(Material.ENCHANTED_BOOK);
-        meta = enchantment.getItemMeta();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.ENCHANTED_BOOK);
         if(enchantName == null){
-            meta.setDisplayName("&5Select enchantment");
+            builder.withDisplayName("&5Select enchantment");
         }else{
-            meta.setDisplayName("&5Selected enchantment: &b" + enchantName);
+            builder.withDisplayName("&5Selected enchantment: &b" + enchantName);
             if(enchantLevel > 0){
-                meta.addEnchant(Enchantment.getByName(enchantName), enchantLevel, true);
+                builder.addEnchantment(Enchantment.getByName(enchantName), enchantLevel);
             }else{
-                meta.addEnchant(Enchantment.getByName(enchantName), 1, true);
+                builder.addEnchantment(Enchantment.getByName(enchantName), 1);
             }
         }
-        enchantment.setItemMeta(meta);
+        ItemStack enchantment = builder.build();
         
-        ItemStack level = XMaterial.EXPERIENCE_BOTTLE.parseItem();
-        meta = level.getItemMeta();
-        meta.setDisplayName("&aSelected level: &b" + enchantLevel);
-        meta.setLore(Arrays.asList("&3Click to select"));
-        level.setAmount(enchantLevel);
-        level.setItemMeta(meta);
-        
-        ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = plus.getItemMeta();
-        meta.setDisplayName("&a&l+");
-        plus.setItemMeta(meta);
-        
-        ItemStack less = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = less.getItemMeta();
-        meta.setDisplayName("&c&l-");
-        less.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
+        ItemStack level = ItemBuilder.newItem(XMaterial.EXPERIENCE_BOTTLE)
+                .withAmount(enchantLevel)
+                .withDisplayName("&aSelected level: &b" + enchantLevel)
+                .addLoreLine("&3Click to select")
+                .build();
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENCHATMENTS_MENU, 27, "&d&lEnchantments Menu");
         for(int i=0;i<9;i++){
@@ -640,14 +552,14 @@ public class ItemMenu{
         inv.setItem(9, glass);
         inv.setItem(17, glass);
         
-        inv.setItem(10, back);
+        inv.setItem(10, GUIItem.getBackItem());
         inv.setItem(12, enchantment);
         inv.setItem(14, level);
         
-        inv.setItem(5, plus);
-        inv.setItem(23, less);
+        inv.setItem(5, GUIItem.getPlusLessItem(+1));
+        inv.setItem(23, GUIItem.getPlusLessItem(-1));
         
-        inv.setItem(16, next);
+        inv.setItem(16, GUIItem.getNextItem());
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
@@ -758,10 +670,7 @@ public class ItemMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.ITEM_COLOR_MENU, 54, "&6&lColor menu");
         
-        ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
@@ -787,50 +696,27 @@ public class ItemMenu{
             }
         }
         
-        ItemStack coloredItem = reward.getItem().clone();
-        meta = coloredItem.getItemMeta();
-        if(meta instanceof LeatherArmorMeta){
-            LeatherArmorMeta lam = (LeatherArmorMeta) meta;
-            if(color == null || color.equals("ERROR")){
-                lam.setDisplayName("&dChosen color: &b" + "null");
-            }else{
-                lam.setDisplayName("&dChosen color: &b" + color);
-                lam.setColor(Color.fromRGB(FireworkMenu.getDecimalFromHex(color)));
-            }
-        }else if(meta instanceof PotionMeta){
-            PotionMeta potionMeta = (PotionMeta) meta;
-            if(color == null || color.equals("ERROR")){
-                potionMeta.setDisplayName("&dChosen color: &b" + "null");
-            }else{
-                potionMeta.setDisplayName("&dChosen color: &b" + color);
-                potionMeta.setColor(Color.fromRGB(FireworkMenu.getDecimalFromHex(color)));
-            }
-        }            
-        coloredItem.setItemMeta(meta);
-        
-        ItemStack chooseCustomColor = XMaterial.OAK_SIGN.parseItem();
-        meta = chooseCustomColor.getItemMeta();
-        if(color != null && color.equals("ERROR")){
-            meta.setDisplayName("&cYou must enter a valid hex color");
+        ItemBuilder builder = ItemBuilder.fromItem(reward.getItem());
+        if(color == null || color.equals("ERROR")){
+            builder.withDisplayName("&dChosen color: &b" + "null");
         }else{
-            meta.setDisplayName("&3Choose custom color");
+            builder.withDisplayName("&dChosen color: &b" + color);
+            builder.withColor(Color.fromRGB(FireworkMenu.getDecimalFromHex(color)));
         }
-        chooseCustomColor.setItemMeta(meta);
+        ItemStack coloredItem = builder.build();
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&bBack");
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
-        
+        builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
+        if(color != null && color.equals("ERROR")){
+            builder.withDisplayName("&cYou must enter a valid hex color");
+        }else{
+            builder.withDisplayName("&3Choose custom color");
+        }
+        ItemStack chooseCustomColor = builder.build();
+                
         inv.setItem(16, coloredItem);
         inv.setItem(15, chooseCustomColor);
-        inv.setItem(42, back);
-        inv.setItem(43, next);
+        inv.setItem(42, GUIItem.getBackItem());
+        inv.setItem(43, GUIItem.getNextItem());
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
@@ -869,17 +755,7 @@ public class ItemMenu{
                     //Open item menu 2 inventory
                     if(color != null && !color.equals("ERROR")){
                         Color c = Color.fromRGB(FireworkMenu.getDecimalFromHex(color));
-                        
-                        ItemMeta meta = reward.getItem().getItemMeta();
-                        if(meta instanceof LeatherArmorMeta){
-                            LeatherArmorMeta lam = (LeatherArmorMeta) meta;
-                            lam.setColor(c);
-                        }else if(meta instanceof PotionMeta){
-                            PotionMeta potionMeta = (PotionMeta) meta;
-                            potionMeta.setColor(c);
-                        }
-                        
-                        reward.getItem().setItemMeta(meta);
+                        ItemBuilder.fromItem(reward.getItem(), false).withColor(c);
                         openItemMenu2(p);
                     }
                     break;
@@ -976,35 +852,25 @@ public class ItemMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.POTION_EFFECTS_MENU, 54, "&d&lEffect List");
         
-        List<String> effectTypeNames = new ArrayList<>();
-        for(PotionEffectType pe : PotionEffectType.values()){
-            try{
-                effectTypeNames.add(pe.getName());
-            }catch(Exception ex){
-                
-            }
-        }
-        Collections.sort(effectTypeNames);
+        List<PotionEffectType> effectTypes = Arrays.asList(PotionEffectType.values());
+        effectTypes.sort((effectType1, effectType2) -> {
+            String effectTypeName1 = effectType1.getName();
+            String effectTypeName2 = effectType2.getName();
+            return effectTypeName1.compareTo(effectTypeName2);
+        });
         
-        for(int i=0;i<effectTypeNames.size();i++){
-            String typeName = effectTypeNames.get(i);
-            
-            ItemStack sk = new ItemStack(Material.POTION);
-            ItemMeta meta = sk.getItemMeta();
-            meta.setDisplayName("&d" + typeName);
-            PotionMeta pm = (PotionMeta) meta;
-            pm.addCustomEffect(new PotionEffect(PotionEffectType.getByName(typeName), 0, 0), true);
-            sk.setItemMeta(pm);
-            
-            inv.setItem(i, sk);
+        Iterator<PotionEffectType> iterator = effectTypes.iterator();
+        for(int i=1; iterator.hasNext() && i<45; i++){
+            PotionEffectType effectType = iterator.next();
+            PotionEffect potionEffect = new PotionEffect(effectType, 0, 0);
+            ItemStack effectItem = ItemBuilder.newItem(XMaterial.POTION)
+                    .withDisplayName("&d" + effectType.getName())
+                    .addPotionEffect(potionEffect)
+                    .build();
+            inv.setItem(i, effectItem);
         }
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        inv.setItem(45, back);
+        inv.setItem(45, GUIItem.getBackItem());
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
@@ -1035,76 +901,30 @@ public class ItemMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.POTION_EFFECTS_MENU_2, 45, "&5&lEffect Config");
         
-        ItemStack glass = XMaterial.MAGENTA_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
         
-        ItemStack time = XMaterial.CLOCK.parseItem();
-        meta = time.getItemMeta();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.CLOCK);
         if(effect_time < 0){
-            meta.setDisplayName("&6Effect time (seconds): &ainfinite");
+            builder.withDisplayName("&6Effect time (seconds): &ainfinite");
         }else{
-            meta.setDisplayName("&6Effect time (seconds): &a" + effect_time);
+            builder.withDisplayName("&6Effect time (seconds): &a" + effect_time);
         }
-        meta.setLore(Arrays.asList("&3Click to reset"));
-        time.setItemMeta(meta);
+        builder.addLoreLine("&3Click to reset");
+        ItemStack time_item = builder.build();
         
-        ItemStack amplifier = new ItemStack(Material.BEACON);
-        meta = amplifier.getItemMeta();
-        meta.setDisplayName("&6Effect amplifier: &a" + effect_amplifier);
-        meta.setLore(Arrays.asList("&3Click to reset"));
-        amplifier.setItemMeta(meta);
+        ItemStack amplifier = ItemBuilder.newItem(XMaterial.BEACON)
+                .withDisplayName("&6Effect amplifier: &a" + effect_amplifier)
+                .addLoreLine("&3Click to reset")
+                .build();
         
-        
-        ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = minus1.getItemMeta();
-        meta.setDisplayName("&c&l-1");
-        minus1.setItemMeta(meta);
-        
-        ItemStack minus10 = minus1.clone();
-        meta = minus10.getItemMeta();
-        meta.setDisplayName("&c&l-10");
-        minus10.setItemMeta(meta);
-        
-        ItemStack minus100 = minus1.clone();
-        meta = minus100.getItemMeta();
-        meta.setDisplayName("&c&l-100");
-        minus100.setItemMeta(meta);
-        
-        ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = minus1.getItemMeta();
-        meta.setDisplayName("&a&l+1");
-        plus1.setItemMeta(meta);
-        
-        ItemStack plus10 = plus1.clone();
-        meta = plus10.getItemMeta();
-        meta.setDisplayName("&a&l+10");
-        plus10.setItemMeta(meta);
-        
-        ItemStack plus100 = plus1.clone();
-        meta = plus100.getItemMeta();
-        meta.setDisplayName("&a&l+100");
-        plus100.setItemMeta(meta);
-        
-        
-        ItemStack effectStack = new ItemStack(Material.POTION);
-        meta = effectStack.getItemMeta();
-        meta.setDisplayName("&bSelected effect: &d" + effect_name);
-        PotionMeta pm = (PotionMeta) meta;
-        pm.addCustomEffect(new PotionEffect(PotionEffectType.getByName(effect_name), 0, 0), true);
-        effectStack.setItemMeta(pm);
-        
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
+        builder = ItemBuilder.newItem(XMaterial.POTION);
+        if(effect_name == null){
+            builder.withDisplayName("&bSelected effect: &dnull");
+        }else{
+            builder.withDisplayName("&bSelected effect: &d" + effect_name);
+            builder.addPotionEffect(new PotionEffect(PotionEffectType.getByName(effect_name), 0, 0));
+        }
+        ItemStack effectStack = builder.build();
         
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
@@ -1119,26 +939,26 @@ public class ItemMenu{
         inv.setItem(27, glass);
         inv.setItem(35, glass);
         
-        inv.setItem(10, back);
-        inv.setItem(16, next);
+        inv.setItem(10, GUIItem.getBackItem());
+        inv.setItem(16, GUIItem.getNextItem());
         
         inv.setItem(13, effectStack);
         
-        inv.setItem(19, minus100);
-        inv.setItem(20, minus10);
-        inv.setItem(21, minus1);
-        inv.setItem(22, time);
-        inv.setItem(23, plus1);
-        inv.setItem(24, plus10);
-        inv.setItem(25, plus100);
+        inv.setItem(19, GUIItem.getPlusLessItem(-100));
+        inv.setItem(20, GUIItem.getPlusLessItem(-10));
+        inv.setItem(21, GUIItem.getPlusLessItem(-1));
+        inv.setItem(22, time_item);
+        inv.setItem(23, GUIItem.getPlusLessItem(+1));
+        inv.setItem(24, GUIItem.getPlusLessItem(+10));
+        inv.setItem(25, GUIItem.getPlusLessItem(+100));
         
-        inv.setItem(28, minus100);
-        inv.setItem(29, minus10);
-        inv.setItem(30, minus1);
+        inv.setItem(28, GUIItem.getPlusLessItem(-100));
+        inv.setItem(29, GUIItem.getPlusLessItem(-10));
+        inv.setItem(30, GUIItem.getPlusLessItem(-1));
         inv.setItem(31, amplifier);
-        inv.setItem(32, plus1);
-        inv.setItem(33, plus10);
-        inv.setItem(34, plus100);
+        inv.setItem(32, GUIItem.getPlusLessItem(+1));
+        inv.setItem(33, GUIItem.getPlusLessItem(+10));
+        inv.setItem(34, GUIItem.getPlusLessItem(+100));
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
