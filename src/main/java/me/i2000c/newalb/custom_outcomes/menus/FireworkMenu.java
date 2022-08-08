@@ -3,28 +3,43 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.FireworkReward;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.FireworkReward;
-import me.i2000c.newalb.utils.logger.Logger;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.entity.Player;
-
-import org.bukkit.inventory.meta.LeatherArmorMeta;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Color;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class FireworkMenu{
     private static final String[] colors = {"BLACK","RED","DARK GREEN","BROWN","DARK BLUE","PURPLE","CYAN","LIGHT GREY","DARK GREY","PINK","LIGHT GREEN","YELLOW","LIGHT BLUE","MAGENTA","ORANGE","WHITE"};
     static final String[] hexValues = {"000000","FF0000", "006622","663300","0000CC","8000FF","009999","A6A6A6","6B6B6B","FF99FF","33CC33","FFFF00","80CCFF","FF00FF","FF8000","FFFFFF"};
     public static final String[] type = {"BALL","BALL_LARGE","STAR","BURST","CREEPER"};
     private static List<ItemStack> typeMaterial = new ArrayList<>();
+    private static XMaterial[] materials = {
+        XMaterial.INK_SAC,
+        XMaterial.RED_DYE,
+        XMaterial.GREEN_DYE,
+        XMaterial.COCOA_BEANS,
+        XMaterial.LAPIS_LAZULI,
+        XMaterial.PURPLE_DYE,
+        XMaterial.CYAN_DYE,
+        XMaterial.LIGHT_GRAY_DYE,
+        XMaterial.GRAY_DYE,
+        XMaterial.PINK_DYE,
+        XMaterial.LIME_DYE,
+        XMaterial.YELLOW_DYE,
+        XMaterial.LIGHT_BLUE_DYE,
+        XMaterial.MAGENTA_DYE,
+        XMaterial.ORANGE_DYE,
+        XMaterial.BONE_MEAL
+    };
     
     public static int selectedType = 0;
     private static List<String> list = null;
@@ -50,6 +65,8 @@ public class FireworkMenu{
     
     public static void openFireworkMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.FIREWORK_MENU, 27, "&b&lFirework Reward");
+        
         if(reward == null){
             reward = new FireworkReward(FinishMenu.getCurrentOutcome());
         }
@@ -62,132 +79,87 @@ public class FireworkMenu{
             typeMaterial.add(XMaterial.CREEPER_HEAD.parseItem());
         }
         
-        ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = plus.getItemMeta();
-        meta.setDisplayName("&a&l+");
-        plus.setItemMeta(meta);
+        ItemStack amount = ItemBuilder.newItem(XMaterial.FIREWORK_ROCKET)
+                .withAmount(reward.getAmount())
+                .withDisplayName("&3Amount")
+                .build();
         
-        ItemStack minus = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = minus.getItemMeta();
-        meta.setDisplayName("&c&l-");
-        minus.setItemMeta(meta);
+        ItemStack power = ItemBuilder.newItem(XMaterial.BLAZE_POWDER)
+                .withAmount(reward.getPower())
+                .withDisplayName("&6Power")
+                .build();
         
-        ItemStack amt = XMaterial.FIREWORK_ROCKET.parseItem();
-        amt.setAmount(reward.getAmount());
-        meta = amt.getItemMeta();
-        meta.setDisplayName("&3Amount");
-        amt.setItemMeta(meta);
+        ItemStack withTrail = GUIItem.getBooleanItem(
+                reward.withTrail(), 
+                "&5Trail", 
+                XMaterial.BLAZE_ROD, 
+                XMaterial.BLAZE_ROD);
         
-        ItemStack pow = new ItemStack(Material.BLAZE_POWDER);
-        pow.setAmount(reward.getPower());
-        meta = pow.getItemMeta();
-        meta.setDisplayName("&6Power");
-        pow.setItemMeta(meta);
+        ItemStack withFlicker = GUIItem.getBooleanItem(
+                inventoriesRegistered, 
+                "&5Flicker", 
+                XMaterial.TNT, 
+                XMaterial.TNT);
         
-        ItemStack withTrail = new ItemStack(Material.BLAZE_ROD);
-        meta = withTrail.getItemMeta();
-        if(reward.withTrail()){
-            meta.setDisplayName("&5Trail: &atrue");
-        }else{
-            meta.setDisplayName("&5Trail: &cfalse");
+        ItemStack fireworkType = ItemBuilder.fromItem(typeMaterial.get(selectedType))
+                .withDisplayName("&aFirework type: &b" + type[selectedType])
+                .build();
+        
+        //Main color list ItemStacks
+        
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.LIME_BANNER);
+        builder.withDisplayName("&aMain color list");
+        if(!reward.getHEXColors().isEmpty()){
+            builder.withLore(reward.getHEXColors());
         }
-        withTrail.setItemMeta(meta);
+        ItemStack mainColorBanner = builder.build();
         
-        ItemStack withFlicker = new ItemStack(Material.TNT);
-        meta = withFlicker.getItemMeta();
-        if(reward.withFlicker()){
-            meta.setDisplayName("&5Flicker: &atrue");
-        }else{
-            meta.setDisplayName("&5Flicker: &cfalse");
-        }
-        withFlicker.setItemMeta(meta);
+        ItemStack addMainColor = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+                .withDisplayName("&aAdd main color")
+                .build();
         
-        ItemStack fireworkType = typeMaterial.get(selectedType).clone();
-        meta = fireworkType.getItemMeta();
-        meta.setDisplayName("&aFirework type: &b" + type[selectedType]);
-        fireworkType.setItemMeta(meta);
-        
-        //Color list ItemStacks
-        
-        ItemStack colorBanner = XMaterial.LIME_BANNER.parseItem();
-        meta = colorBanner.getItemMeta();
-        meta.setDisplayName("&aColor list");
-        if(reward.getHEXColors().isEmpty()){
-            meta.setLore(null);
-        }else{
-            meta.setLore(reward.getHEXColors());
-        }
-        colorBanner.setItemMeta(meta);
-        
-        ItemStack addColor = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        addColor.setDurability((short) 5);
-        meta = addColor.getItemMeta();
-        meta.setDisplayName("&aAdd color");
-        addColor.setItemMeta(meta);
-        
-        ItemStack resetColor = new ItemStack(Material.BARRIER);
-        meta = resetColor.getItemMeta();
-        meta.setDisplayName("&cReset color list");
-        resetColor.setItemMeta(meta);
+        ItemStack resetMainColors = ItemBuilder.newItem(XMaterial.BARRIER)
+                .withDisplayName("&cReset main color list")
+                .build();   
         
         //Fade color list ItemStacks
         
-        ItemStack fadeBanner = XMaterial.RED_BANNER.parseItem();
-        meta = fadeBanner.getItemMeta();
-        meta.setDisplayName("&cFade color list");
-        if(reward.getHEXFadeColors().isEmpty()){
-            meta.setLore(null);
-        }else{
-            meta.setLore(reward.getHEXFadeColors());
+        builder = ItemBuilder.newItem(XMaterial.RED_BANNER);
+        builder.withDisplayName("&cFade color list");
+        if(!reward.getHEXFadeColors().isEmpty()){
+            builder.withLore(reward.getHEXFadeColors());
         }
-        fadeBanner.setItemMeta(meta);
+        ItemStack fadeColorBanner = builder.build();
         
-        ItemStack addFadeColor = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = addFadeColor.getItemMeta();
-        meta.setDisplayName("&aAdd fade color (opcional)");
-        addFadeColor.setItemMeta(meta);
+        ItemStack addFadeColor = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+                .withDisplayName("&aAdd fade color (optional)")
+                .build();
         
-        ItemStack resetFadeColor = new ItemStack(Material.BARRIER);
-        meta = resetFadeColor.getItemMeta();
-        meta.setDisplayName("&cReset fade color list");
-        resetFadeColor.setItemMeta(meta);
+        ItemStack resetFadeColors = ItemBuilder.newItem(XMaterial.BARRIER)
+                .withDisplayName("&cReset fade color list")
+                .build();    
         
-        //Back and Next ItemStacks
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.FIREWORK_MENU, 27, "&b&lFirework Reward");
-        
-        inv.setItem(1, plus);
-        inv.setItem(2, plus);
-        inv.setItem(19, minus);
-        inv.setItem(20, minus);
-        inv.setItem(10, amt);
-        inv.setItem(11, pow);
+        inv.setItem(1, GUIItem.getPlusLessItem(+1));
+        inv.setItem(2, GUIItem.getPlusLessItem(+1));
+        inv.setItem(19, GUIItem.getPlusLessItem(-1));
+        inv.setItem(20, GUIItem.getPlusLessItem(-1));
+        inv.setItem(10, amount);
+        inv.setItem(11, power);
         
         inv.setItem(12, withTrail);
         inv.setItem(13, withFlicker);
         
         inv.setItem(14, fireworkType);
         
-        inv.setItem(15, colorBanner);
-        inv.setItem(6, addColor);
-        inv.setItem(24, resetColor);
-        inv.setItem(16, fadeBanner);
+        inv.setItem(15, mainColorBanner);
+        inv.setItem(6, addMainColor);
+        inv.setItem(24, resetMainColors);
+        inv.setItem(16, fadeColorBanner);
         inv.setItem(7, addFadeColor);
-        inv.setItem(25, resetFadeColor);
+        inv.setItem(25, resetFadeColors);
         
-        inv.setItem(9, back);
-        inv.setItem(17, next);
+        inv.setItem(9, GUIItem.getBackItem());
+        inv.setItem(17, GUIItem.getNextItem());
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
@@ -295,10 +267,7 @@ public class FireworkMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.COLOR_MENU, 54, "&6&lColor menu");
         
-        ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
@@ -324,39 +293,27 @@ public class FireworkMenu{
             }
         }
         
-        ItemStack leather = new ItemStack(Material.LEATHER_CHESTPLATE);
-        LeatherArmorMeta lam = (LeatherArmorMeta) leather.getItemMeta();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.LEATHER_CHESTPLATE);
         if(color == null || color.equals("ERROR")){
-            lam.setDisplayName("&dChosen color: &b" + "null");
+            builder.withDisplayName("&dChosen color: &b" + "null");
         }else{
-            lam.setDisplayName("&dChosen color: &b" + color);
-            lam.setColor(Color.fromRGB(getDecimalFromHex(color)));
+            builder.withDisplayName("&dChosen color: &b" + color);
+            builder.withColor(Color.fromRGB(getDecimalFromHex(color)));
         }
-        leather.setItemMeta(lam);
+        ItemStack leather = builder.build();
         
-        ItemStack chooseCustomColor = XMaterial.OAK_SIGN.parseItem();
-        meta = chooseCustomColor.getItemMeta();
+        builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
         if(color != null && color.equals("ERROR")){
-            meta.setDisplayName("&cYou must enter a valid hex color");
+            builder.withDisplayName("&cYou must enter a valid hex color");
         }else{
-            meta.setDisplayName("&3Choose custom color");
+            builder.withDisplayName("&3Choose custom color");
         }
-        chooseCustomColor.setItemMeta(meta);
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&bBack");
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
+        ItemStack chooseCustomColor = builder.build();
         
         inv.setItem(16, leather);
         inv.setItem(15, chooseCustomColor);
-        inv.setItem(42, back);
-        inv.setItem(43, next);
+        inv.setItem(42, GUIItem.getBackItem());
+        inv.setItem(43, GUIItem.getNextItem());
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
@@ -412,137 +369,26 @@ public class FireworkMenu{
     
     static String getHexColorFromItemStack(ItemStack stack){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-            if(stack.getType() == Material.INK_SACK){
-                return hexValues[stack.getDurability()];
-            }else{
-                return null;
+        XMaterial material = XMaterial.matchXMaterial(stack);
+        for(int i=0; i<materials.length; i++){
+            if(materials[i] == material){
+                return hexValues[i];
             }
-        }else switch(stack.getType().name()){
-            case "INK_SAC":
-                return hexValues[0];
-            case "RED_DYE":
-            case "ROSE_RED":
-                return hexValues[1];
-            case "GREEN_DYE":
-            case "CACTUS_GREEN":
-                return hexValues[2];
-            case "COCOA_BEANS":
-                return hexValues[3];
-            case "LAPIS_LAZULI":
-                return hexValues[4];
-            case "PURPLE_DYE":
-                return hexValues[5];
-            case "CYAN_DYE":
-                return hexValues[6];
-            case "LIGHT_GRAY_DYE":
-                return hexValues[7];
-            case "GRAY_DYE":
-                return hexValues[8];
-            case "PINK_DYE":
-                return hexValues[9];
-            case "LIME_DYE":
-                return hexValues[10];
-            case "YELLOW_DYE":
-            case "DANDELION_YELLOW":
-                return hexValues[11];
-            case "LIGHT_BLUE_DYE":
-                return hexValues[12];
-            case "MAGENTA_DYE":
-                return hexValues[13];
-            case "ORANGE_DYE":
-                return hexValues[14];
-            case "BONE_MEAL":
-                return hexValues[15];
-            default:
-                return null;
-        }
+        }        
+        return null;
 //</editor-fold>
     }
     
-    // PRE: 0 <= i <= 15
+    // 0 <= i <= 15
     static ItemStack getColorItemStackFromDurability(int i){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(i<0 || i>15){
             return null;
         }
         
-        ItemStack stack;
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-            stack = new ItemStack(Material.INK_SACK);
-            stack.setDurability((short) i);
-        }else{
-            Material material;
-            switch(i){
-                case 0:
-                    material = Material.valueOf("INK_SAC");
-                    break;
-                case 1:
-                    try{
-                        material = Material.valueOf("RED_DYE");
-                    }catch(Exception ex){
-                        material = Material.valueOf("ROSE_RED");
-                    }
-                    break;
-                case 2:
-                    try{
-                        material = Material.valueOf("GREEN_DYE");
-                    }catch(Exception ex){
-                        material = Material.valueOf("CACTUS_GREEN");
-                    }
-                    break;
-                case 3:
-                    material = Material.valueOf("COCOA_BEANS");
-                    break;
-                case 4:
-                    material = Material.valueOf("LAPIS_LAZULI");
-                    break;
-                case 5:
-                    material = Material.valueOf("PURPLE_DYE");
-                    break;
-                case 6:
-                    material = Material.valueOf("CYAN_DYE");
-                    break;
-                case 7:
-                    material = Material.valueOf("LIGHT_GRAY_DYE");
-                    break;
-                case 8:
-                    material = Material.valueOf("GRAY_DYE");
-                    break;
-                case 9:
-                    material = Material.valueOf("PINK_DYE");
-                    break;
-                case 10:
-                    material = Material.valueOf("LIME_DYE");
-                    break;
-                case 11:
-                    try{
-                        material = Material.valueOf("YELLOW_DYE");
-                    }catch(Exception ex){
-                        material = Material.valueOf("DANDELION_YELLOW");
-                    }
-                    break;
-                case 12:
-                    material = Material.valueOf("LIGHT_BLUE_DYE");
-                    break;
-                case 13:
-                    material = Material.valueOf("MAGENTA_DYE");
-                    break;
-                case 14:
-                    material = Material.valueOf("ORANGE_DYE");
-                    break;
-                case 15:
-                    material = Material.valueOf("BONE_MEAL");
-                    break;
-                default:
-                    material = null;
-            }
-            stack = new ItemStack(material);
-        }
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&d" + colors[i] + ": &b" + hexValues[i]);
-        stack.setItemMeta(meta);
-        return stack;
+        return ItemBuilder.newItem(materials[i])
+                .withDisplayName("&d" + colors[i] + ": &b" + hexValues[i])
+                .build();
 //</editor-fold>
     }
     
