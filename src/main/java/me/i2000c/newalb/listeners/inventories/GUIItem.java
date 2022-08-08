@@ -78,6 +78,27 @@ public class GUIItem{
         builder.addLoreLine("&3Click to toggle");
         return builder.build();
     }
+    public static ItemStack getEnabledDisabledItem(
+            boolean value, 
+            String displayText, 
+            String modeText,
+            XMaterial materialIfTrue,
+            XMaterial materialIfFalse){
+        
+        ItemBuilder builder;
+        if(value){
+            builder = ItemBuilder.newItem(materialIfTrue);
+            builder.addLoreLine("");
+            builder.addLoreLine(modeText + ": &aenabled");
+        }else{
+            builder = ItemBuilder.newItem(materialIfFalse);
+            builder.addLoreLine("");
+            builder.withDisplayName(modeText + ": &7disabled");
+        }
+        builder.addLoreLine("&3Click to toggle");
+        builder.withDisplayName(displayText);
+        return builder.build();
+    }
     
     public static ItemStack getPreviousPageItem(){
         return ItemBuilder.newItem(XMaterial.ENDER_EYE)
