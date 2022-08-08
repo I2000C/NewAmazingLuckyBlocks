@@ -1,21 +1,17 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.LightningReward;
-import me.i2000c.newalb.utils.logger.Logger;
-import java.util.ArrayList;
-import java.util.List;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
-import org.bukkit.Material;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class LightningMenu{
     public static LightningReward reward;
@@ -41,12 +37,7 @@ public class LightningMenu{
                 
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.LIGHTNING_MENU, 27, "&e&lLightning Reward");
 
-        ItemMeta meta;
-
-        ItemStack glass = XMaterial.WHITE_STAINED_GLASS_PANE.parseItem();
-        meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.WHITE);
 
         for(int i=0;i<=9;i++){
             inv.setItem(i, glass);
@@ -55,54 +46,22 @@ public class LightningMenu{
             inv.setItem(i, glass);
         }
 
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&2Back");
-        back.setItemMeta(meta);
-
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
-
-        ItemStack usePlayerLocStack;
-        if(reward.getUsePlayerLoc()){
-            usePlayerLocStack = XMaterial.PLAYER_HEAD.parseItem();
-            meta = usePlayerLocStack.getItemMeta();
-            meta.setDisplayName("&aUse player location");
-        }else{
-            usePlayerLocStack = TypeManager.getMenuItemStack();
-            meta = usePlayerLocStack.getItemMeta();
-            meta.setDisplayName("&6Use lucky block location");
-            meta.setLore(null);
-        }
-        usePlayerLocStack.setItemMeta(meta);
-
-        ItemStack damagePlayerStack;
+        ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(reward.getUsePlayerLoc());
+        
+        ItemBuilder builder;        
         if(reward.getCauseDamage()){
-            damagePlayerStack = new ItemStack(Material.LAVA_BUCKET);
-            meta = damagePlayerStack.getItemMeta();
-            meta.setDisplayName("&cCause damage");
+            builder = ItemBuilder.newItem(XMaterial.LAVA_BUCKET);
+            builder.withDisplayName("&cCause damage");
         }else{
-            damagePlayerStack = new ItemStack(Material.WATER_BUCKET);
-            meta = damagePlayerStack.getItemMeta();
-            meta.setDisplayName("&bDon't cause damage");            
+            builder = ItemBuilder.newItem(XMaterial.WATER_BUCKET);
+            builder.withDisplayName("&bDon't cause damage");            
         }
-        damagePlayerStack.setItemMeta(meta);
+        ItemStack damagePlayerStack = builder.build();
 
-        ItemStack offsetStack = XMaterial.PISTON.parseItem();
-        meta = offsetStack.getItemMeta();
-        meta.setDisplayName("&3Configure offset");
-        List<String> loreList = new ArrayList<>();
-        loreList.add("&dCurrent Offset:");
-        loreList.add("   &5X: &3" + reward.getOffset().getOffsetX());
-        loreList.add("   &5Y: &3" + reward.getOffset().getOffsetY());
-        loreList.add("   &5Z: &3" + reward.getOffset().getOffsetZ());
-        meta.setLore(loreList);
-        offsetStack.setItemMeta(meta);
+        ItemStack offsetStack = reward.getOffset().getItemToDisplay();
 
-        inv.setItem(10, back);
-        inv.setItem(16, next);
+        inv.setItem(10, GUIItem.getBackItem());
+        inv.setItem(16, GUIItem.getNextItem());
 
         inv.setItem(12, usePlayerLocStack);
         inv.setItem(13, damagePlayerStack);
