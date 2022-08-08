@@ -135,67 +135,55 @@ public class FinishMenu{
                 .withDisplayName("&bTest the outcome")
                 .build();
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.PAPER);
-        builder.withDisplayName("&eTest rewards");
-        builder.addLoreLine("");
-        if(testMode){
-            builder.addLoreLine("&6TestMode: &aenabled");
-        }else{
-            builder.addLoreLine("&6TestMode: &7disabled");
-        }
-        ItemStack testReward = builder.build();
+        ItemStack testReward = GUIItem.getEnabledDisabledItem(
+                testMode, 
+                "&eTest rewards", 
+                "&6TestMode", 
+                XMaterial.PAPER, 
+                XMaterial.PAPER);
         
-        builder = ItemBuilder.newItem(XMaterial.BARRIER);
-        builder.withDisplayName("&cDelete rewards");
-        builder.addLoreLine("");
-        builder.addLoreLine("&5Click here to toggle reward deleteMode");
-        builder.addLoreLine("&5If this mode is enabled, you will be able");
-        builder.addLoreLine("&5to delete the reward which you click");
-        builder.addLoreLine("");
-        if(deleteMode){
-            builder.addLoreLine("&4DeleteMode: &aenabled");
-        }else{
-            builder.addLoreLine("&4DeleteMode: &7disabled");
-        }
-        ItemStack delete = builder.build();
+        ItemStack delete = GUIItem.getEnabledDisabledItem(
+                deleteMode, 
+                "&cDelete rewards", 
+                "&4DeleteMode", 
+                XMaterial.BARRIER, 
+                XMaterial.BARRIER);
+        ItemBuilder.fromItem(delete, false)
+                .addLoreLine("")
+                .addLoreLine("&5If this mode is enabled, you will be able")
+                .addLoreLine("&5to delete the reward which you click");
         
         ItemStack exit = ItemBuilder.newItem(XMaterial.IRON_DOOR)
                 .withDisplayName("&cExit without saving")
                 .build();
         
-        builder = ItemBuilder.newItem(XMaterial.ANVIL);
-        builder.withDisplayName("&6Edit rewards");
-        builder.addLoreLine("");
-        if(editMode){
-            builder.addLoreLine("&dEditMode: &aenabled");
-        }else{
-            builder.addLoreLine("&dEditMode: &7disabled");
-        }
-        ItemStack edit = builder.build();
+        ItemStack edit = GUIItem.getEnabledDisabledItem(
+                editMode, 
+                "&6Edit rewards", 
+                "&dEditMode", 
+                XMaterial.ANVIL, 
+                XMaterial.ANVIL);
         
-        builder = ItemBuilder.newItem(XMaterial.REPEATER);
-        builder.withDisplayName("&3Clone rewards");
-        builder.addLoreLine("");
-        builder.addLoreLine("&6You can clone rewards using this option.");
-        builder.addLoreLine("&6However, you cannot clone &7EntityTowerRewards");
-        builder.addLoreLine("");
-        if(cloneMode){
-            builder.addLoreLine("&eCloneMode: &aenabled");
-        }else{
-            builder.addLoreLine("&eCloneMode: &7disabled");
-        }
-        ItemStack clone = builder.build();
+        ItemStack clone = GUIItem.getEnabledDisabledItem(
+                cloneMode,
+                "&3Clone rewards",
+                "&eCloneMode",
+                XMaterial.REPEATER,
+                XMaterial.REPEATER);
+        ItemBuilder.fromItem(clone, false)
+                .addLoreLine("")
+                .addLoreLine("&6You can clone rewards using this option.")
+                .addLoreLine("&6However, you cannot clone &7EntityTowerRewards");
         
-        builder = ItemBuilder.newItem(XMaterial.CLOCK);
-        builder.addLoreLine("");
-        builder.addLoreLine("&3Click here to configure the delay of a reward");
-        builder.addLoreLine("");
-        if(delayMode){
-            builder.addLoreLine("&5DelayMode: &aenabled");
-        }else{
-            builder.addLoreLine("&5DelayMode: &7disabled");
-        }
-        ItemStack delay = builder.build();
+        ItemStack delay = GUIItem.getEnabledDisabledItem(
+                delayMode,
+                "&6Configure delay of Rewards",
+                "&5DelayMode",
+                XMaterial.CLOCK,
+                XMaterial.CLOCK);
+        ItemBuilder.fromItem(delay, false)
+                .addLoreLine("")
+                .addLoreLine("&3Click here to configure the delay of a reward");
 
         inv.setItem(PREVIOUS_PAGE_SLOT, GUIItem.getPreviousPageItem());
         inv.setItem(CURRENT_PAGE_SLOT, GUIItem.getCurrentPageItem(index+1, max_pages));
