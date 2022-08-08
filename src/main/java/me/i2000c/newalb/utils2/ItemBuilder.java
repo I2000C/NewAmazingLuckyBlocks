@@ -9,9 +9,11 @@ import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureManager;
+import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 
@@ -142,10 +144,31 @@ public class ItemBuilder{
     public ItemBuilder addPotionEffect(PotionEffect potionEffect){
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof PotionMeta){
-            PotionMeta pmeta = (PotionMeta) meta;
-            pmeta.addCustomEffect(potionEffect, true);
+            ((PotionMeta) meta).addCustomEffect(potionEffect, true);
+            item.setItemMeta(meta);
         }
         return this;
+    }
+    
+    public ItemBuilder withColor(Color color){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof LeatherArmorMeta){
+            ((LeatherArmorMeta) meta).setColor(color);
+        }else if(meta instanceof PotionMeta){
+            ((PotionMeta) meta).setColor(color);
+        }
+        item.setItemMeta(meta);
+        return this;
+    }
+    public Color getColor(){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof LeatherArmorMeta){
+            return ((LeatherArmorMeta) meta).getColor();
+        }else if(meta instanceof PotionMeta){
+            return ((PotionMeta) meta).getColor();
+        }else{
+            return null;
+        }
     }
     
     public ItemStack build(){
