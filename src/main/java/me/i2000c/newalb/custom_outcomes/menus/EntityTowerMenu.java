@@ -1,21 +1,23 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityTowerReward;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.util.ArrayList;
 import java.util.List;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityTowerReward;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class EntityTowerMenu{
     public static EntityTowerReward reward = null;
@@ -41,33 +43,19 @@ public class EntityTowerMenu{
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENTITY_TOWER_MENU, 54, "&e&lEntityTower Reward");
         
-        ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
-        
-        ItemStack reset = new ItemStack(Material.BARRIER);
-        meta = reset.getItemMeta();
-        meta.setDisplayName("&cReset tower");
-        reset.setItemMeta(meta);
+        ItemStack reset = ItemBuilder.newItem(XMaterial.BARRIER)
+                .withDisplayName("&cReset tower")
+                .build();
         
         for(int i=7;i<54;i+=9){
             inv.setItem(i, glass);
         }
         
-        inv.setItem(49, back);
+        inv.setItem(49, GUIItem.getBackItem());
         inv.setItem(50, reset);
-        inv.setItem(51, next);
+        inv.setItem(51, GUIItem.getNextItem());
         
         for(int i=0;i<6 && i<reward.getEntityList().size();i++){
             int entityID = reward.getEntityList().get(i);
