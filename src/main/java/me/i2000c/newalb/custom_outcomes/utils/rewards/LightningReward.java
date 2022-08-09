@@ -1,16 +1,14 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
-import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.LightningMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class LightningReward extends Reward{
     private boolean usePlayerLoc;
@@ -47,28 +45,24 @@ public class LightningReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = XMaterial.WHITE_WOOL.parseItem();
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&eLightning");
-        List<String> loreList = new ArrayList<>();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.WHITE_WOOL);
+        builder.withDisplayName("&eLightning");
         if(usePlayerLoc){
-            loreList.add("&bTarget location: &2player");
+            builder.addLoreLine("&bTarget location: &2player");
         }else{
-            loreList.add("&bTarget location: &6lucky block");
+            builder.addLoreLine("&bTarget location: &6lucky block");
         }
         if(causeDamage){
-            loreList.add("&cCause damage: &atrue");
+            builder.addLoreLine("&cCause damage: &atrue");
         }else{
-            loreList.add("&cCause damage: &7false");
+           builder.addLoreLine("&cCause damage: &7false");
         }
-        loreList.add("&dOffset:");
-        loreList.add("   &5X: &3" + offset.getOffsetX());
-        loreList.add("   &5Y: &3" + offset.getOffsetY());
-        loreList.add("   &5Z: &3" + offset.getOffsetZ());
-        meta.setLore(loreList);
-        stack.setItemMeta(meta);
+        builder.addLoreLine("&dOffset:");
+        builder.addLoreLine("   &5X: &3" + offset.getOffsetX());
+        builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
+        builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
         
-        return stack;
+        return builder.build();
     }
     
     @Override
