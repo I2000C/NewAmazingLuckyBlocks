@@ -1,17 +1,15 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.menus.MessageMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ActionBarUtils;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class MessageReward extends Reward{
     private String title;
@@ -46,19 +44,12 @@ public class MessageReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = new ItemStack(Material.BOOK);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&6Message");
-        
-        List<String> lore = new ArrayList<>();
-        lore.add("&3MessageType: &b" + type.name());
-        lore.add("&3Title: &r\"" + title + "&r\"");
-        lore.add("&3Subtitle: &r\"" + subtitle + "&r\"");
-        
-        meta.setLore(lore);
-        stack.setItemMeta(meta);
-        
-        return stack;
+        return ItemBuilder.newItem(XMaterial.BOOK)
+                .withDisplayName("&6Message")
+                .addLoreLine("&3MessageType: &b" + type.name())
+                .addLoreLine("&3Title: &r\"" + title + "&r\"")
+                .addLoreLine("&3Subtitle: &r\"" + subtitle + "&r\"")
+                .build();
     }
     
     @Override
