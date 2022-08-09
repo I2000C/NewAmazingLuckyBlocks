@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.EntityMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.EnchantmentUtils;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils.textures.URLTextureException;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,7 +21,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -93,52 +91,61 @@ public class EntityReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        List<String> lore = new ArrayList();
-        lore.add("&bID: &r" + entityID);
-        lore.add("&btype: &e" + Logger.stripColor(this.type.name()));
-        lore.add("&bcustom-name: &r" + this.custom_name);
-        if(this.effects.isEmpty()){
-            lore.add("&beffects: &rnull");
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.GHAST_SPAWN_EGG);
+        builder.withDisplayName("&2Entity");
+        builder.addLoreLine("&bID: &r" + entityID);
+        builder.addLoreLine("&btype: &e" + Logger.stripColor(type.name()));
+        builder.addLoreLine("&bcustom-name: &r" + custom_name);
+        if(effects.isEmpty()){
+            builder.addLoreLine("&beffects: &rnull");
         }else{
-            lore.add("&beffects: &r");
-            this.effects.forEach((str) -> {
-                lore.add("   " + str);
+            builder.addLoreLine("&beffects: &r");
+            effects.forEach((str) -> {
+                builder.addLoreLine("   " + str);
             });
         }                   
 
-        if(this.equipment.isEmpty()){
-            lore.add("&bequipment: &rnull");
+        if(equipment.isEmpty()){
+            builder.addLoreLine("&bequipment: &cnull");
         }else{
-            lore.add("&bequipment: &r");
-            try{
-                lore.add("   &6Helmet: &d" + this.equipment.helmet.getType().name());
-            }catch(Exception ex){}
-            try{
-                lore.add("   &6Chestplate: &d" + this.equipment.chestplate.getType().name());
-            }catch(Exception ex){}    
-            try{
-                lore.add("   &6Leggings: &d" + this.equipment.leggings.getType().name());
-            }catch(Exception ex){}
-            try{
-                lore.add("   &6Boots: &d" + this.equipment.boots.getType().name());
-            }catch(Exception ex){}
-            try{
-                lore.add("   &6Item in hand: &d" + this.equipment.itemInHand.getType().name());
-            }catch(Exception ex){}
+            builder.addLoreLine("&bequipment:");
+            if(equipment.helmet == null){
+                builder.addLoreLine("   &6Helmet: &cnull");
+            }else{
+                builder.addLoreLine("   &6Helmet: &d" + this.equipment.helmet.getType().name());
+            }
+            
+            if(equipment.chestplate == null){
+                builder.addLoreLine("   &6Chestplate: &cnull");
+            }else{
+                builder.addLoreLine("   &6Chestplate: &d" + this.equipment.chestplate.getType().name());
+            }
+            
+            if(equipment.leggings == null){
+                builder.addLoreLine("    &6Leggings: &cnull");
+            }else{
+                builder.addLoreLine("    &6Leggings: &d" + this.equipment.leggings.getType().name());
+            }
+            
+            if(equipment.boots == null){
+                builder.addLoreLine("    &6Boots: &cnull");
+            }else{
+                builder.addLoreLine("    &6Boots: &d" + this.equipment.boots.getType().name());
+            }
+            
+            if(equipment.itemInHand == null){
+                builder.addLoreLine("    &6Item in hand: &cnull");
+            }else{
+                builder.addLoreLine("    &6Item in hand: &d" + this.equipment.itemInHand.getType().name());
+            }
         }
         
-        lore.add("&dOffset:");
-        lore.add("   &5X: &3" + offset.getOffsetX());
-        lore.add("   &5Y: &3" + offset.getOffsetY());
-        lore.add("   &5Z: &3" + offset.getOffsetZ());
-
-        ItemStack stack = XMaterial.GHAST_SPAWN_EGG.parseItem();
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&2Entity");                        
-        meta.setLore(lore);
-        stack.setItemMeta(meta);
+        builder.addLoreLine("&dOffset:");
+        builder.addLoreLine("   &5X: &3" + offset.getOffsetX());
+        builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
+        builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
         
-        return stack;
+        return builder.build();
     }
 
     @Override
@@ -152,23 +159,21 @@ public class EntityReward extends Reward{
                 for(int i=0;i<EQUIP.length;i++){
                     if(equip.get(i) != null && equip.get(i).getType() != Material.AIR){
                         String fullFullPath = path + ".equipment." + EQUIP[i];
-                        ItemStack sk = equip.get(i);
-                        config.set(fullFullPath + ".material", sk.getType().name());
-                        config.set(fullFullPath + ".durability", sk.getDurability());
-                        if(!sk.hasItemMeta()){
-                            continue;
+                        ItemBuilder builder = ItemBuilder.fromItem(equip.get(i), false);
+                        Material material = builder.getMaterial().parseMaterial();
+                        config.set(fullFullPath + ".material", material.name());
+                        config.set(fullFullPath + ".durability", builder.getDurability());
+                        
+                        if(builder.hasDisplayName()){
+                            config.set(fullFullPath + ".name", Logger.deColor(builder.getDisplayName()));
                         }
-                        ItemMeta meta = sk.getItemMeta();
-                        if(meta.hasDisplayName()){
-                            config.set(fullFullPath + ".name", Logger.deColor(meta.getDisplayName()));
+                        if(builder.hasLore()){
+                            config.set(fullFullPath + ".lore", Logger.deColor(builder.getLore()));
                         }
-                        if(meta.hasLore()){
-                            config.set(fullFullPath + ".lore", Logger.deColor(meta.getLore()));
+                        if(builder.hasEnchantments()){
+                            config.set(fullFullPath + ".enchantments", builder.getEnchantmentsIntoStringList());
                         }
-                        if(meta.hasEnchants()){
-                            config.set(fullFullPath + ".enchantments", EnchantmentUtils.getEnchantments(meta));
-                        }
-                        Texture texture = TextureManager.getTexture(sk);
+                        Texture texture = builder.getTexture();
                         if(texture != null){
                             config.set(fullFullPath + ".textureID", texture.getID());
                         }
@@ -187,29 +192,30 @@ public class EntityReward extends Reward{
             this.effects = config.getStringList(path + ".effects");
             List<ItemStack> equipmentList = new ArrayList();
             if(config.contains(path + ".equipment")){
-                for(int i=0;i<EQUIP.length;i++){
-                    String fullPath = path + ".equipment." + EQUIP[i];
+                for(String equipItemName : EQUIP){
+                    String fullPath = path + ".equipment." + equipItemName;
                     if(config.contains(fullPath)){
                         Material material = Material.valueOf(config.getString(fullPath + ".material"));
                         short durability = (short) config.getInt(fullPath + ".durability");
-                        ItemStack stack = new ItemStack(material, 1, durability);
-                        ItemMeta meta = stack.getItemMeta();
+                        ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(material));
+                        builder.withAmount(1);
+                        builder.withDurability(durability);
                         if(config.contains(fullPath + ".name")){
-                            meta.setDisplayName(config.getString(fullPath + ".name"));
+                            builder.withDisplayName(config.getString(fullPath + ".name"));
                         }
                         if(config.contains(fullPath + ".lore")){
-                            meta.setLore(config.getStringList(fullPath + ".lore"));
+                            builder.withLore(config.getStringList(fullPath + ".lore"));
                         }
                         if(config.contains(fullPath + ".enchantments")){
                             List<String> enchantments = config.getStringList(fullPath + ".enchantments");
-                            EnchantmentUtils.setEnchantments(meta, enchantments);
+                            builder.withEnchantments(enchantments);
                         }
-                        stack.setItemMeta(meta);
+                        
                         if(config.contains(fullPath + ".textureID")){
                             String textureID = config.getString(fullPath + ".textureID");
                             try{
                                 Texture texture = new Texture(textureID);
-                                TextureManager.setTexture(stack, texture);
+                                builder.withTexture(texture);
                             }catch(InvalidTextureException ex){
                                 Logger.log("Item at " + fullPath + " contains an invalid HeadTexture");
                             }catch(URLTextureException ex){
@@ -217,8 +223,9 @@ public class EntityReward extends Reward{
                                         LogLevel.ERROR);
                                 Logger.log(ex, LogLevel.ERROR);
                             }catch(TextureException ex){}
-                        }                    
-                        equipmentList.add(stack);
+                        }
+                        
+                        equipmentList.add(builder.build());
                     }else{
                         equipmentList.add(null);
                     }
