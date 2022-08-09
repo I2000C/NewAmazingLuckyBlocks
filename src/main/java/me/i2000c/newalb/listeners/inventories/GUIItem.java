@@ -32,6 +32,7 @@ public class GUIItem{
                     .build();
         }else{
             return ItemBuilder.fromItem(TypeManager.getMenuItemStack(), false)
+                    .withDisplayName("&eUse LuckyBlock location")
                     .addLoreLine("&3Click to toggle")
                     .build();
         }
