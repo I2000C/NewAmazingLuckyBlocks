@@ -365,15 +365,19 @@ public class EffectMenu{
                 return;
             }
             if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                String effect_name = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-                if(effect_name.equals(EffectReward.CLEAR_EFFECTS_TAG)){
-                    reward.setClearEffects(true);
-                    reward.setPotionEffect(null);
-                }else{
-                    reward.setClearEffects(false);
-                    reward.setPotionEffect(PotionEffectType.getByName(effect_name));
-                }
-                openEffectMenu(p);
+                String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                        .getDisplayName();
+                if(displayName != null){
+                    String effect_name = Logger.stripColor(displayName);
+                    if(effect_name.equals(EffectReward.CLEAR_EFFECTS_TAG)){
+                        reward.setClearEffects(true);
+                        reward.setPotionEffect(null);
+                    }else{
+                        reward.setClearEffects(false);
+                        reward.setPotionEffect(PotionEffectType.getByName(effect_name));
+                    }
+                    openEffectMenu(p);
+                }                    
             }
         }
 //</editor-fold>
