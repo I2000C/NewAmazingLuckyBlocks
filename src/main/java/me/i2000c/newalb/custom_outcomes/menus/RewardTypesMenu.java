@@ -2,129 +2,97 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.logger.Logger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class RewardTypesMenu{
     public static void openRewardTypesMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.REWARD_TYPES_MENU, 27, "&2&lSelect reward type");
         
-        ItemStack stack = new ItemStack(Material.IRON_INGOT);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&aCreate Item Rewards");
-        stack.setItemMeta(meta);
+        ItemStack stack = ItemBuilder.newItem(XMaterial.IRON_INGOT)
+                .withDisplayName("&aCreate Item rewards")
+                .build();
         
-        ItemStack stack2 = new ItemStack(Material.NAME_TAG);
-        meta = stack2.getItemMeta();
-        meta.setDisplayName("&7Create Command Rewards");
-        stack2.setItemMeta(meta);
+        ItemStack stack2 = ItemBuilder.newItem(XMaterial.NAME_TAG)
+                .withDisplayName("&7Create Command Rewards")
+                .build();
         
-        ItemStack stack3 = new ItemStack(Material.BONE);
-        meta = stack.getItemMeta();
-        meta.setDisplayName("&5Create Entity Rewards");
-        stack3.setItemMeta(meta);
+        ItemStack stack3 = ItemBuilder.newItem(XMaterial.BONE)
+                .withDisplayName("&5Create Entity Rewards")
+                .build();
         
-        ItemStack stack4 = new ItemStack(Material.ARMOR_STAND);
-        meta = stack4.getItemMeta();
-        meta.setDisplayName("&eCreate EntityTower Rewards");
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.ARMOR_STAND);
+        builder.withDisplayName("&eCreate EntityTower Rewards");
         if(FinishMenu.getCurrentOutcome().getEntityRewardList().size() < 2){
-            List<String> lore2 = new ArrayList();
-            lore2.add("&cYou need to have created at least 2 entities");
-            lore2.add("&cin order to use this reward");
-            
-            meta.setLore(lore2);
+            builder.addLoreLine("&cYou need to have created at least 2 entities");
+            builder.addLoreLine("&cin order to use this reward");
         }else{
             int available_entities = FinishMenu.getCurrentOutcome().getEntitiesNotInTowerRewards();
             if(available_entities < 2){
-                List<String> lore2 = new ArrayList();
-                lore2.add("&cYou need to create more entities");
-                lore2.add("&cin order to use this reward");
-                
-                meta.setLore(lore2);
+                builder.addLoreLine("&cYou need to create more entities");
+                builder.addLoreLine("&cin order to use this reward");
             }
         }
-        stack4.setItemMeta(meta);
+        ItemStack stack4 = builder.build();
         
-        ItemStack stack5 = XMaterial.FIREWORK_ROCKET.parseItem();
-        meta = stack5.getItemMeta();
-        meta.setDisplayName("&bCreate Firework Rewards");
-        stack5.setItemMeta(meta);
+        ItemStack stack5 = ItemBuilder.newItem(XMaterial.FIREWORK_ROCKET)
+                .withDisplayName("&bCreate Firework Rewards")
+                .build();
         
-        ItemStack stack6 = new ItemStack(Material.JUKEBOX);
-        meta = stack6.getItemMeta();
-        meta.setDisplayName("&dCreate Sound Rewards");
-        stack6.setItemMeta(meta);
+        ItemStack stack6 = ItemBuilder.newItem(XMaterial.JUKEBOX)
+                .withDisplayName("&dCreate Sound Rewards")
+                .build();
         
-        ItemStack stack7 = XMaterial.BRICKS.parseItem();
-        meta = stack7.getItemMeta();
-        meta.setDisplayName("&3Create Structure Rewards");
+        builder = ItemBuilder.newItem(XMaterial.BRICKS);
+        builder.withDisplayName("&3Create Structure Rewards");
         if(NewAmazingLuckyBlocks.getWorldEditPlugin() == null){
-            List<String> lore = Arrays.asList("&cYou need WorldEdit in order to use this reward");
-            meta.setLore(lore);
+            builder.addLoreLine("&cYou need WorldEdit in order to use this reward");
         }
-        stack7.setItemMeta(meta);
+        ItemStack stack7 = builder.build();
         
-        ItemStack stack8 = XMaterial.BRICK.parseItem();
-        meta = stack8.getItemMeta();
-        meta.setDisplayName("&dCreate block rewards");
-        stack8.setItemMeta(meta);
+        ItemStack stack8 = ItemBuilder.newItem(XMaterial.BRICK)
+                .withDisplayName("&dCreate block rewards")
+                .build();
         
-        ItemStack stack9 = XMaterial.WHITE_WOOL.parseItem();
-        meta = stack9.getItemMeta();
-        meta.setDisplayName("&eCreate lightning rewards");
-        stack9.setItemMeta(meta);
+        ItemStack stack9 = ItemBuilder.newItem(XMaterial.WHITE_WOOL)
+                .withDisplayName("&eCreate lightning rewards")
+                .build();
         
-        ItemStack stack10 = new ItemStack(Material.BUCKET);
-        meta = stack10.getItemMeta();
-        meta.setDisplayName("&8Create dark hole rewards");
-        stack10.setItemMeta(meta);
+        ItemStack stack10 = ItemBuilder.newItem(XMaterial.BUCKET)
+                .withDisplayName("&8Create dark hole rewards")
+                .build();
         
-        ItemStack stack11 = new ItemStack(Material.LAVA_BUCKET);
-        meta = stack11.getItemMeta();
-        meta.setDisplayName("&cCreate mini volcano rewards");
-        stack11.setItemMeta(meta);
+        ItemStack stack11 = ItemBuilder.newItem(XMaterial.LAVA_BUCKET)
+                .withDisplayName("&cCreate mini volcano rewards")
+                .build();
         
-        ItemStack stack12 = new ItemStack(Material.BOOK);
-        meta = stack12.getItemMeta();
-        meta.setDisplayName("&7Create message rewards");
-        stack12.setItemMeta(meta);
+        ItemStack stack12 = ItemBuilder.newItem(XMaterial.BOOK)
+                .withDisplayName("&7Create message rewards")
+                .build();
         
-        ItemStack stack13 = new ItemStack(Material.POTION);
-        meta = stack13.getItemMeta();
-        meta.setDisplayName("&5Create effect rewards");
-        stack13.setItemMeta(meta);
+        ItemStack stack13 = ItemBuilder.newItem(XMaterial.POTION)
+                .withDisplayName("&5Create effect rewards")
+                .build();
         
-        ItemStack stack14 = new ItemStack(Material.TNT);
-        meta = stack14.getItemMeta();
-        meta.setDisplayName("&4Create explosion rewards");
-        stack14.setItemMeta(meta);
+        ItemStack stack14 = ItemBuilder.newItem(XMaterial.TNT)
+                .withDisplayName("&4Create explosion rewards")
+                .build();
         
-        ItemStack stack15 = new ItemStack(Material.DIAMOND_ORE);
-        meta = stack15.getItemMeta();
-        meta.setDisplayName("&bCreate block replacing sphere (BRS) rewards");
-        stack15.setItemMeta(meta);
+        ItemStack stack15 = ItemBuilder.newItem(XMaterial.DIAMOND_ORE)
+                .withDisplayName("&bCreate block replacing sphere (BRS) rewards")
+                .build();
         
-        ItemStack stack16 = XMaterial.OAK_PRESSURE_PLATE.parseItem();
-        meta = stack16.getItemMeta();
-        meta.setDisplayName("&5Create trap rewards");
-        stack16.setItemMeta(meta);
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&2Back");
-        back.setItemMeta(meta);
+        ItemStack stack16 = ItemBuilder.newItem(XMaterial.OAK_PRESSURE_PLATE)
+                .withDisplayName("&5Create trap rewards")
+                .build();
         
         inv.setItem(0, stack);
         inv.setItem(1, stack2);
@@ -143,7 +111,7 @@ public class RewardTypesMenu{
         inv.setItem(14, stack15);
         inv.setItem(15, stack16);
         
-        inv.setItem(18, back);
+        inv.setItem(18, GUIItem.getBackItem());
         
         InventoryListener.registerInventory(CustomInventoryType.REWARD_TYPES_MENU, REWARD_TYPES_MENU_FUNCTION);
         GUIManager.setCurrentInventory(inv);
