@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionData;
@@ -323,9 +322,8 @@ public class ItemMenu{
             case 13:
                 //Set custom name
                 ChatListener.registerPlayer(p, message -> {
-                    ItemMeta meta = reward.getItem().getItemMeta();
-                    meta.setDisplayName(message);
-                    reward.getItem().setItemMeta(meta);
+                    ItemBuilder.fromItem(reward.getItem(), false)
+                            .withDisplayName(message);
                     openItemMenu2(p);
                 });
                 p.closeInventory();
@@ -333,19 +331,8 @@ public class ItemMenu{
             case 14:
                 //Add lore line
                 ChatListener.registerPlayer(p, message -> {
-                    ItemMeta meta = reward.getItem().getItemMeta();
-                
-                    List<String> lore;
-                    if(meta.getLore() == null){
-                        lore = new ArrayList<>();
-                    }else{
-                        lore = meta.getLore();
-                    }
-                    lore.add(message);
-
-                    meta.setLore(lore);
-                    reward.getItem().setItemMeta(meta);
-                    
+                    ItemBuilder.fromItem(reward.getItem(), false)
+                            .addLoreLine(message);                    
                     openItemMenu2(p);
                 });
                 p.closeInventory();
@@ -391,16 +378,14 @@ public class ItemMenu{
                 break;
             case 31:
                 //Reset custom name
-                ItemMeta meta = reward.getItem().getItemMeta();
-                meta.setDisplayName(null);
-                reward.getItem().setItemMeta(meta);
+                ItemBuilder.fromItem(reward.getItem(), false)
+                        .withDisplayName(null);
                 openItemMenu2(p);
                 break;
             case 32:
                 //Reset custom lore
-                meta = reward.getItem().getItemMeta();
-                meta.setLore(null);
-                reward.getItem().setItemMeta(meta);
+                ItemBuilder.fromItem(reward.getItem(), false)
+                        .withLore();
                 openItemMenu2(p);
                 break;
             case 33:
@@ -420,10 +405,9 @@ public class ItemMenu{
                 if(e.getCurrentItem() != null){
                     if(e.getCurrentItem().getType() == Material.BLAZE_POWDER){
                         if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
-                            PotionMeta potionMeta = (PotionMeta) reward.getItem().getItemMeta();
-                            if(potionMeta.hasColor()){
-                                color = FireworkMenu.getHexFromDecimal(potionMeta.getColor().asRGB());
-                            }                            
+                            Color itemColor = ItemBuilder.fromItem(reward.getItem(), false)
+                                    .getColor();
+                            color = FireworkMenu.getHexFromDecimal(itemColor.asRGB());
                             openColorInventory(p);
                         }
                     }
@@ -487,15 +471,15 @@ public class ItemMenu{
                         case SPLASH_POTION:
                         case LINGERING_POTION:
                             //Remove all effects
-                            PotionMeta potionMeta = (PotionMeta) reward.getItem().getItemMeta();
-                            potionMeta.clearCustomEffects();
-                            reward.getItem().setItemMeta(potionMeta);
+                            ItemBuilder.fromItem(reward.getItem(), false)
+                                    .clearPotionEffects();
                             
                             if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
                                 Potion potion = Potion.fromItemStack(reward.getItem());
                                 potion.setType(PotionType.WATER);
                                 potion.apply(reward.getItem());
                             }else{
+                                PotionMeta potionMeta = (PotionMeta) reward.getItem().getItemMeta();
                                 potionMeta.setBasePotionData(new PotionData(PotionType.WATER));
                                 reward.getItem().setItemMeta(potionMeta);
                             }
@@ -604,9 +588,8 @@ public class ItemMenu{
                 break;
             case 16:
                 if(enchantName != null && enchantLevel > 0){
-                    ItemMeta meta = reward.getItem().getItemMeta();
-                    meta.addEnchant(Enchantment.getByName(enchantName), enchantLevel, true);
-                    reward.getItem().setItemMeta(meta);
+                    ItemBuilder.fromItem(reward.getItem(), false)
+                            .addEnchantment(Enchantment.getByName(enchantName), enchantLevel);
                     enchantName = null;
                     enchantLevel = 0;
                     openItemMenu2(p);
@@ -628,22 +611,16 @@ public class ItemMenu{
         enchantments.sort(null);
         int i = 0;
         for(String ench : enchantments){
-            ItemStack sk = new ItemStack(Material.ENCHANTED_BOOK);
-            ItemMeta meta = sk.getItemMeta();
-            meta.setDisplayName("&d" + enchantments.get(i));
-            meta.addEnchant(Enchantment.getByName(ench), 1, true);
-            sk.setItemMeta(meta);
+            ItemStack enchantItem = ItemBuilder.newItem(XMaterial.ENCHANTED_BOOK)
+                    .withDisplayName("&d" + enchantments.get(i))
+                    .addEnchantment(Enchantment.getByName(ench), 1)
+                    .build();
             
-            inv.setItem(i, sk);
+            inv.setItem(i, enchantItem);
             i++;
         }
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        inv.setItem(53, back);
+        inv.setItem(53, GUIItem.getBackItem());
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
@@ -658,7 +635,9 @@ public class ItemMenu{
             if(e.getSlot() == 53){
                 openEnchantmentsMenu(p);
             }else{
-                enchantName = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+                String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                        .getDisplayName();
+                enchantName = Logger.stripColor(displayName);
                 openEnchantmentsMenu(p);
             }
         }
@@ -889,7 +868,9 @@ public class ItemMenu{
                 return;
             }
             if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                effect_name = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+                String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                        .getDisplayName();
+                effect_name = Logger.stripColor(displayName);
                 openPotionEffects2Inventory(p);
             }
         }
@@ -980,9 +961,9 @@ public class ItemMenu{
                 case 16:
                     //Open item menu 2
                     if(effect_name != null){
-                        PotionMeta meta = (PotionMeta) reward.getItem().getItemMeta();
-                        meta.addCustomEffect(new PotionEffect(PotionEffectType.getByName(effect_name), effect_time*20, effect_amplifier), true);
-                        reward.getItem().setItemMeta(meta);
+                        PotionEffect potionEffect = new PotionEffect(PotionEffectType.getByName(effect_name), effect_time*20, effect_amplifier);
+                        ItemBuilder.fromItem(reward.getItem(), false)
+                                .addPotionEffect(potionEffect);
                         effect_name = null;
                         effect_time = 60;
                         effect_amplifier = 0;
