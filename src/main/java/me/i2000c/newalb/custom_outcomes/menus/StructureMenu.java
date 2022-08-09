@@ -1,27 +1,26 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.StructureReward;
-import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils2.FilePickerEvent;
 import java.io.File;
 import java.io.FilenameFilter;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.StructureReward;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.FilePicker;
-import me.i2000c.newalb.utils.textures.TextureManager;
-import org.bukkit.Material;
+import me.i2000c.newalb.utils2.FilePickerEvent;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class StructureMenu implements Listener{
     public static StructureReward reward;
@@ -48,10 +47,7 @@ public class StructureMenu implements Listener{
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.STRUCTURE_MENU, 27, "&3&lStructure Reward");
         GUIManager.setCurrentInventory(inv);
         
-        ItemStack glass = XMaterial.CYAN_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
         for(int i=0;i<9;i++){
             inv.setItem(i, glass);
@@ -62,70 +58,38 @@ public class StructureMenu implements Listener{
         inv.setItem(9, glass);
         inv.setItem(17, glass);
         
-        ItemStack pathItem = new ItemStack(Material.NAME_TAG);
-        meta = pathItem.getItemMeta();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
         if(reward.getSchematicName() == null){
-            meta.setDisplayName("&6Selected file: &cnull");
+            builder.withDisplayName("&6Selected file: &cnull");
         }else{
-            meta.setDisplayName("&6Selected file: &3" + reward.getSchematicName());
+            builder.withDisplayName("&6Selected file: &3" + reward.getSchematicName());
         }
-        pathItem.setItemMeta(meta);
+        ItemStack pathItem = builder.build();
         
-        ItemStack selectFromChat = new ItemStack(Material.SIGN);
-        meta = selectFromChat.getItemMeta();
-        meta.setDisplayName("&6Select file from chat");
-        selectFromChat.setItemMeta(meta);
+        ItemStack selectFromChat = ItemBuilder.newItem(XMaterial.OAK_SIGN)
+                .withDisplayName("&6Select file from chat")
+                .build();
         
-        ItemStack selectFromMenu = new ItemStack(Material.CHEST);
-        meta = selectFromMenu.getItemMeta();
-        meta.setDisplayName("&6Select file from menu");
-        selectFromMenu.setItemMeta(meta);
+        ItemStack selectFromMenu = ItemBuilder.newItem(XMaterial.CHEST)
+                .withDisplayName("&6Select file from menu")
+                .build();
         
-        ItemStack fromPlayer;
-        if(reward.isFromPlayer()){
-            fromPlayer = TextureManager.getItemSkullStack();
-        }else{
-            fromPlayer = TypeManager.getMenuItemStack();
-        }
-        meta = fromPlayer.getItemMeta();
-        if(reward.isFromPlayer()){
-            meta.setDisplayName("&3Source: &2Player location");
-        }else{
-            meta.setDisplayName("&3Source: &eLuckyBlock location");
-        }
-        meta.setLore(null);
-        fromPlayer.setItemMeta(meta);
+        ItemStack fromPlayer = GUIItem.getUsePlayerLocItem(reward.isFromPlayer());
         
-        ItemStack replaceBlocks = XMaterial.BRICKS.parseItem();
-        meta = replaceBlocks.getItemMeta();
-        if(reward.isReplaceBlocks()){
-            meta.setDisplayName("&3Replace existing blocks: &atrue");
-        }else{
-            meta.setDisplayName("&3Replace existing blocks: &7false");
-        }
-        replaceBlocks.setItemMeta(meta);
+        ItemStack replaceBlocks = GUIItem.getBooleanItem(
+                reward.isReplaceBlocks(), 
+                "&3Replace existing blocks", 
+                XMaterial.BRICKS, 
+                XMaterial.BRICKS);
         
-        ItemStack placeAirBlocks = new ItemStack(Material.GLASS);
-        meta = placeAirBlocks.getItemMeta();
-        if(reward.isPlaceAirBlocks()){
-            meta.setDisplayName("&3Place air blocks: &atrue");
-        }else{
-            meta.setDisplayName("&3Place air blocks: &7false");
-        }
-        placeAirBlocks.setItemMeta(meta);
+        ItemStack placeAirBlocks = GUIItem.getBooleanItem(
+                reward.isPlaceAirBlocks(), 
+                "&3Place air blocks", 
+                XMaterial.GLASS, 
+                XMaterial.GLASS);
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
-        
-        inv.setItem(10, back);
-        inv.setItem(16, next);
+        inv.setItem(10, GUIItem.getBackItem());
+        inv.setItem(16, GUIItem.getNextItem());
         
         inv.setItem(12, fromPlayer);
         inv.setItem(13, replaceBlocks);
