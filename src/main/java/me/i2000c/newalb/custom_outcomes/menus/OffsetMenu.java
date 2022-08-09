@@ -1,17 +1,16 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.utils2.Offset;
-import java.util.Arrays;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import org.bukkit.Material;
+import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class OffsetMenu{
     private static Offset oldOffset;
@@ -45,98 +44,55 @@ public class OffsetMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.OFFSET_MENU, 54, "&dOffset menu");
         
-        ItemMeta meta;
-        
-        ItemStack minus1 = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = minus1.getItemMeta();
-        meta.setDisplayName("&c&l-1");
-        minus1.setItemMeta(meta);
         for(int i=3;i<=48;i+=9){
-            inv.setItem(i, minus1);
-        }
-        
-        ItemStack minus10 = minus1.clone();
-        meta = minus10.getItemMeta();
-        meta.setDisplayName("&c&l-10");
-        minus10.setItemMeta(meta);
+            inv.setItem(i, GUIItem.getPlusLessItem(-1));
+        }        
         for(int i=2;i<=47;i+=9){
-            inv.setItem(i, minus10);
-        }
-        
-        ItemStack minus100 = minus1.clone();
-        meta = minus100.getItemMeta();
-        meta.setDisplayName("&c&l-100");
-        minus100.setItemMeta(meta);
+            inv.setItem(i, GUIItem.getPlusLessItem(-10));
+        }        
         for(int i=1;i<=46;i+=9){
-            inv.setItem(i, minus100);
+            inv.setItem(i, GUIItem.getPlusLessItem(-100));
         }
         
-        ItemStack plus1 = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = minus1.getItemMeta();
-        meta.setDisplayName("&a&l+1");
-        plus1.setItemMeta(meta);
         for(int i=5;i<=50;i+=9){
-            inv.setItem(i, plus1);
+            inv.setItem(i, GUIItem.getPlusLessItem(+1));
         }
-        
-        ItemStack plus10 = plus1.clone();
-        meta = plus10.getItemMeta();
-        meta.setDisplayName("&a&l+10");
-        plus10.setItemMeta(meta);
         for(int i=6;i<=51;i+=9){
-            inv.setItem(i, plus10);
+            inv.setItem(i, GUIItem.getPlusLessItem(+10));
         }
-        
-        ItemStack plus100 = plus1.clone();
-        meta = plus100.getItemMeta();
-        meta.setDisplayName("&a&l+100");
-        plus100.setItemMeta(meta);
         for(int i=7;i<=52;i+=9){
-            inv.setItem(i, plus100);
+            inv.setItem(i, GUIItem.getPlusLessItem(+100));
         }
         
-        ItemStack minX = XMaterial.GRASS_BLOCK.parseItem();
-        meta = minX.getItemMeta();
-        meta.setDisplayName("&cMin X: &6" + newOffset.getOffsetX().getMin());
-        meta.setLore(Arrays.asList("&3Click to reset"));
-        minX.setItemMeta(meta);
+        ItemStack minX = ItemBuilder.newItem(XMaterial.GRASS_BLOCK)
+                .withDisplayName("&cMin X: &6" + newOffset.getOffsetX().getMin())
+                .addLoreLine("&3Click to reset")
+                .build();
         
-        ItemStack maxX = minX.clone();
-        meta = maxX.getItemMeta();
-        meta.setDisplayName("&cMax X: &6" + newOffset.getOffsetX().getMax());
-        maxX.setItemMeta(meta);
+        ItemStack maxX = ItemBuilder.newItem(XMaterial.GRASS_BLOCK)
+                .withDisplayName("&cMax X: &6" + newOffset.getOffsetX().getMax())
+                .addLoreLine("&3Click to reset")
+                .build();
         
-        ItemStack minY = new ItemStack(Material.DIRT);
-        meta = minY.getItemMeta();
-        meta.setDisplayName("&aMin Y: &6" + newOffset.getOffsetY().getMin());
-        meta.setLore(Arrays.asList("&3Click to reset"));
-        minY.setItemMeta(meta);
+        ItemStack minY = ItemBuilder.newItem(XMaterial.DIRT)
+                .withDisplayName("&aMin Y: &6" + newOffset.getOffsetY().getMin())
+                .addLoreLine("&3Click to reset")
+                .build();
         
-        ItemStack maxY = minY.clone();
-        meta = maxY.getItemMeta();
-        meta.setDisplayName("&aMax Y: &6" + newOffset.getOffsetY().getMax());
-        maxY.setItemMeta(meta);
+        ItemStack maxY = ItemBuilder.newItem(XMaterial.DIRT)
+                .withDisplayName("&aMax Y: &6" + newOffset.getOffsetY().getMax())
+                .addLoreLine("&3Click to reset")
+                .build();        
         
-        ItemStack minZ = new ItemStack(Material.STONE);
-        meta = minZ.getItemMeta();
-        meta.setDisplayName("&bMin Z: &6" + newOffset.getOffsetZ().getMin());
-        meta.setLore(Arrays.asList("&3Click to reset"));
-        minZ.setItemMeta(meta);
+        ItemStack minZ = ItemBuilder.newItem(XMaterial.STONE)
+                .withDisplayName("&bMin Z: &6" + newOffset.getOffsetZ().getMin())
+                .addLoreLine("&3Click to reset")
+                .build();
         
-        ItemStack maxZ = minZ.clone();
-        meta = maxZ.getItemMeta();
-        meta.setDisplayName("&bMax Z: &6" + newOffset.getOffsetZ().getMax());
-        maxZ.setItemMeta(meta);
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&2Back");
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
+        ItemStack maxZ = ItemBuilder.newItem(XMaterial.STONE)
+                .withDisplayName("&bMax Z: &6" + newOffset.getOffsetZ().getMax())
+                .addLoreLine("&3Click to reset")
+                .build();
         
         inv.setItem(4, minX);
         inv.setItem(13, maxX);
@@ -145,8 +101,8 @@ public class OffsetMenu{
         inv.setItem(40, minZ);
         inv.setItem(49, maxZ);
         
-        inv.setItem(18, back);
-        inv.setItem(26, next);
+        inv.setItem(18, GUIItem.getBackItem());
+        inv.setItem(26, GUIItem.getNextItem());
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
