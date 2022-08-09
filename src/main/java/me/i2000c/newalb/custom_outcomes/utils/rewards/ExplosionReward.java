@@ -1,15 +1,13 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import java.util.Arrays;
+import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.menus.ExplosionMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class ExplosionReward extends Reward{
     private int power;
@@ -44,17 +42,21 @@ public class ExplosionReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = new ItemStack(Material.TNT);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&4Explosion");
-        String withFireString = this.withFire ? "&atrue" : "&cfalse";
-        String breakBlocksString = this.breakBlocks ? "&atrue" : "&cfalse";
-        meta.setLore(Logger.color(Arrays.asList("&6Power: &e" + this.power,
-                                                "&6Generate fire: " + withFireString,
-                                                "&6Break blocks: " + breakBlocksString)));
-        stack.setItemMeta(meta);
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.TNT);
+        builder.withDisplayName("&4Explosion");
+        builder.addLoreLine("&6Power: &e" + this.power);
+        if(breakBlocks){
+            builder.addLoreLine("&6Generate fire: &atrue");
+        }else{
+            builder.addLoreLine("&6Generate fire: &cfalse");
+        }
+        if(breakBlocks){
+            builder.addLoreLine("&6Break blocks: &atrue");
+        }else{
+            builder.addLoreLine("&6Break blocks: &cfalse");
+        }
         
-        return stack;
+        return builder.build();
     }
     
     @Override
