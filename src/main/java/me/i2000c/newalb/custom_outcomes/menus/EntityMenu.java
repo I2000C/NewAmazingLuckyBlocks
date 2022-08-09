@@ -312,11 +312,15 @@ public class EntityMenu{
                     break;
                 default:
                     ItemStack stack = e.getCurrentItem();
-                    if(stack != null && stack.hasItemMeta() && stack.getItemMeta().hasDisplayName()){
-                        String typeName = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-                        reward.setType(EntityType.valueOf(typeName));
-                        index = 0;
-                        openEntityMenu(p);
+                    if(stack != null){
+                        String displayName = ItemBuilder.fromItem(stack, false)
+                                .getDisplayName();
+                        if(displayName != null){
+                            String typeName = Logger.stripColor(displayName);
+                            reward.setType(EntityType.valueOf(typeName));
+                            index = 0;
+                            openEntityMenu(p);
+                        }                            
                     }
             }
         }
@@ -365,8 +369,12 @@ public class EntityMenu{
                 return;
             }
             if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                effect_name = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-                openEntityEffects2Inventory(p);
+                String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                        .getDisplayName();
+                if(displayName != null){
+                    effect_name = Logger.stripColor(displayName);
+                    openEntityEffects2Inventory(p);
+                }                    
             }
         }
 //</editor-fold>
