@@ -1,7 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -25,7 +24,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class LuckyBlockTypesMenu{
     private static final int[] CRAFTING_SLOTS = {21, 22, 23, 30, 31, 32, 39, 40, 41};
@@ -414,17 +412,9 @@ public class LuckyBlockTypesMenu{
                         ItemStack cursor = e.getCursor();
                         if(cursor.getType() != Material.AIR && 
                                 (cursor.getType().isBlock() || TextureManager.isSkull(cursor.getType()))){
-                            String displayName = "";
-                            List<String> lore = new ArrayList<>();
-                            if(currentType.getItem().hasItemMeta()){
-                                ItemMeta meta = currentType.getItem().getItemMeta();
-                                if(meta.hasDisplayName()){
-                                    displayName = meta.getDisplayName();
-                                }
-                                if(meta.hasLore()){
-                                    lore = meta.getLore();
-                                }
-                            }
+                            ItemBuilder builder = ItemBuilder.fromItem(currentType.getItem(), false);
+                            String displayName = builder.getDisplayName();
+                            List<String> lore = builder.getLore();
                             
                             currentType.setItem(ItemBuilder.fromItem(cursor.clone())
                                 .withAmount(1)
@@ -758,12 +748,14 @@ public class LuckyBlockTypesMenu{
             }else{
                 // Add selected pack if it wasn't present in auxPacks
                 ItemStack sk = e.getCurrentItem();
-                if(sk != null && sk.getType() != Material.AIR
-                        && sk.hasItemMeta() && sk.getItemMeta().hasDisplayName()){
-                    String packName = Logger.stripColor(sk.getItemMeta().getDisplayName());
-                    OutcomePack pack = PackManager.getPack(packName);
-                    auxPacks.putIfAbsent(pack, 100);
-                    openPackManageMenu(p);
+                if(sk != null && sk.getType() != Material.AIR){
+                    String displayName = ItemBuilder.fromItem(sk).getDisplayName();
+                    if(displayName != null){
+                        String packName = Logger.stripColor(displayName);
+                        OutcomePack pack = PackManager.getPack(packName);
+                        auxPacks.putIfAbsent(pack, 100);
+                        openPackManageMenu(p);
+                    }                        
                 }
             }
         }
