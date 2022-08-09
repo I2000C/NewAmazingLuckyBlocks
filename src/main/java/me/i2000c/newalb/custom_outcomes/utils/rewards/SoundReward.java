@@ -1,18 +1,16 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.SoundMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class SoundReward extends Reward{
     private String type;
@@ -47,19 +45,15 @@ public class SoundReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        List<String> lore = new ArrayList();
-        double truncated = BigDecimal.valueOf(this.volume).setScale(3, RoundingMode.HALF_UP).doubleValue();
-        lore.add("&3Volume: &6" + truncated);
-        truncated = BigDecimal.valueOf(this.pitch).setScale(3, RoundingMode.HALF_UP).doubleValue();
-        lore.add("&3Pitch: &6" + truncated);
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.NOTE_BLOCK);
+        builder.withDisplayName("&dSound: &e" + this.type);
         
-        ItemStack stack = new ItemStack(Material.NOTE_BLOCK);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&dSound: &e" + this.type);
-        meta.setLore(lore);
-        stack.setItemMeta(meta);
+        double value = BigDecimal.valueOf(this.volume).setScale(3, RoundingMode.HALF_UP).doubleValue();
+        builder.addLoreLine("&3Volume: &6" + value);
+        value = BigDecimal.valueOf(this.pitch).setScale(3, RoundingMode.HALF_UP).doubleValue();
+        builder.addLoreLine("&3Pitch: &6" + value);
         
-        return stack;
+        return builder.build();
     }
     
     @Override
