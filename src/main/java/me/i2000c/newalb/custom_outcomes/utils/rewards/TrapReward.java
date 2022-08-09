@@ -3,13 +3,12 @@ package me.i2000c.newalb.custom_outcomes.utils.rewards;
 import com.cryptomorin.xseries.XMaterial;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.TrapMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -65,15 +64,13 @@ public class TrapReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = new ItemStack(pressurePlateMaterial);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&5Trap");
-        meta.setLore(Logger.color(Arrays.asList("&3Name: &r" + this.trapName,
-                                                "&3Pressure Plate Material: &b" + OtherUtils.parseItemStack(stack),
-                                                "&3Trap Outcome: &b" + this.trapOutcomePackName + "/" + this.trapOutcomeID)));
-        stack.setItemMeta(meta);
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(pressurePlateMaterial));
+        builder.withDisplayName("&5Trap");
+        builder.addLoreLine("&3Name: &r:" + trapName);
+        builder.addLoreLine("&3Pressure Plate Material: &b" + OtherUtils.parseItemStack(builder.build()));
+        builder.addLoreLine("&3Trap Outcome: &b" + this.trapOutcomePackName + "/" + this.trapOutcomeID);
         
-        return stack;
+        return builder.build();
     }
     
     private static List<Material> PRESSURE_PLATE_MATERIALS;
