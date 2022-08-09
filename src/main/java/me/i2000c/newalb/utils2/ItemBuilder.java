@@ -69,7 +69,11 @@ public class ItemBuilder{
     }
     public String getDisplayName(){
         ItemMeta meta = item.getItemMeta();
-        return meta.getDisplayName();
+        if(meta.hasDisplayName()){
+            return meta.getDisplayName();
+        }else{
+            return null;
+        }
     }
     
     public ItemBuilder addLoreLine(String loreLine){
@@ -109,7 +113,11 @@ public class ItemBuilder{
     }
     public List<String> getLore(){
         ItemMeta meta = item.getItemMeta();
-        return meta.getLore();
+        if(meta.hasLore()){
+            return meta.getLore();
+        }else{
+            return null;
+        }
     }
     
     public ItemBuilder addEnchantment(Enchantment enchantment, int level){
