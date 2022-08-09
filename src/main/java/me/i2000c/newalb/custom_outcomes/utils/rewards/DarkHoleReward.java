@@ -1,17 +1,15 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
+import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.menus.DarkHoleMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Timer;
-import java.util.ArrayList;
-import java.util.List;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class DarkHoleReward extends Reward{
     private int depth;
@@ -58,22 +56,18 @@ public class DarkHoleReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = new ItemStack(Material.BUCKET);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&7DarkHole");
-        List<String> loreList = new ArrayList<>();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.BUCKET);
+        builder.withDisplayName("&7DarkHole");
         if(this.depth < 0){
-            loreList.add("&3Depth: &6infinite");
+            builder.addLoreLine("&3Depth: &6infinite");
         }else{
-            loreList.add("&3Depth: &6" + this.depth);
+            builder.addLoreLine("&3Depth: &6" + this.depth);
         }
-        loreList.add("&3Radius: &6" + this.radius);
-        loreList.add("&3Ticks between blocks: &6" + this.ticks);
-        loreList.add("&3Is squared: &6" + this.squared);
-        meta.setLore(loreList);
-        stack.setItemMeta(meta);
+        builder.addLoreLine("&3Radius: &6" + this.radius);
+        builder.addLoreLine("&3Ticks between blocks: &6" + this.ticks);
+        builder.addLoreLine("&3Is squared: &6" + this.squared);
         
-        return stack;
+        return builder.build();
     }
     
     @Override
