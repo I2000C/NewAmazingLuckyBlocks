@@ -1,5 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.utils;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -23,6 +24,7 @@ import me.i2000c.newalb.custom_outcomes.utils.rewards.StructureReward;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapReward;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
@@ -30,7 +32,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class Outcome implements Displayable, Executable{
     private final OutcomePack pack;
@@ -407,16 +408,11 @@ public class Outcome implements Displayable, Executable{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack sk = this.icon.clone();
-        ItemMeta meta = sk.getItemMeta();
-        meta.setDisplayName("&3Outcome " + ID);
-        List<String> lore = new ArrayList();
-        lore.add("&aName: &d" + this.name);
-        lore.add("&6Probability: &b" + this.probability);
-        meta.setLore(lore);
-        sk.setItemMeta(meta);
-        
-        return sk;
+        return ItemBuilder.newItem(XMaterial.matchXMaterial(icon))
+                .withDisplayName("&3Outcome " + ID)
+                .addLoreLine("&aName: &d" + this.name)
+                .addLoreLine("&6Probability: &b" + this.probability)
+                .build();
     }
     
     public Outcome cloneOutcome(){
