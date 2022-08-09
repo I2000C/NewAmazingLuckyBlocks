@@ -103,7 +103,7 @@ public class ItemBuilder{
         return this;
     }
     public ItemBuilder withLore(String... lore){
-        if(lore == null){
+        if(lore == null || lore.length == 0){
             return withLore((List<String>) null);
         }else{
             return withLore(Arrays.asList(lore));
@@ -111,7 +111,11 @@ public class ItemBuilder{
     }
     public ItemBuilder withLore(List<String> lore){
         ItemMeta meta = item.getItemMeta();
-        meta.setLore(Logger.color(lore));
+        if(lore == null || lore.isEmpty()){
+            meta.setLore(null);
+        }else{
+            meta.setLore(Logger.color(lore));
+        }        
         item.setItemMeta(meta);
         return this;
     }
