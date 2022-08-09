@@ -20,7 +20,7 @@ public class FilePickerEvent extends Event{
     
     public FilePickerEvent(Player p, File file){
         this.player = p;
-        this.file = file;        
+        this.file = file;
     }
     
     public Player getPlayer(){

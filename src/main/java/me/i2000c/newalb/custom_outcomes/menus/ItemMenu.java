@@ -76,7 +76,7 @@ public class ItemMenu{
         enchantLevel = 1;
         amount = 1;
         
-        reward = null;        
+        reward = null;
     }
     
     public static void openItemMenu(Player p){

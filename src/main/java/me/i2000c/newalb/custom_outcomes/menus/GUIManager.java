@@ -21,7 +21,7 @@ public class GUIManager{
     private static Inventory currentINV = null;
     
     public static void setCurrentInventory(Inventory inv){
-        currentINV = inv;        
+        currentINV = inv;
         CommandManager.confirmMenu = (inv != null);
     }
     public static Inventory getCurrentInventory(){
@@ -99,7 +99,7 @@ public class GUIManager{
         
         inv.setItem(12, name);
         inv.setItem(13, icon);
-        inv.setItem(14, prob);        
+        inv.setItem(14, prob);
         
         GUIManager.currentINV = inv;
         p.openInventory(inv);

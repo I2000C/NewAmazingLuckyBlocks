@@ -38,7 +38,7 @@ public class ItemBuilder{
     }
     
     public ItemBuilder withMaterial(XMaterial material){
-        material.setType(item);        
+        material.setType(item);
         return this;
     }
     public XMaterial getMaterial(){
@@ -46,7 +46,7 @@ public class ItemBuilder{
     }
     
     public ItemBuilder withAmount(int amount){
-        item.setAmount(amount);        
+        item.setAmount(amount);
         return this;
     }
     public int getAmount(){
@@ -54,7 +54,7 @@ public class ItemBuilder{
     }
     
     public ItemBuilder withDurability(int durability){
-        item.setDurability((short) durability);        
+        item.setDurability((short) durability);
         return this;
     }
     public short getDurability(){
@@ -64,7 +64,7 @@ public class ItemBuilder{
     public ItemBuilder withDisplayName(String displayName){
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(Logger.color(displayName));
-        item.setItemMeta(meta);        
+        item.setItemMeta(meta);
         return this;
     }
     public String getDisplayName(){
@@ -86,7 +86,7 @@ public class ItemBuilder{
         }
         lore.add(Logger.color(loreLine));
         meta.setLore(lore);
-        item.setItemMeta(meta);        
+        item.setItemMeta(meta);
         return this;
     }
     public ItemBuilder addLore(List<String> loreLines){
@@ -99,7 +99,7 @@ public class ItemBuilder{
         }
         lore.addAll(loreLines);
         meta.setLore(lore);
-        item.setItemMeta(meta);        
+        item.setItemMeta(meta);
         return this;
     }
     public ItemBuilder withLore(String... lore){
@@ -108,7 +108,7 @@ public class ItemBuilder{
     public ItemBuilder withLore(List<String> lore){
         ItemMeta meta = item.getItemMeta();
         meta.setLore(Logger.color(lore));
-        item.setItemMeta(meta);        
+        item.setItemMeta(meta);
         return this;
     }
     public List<String> getLore(){
@@ -142,7 +142,7 @@ public class ItemBuilder{
         }
     }
     public ItemBuilder withTexture(Texture texture){
-        TextureManager.setTexture(item, texture);        
+        TextureManager.setTexture(item, texture);
         return this;
     }
     public Texture getTexture(){

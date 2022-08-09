@@ -31,7 +31,7 @@ public class HookBowAux1_8{
             getNBTTag = nmsEntityClass.getMethod("getNBTTag");
             invulnerableField = nmsEntityClass.getDeclaredField("invulnerable");
             
-            Class nbtTagCompoundClass = OtherUtils.getNMSClass(null, "NBTTagCompound");        
+            Class nbtTagCompoundClass = OtherUtils.getNMSClass(null, "NBTTagCompound");
             nbtTagCompoundConstructor = nbtTagCompoundClass.getConstructor();
             
             setInt = nbtTagCompoundClass.getMethod("setInt", String.class, int.class);

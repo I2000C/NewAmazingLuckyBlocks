@@ -90,7 +90,7 @@ public class LuckyBlockType implements Displayable{
         builder.addLoreLine("    &b" + this.placePermission);
         builder.addLoreLine("&5Break permission:");
         builder.addLoreLine("    &b" + this.breakPermission);
-        builder.addLoreLine("&5Place permission required: " + (this.requirePlacePermission ? "&atrue" : "&7false"));        
+        builder.addLoreLine("&5Place permission required: " + (this.requirePlacePermission ? "&atrue" : "&7false"));
         builder.addLoreLine("&5Break permission required: " + (this.requireBreakPermission ? "&atrue" : "&7false"));
         
         builder.addLoreLine("&5Crafting:");
@@ -215,7 +215,7 @@ public class LuckyBlockType implements Displayable{
         // Load permissions
         type.requireBreakPermission = config.getBoolean(path + ".permissions.break.enable");
         type.breakPermission = config.getString(path + ".permissions.break.permission");
-        type.requirePlacePermission = config.getBoolean(path + ".permissions.place.enable");        
+        type.requirePlacePermission = config.getBoolean(path + ".permissions.place.enable");
         type.placePermission = config.getString(path + ".permissions.place.permission");
         
         // Load item

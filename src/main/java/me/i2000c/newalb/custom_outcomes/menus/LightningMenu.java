@@ -48,7 +48,7 @@ public class LightningMenu{
 
         ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(reward.getUsePlayerLoc());
         
-        ItemBuilder builder;        
+        ItemBuilder builder;
         if(reward.getCauseDamage()){
             builder = ItemBuilder.newItem(XMaterial.LAVA_BUCKET);
             builder.withDisplayName("&cCause damage");
@@ -74,7 +74,7 @@ public class LightningMenu{
     
     private static final InventoryFunction LIGHTNING_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();        
+        Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getClickedInventory().equals(e.getView().getTopInventory())){

@@ -144,7 +144,7 @@ public class FireworkReward extends Reward{
             
         for(int i=0;i<amount;i++){
             Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
-            FireworkMeta fwm = fw.getFireworkMeta();        
+            FireworkMeta fwm = fw.getFireworkMeta();
             fwm.setPower(power);
             fwm.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.valueOf(type)).withColor(color).withFade(fade).trail(trail).flicker(flicker).build());
             fw.setFireworkMeta(fwm);

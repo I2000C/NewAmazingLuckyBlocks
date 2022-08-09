@@ -83,13 +83,13 @@ public class Logger{
         if(sender instanceof Player){
             Logger.sendMessage(object, sender);
         }
-        Logger.log(object);        
+        Logger.log(object);
     }
     
     public static void logAndMessage(Object object, CommandSender sender, LogLevel level){
         if(sender instanceof Player){
             Logger.sendMessage(object, sender);
         }
-        Logger.log(object, level);        
+        Logger.log(object, level);
     }
 }

@@ -156,7 +156,7 @@ public class BlockReplacingSphereReward extends Reward{
         loreList.add("&dMaterials:");
         loreList.addAll(getOrderedMaterialList());
         meta.setLore(loreList);
-        stack.setItemMeta(meta);        
+        stack.setItemMeta(meta);
         
         return stack;
     }

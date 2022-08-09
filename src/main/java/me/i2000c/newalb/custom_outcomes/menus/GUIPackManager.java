@@ -76,7 +76,7 @@ public class GUIPackManager{
                 .addLoreLine("")
                 .addLoreLine("&4&lWARNING: &cIf this mode is enabled,")
                 .addLoreLine("&cwhen you click on a pack,")
-                .addLoreLine("&cit will be deleted permanently");        
+                .addLoreLine("&cit will be deleted permanently");
         
         inv.setItem(45, GUIItem.getBackItem());
         if(!renameMode && !cloneMode && !deleteMode){

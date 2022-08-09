@@ -114,7 +114,7 @@ public class FireWand extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        ItemStack stack = XMaterial.MUSIC_DISC_MALL.parseItem();        
+        ItemStack stack = XMaterial.MUSIC_DISC_MALL.parseItem();
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(LangLoader.getMessages().getString("Wands.Fire.name"));
         if(ConfigManager.getConfig().getBoolean("Wands.Fire.limited-uses.enable")){

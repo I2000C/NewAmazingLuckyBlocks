@@ -278,7 +278,7 @@ public class Schematic{
             initialize();
         }
         
-        final World w = location.getWorld();        
+        final World w = location.getWorld();
         BlockVector3 newOrigin = BlockVector3.at(location.getX(), location.getY(), location.getZ());
         BlockVector3 offset = newOrigin.subtract(clipboard.getOrigin());
         Operation operation = new ClipboardHolder(clipboard).createPaste(session).ignoreAirBlocks(!placeAirBlocks).to(newOrigin)

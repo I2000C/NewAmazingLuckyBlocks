@@ -122,7 +122,7 @@ public class FrostPathWand extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        ItemStack stack = XMaterial.MUSIC_DISC_WAIT.parseItem();        
+        ItemStack stack = XMaterial.MUSIC_DISC_WAIT.parseItem();
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(LangLoader.getMessages().getString("Wands.Frost.name"));
         if(ConfigManager.getConfig().getBoolean("Wands.Frost.limited-uses.enable")){

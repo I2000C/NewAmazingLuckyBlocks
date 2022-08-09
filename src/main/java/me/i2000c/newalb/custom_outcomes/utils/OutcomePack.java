@@ -43,7 +43,7 @@ public class OutcomePack implements Displayable{
         luckyBlockTypesToNotify = new HashSet<>();
         outcomeFile = file;
         outcomes = new HashMap<>();
-        loadPack();        
+        loadPack();
     }
     
     public final void loadPack(){

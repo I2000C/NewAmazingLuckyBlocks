@@ -15,7 +15,7 @@ public class TypeData{
     
     public TypeData(ItemStack stack){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        this.texture = TextureManager.getTexture(stack);        
+        this.texture = TextureManager.getTexture(stack);
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             if(this.texture == null){
                 this.material = processMaterial(stack.getType());
@@ -32,7 +32,7 @@ public class TypeData{
     }    
     public TypeData(Block block){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        this.texture = TextureManager.getTexture(block);        
+        this.texture = TextureManager.getTexture(block);
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             if(this.texture == null){
                 this.material = processMaterial(block.getType());
