@@ -19,7 +19,7 @@ public class GUIItem{
     }
     
     public static ItemStack getNextItem(){
-        return ItemBuilder.newItem(XMaterial.ENDER_EYE)
+        return ItemBuilder.newItem(XMaterial.ANVIL)
                 .withDisplayName("&bNext")
                 .build();
     }
