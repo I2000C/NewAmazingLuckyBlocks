@@ -1,21 +1,18 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class OutcomeListMenu{
     private static OutcomePack currentPack;
@@ -68,68 +65,37 @@ public class OutcomeListMenu{
             inv.setItem(i, currentPack.getOutcome(i + index*MENU_SIZE).getItemToDisplay());
         }
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName("&2Back");
-        back.setItemMeta(meta);
+        ItemStack createOutcome = ItemBuilder.newItem(XMaterial.SLIME_BALL)
+                .withDisplayName("&aCreate new outcome")
+                .build();
         
-        ItemStack currentPage = new ItemStack(Material.BOOK, (index+1));
-        meta = currentPage.getItemMeta();
-        meta.setDisplayName("&6Page &3" + (index+1) + " &a/ &3" + max_pages);
-        currentPage.setItemMeta(meta);
+        ItemStack editOutcome = GUIItem.getEnabledDisabledItem(
+                editMode, 
+                "&6Edit outcomes", 
+                "&dEdit mode", 
+                XMaterial.ANVIL, 
+                XMaterial.ANVIL);
         
-        ItemStack previousPage = XMaterial.ENDER_EYE.parseItem();
-        meta = previousPage.getItemMeta();
-        meta.setDisplayName("&2Previous page");
-        previousPage.setItemMeta(meta);
+        ItemStack cloneOutcome = GUIItem.getEnabledDisabledItem(
+                cloneMode, 
+                "&3Clone outcomes", 
+                "&dClone mode", 
+                XMaterial.REPEATER, 
+                XMaterial.REPEATER);
         
-        ItemStack nextPage = new ItemStack(Material.MAGMA_CREAM);
-        meta = nextPage.getItemMeta();
-        meta.setDisplayName("&2Next page");
-        nextPage.setItemMeta(meta);
+        ItemStack deleteOutcome = GUIItem.getEnabledDisabledItem(
+                deleteMode,
+                "&cDelete outcomes",
+                "&dDelete mode", 
+                XMaterial.BARRIER,
+                XMaterial.BARRIER);
+        ItemBuilder.fromItem(deleteOutcome, false)
+                .addLoreLine("")
+                .addLoreLine("&4&lWARNING: &cIf this mode is enabled,")
+                .addLoreLine("&cwhen you click on an outcome,")
+                .addLoreLine("&cit will be deleted permanently");
         
-        ItemStack createOutcome = new ItemStack(Material.SLIME_BALL);
-        meta = createOutcome.getItemMeta();
-        meta.setDisplayName("&aCreate new outcome");
-        createOutcome.setItemMeta(meta);
-        
-        ItemStack editOutcome = new ItemStack(Material.ANVIL);
-        meta = editOutcome.getItemMeta();
-        meta.setDisplayName("&6Edit outcomes");
-        if(editMode){
-            meta.setLore(Arrays.asList("&dEdit mode: &aenabled"));
-        }else{
-            meta.setLore(Arrays.asList("&dEdit mode: &7disabled"));
-        }
-        editOutcome.setItemMeta(meta);
-        
-        ItemStack cloneOutcome = XMaterial.REPEATER.parseItem();
-        meta = cloneOutcome.getItemMeta();
-        meta.setDisplayName("&3Clone outcomes");
-        if(cloneMode){
-            meta.setLore(Arrays.asList("&dClone mode: &aenabled"));
-        }else{
-            meta.setLore(Arrays.asList("&dClone mode: &7disabled"));
-        }
-        cloneOutcome.setItemMeta(meta);
-        
-        ItemStack deleteOutcome = new ItemStack(Material.BARRIER);
-        meta = deleteOutcome.getItemMeta();
-        meta.setDisplayName("&cDelete outcomes");
-        List<String> loreList = new ArrayList();
-        if(deleteMode){
-            loreList.add("&4&lWARNING: &cIf this mode is enabled,");
-            loreList.add("&cwhen you click on an outcome,");
-            loreList.add("&cit will be deleted permanently");
-            loreList.add("");
-            loreList.add("&dDelete mode: &aenabled");
-        }else{
-            loreList.add("&dDelete mode: &7disabled");
-        }
-        meta.setLore(loreList);
-        deleteOutcome.setItemMeta(meta);
-        
-        inv.setItem(45, back);
+        inv.setItem(45, GUIItem.getBackItem());
         
         if(!editMode && !cloneMode && !deleteMode){
             inv.setItem(46, createOutcome);
@@ -144,9 +110,9 @@ public class OutcomeListMenu{
             inv.setItem(48, deleteOutcome);
         }
         
-        inv.setItem(51, previousPage);
-        inv.setItem(52, currentPage);
-        inv.setItem(53, nextPage);
+        inv.setItem(51, GUIItem.getPreviousPageItem());
+        inv.setItem(52, GUIItem.getCurrentPageItem(index+1, max_pages));
+        inv.setItem(53, GUIItem.getNextPageItem());
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
