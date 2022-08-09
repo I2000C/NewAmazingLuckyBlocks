@@ -1,5 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.MinecraftVersion;
@@ -7,7 +8,6 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
 import me.i2000c.newalb.custom_outcomes.menus.ItemMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.EnchantmentUtils;
 import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.SpecialItemManager;
 import me.i2000c.newalb.utils.logger.LogLevel;
@@ -15,17 +15,14 @@ import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils.textures.URLTextureException;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -54,80 +51,78 @@ public class ItemReward extends Reward{
         Material material = Material.valueOf(config.getString(path + ".material"));
         int amount = config.getInt(path + ".amount", 1);
         short durability = (short) config.getInt(path + ".durability", 0);
-        this.item = new ItemStack(material, amount, durability);
-        ItemMeta meta = this.item.getItemMeta();
+        
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(material));
+        builder.withAmount(amount);
+        builder.withDurability(durability);
+        
         if(config.contains(path + ".name")){
             String displayName = config.getString(path + ".name");
-            meta.setDisplayName(displayName);
+            builder.withDisplayName(displayName);
         }
         if(config.contains(path + ".lore")){
             List<String> lore = config.getStringList(path + ".lore");
-            meta.setLore(lore);
+            builder.withLore(lore);
         }
         if(config.contains(path + ".enchantments")){
             List<String> enchantments = config.getStringList(path + ".enchantments");
-            EnchantmentUtils.setEnchantments(meta, enchantments);
+            builder.withEnchantments(enchantments);
         }
         
         //Load armor color
-        switch(this.item.getType()){
+        switch(material){
             case LEATHER_HELMET:
             case LEATHER_CHESTPLATE:
             case LEATHER_LEGGINGS:
             case LEATHER_BOOTS:
                 if(config.contains(path + ".armorColor")){
                     String hexColor = config.getString(path + ".armorColor");
-                    hexColor = hexColor.substring(2); //Remove the '0x'
-                    LeatherArmorMeta lam = (LeatherArmorMeta) meta;
-                    lam.setColor(Color.fromRGB(FireworkMenu.getDecimalFromHex(hexColor)));
+                    hexColor = hexColor.substring(2); //Remove the '0x' prefix
+                    builder.withColor(Color.fromRGB(FireworkMenu.getDecimalFromHex(hexColor)));
                 }
                 break;
         }
         
         //Load potion meta
-        ItemMenu.PotionSplashType type = ItemMenu.PotionSplashType.getFromPotion(this.item);
+        ItemMenu.PotionSplashType type = ItemMenu.PotionSplashType.getFromPotion(builder.build());
         if(type != null){
             if(config.contains(path + ".potionSplashType")){
                 type = ItemMenu.PotionSplashType.valueOf(config.getString(path + ".potionSplashType"));
-                type.setToPotion(this.item);
+                type.setToPotion(builder.build());
             }
             if(config.contains(path + ".potionEffects")){
-                PotionMeta potionMeta = (PotionMeta) meta;
                 List<String> potionEffects = config.getStringList(path + ".potionEffects");
                 potionEffects.forEach(string -> {
                     String[] splitted = string.split(";");
                     String name = splitted[0];
-                    int duration = Integer.parseInt(splitted[1]);
+                    int duration = Integer.parseInt(splitted[1]) * 20;
                     int amplifier = Integer.parseInt(splitted[2]);
                     
                     if(duration < 0){
-                        duration = Integer.MAX_VALUE / 20;
+                        duration = Integer.MAX_VALUE;
                     }
                     if(amplifier < 0){
                         amplifier = 0;
                     }
                     
-                    potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.getByName(name), duration * 20, amplifier), true);
+                    builder.addPotionEffect(new PotionEffect(PotionEffectType.getByName(name), duration, amplifier));
                 });
             }
             if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
                 if(config.contains(path + ".potionColor")){
                     String hexColor = config.getString(path + ".potionColor");
-                    hexColor = hexColor.substring(2); //Remove the '0x'
-                    PotionMeta potionMeta = (PotionMeta) meta;
-                    potionMeta.setColor(Color.fromRGB(FireworkMenu.getDecimalFromHex(hexColor)));
+                    hexColor = hexColor.substring(2); //Remove the '0x' prefix
+                    builder.withColor(Color.fromRGB(FireworkMenu.getDecimalFromHex(hexColor)));
                 }
             }
         }
-        
-        this.item.setItemMeta(meta);
         
         //Load texture ID
         if(config.contains(path + ".textureID")){
             String textureID = config.getString(path + ".textureID");
             try{
                 Texture texture = new Texture(textureID);
-                TextureManager.setTexture(this.item, texture);
+                builder.withTexture(texture);
             }catch(InvalidTextureException ex){
                 Logger.log("ItemReward at \"" + path + "\" contains an invalid HeadTexture", 
                             LogLevel.WARN);
@@ -137,101 +132,100 @@ public class ItemReward extends Reward{
                 Logger.log(ex, LogLevel.ERROR);
             }catch(TextureException ex){}
         }
+        
+        this.item = builder.build();
 //</editor-fold>
     }
     
     @Override
     public void saveRewardIntoConfig(FileConfiguration config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        config.set(path + ".material" , this.item.getType().name());
-        config.set(path + ".amount" , this.item.getAmount());
-        config.set(path + ".durability" , this.item.getDurability());
-        if(this.item.hasItemMeta()){
-            ItemMeta meta = this.item.getItemMeta();
-            if(meta.hasDisplayName()){
-                config.set(path + ".name", Logger.deColor(meta.getDisplayName()));
-            }
-            if(meta.hasLore()){
-                config.set(path + ".lore", Logger.deColor(meta.getLore()));
-            }
-            if(meta.hasEnchants()){
-                config.set(path + ".enchantments", EnchantmentUtils.getEnchantments(meta));
-            }
-            
-            //Save texture
-            Texture texture = TextureManager.getTexture(this.item);
-            if(texture != null){
-                config.set(path + ".textureID", texture.getID());
-            }
-            
-            //Save leather armor color
-            switch(this.item.getType()){
-                case LEATHER_HELMET:
-                case LEATHER_CHESTPLATE:
-                case LEATHER_LEGGINGS:
-                case LEATHER_BOOTS:
-                    LeatherArmorMeta lam = (LeatherArmorMeta) meta;
-                    String hexColor = FireworkMenu.getHexFromDecimal(lam.getColor().asRGB());
-                    config.set(path + ".armorColor", "0x" + hexColor);
-            }
-            
-            ItemMenu.PotionSplashType type = ItemMenu.PotionSplashType.getFromPotion(this.item);
-            if(type != null){
-                config.set(path + ".material" , "POTION");
-                config.set(path + ".potionSplashType", type.name());                
-                PotionMeta potionMeta = (PotionMeta) meta;
-                if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
-                    if(potionMeta.hasColor()){
-                        String hexColor = FireworkMenu.getHexFromDecimal(potionMeta.getColor().asRGB());
-                        config.set(path + ".potionColor", "0x" + hexColor);
-                    }
+        ItemBuilder builder = ItemBuilder.fromItem(item, false);
+        
+        config.set(path + ".material" , builder.getMaterial().parseMaterial().name());
+        config.set(path + ".amount" , builder.getAmount());
+        config.set(path + ".durability" , builder.getDurability());
+        
+        if(builder.hasDisplayName()){
+            config.set(path + ".name", Logger.deColor(builder.getDisplayName()));
+        }
+        if(builder.hasLore()){
+            config.set(path + ".lore", Logger.deColor(builder.getLore()));
+        }
+        if(builder.hasEnchantments()){
+            config.set(path + ".enchantments", builder.getEnchantmentsIntoStringList());
+        }
+
+        //Save texture
+        Texture texture = builder.getTexture();
+        if(texture != null){
+            config.set(path + ".textureID", texture.getID());
+        }
+
+        //Save leather armor color
+        switch(this.item.getType()){
+            case LEATHER_HELMET:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_LEGGINGS:
+            case LEATHER_BOOTS:
+                String hexColor = FireworkMenu.getHexFromDecimal(builder.getColor().asRGB());
+                config.set(path + ".armorColor", "0x" + hexColor);
+        }
+
+        ItemMenu.PotionSplashType type = ItemMenu.PotionSplashType.getFromPotion(this.item);
+        if(type != null){
+            config.set(path + ".material" , "POTION");
+            config.set(path + ".potionSplashType", type.name());   
+            if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+                if(builder.hasColor()){
+                    String hexColor = FireworkMenu.getHexFromDecimal(builder.getColor().asRGB());
+                    config.set(path + ".potionColor", "0x" + hexColor);
                 }
-                List<String> effectList = new ArrayList<>();
-                potionMeta.getCustomEffects().forEach(potionEffect -> {
-                    String name = potionEffect.getType().getName();
-                    int duration = potionEffect.getDuration() / 20;
-                    int amplifier = potionEffect.getAmplifier();
-                    
-                    if(duration < 0){
-                        duration = 0;
-                    }
-                    if(amplifier < 0){
-                        amplifier = 0;
-                    }
-                    
-                    effectList.add(name + ";" + duration + ";" + amplifier);
-                });
-                
-                config.set(path + ".potionEffects", effectList);
             }
+            List<String> effectList = new ArrayList<>();
+            builder.getPotionEffects().forEach(potionEffect -> {
+                String name = potionEffect.getType().getName();
+                int duration = potionEffect.getDuration() / 20;
+                int amplifier = potionEffect.getAmplifier();
+
+                if(duration < 0){
+                    duration = 0;
+                }
+                if(amplifier < 0){
+                    amplifier = 0;
+                }
+
+                effectList.add(name + ";" + duration + ";" + amplifier);
+            });
+
+            config.set(path + ".potionEffects", effectList);
         }
 //</editor-fold>
     }
     
     @Override
     public void execute(Player player, Location location){
-        ItemStack stack;
-        if(this.item.hasItemMeta() && this.item.getItemMeta().hasDisplayName()){
-            String name = Logger.stripColor(this.item.getItemMeta().getDisplayName());
-            if(name.charAt(0) == '%' && name.charAt(name.length() - 1) == '%'){
+        ItemStack stack = null;
+        String displayName = ItemBuilder.fromItem(item, false).getDisplayName();
+        if(displayName != null){
+            String name = Logger.stripColor(displayName);
+            if(name.charAt(0) == '%' && name.charAt(name.length()-1) == '%'){
                 SpecialItem specialItem = SpecialItemManager.getSpecialItem(name);
                 if(specialItem != null){
                     stack = specialItem.getItem();
-                }else{
-                    stack = this.item;
                 }
-            }else{
-                stack = this.item;
-            }                
-        }else{
-            stack = this.item;
+            }
         }
         
-        if(stack != this.item){
+        if(stack == null){
+            stack = item.clone();
+        }else{
+            // Set only amount and enchantments if the item is a special item
             stack.setAmount(item.getAmount());
             stack.addUnsafeEnchantments(item.getEnchantments());
         }
-        location.getWorld().dropItemNaturally(location, stack.clone());
+        
+        location.getWorld().dropItemNaturally(location, stack);
     }
     
     @Override
