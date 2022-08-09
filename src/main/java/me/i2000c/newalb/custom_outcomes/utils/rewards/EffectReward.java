@@ -1,14 +1,13 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import java.util.Arrays;
+import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.menus.EffectMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -71,22 +70,23 @@ public class EffectReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = new ItemStack(Material.POTION);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&5Effect");
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.POTION);
+        builder.withDisplayName("&5Effect");
         if(this.clearEffects){
-            meta.setLore(Arrays.asList("&dEffect name: &b" + CLEAR_EFFECTS_TAG));
+            builder.addLoreLine("&dEffect name: &b" + CLEAR_EFFECTS_TAG);
         }else{
-            String durationString = duration > 0 ? duration + "" : "infinite";
-            meta.setLore(Arrays.asList("&dEffect name: &b" + this.potionEffect.getName(),
-                                                    "&dDuration: &b" + durationString + " &dseconds",
-                                                    "&dAmplifier: &b" + this.amplifier,
-                                                    "&dIsAmbient: &b" + this.ambient,
-                                                    "&dShowParticles: &b" + this.showParticles));            
+            builder.addLoreLine("&dEffect name: &b" + this.potionEffect.getName());
+            if(duration >= 0){
+                builder.addLoreLine("&dDuration: &b" + duration + " &dseconds");
+            }else{
+                builder.addLoreLine("&dDuration: &binfinite &dseconds");
+            }
+            builder.addLoreLine("&dAmplifier: &b" + this.amplifier);
+            builder.addLoreLine("&dIsAmbient: &b" + this.ambient);
+            builder.addLoreLine("&dShowParticles: &b" + this.showParticles);
         }
-        stack.setItemMeta(meta);
         
-        return stack;
+        return builder.build();
     }
     
     @Override
