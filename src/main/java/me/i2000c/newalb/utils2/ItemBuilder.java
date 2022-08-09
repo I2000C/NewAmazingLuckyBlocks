@@ -168,6 +168,14 @@ public class ItemBuilder{
         }
         return this;
     }
+    public ItemBuilder clearPotionEffects(){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof PotionMeta){
+            ((PotionMeta) meta).clearCustomEffects();
+            item.setItemMeta(meta);
+        }
+        return this;
+    }
     
     public ItemBuilder withColor(Color color){
         ItemMeta meta = item.getItemMeta();
