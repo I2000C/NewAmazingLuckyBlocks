@@ -13,14 +13,47 @@ import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class FireworkMenu{
-    private static final String[] colors = {"BLACK","RED","DARK GREEN","BROWN","DARK BLUE","PURPLE","CYAN","LIGHT GREY","DARK GREY","PINK","LIGHT GREEN","YELLOW","LIGHT BLUE","MAGENTA","ORANGE","WHITE"};
-    static final String[] hexValues = {"000000","FF0000", "006622","663300","0000CC","8000FF","009999","A6A6A6","6B6B6B","FF99FF","33CC33","FFFF00","80CCFF","FF00FF","FF8000","FFFFFF"};
-    public static final String[] type = {"BALL","BALL_LARGE","STAR","BURST","CREEPER"};
+    private static final String[] colors = {
+        "BLACK",
+        "RED",
+        "DARK GREEN",
+        "BROWN",
+        "DARK BLUE",
+        "PURPLE",
+        "CYAN",
+        "LIGHT GREY",
+        "DARK GREY",
+        "PINK",
+        "LIGHT GREEN",
+        "YELLOW",
+        "LIGHT BLUE",
+        "MAGENTA",
+        "ORANGE",
+        "WHITE"};
+    static final String[] hexValues = {
+        "000000",
+        "FF0000",
+        "006622",
+        "663300",
+        "0000CC",
+        "8000FF",
+        "009999",
+        "A6A6A6",
+        "6B6B6B",
+        "FF99FF",
+        "33CC33",
+        "FFFF00",
+        "80CCFF",
+        "FF00FF",
+        "FF8000",
+        "FFFFFF"};
+    public static final FireworkEffect.Type[] fireworkEffects = FireworkEffect.Type.values();
     private static List<ItemStack> typeMaterial = new ArrayList<>();
     private static XMaterial[] materials = {
         XMaterial.INK_SAC,
@@ -102,7 +135,7 @@ public class FireworkMenu{
                 XMaterial.TNT);
         
         ItemStack fireworkType = ItemBuilder.fromItem(typeMaterial.get(selectedType))
-                .withDisplayName("&aFirework type: &b" + type[selectedType])
+                .withDisplayName("&aFirework type: &b" + fireworkEffects[selectedType])
                 .build();
         
         //Main color list ItemStacks
@@ -227,7 +260,7 @@ public class FireworkMenu{
                     }else{
                         selectedType++;
                     }
-                    reward.setType(type[selectedType]);
+                    reward.setType(fireworkEffects[selectedType]);
                     openFireworkMenu(p);
                     break;
                 case 6:

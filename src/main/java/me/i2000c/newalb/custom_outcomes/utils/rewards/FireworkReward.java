@@ -2,10 +2,10 @@ package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -15,14 +15,13 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class FireworkReward extends Reward{
     private int amount;
     private int power;
     private boolean trail;
     private boolean flicker;
-    private String type;
+    private FireworkEffect.Type type;
     private List<String> colorHEX;
     private List<String> fadeHEX;
     
@@ -32,7 +31,7 @@ public class FireworkReward extends Reward{
         this.power = 0;
         this.trail = false;
         this.flicker = false;
-        this.type = "BALL";
+        this.type = FireworkEffect.Type.BALL;
         this.colorHEX = new ArrayList<>();
         this.fadeHEX = new ArrayList<>();
     }
@@ -61,10 +60,10 @@ public class FireworkReward extends Reward{
     public void setWithFlicker(boolean flicker){
         this.flicker = flicker;
     }
-    public String getType(){
+    public FireworkEffect.Type getType(){
         return this.type;
     }
-    public void setType(String type){
+    public void setType(FireworkEffect.Type type){
         this.type = type;
     }
     public List<String> getHEXColors(){
@@ -82,30 +81,26 @@ public class FireworkReward extends Reward{
 
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = XMaterial.FIREWORK_ROCKET.parseItem();
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&6Firework");
-
-        List<String> lore = new ArrayList();
-        //lore.add("&bID: &r" + fireworkID);
-        lore.add("&bAmount: &r" + amount);
-        lore.add("&bPower: &r" + power);
-        lore.add("&bTrail: &r" + trail);
-        lore.add("&bFlicker: &r" + flicker);
-        lore.add("&bType: &r" + type);
-        lore.add("&bColorList:");
-        for(String str : colorHEX){
-            lore.add("  &r" + str);
-        }
-        lore.add("&bFadeColorList:");
-        for(String str : fadeHEX){
-            lore.add("  &r" + str);
-        }
-
-        meta.setLore(lore);
-        stack.setItemMeta(meta);
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.FIREWORK_ROCKET);
+        builder.withDisplayName("&6Firework");
         
-        return stack;
+        builder.addLoreLine("&bAmount: &r" + amount);
+        builder.addLoreLine("&bPower: &r" + power);
+        builder.addLoreLine("&bTrail: &r" + trail);
+        builder.addLoreLine("&bFlicker: &r" + flicker);
+        builder.addLoreLine("&bType: &r" + type);
+        
+        builder.addLoreLine("&bColorList:");
+        colorHEX.forEach(str -> {
+            builder.addLoreLine("  &r" + str);
+        });
+        
+        builder.addLoreLine("&bFadeColorList:");
+        fadeHEX.forEach(str -> {
+            builder.addLoreLine("  &r" + str);
+        });
+        
+        return builder.build();
     }
 
     @Override
@@ -114,11 +109,10 @@ public class FireworkReward extends Reward{
         config.set(path + ".power", this.power);
         config.set(path + ".trail", this.trail);
         config.set(path + ".flicker", this.flicker);
-        config.set(path + ".type", this.type);
+        config.set(path + ".type", this.type.name());
         config.set(path + ".color", this.colorHEX);
         config.set(path + ".fade", this.fadeHEX);
-    }
-    
+    }    
     
     @Override
     public void loadRewardFromConfig(FileConfiguration config, String path){
@@ -126,18 +120,18 @@ public class FireworkReward extends Reward{
         this.power = config.getInt(path + ".power");
         this.trail = config.getBoolean(path + ".trail");
         this.flicker = config.getBoolean(path + ".flicker");
-        this.type = config.getString(path + ".type");
+        this.type = FireworkEffect.Type.valueOf(config.getString(path + ".type"));
         this.colorHEX = config.getStringList(path + ".color");
         this.fadeHEX = config.getStringList(path + ".fade");
     }
     
     @Override
     public void execute(Player player, Location location){
-        List<Color> color = new ArrayList();
+        List<Color> color = new ArrayList<>();
         for(String str : colorHEX){
             color.add(Color.fromRGB(getDecimalFromHex(str)));
         }
-        List<Color> fade = new ArrayList();
+        List<Color> fade = new ArrayList<>();
         for(String str : fadeHEX){
             fade.add(Color.fromRGB(getDecimalFromHex(str)));
         }
@@ -146,7 +140,14 @@ public class FireworkReward extends Reward{
             Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
             FireworkMeta fwm = fw.getFireworkMeta();
             fwm.setPower(power);
-            fwm.addEffect(FireworkEffect.builder().with(FireworkEffect.Type.valueOf(type)).withColor(color).withFade(fade).trail(trail).flicker(flicker).build());
+            FireworkEffect fireworkEffect = FireworkEffect.builder()
+                    .with(type)
+                    .withColor(color)
+                    .withFade(fade)
+                    .trail(trail)
+                    .flicker(flicker)
+                    .build();
+            fwm.addEffect(fireworkEffect);
             fw.setFireworkMeta(fwm);
         }
         //BLACK: 000000
@@ -182,7 +183,7 @@ public class FireworkReward extends Reward{
     public void edit(Player player){
         FireworkMenu.reset();
         FireworkMenu.reward = this;
-        FireworkMenu.selectedType = Arrays.asList(FireworkMenu.type).indexOf(this.type);
+        FireworkMenu.selectedType = this.type.ordinal();
         FireworkMenu.openFireworkMenu(player);
     }
     
