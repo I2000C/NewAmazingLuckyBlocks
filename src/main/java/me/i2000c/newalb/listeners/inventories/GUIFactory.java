@@ -1,5 +1,6 @@
 package me.i2000c.newalb.listeners.inventories;
 
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -10,7 +11,7 @@ public final class GUIFactory implements InventoryHolder{
     private final Inventory inventory;
 
     public GUIFactory(CustomInventoryType inventoryType, int size, String title){
-        this.inventory = Bukkit.createInventory(this, size, title);
+        this.inventory = Bukkit.createInventory(this, size, Logger.color(title));
         this.inventoryType = inventoryType;
     }
     
