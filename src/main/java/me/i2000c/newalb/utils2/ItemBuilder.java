@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.Texture;
@@ -81,6 +83,9 @@ public class ItemBuilder{
             return null;
         }
     }
+    public boolean hasDisplayName(){
+        return item.getItemMeta().hasDisplayName();
+    }
     
     public ItemBuilder addLoreLine(String loreLine){
         ItemMeta meta = item.getItemMeta();
@@ -133,18 +138,45 @@ public class ItemBuilder{
             return null;
         }
     }
+    public boolean hasLore(){
+        return item.getItemMeta().hasLore();
+    }
     
     public ItemBuilder addEnchantment(Enchantment enchantment, int level){
         item.addUnsafeEnchantment(enchantment, level);
         return this;
     }
     public ItemBuilder withEnchantments(Map<Enchantment, Integer> enchantments){
-        item.getEnchantments().forEach((enchantment, level) -> item.removeEnchantment(enchantment));
+        clearEnchantments();
         item.addUnsafeEnchantments(enchantments);
+        return this;
+    }
+    public ItemBuilder withEnchantments(List<String> enchantments){
+        clearEnchantments();
+        enchantments.forEach(enchant -> {
+            String[] splitted = enchant.split(";");
+            Enchantment enchantment = Enchantment.getByName(splitted[0]);
+            int level = Integer.parseInt(splitted[1]);
+            item.addUnsafeEnchantment(enchantment, level);
+        });
         return this;
     }
     public Map<Enchantment, Integer> getEnchantments(){
         return item.getEnchantments();
+    }
+    public List<String> getEnchantmentsIntoStringList(){
+        List<String> enchantments = new ArrayList<>();
+        item.getEnchantments().forEach((enchantment, level) -> {
+            enchantments.add(enchantment + ";" + level);
+        });
+        return enchantments;
+    }
+    public boolean hasEnchantments(){
+        return item.getItemMeta().hasEnchants();
+    }
+    public ItemBuilder clearEnchantments(){
+        item.getEnchantments().forEach((enchantment, level) -> item.removeEnchantment(enchantment));
+        return this;
     }
     
     public ItemBuilder withTextureID(String textureID){
@@ -163,6 +195,9 @@ public class ItemBuilder{
     }
     public Texture getTexture(){
         return TextureManager.getTexture(item);
+    }
+    public boolean hasTexture(){
+        return getTexture() != null;
     }
     
     public ItemBuilder addPotionEffect(PotionEffect potionEffect){
@@ -197,10 +232,17 @@ public class ItemBuilder{
         if(meta instanceof LeatherArmorMeta){
             return ((LeatherArmorMeta) meta).getColor();
         }else if(meta instanceof PotionMeta){
-            return ((PotionMeta) meta).getColor();
+            if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+                return ((PotionMeta) meta).getColor();
+            }else{
+                return null;
+            }            
         }else{
             return null;
         }
+    }
+    public boolean hasColor(){
+        return getColor() != null;
     }
     
     public ItemBuilder addItemFlags(ItemFlag... itemFlags){
@@ -214,6 +256,9 @@ public class ItemBuilder{
         meta.removeItemFlags(itemFlags);
         item.setItemMeta(meta);
         return this;
+    }
+    public boolean hasItemFlag(ItemFlag itemFlag){
+        return item.getItemMeta().hasItemFlag(itemFlag);
     }
     
     public ItemStack build(){
