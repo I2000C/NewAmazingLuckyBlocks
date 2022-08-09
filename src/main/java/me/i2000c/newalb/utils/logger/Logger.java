@@ -12,28 +12,48 @@ import org.bukkit.entity.Player;
 
 public class Logger{
     public static String color(String str){
-        return ChatColor.translateAlternateColorCodes('&', str);
+        if(str == null){
+            return str;
+        }else{
+            return ChatColor.translateAlternateColorCodes('&', str);
+        }        
     }
     public static List<String> color(List<String> list){
-        List<String> coloredList = new ArrayList();
-        for(String str : list){
-            coloredList.add(Logger.color(str));
-        }
-        return coloredList;
+        if(list == null){
+            return list;
+        }else{
+            List<String> coloredList = new ArrayList<>();
+            for(String str : list){
+                coloredList.add(Logger.color(str));
+            }
+            return coloredList;
+        }            
     }
     public static String deColor(String str){
-        //https://www.spigotmc.org/threads/solved-itemstack-chatcolor-to-string.52095/
-        return str.replace(ChatColor.COLOR_CHAR, '&');
+        if(str == null){
+            return str;
+        }else{
+            //https://www.spigotmc.org/threads/solved-itemstack-chatcolor-to-string.52095/
+            return str.replace(ChatColor.COLOR_CHAR, '&');
+        }            
     }    
     public static List<String> deColor(List<String> list){
-        List<String> decolored_list = new ArrayList();
-        for(String str : list){
-            decolored_list.add(Logger.deColor(str));
-        }
-        return decolored_list;
+        if(list == null){
+            return null;
+        }else{
+            List<String> decolored_list = new ArrayList<>();
+            for(String str : list){
+                decolored_list.add(Logger.deColor(str));
+            }
+            return decolored_list;
+        }            
     }
     public static String stripColor(String str){
-        return ChatColor.stripColor(str);
+        if(str == null){
+            return str;
+        }else{
+            return ChatColor.stripColor(str);
+        }        
     }
     
     private static final NewAmazingLuckyBlocks PLUGIN = NewAmazingLuckyBlocks.getInstance();

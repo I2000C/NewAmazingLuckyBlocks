@@ -103,7 +103,11 @@ public class ItemBuilder{
         return this;
     }
     public ItemBuilder withLore(String... lore){
-        return withLore(Arrays.asList(lore));
+        if(lore == null){
+            return withLore((List<String>) null);
+        }else{
+            return withLore(Arrays.asList(lore));
+        }        
     }
     public ItemBuilder withLore(List<String> lore){
         ItemMeta meta = item.getItemMeta();
