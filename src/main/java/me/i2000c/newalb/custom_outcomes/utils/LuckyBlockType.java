@@ -27,7 +27,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class LuckyBlockType implements Displayable{
     private int ID;
@@ -74,16 +73,18 @@ public class LuckyBlockType implements Displayable{
             builder.addLoreLine("&5Texture: &b" + textureString);
         }
         
-        ItemMeta meta = this.luckyBlockItem.getItemMeta();
-        if(meta.hasDisplayName()){
-            builder.addLoreLine(String.format("&5Item name: &r%s", meta.getDisplayName()));
+        ItemBuilder builder2 = ItemBuilder.fromItem(luckyBlockItem, false);
+        String displayName = builder2.getDisplayName();
+        if(displayName != null){
+            builder.addLoreLine(String.format("&5Item name: &r%s", displayName));
         }else{
             builder.addLoreLine("&5Item name: &cnull");
         }
         
-        if(meta.hasLore()){
+        List<String> lore = builder2.getLore();
+        if(lore != null){
             builder.addLoreLine("&5Item lore:");
-            meta.getLore().forEach(line -> builder.addLoreLine("    " + line));
+            lore.forEach(line -> builder.addLoreLine("    " + line));
         }else{
             builder.addLoreLine("&5Item lore: &cnull");
         }
@@ -248,14 +249,9 @@ public class LuckyBlockType implements Displayable{
             return null;
         }
         
-        ItemMeta meta = type.luckyBlockItem.getItemMeta();
-        if(!name.isEmpty()){
-            meta.setDisplayName(name);
-        }
-        if(!lore.isEmpty()){
-            meta.setLore(lore);
-        }        
-        type.luckyBlockItem.setItemMeta(meta);
+        ItemBuilder.fromItem(type.luckyBlockItem, false)
+                .withDisplayName(name)
+                .withLore(lore);
         
         // Load crafting
         List<String> recipeMaterialNames = config.getStringList(path + ".crafting");
@@ -354,11 +350,12 @@ public class LuckyBlockType implements Displayable{
         config.set(path + ".permissions.place.permission", placePermission);
         
         // Save item
-        ItemMeta meta = luckyBlockItem.getItemMeta();
-        String name = meta.hasDisplayName() ? Logger.deColor(meta.getDisplayName()) : "";
-        List<String> lore = meta.hasLore() ? Logger.deColor(meta.getLore()) : Collections.EMPTY_LIST;
-        config.set(path + ".name", name);
-        config.set(path + ".lore", lore);
+        ItemBuilder builder = ItemBuilder.fromItem(luckyBlockItem, false);
+        String name = builder.getDisplayName();
+        List<String> lore = builder.getLore();
+        
+        config.set(path + ".name", name != null ? Logger.deColor(name) : "");
+        config.set(path + ".lore", lore != null ? Logger.deColor(lore) : Collections.EMPTY_LIST);
         config.set(path + ".material", texture == null ? OtherUtils.parseItemStack(luckyBlockItem) : "");
         config.set(path + ".textureID", texture != null ? texture.toString() : "");
         
