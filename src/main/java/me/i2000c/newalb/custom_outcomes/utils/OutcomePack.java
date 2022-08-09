@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class OutcomePack implements Displayable{
     private Map<Integer, Outcome> outcomes;
@@ -208,14 +208,9 @@ public class OutcomePack implements Displayable{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack sk = XMaterial.CRAFTING_TABLE.parseItem();
-        ItemMeta meta = sk.getItemMeta();
-        meta.setDisplayName("&6" + getFilename());
-        List<String> lore = new ArrayList<>();
-        lore.add("&aOutcome number: &d" + getOutcomes().size());
-        meta.setLore(lore);
-        sk.setItemMeta(meta);
-        
-        return sk;
+        return ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
+                .withDisplayName("&6" + getFilename())
+                .addLoreLine("&aOutcome number: &d" + getOutcomes().size())
+                .build();
     }
 }
