@@ -26,7 +26,9 @@ import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
+import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.Schematic;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -786,6 +788,12 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return true;
         }catch(InvalidTextureException ex){
             Logger.sendMessage("&cInvalid texture ID", sender);
+            return false;
+        }catch(URLTextureException ex){
+            Logger.sendMessage("&cAn error occured while loading texture:", sender);
+            Logger.sendMessage("    &4" + ex, sender);
+            return false;
+        }catch(TextureException ex){
             return false;
         }
 //</editor-fold>

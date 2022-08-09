@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
@@ -145,7 +146,9 @@ public class ItemBuilder{
         try{
             Texture texture = new Texture(textureID);
             return withTexture(texture);
-        }catch(InvalidTextureException ex){
+        }catch(TextureException ex){
+            Logger.log("An error occurred while setting texture of item:");
+            Logger.log(ex, LogLevel.ERROR);
             return this;
         }
     }

@@ -1,6 +1,5 @@
 package me.i2000c.newalb.custom_outcomes.utils;
 
-import me.i2000c.newalb.utils.logger.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -190,8 +190,10 @@ public class TypeManager{
         Set<String> keyList = luckyBlockTypesConfig.getConfigurationSection("LuckyBlockTypes").getKeys(false);
         for(String key : keyList){
             LuckyBlockType type = LuckyBlockType.loadFromConfig(luckyBlockTypesConfig, "LuckyBlockTypes", key);
-            luckyBlockTypes.add(type);
-            luckyBlockTypesAux.put(type.getTypeData(), type);
+            if(type != null){
+                luckyBlockTypes.add(type);
+                luckyBlockTypesAux.put(type.getTypeData(), type);
+            }                
         }
         //</editor-fold>
     }

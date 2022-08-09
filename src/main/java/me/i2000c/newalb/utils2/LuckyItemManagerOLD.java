@@ -5,8 +5,8 @@ import java.util.Objects;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,7 +32,7 @@ public class LuckyItemManagerOLD{
             String ID = ConfigManager.getConfig().getString("LuckyBlock.HeadMode.skull-ID");
             try{
                 luckyBlockTexture = new Texture(ID);
-            }catch(InvalidTextureException ex){
+            }catch(TextureException ex){
                 Logger.log("&cAn invalid head has been detected in config");
             }            
             itemHeadMode = new ItemStack(TextureManager.getItemSkullMaterial());

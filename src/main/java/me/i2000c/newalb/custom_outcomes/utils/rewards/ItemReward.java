@@ -10,10 +10,13 @@ import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.EnchantmentUtils;
 import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.SpecialItemManager;
+import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
+import me.i2000c.newalb.utils.textures.URLTextureException;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -126,8 +129,13 @@ public class ItemReward extends Reward{
                 Texture texture = new Texture(textureID);
                 TextureManager.setTexture(this.item, texture);
             }catch(InvalidTextureException ex){
-                Logger.log("ItemReward at \"" + path + "\" contains an invalid HeadTexture");
-            }
+                Logger.log("ItemReward at \"" + path + "\" contains an invalid HeadTexture", 
+                            LogLevel.WARN);
+            }catch(URLTextureException ex){
+                Logger.log("An error occurred while loading texture for ItemReward at \"" + path + "\":",
+                            LogLevel.ERROR);
+                Logger.log(ex, LogLevel.ERROR);
+            }catch(TextureException ex){}
         }
 //</editor-fold>
     }

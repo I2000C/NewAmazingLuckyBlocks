@@ -10,7 +10,9 @@ import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
+import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -210,7 +212,11 @@ public class EntityReward extends Reward{
                                 TextureManager.setTexture(stack, texture);
                             }catch(InvalidTextureException ex){
                                 Logger.log("Item at " + fullPath + " contains an invalid HeadTexture");
-                            }                            
+                            }catch(URLTextureException ex){
+                                Logger.log("Couldn't load texture of item at " + fullPath + ":",
+                                        LogLevel.ERROR);
+                                Logger.log(ex, LogLevel.ERROR);
+                            }catch(TextureException ex){}
                         }                    
                         equipmentList.add(stack);
                     }else{

@@ -15,15 +15,16 @@ public final class Texture{
     private String ID;
     private GameProfile profile;
 
-    public Texture(String ID) throws InvalidTextureException{
+    public Texture(String ID) throws TextureException{
         try{
             String textureURL = "http://textures.minecraft.net/texture/" + ID;
             URL url = new URL(textureURL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(1000);
             connection.setRequestMethod("GET");
             int code = connection.getResponseCode();
             if(code == 404){
-                throw new InvalidTextureException();
+                throw new InvalidTextureException(ID);
             }
 
             this.ID = ID;
@@ -32,7 +33,8 @@ public final class Texture{
             this.profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
         }catch(IOException ex){
             this.profile = null;
-            this.ID = null;                
+            this.ID = null;
+            throw new URLTextureException(ex);
         }
     }
 

@@ -16,8 +16,8 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Color;
@@ -444,8 +444,8 @@ public class ItemMenu{
                                 }
                                 
                                 openItemMenu2(p);
-                            }catch(InvalidTextureException ex){
-                                Logger.sendMessage("&cInvalid texture", p);
+                            }catch(TextureException ex){
+                                Logger.sendMessage(ex, p);
                                 Logger.sendMessage("&bUse &7/alb return &bif you don't know any valid texture", p);
                             }
                         }, false);

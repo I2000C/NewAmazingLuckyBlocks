@@ -13,7 +13,9 @@ import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
+import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Bukkit;
@@ -233,10 +235,15 @@ public class LuckyBlockType implements Displayable{
                 type.luckyBlockItem = TextureManager.getItemSkullStack();
                 TextureManager.setTexture(type.luckyBlockItem, type.texture);
             }catch(InvalidTextureException ex){
-                Logger.log(String.format("Invalid texture for LuckyBlockType \"%s\"", 
+                Logger.log(String.format("Invalid texture for LuckyBlock type \"%s\"", 
                         type.typeName), LogLevel.INFO);
                 return null;
-            }
+            }catch(URLTextureException ex){
+                Logger.log(String.format("An error occured while loading texture for LuckyBlock type \"%s\":", 
+                        type.typeName), LogLevel.ERROR);
+                Logger.log(ex, LogLevel.ERROR);
+                return null;
+            }catch(TextureException ex){}
         }else{
             return null;
         }
