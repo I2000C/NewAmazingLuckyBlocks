@@ -1,5 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -11,6 +12,7 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.BlockReplacingSphereMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
@@ -19,7 +21,6 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class BlockReplacingSphereReward extends Reward{
     private int minRadius;
@@ -136,29 +137,25 @@ public class BlockReplacingSphereReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = new ItemStack(Material.DIAMOND_ORE);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&bBlock Replacing Sphere");
-        List<String> loreList = new ArrayList<>();
-        loreList.add("&dMin radius: &3" + this.minRadius);
-        loreList.add("&dMax radius: &3" + this.maxRadius);
-        loreList.add("&dTicks between layers: &3" + this.ticksBetweenLayers);
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.DIAMOND_ORE);
+        builder.withDisplayName("&bBlock Replacing Sphere");
+        builder.addLoreLine("&dMin radius: &3" + this.minRadius);
+        builder.addLoreLine("&dMax radius: &3" + this.maxRadius);
+        builder.addLoreLine("&dTicks between layers: &3" + this.ticksBetweenLayers);
         if(this.usePlayerLoc){
-            loreList.add("&dReplace liquids: &atrue");
+            builder.addLoreLine("&dReplace liquids: &atrue");
         }else{
-            loreList.add("&dReplace liquids: &cfalse");
+            builder.addLoreLine("&dReplace liquids: &cfalse");
         }
         if(this.replaceLiquids){
-            loreList.add("&dUse player location: &atrue");
+            builder.addLoreLine("&dUse player location: &atrue");
         }else{
-            loreList.add("&dUse player location: &cfalse");
+            builder.addLoreLine("&dUse player location: &cfalse");
         }
-        loreList.add("&dMaterials:");
-        loreList.addAll(getOrderedMaterialList());
-        meta.setLore(loreList);
-        stack.setItemMeta(meta);
+        builder.addLoreLine("&dMaterials:");
+        builder.addLore(getOrderedMaterialList());
         
-        return stack;
+        return builder.build();
     }
     
     @Override
