@@ -208,6 +208,14 @@ public class ItemBuilder{
         }
         return this;
     }
+    public List<PotionEffect> getPotionEffects(){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof PotionMeta){
+            return ((PotionMeta) meta).getCustomEffects();
+        }else{
+            return null;
+        }
+    }
     public ItemBuilder clearPotionEffects(){
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof PotionMeta){
