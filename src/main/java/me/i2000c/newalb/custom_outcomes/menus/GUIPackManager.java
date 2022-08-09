@@ -167,9 +167,14 @@ public class GUIPackManager{
                     break;                
                 default:
                     ItemStack sk = e.getCurrentItem();
-                    if(sk != null && sk.getType() != Material.AIR
-                            && sk.hasItemMeta() && sk.getItemMeta().hasDisplayName()){
-                        String packName = Logger.stripColor(sk.getItemMeta().getDisplayName());
+                    if(sk != null && sk.getType() != Material.AIR){
+                        String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                                .getDisplayName();
+                        if(displayName == null){
+                            return;
+                        }
+                        
+                        String packName = Logger.stripColor(displayName);
 
                         /*if(probabilityMode){
                             //Set pack probability
