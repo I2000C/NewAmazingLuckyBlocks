@@ -2,19 +2,17 @@ package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Schematic;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class StructureReward extends Reward{
     public static final File schematicsFolder = new File(NewAmazingLuckyBlocks.getInstance().getDataFolder(), "schematics");
@@ -59,31 +57,26 @@ public class StructureReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = XMaterial.BRICKS.parseItem();
-        
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&6Structure Reward");
-        List<String> lore = new ArrayList();
-        lore.add("&3Schematic name: &b" + this.filename);
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.BRICKS);
+        builder.withDisplayName("&6Structure Reward");
+        builder.addLoreLine("&3Schematic name: &b" + this.filename);
         if(this.fromPlayer){
-            lore.add("&3Source location: &2Player");
+            builder.addLoreLine("&3Source location: &2Player");
         }else{
-            lore.add("&3Source location: &eLuckyBlock");
+            builder.addLoreLine("&3Source location: &eLuckyBlock");
         }
         if(this.replaceBlocks){
-            lore.add("&3Replace existing blocks: &atrue");
+            builder.addLoreLine("&3Replace existing blocks: &atrue");
         }else{
-            lore.add("&3Replace existing blocks: &7false");
+            builder.addLoreLine("&3Replace existing blocks: &7false");
         }
         if(this.placeAirBlocks){
-            lore.add("&3Place air blocks: &atrue");
+            builder.addLoreLine("&3Place air blocks: &atrue");
         }else{
-            lore.add("&3Place air blocks: &7false");
-        }        
-        meta.setLore(lore);
-        stack.setItemMeta(meta);
+            builder.addLoreLine("&3Place air blocks: &7false");
+        }
         
-        return stack;
+        return builder.build();
     }
     
     @Override
