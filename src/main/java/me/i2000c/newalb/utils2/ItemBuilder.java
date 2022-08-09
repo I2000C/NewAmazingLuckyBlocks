@@ -65,7 +65,11 @@ public class ItemBuilder{
     
     public ItemBuilder withDisplayName(String displayName){
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(Logger.color(displayName));
+        if(displayName == null || displayName.isEmpty()){
+            meta.setDisplayName(null);
+        }else{
+            meta.setDisplayName(Logger.color(displayName));
+        }        
         item.setItemMeta(meta);
         return this;
     }
