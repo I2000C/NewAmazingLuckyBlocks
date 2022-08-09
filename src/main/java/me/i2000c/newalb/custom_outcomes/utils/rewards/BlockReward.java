@@ -1,10 +1,10 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.menus.BlockMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
@@ -13,7 +13,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
 public class BlockReward extends Reward{
@@ -60,33 +59,39 @@ public class BlockReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = this.blockItem.clone();
-        if(stack.getType() == Material.WATER){
-            stack.setType(Material.WATER_BUCKET);
-        }else if(stack.getType() == Material.LAVA){
-            stack.setType(Material.LAVA_BUCKET);
+        ItemBuilder builder = ItemBuilder.fromItem(blockItem);
+        switch(builder.getMaterial()){
+            case WATER:
+                builder.withMaterial(XMaterial.WATER_BUCKET);
+                break;
+            case LAVA:
+                builder.withMaterial(XMaterial.LAVA_BUCKET);
+                break;
+            case FIRE:
+                builder.withMaterial(XMaterial.FIRE_CHARGE);
+                break;
         }
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&9Block");
-        List<String> loreList = new ArrayList<>();
-        if(usePlayerLoc){
-            loreList.add("&bTarget location: &2player");
-        }else{
-            loreList.add("&bTarget location: &6lucky block");
-        }
-        if(isFallingBlock){
-            loreList.add("&6IsFallingBlock: &atrue");
-        }else{
-            loreList.add("&6IsFallingBlock: &7false");
-        }
-        loreList.add("&dOffset:");
-        loreList.add("   &5X: &3" + offset.getOffsetX());
-        loreList.add("   &5Y: &3" + offset.getOffsetY());
-        loreList.add("   &5Z: &3" + offset.getOffsetZ());
-        meta.setLore(loreList);
-        stack.setItemMeta(meta);
         
-        return stack;
+        builder.withDisplayName("&9Block");
+        
+        if(usePlayerLoc){
+            builder.addLoreLine("&bTarget location: &2player");
+        }else{
+            builder.addLoreLine("&bTarget location: &6lucky block");
+        }
+        
+        if(isFallingBlock){
+            builder.addLoreLine("&6IsFallingBlock: &atrue");
+        }else{
+            builder.addLoreLine("&6IsFallingBlock: &7false");
+        }
+        
+        builder.addLoreLine("&dOffset:");
+        builder.addLoreLine("   &5X: &3" + offset.getOffsetX());
+        builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
+        builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
+        
+        return builder.build();
     }
     
     @Override

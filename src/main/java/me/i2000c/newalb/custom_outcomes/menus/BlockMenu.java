@@ -72,7 +72,7 @@ public class BlockMenu{
                     builder.withMaterial(XMaterial.LAVA_BUCKET);
                     break;
                 case FIRE:
-                    builder.withMaterial(XMaterial.FLINT_AND_STEEL);
+                    builder.withMaterial(XMaterial.FIRE_CHARGE);
                     break;
             }
             builder.withDisplayName("&3Selected block");
