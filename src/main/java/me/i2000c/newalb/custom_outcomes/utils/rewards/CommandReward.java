@@ -1,16 +1,14 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.menus.CommandMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class CommandReward extends Reward{
     private boolean senderIsPlayer;
@@ -37,22 +35,15 @@ public class CommandReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        List<String> lore = new ArrayList<>();
-        String senderName;
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
+        builder.withDisplayName("&6Command: &b/" + cmd);
         if(senderIsPlayer){
-            senderName = "&2Player";
+            builder.addLoreLine("&5Sender: &2Player");
         }else{
-            senderName = "&8Console";
+            builder.addLoreLine("&5Sender: &8Console");
         }
-        lore.add("&5Sender: " + senderName);
         
-        ItemStack stack = new ItemStack(Material.NAME_TAG);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&6Command: &b/" + cmd);
-        meta.setLore(lore);
-        stack.setItemMeta(meta);
-        
-        return stack;
+        return builder.build();
     }
 
     @Override
