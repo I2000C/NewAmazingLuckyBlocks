@@ -1,7 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.Arrays;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
@@ -9,16 +8,18 @@ import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapReward;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class TrapMenu{
     public static TrapReward reward = null;
@@ -58,46 +59,31 @@ public class TrapMenu{
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_MENU, 27, "&5&lTrap Reward");
         
-        ItemStack glass = XMaterial.PURPLE_STAINED_GLASS_PANE.parseItem();
-        ItemMeta meta = glass.getItemMeta();
-        meta.setDisplayName(" ");
-        glass.setItemMeta(meta);
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.PURPLE);
         
-        ItemStack trapMaterialItem = new ItemStack(reward.getPressurePlateMaterial());
-        meta = trapMaterialItem.getItemMeta();
-        meta.setDisplayName("&2Selected pressure plate material: &a" + reward.getPressurePlateMaterial().name());
-        meta.setLore(Arrays.asList("&3Click to change"));
-        trapMaterialItem.setItemMeta(meta);
+        ItemStack trapMaterialItem = ItemBuilder
+                .newItem(XMaterial.matchXMaterial(reward.getPressurePlateMaterial()))
+                .withDisplayName("&2Selected pressure plate material: &a" + reward.getPressurePlateMaterial().name())
+                .addLoreLine("&3Click to change")
+                .build();
         
-        ItemStack trapNameItem = new ItemStack(Material.NAME_TAG);
-        meta = trapNameItem.getItemMeta();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.NAME_TAG);        
         if(reward.getTrapName() == null){
-            meta.setDisplayName("&2Trap name: &cnull");
+            builder.withDisplayName("&2Trap name: &cnull");
         }else{
-            meta.setDisplayName("&2Trap name: &r" + reward.getTrapName());
+            builder.withDisplayName("&2Trap name: &r" + reward.getTrapName());
         }        
-        meta.setLore(Arrays.asList("&3Click to change"));
-        trapNameItem.setItemMeta(meta);
+        builder.addLoreLine("&3Click to change");
+        ItemStack trapNameItem = builder.build();
         
-        ItemStack trapOutcomeItem = new ItemStack(Material.CHEST);
-        meta = trapOutcomeItem.getItemMeta();
+        builder = ItemBuilder.newItem(XMaterial.CHEST);        
         if(reward.getTrapOutcome() == null){
-            meta.setDisplayName("&2Selected trap outcome: &cnull");
+            builder.withDisplayName("&2Selected trap outcome: &cnull");
         }else{
-            meta.setDisplayName("&2Selected trap outcome: &a" + reward.getTrapOutcome());
+            builder.withDisplayName("&2Selected trap outcome: &a" + reward.getTrapOutcome());
         }
-        meta.setLore(Arrays.asList("&3Click to select"));
-        trapOutcomeItem.setItemMeta(meta);
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        ItemStack next = new ItemStack(Material.ANVIL);
-        meta = next.getItemMeta();
-        meta.setDisplayName("&bNext");
-        next.setItemMeta(meta);
+        builder.addLoreLine("&3Click to select");
+        ItemStack trapOutcomeItem = builder.build();
         
         for(int i=0;i<=9;i++){
             inv.setItem(i, glass);
@@ -106,8 +92,8 @@ public class TrapMenu{
             inv.setItem(i, glass);
         }
         
-        inv.setItem(10, back);
-        inv.setItem(16, next);
+        inv.setItem(10, GUIItem.getBackItem());
+        inv.setItem(16, GUIItem.getNextItem());
         
         inv.setItem(12, trapMaterialItem);
         inv.setItem(13, trapNameItem);
@@ -167,24 +153,17 @@ public class TrapMenu{
     private static void openTrapTypeMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_TYPE_MENU, 27, "&2&lTrap materials");
-        
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        inv.setItem(0, back);
+                
+        inv.setItem(0, GUIItem.getBackItem());
         
         for(int i=0;i<TrapReward.getPressurePlateMaterials().size();i++){
             Material material = TrapReward.getPressurePlateMaterials().get(i);
-            ItemStack stack = new ItemStack(material);
-            if(material == reward.getPressurePlateMaterial()){
-                stack.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
-                meta = stack.getItemMeta();
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                stack.setItemMeta(meta);
+            ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(material));
+            if(material == reward.getPressurePlateMaterial()){                
+                builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+                builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            inv.setItem(i+2, stack);
+            inv.setItem(i+2, builder.build());
         }
         
         GUIManager.setCurrentInventory(inv);
@@ -215,12 +194,7 @@ public class TrapMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_PACKS_MENU, 54, "&3&lPack list");
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        inv.setItem(0, back);
+        inv.setItem(0, GUIItem.getBackItem());
         
         int i=0;
         for(OutcomePack pack : PackManager.getPacks()){
@@ -228,14 +202,12 @@ public class TrapMenu{
                 break;
             }
             
-            ItemStack packItem = pack.getItemToDisplay();
+            ItemBuilder builder = ItemBuilder.fromItem(pack.getItemToDisplay(), false);
             if(reward.getTrapOutcome() != null && reward.getTrapOutcome().getPack().equals(pack)){
-                packItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
-                meta = packItem.getItemMeta();
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                packItem.setItemMeta(meta);
+                builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+                builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            inv.setItem(++i, packItem);
+            inv.setItem(++i, builder.build());
         }
         
         GUIManager.setCurrentInventory(inv);
@@ -254,7 +226,9 @@ public class TrapMenu{
                 openTrapMenu(p);
             }else if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 //Open select outcome menu
-                String packName = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+                String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                        .getDisplayName();
+                String packName = Logger.stripColor(displayName);
                 auxPack = PackManager.getPack(packName);
                 if(auxPack != null){
                     index = 0;
@@ -275,43 +249,22 @@ public class TrapMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_OUTCOMES_MENU, 54, "&3&lOutcomes list");
         
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName("&7Back");
-        back.setItemMeta(meta);
-        
-        ItemStack currentPage = new ItemStack(Material.BOOK, (index+1));
-        meta = currentPage.getItemMeta();
-        meta.setDisplayName("&6Page &3" + (index+1) + " &a/ &3" + max_pages);
-        currentPage.setItemMeta(meta);
-        
-        ItemStack previousPage = XMaterial.ENDER_EYE.parseItem();
-        meta = previousPage.getItemMeta();
-        meta.setDisplayName("&2Previous page");
-        previousPage.setItemMeta(meta);
-        
-        ItemStack nextPage = new ItemStack(Material.MAGMA_CREAM);
-        meta = nextPage.getItemMeta();
-        meta.setDisplayName("&2Next page");
-        nextPage.setItemMeta(meta);
-        
-        inv.setItem(45, back);
-        inv.setItem(51, previousPage);
-        inv.setItem(52, currentPage);
-        inv.setItem(53, nextPage);
+        inv.setItem(45, GUIItem.getBackItem());
+        inv.setItem(51, GUIItem.getPreviousPageItem());
+        inv.setItem(52, GUIItem.getCurrentPageItem(index+1, max_pages));
+        inv.setItem(53, GUIItem.getNextPageItem());
         
         int n = Integer.min((auxPack.getOutcomes().size() - MENU_SIZE*index), MENU_SIZE);
         for(int i=0;i<n;i++){
             Outcome outcome = auxPack.getOutcome(i + index*MENU_SIZE);
-            ItemStack outcomeItem = outcome.getItemToDisplay();
+            ItemBuilder builder = ItemBuilder.fromItem(outcome.getItemToDisplay(), false);
             
             if(reward.getTrapOutcome() != null && reward.getTrapOutcome().equals(outcome)){
-                outcomeItem.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 1);
-                meta = outcomeItem.getItemMeta();
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                outcomeItem.setItemMeta(meta);
+                builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+                builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            inv.setItem(i, outcomeItem);
+            
+            inv.setItem(i, builder.build());
         }
         
         GUIManager.setCurrentInventory(inv);
@@ -360,7 +313,9 @@ public class TrapMenu{
             default:
                 if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                     //Open trap menu
-                    String itemName = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+                    String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                            .getDisplayName();
+                    String itemName = Logger.stripColor(displayName);
                     int outcomeID = Integer.parseInt(itemName.split(" ")[1]);
                     Outcome outcome = auxPack.getOutcome(outcomeID);
                     if(outcome != null){
