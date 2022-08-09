@@ -1,16 +1,16 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import me.i2000c.newalb.custom_outcomes.menus.EntityTowerMenu;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
+import me.i2000c.newalb.custom_outcomes.menus.EntityTowerMenu;
+import me.i2000c.newalb.custom_outcomes.utils.Outcome;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class EntityTowerReward extends Reward{
     private List<Integer> entityList;
@@ -29,25 +29,20 @@ public class EntityTowerReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStack stack = new ItemStack(Material.ARMOR_STAND);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&eEntityTower");
-
-        List<String> lore = new ArrayList();
-        //lore.add(color("&bID: &r" + (entityTower_list.size()-1)));
-        String data = "";
-        for(int i=0;i<this.entityList.size();i++){
-            data += this.entityList.get(i);
-            if(i < this.entityList.size()-1){
-                data += ",";
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.ARMOR_STAND);
+        builder.withDisplayName("&eEntityTower");
+        
+        StringBuilder stringBuilder = new StringBuilder();
+        if(!entityList.isEmpty()){
+            stringBuilder.append(entityList.get(0));            
+            for(int i=1; i<this.entityList.size(); i++){
+                stringBuilder.append(", ").append(entityList.get(i));
             }
         }
-        lore.add("&3Entities: &r" + data);
-
-        meta.setLore(lore);
-        stack.setItemMeta(meta);
         
-        return stack;
+        builder.addLoreLine("&3Entities: &r" + stringBuilder.toString());
+        
+        return builder.build();
     }
 
     @Override
