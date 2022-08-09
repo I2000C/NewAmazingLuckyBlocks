@@ -1,17 +1,16 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.menus.MiniVolcanoMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Timer;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class MiniVolcanoReward extends Reward{
     private int height;
@@ -76,21 +75,16 @@ public class MiniVolcanoReward extends Reward{
     
     
     @Override
-    public ItemStack getItemToDisplay(){        
-        ItemStack stack = new ItemStack(Material.LAVA_BUCKET);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("&cMiniVolcano");
-        List<String> loreList = new ArrayList<>();
-        loreList.add("&bHeight: &6" + this.height);
-        loreList.add("&bBase material: &6" + this.baseMaterial);
-        loreList.add("&bLava material: &6" + this.lavaMaterial);
-        loreList.add("&bTicks between blocks: &6" + this.ticks);
-        loreList.add("&bIs squared: &6" + this.squared);
-        loreList.add("&bThrow blocks: &6" + this.throwBlocks);
-        meta.setLore(loreList);
-        stack.setItemMeta(meta);
-        
-        return stack;
+    public ItemStack getItemToDisplay(){
+        return ItemBuilder.newItem(XMaterial.LAVA_BUCKET)
+                .withDisplayName("&cMiniVolcano")
+                .addLoreLine("&bHeight: &6" + this.height)
+                .addLoreLine("&bBase material: &6" + this.baseMaterial)
+                .addLoreLine("&bLava material: &6" + this.lavaMaterial)
+                .addLoreLine("&bTicks between blocks: &6" + this.ticks)
+                .addLoreLine("&bIs squared: &6" + this.squared)
+                .addLoreLine("&bThrow blocks: &6" + this.throwBlocks)
+                .build();
     }
     
     @Override
