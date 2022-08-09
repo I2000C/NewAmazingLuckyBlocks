@@ -12,6 +12,7 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -196,6 +197,19 @@ public class ItemBuilder{
         }else{
             return null;
         }
+    }
+    
+    public ItemBuilder addItemFlags(ItemFlag... itemFlags){
+        ItemMeta meta = item.getItemMeta();
+        meta.addItemFlags(itemFlags);
+        item.setItemMeta(meta);
+        return this;
+    }
+    public ItemBuilder removeItemFlags(ItemFlag... itemFlags){
+        ItemMeta meta = item.getItemMeta();
+        meta.removeItemFlags(itemFlags);
+        item.setItemMeta(meta);
+        return this;
     }
     
     public ItemStack build(){
