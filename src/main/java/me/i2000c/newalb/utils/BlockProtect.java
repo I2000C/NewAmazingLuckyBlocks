@@ -1,7 +1,8 @@
 package me.i2000c.newalb.utils;
 
-import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,7 +12,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 
 public class BlockProtect implements Listener{
@@ -66,11 +66,13 @@ public class BlockProtect implements Listener{
         if(sk0.getType() == Material.AIR || sk1.getType() == Material.AIR || sk2.getType() == Material.AIR){
             return;
         }
-        if(OtherUtils.checkItemStack(sk0, SpecialItemManager.getSpecialItem("auto_bow").getItem()) || 
-                OtherUtils.checkItemStack(sk0, SpecialItemManager.getSpecialItem("multi_bow").getItem())){
-            ItemMeta meta = sk2.getItemMeta();
-            meta.setDisplayName(sk0.getItemMeta().getDisplayName());
-            sk2.setItemMeta(meta);
+        if(OtherUtils.checkItemStack(sk0, SpecialItemManager.getSpecialItem(SpecialItemName.auto_bow).getItem()) || 
+                OtherUtils.checkItemStack(sk0, SpecialItemManager.getSpecialItem(SpecialItemName.multi_bow).getItem())){
+            
+            String displayName = ItemBuilder.fromItem(sk0, false)
+                    .getDisplayName();            
+            ItemBuilder.fromItem(sk2, false)
+                    .withDisplayName(displayName);
             event.getView().setItem(2, sk2);
         }
     }
