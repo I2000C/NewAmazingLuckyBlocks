@@ -103,4 +103,14 @@ public abstract class SpecialItem{
         message = message.replace("%time%", String.valueOf(getRemainingSeconds(player)));
         Logger.sendMessage(message, player, false);
     }
+    
+    protected static void decreaseAmountOfItem(PlayerInteractEvent e){
+        ItemStack itemInHand = e.getItem();
+        int amount = itemInHand.getAmount() - 1;
+        if(amount == 0){
+            e.getPlayer().setItemInHand(null);
+        }else{
+            itemInHand.setAmount(amount);
+        }
+    }
 }
