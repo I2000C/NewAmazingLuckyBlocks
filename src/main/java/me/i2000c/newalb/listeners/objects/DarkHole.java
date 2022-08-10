@@ -1,8 +1,8 @@
 package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.SpecialItem;
+import me.i2000c.newalb.utils.SpecialItemName;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
@@ -35,12 +35,12 @@ public class DarkHole extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.BUCKET)
-                .withDisplayName(LangLoader.getMessages().getString("Objects.DarkHole.name"))
+                .withDisplayName(getDisplayName())
                 .build();
     }
     
     @Override
-    public String getPermissionPath(){
-        return "Objects.DarkHole";
+    public SpecialItemName getSpecialItemName(){
+        return SpecialItemName.dark_hole;
     }
 }
