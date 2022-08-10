@@ -31,7 +31,9 @@ public class OtherUtils{
         }
         
         if(toCheck.getType() == reference.getType()){
-            if(Objects.equals(toCheck.getItemMeta().getDisplayName(), reference.getItemMeta().getDisplayName())){
+            String name1 = ItemBuilder.fromItem(toCheck).getDisplayName();
+            String name2 = ItemBuilder.fromItem(reference).getDisplayName();
+            if(Objects.equals(name1, name2)){
                 return true;
             }
         }
