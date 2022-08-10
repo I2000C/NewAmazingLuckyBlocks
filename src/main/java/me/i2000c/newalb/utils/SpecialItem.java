@@ -24,4 +24,6 @@ public abstract class SpecialItem{
     public abstract ItemStack buildItem();
     
     public abstract void onPlayerInteract(PlayerInteractEvent e);
+    
+    public abstract String getPermissionPath();
 }

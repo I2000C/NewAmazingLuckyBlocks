@@ -2,11 +2,18 @@ package me.i2000c.newalb.listeners.interact;
 
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.listeners.objects.MaterialChecker;
 import me.i2000c.newalb.utils.SpecialItem;
+import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils2.OtherUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerInteractListener implements Listener{
@@ -34,11 +41,29 @@ public class PlayerInteractListener implements Listener{
     private static void onPlayerInteract(PlayerInteractEvent e){
         ItemStack stack = e.getItem();
         if(stack != null){
+            Player player = e.getPlayer();
+            
+            if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
+                if(e.getHand() == EquipmentSlot.OFF_HAND){
+                    return;
+                }
+            }
+            
+            if(MaterialChecker.check(e)){
+                return;
+            }
+            
+            if(!WorldList.isRegistered(player.getWorld().getName())){
+                return;
+            }
+            
             int specialItemID = getSpecialItemID(stack);
             if(specialItemID >= 0 && specialItemID < EVENTS.size()){
                 SpecialItem specialItem = EVENTS.get(specialItemID);
-                if(specialItem != null){
-                    specialItem.onPlayerInteract(e);
+                if(specialItem != null){                    
+                    if(OtherUtils.checkPermission(player, specialItem.getPermissionPath())){
+                        specialItem.onPlayerInteract(e);
+                    }
                 }
             }
         }
