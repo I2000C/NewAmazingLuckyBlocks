@@ -15,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class TrapReward extends Reward{
     public static final String HIDDEN_TAG = "NewAmazingLuckyBlocks.TrapReward";
@@ -104,14 +103,12 @@ public class TrapReward extends Reward{
     }
     
     private ItemStack getItemToDrop(){
-        ItemStack stack = new ItemStack(pressurePlateMaterial);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(trapName);
-        stack.setItemMeta(meta);
+        ItemStack stack = ItemBuilder
+                .newItem(XMaterial.matchXMaterial(pressurePlateMaterial))
+                .withDisplayName(trapName)
+                .build();
         
-        stack = encryptOutcome(trapOutcomePackName, trapOutcomeID, stack);
-        
-        return stack;
+        return encryptOutcome(trapOutcomePackName, trapOutcomeID, stack);
     }
     
     static ItemStack encryptOutcome(Outcome outcome, ItemStack item){

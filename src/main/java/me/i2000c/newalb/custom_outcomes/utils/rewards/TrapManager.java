@@ -1,13 +1,15 @@
 package me.i2000c.newalb.custom_outcomes.utils.rewards;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
 import org.bukkit.Bukkit;
@@ -26,7 +28,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class TrapManager implements Listener{
     private static class Trap{
@@ -90,10 +91,11 @@ public class TrapManager implements Listener{
                 continue;
             }
             
-            ItemStack stack = new ItemStack(Material.valueOf(materialName));
-            ItemMeta meta = stack.getItemMeta();
-            meta.setDisplayName(name);
-            stack.setItemMeta(meta);
+            Material stackMaterial = Material.valueOf(materialName);
+            ItemStack stack = ItemBuilder
+                    .newItem(XMaterial.matchXMaterial(stackMaterial))
+                    .withDisplayName(name)
+                    .build();
             TrapReward.encryptOutcome(outcome, stack);
             
             Trap trap = new Trap();
@@ -123,8 +125,9 @@ public class TrapManager implements Listener{
             
             //save ItemStack
             config.set(path + ".item.material", trap.trapItemStack.getType().name());
-            ItemMeta meta = trap.trapItemStack.getItemMeta();
-            String name = Logger.deColor(meta.getDisplayName());
+            String displayName = ItemBuilder.fromItem(trap.trapItemStack, false)
+                    .getDisplayName();
+            String name = Logger.deColor(displayName);
             
             config.set(path + ".item.name", name);
             config.set(path + ".trapOutcome", TrapReward.decryptOutcome(trap.trapItemStack) + "");
