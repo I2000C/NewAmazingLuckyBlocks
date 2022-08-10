@@ -94,7 +94,7 @@ public class GUIItem{
         }else{
             builder = ItemBuilder.newItem(materialIfFalse);
             builder.addLoreLine("");
-            builder.withDisplayName(modeText + ": &7disabled");
+            builder.addLoreLine(modeText + ": &7disabled");
         }
         builder.addLoreLine("&3Click to toggle");
         builder.withDisplayName(displayText);
@@ -112,7 +112,7 @@ public class GUIItem{
                 .build();
     }
     public static ItemStack getCurrentPageItem(int currentPage, int maxPages){
-        return ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
+        return ItemBuilder.newItem(XMaterial.BOOK)
                 .withDisplayName("&6Page &3" + currentPage + " &a/ &3" + maxPages)
                 .addLoreLine("&bClick to go to page 1")
                 .build();

@@ -121,7 +121,7 @@ public class FinishMenu{
             inv.setItem(i, builder.build());
         }
         
-        ItemStack saveAndExit = ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
+        ItemStack saveAndExit = ItemBuilder.newItem(XMaterial.DARK_OAK_DOOR)
                 .withDisplayName("&dSave and exit")
                 .addLoreLine("&6The plugin will reload the custom outcomes list")
                 .addLoreLine("&6after you click this option")
