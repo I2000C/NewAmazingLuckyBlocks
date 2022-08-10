@@ -1,38 +1,26 @@
 package me.i2000c.newalb.listeners.interact;
 
-import io.github.bananapuncher714.nbteditor.NBTEditor;
-import java.util.ArrayList;
+import java.util.EnumMap;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.objects.MaterialChecker;
 import me.i2000c.newalb.utils.WorldList;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerInteractListener implements Listener{
-    private static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
-    private static int GLOBAL_ID = -1;
-    private static final ArrayList<SpecialItem> EVENTS = new ArrayList<>();
+    private static final EnumMap<SpecialItemName, SpecialItem> EVENTS = new EnumMap<>(SpecialItemName.class);
+    private static final SpecialItemName[] SPECIAL_ITEM_NAMES = SpecialItemName.values();
     
-    public static int registerSpecialtem(SpecialItem specialItem){
-        EVENTS.add(specialItem);
-        return ++GLOBAL_ID;
-    }
-    
-    public static ItemStack setSpecialtemID(ItemStack stack, int specialItemID){
-        return NBTEditor.set(stack, specialItemID, ITEM_TAG);
-    }
-    public static int getSpecialItemID(ItemStack stack){
-        if(NBTEditor.contains(stack, ITEM_TAG)){
-            return NBTEditor.getInt(stack, ITEM_TAG);
-        }else{
-            return -1;
-        }
+    public static void registerSpecialtem(SpecialItem specialItem){
+        EVENTS.putIfAbsent(specialItem.getSpecialItemName(), specialItem);
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -55,9 +43,10 @@ public class PlayerInteractListener implements Listener{
                 return;
             }
             
-            int specialItemID = getSpecialItemID(stack);
-            if(specialItemID >= 0 && specialItemID < EVENTS.size()){
-                SpecialItem specialItem = EVENTS.get(specialItemID);
+            int specialItemID = SpecialItem.getSpecialItemID(stack);
+            if(specialItemID >= 0 && specialItemID < SPECIAL_ITEM_NAMES.length){
+                SpecialItemName specialItemName = SPECIAL_ITEM_NAMES[specialItemID];
+                SpecialItem specialItem = EVENTS.get(specialItemName);
                 if(specialItem != null){                    
                     if(!specialItem.checkPermission(player)){
                         return;
@@ -71,6 +60,17 @@ public class PlayerInteractListener implements Listener{
                     specialItem.onPlayerInteract(e);
                 }
             }
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private static void onItemPickup(PlayerPickupItemEvent e){
+        Item item = e.getItem();
+        if(item.hasMetadata(SpecialItem.METADATA_TAG)){
+            SpecialItem specialItem = SpecialItem.getMetadata(item);
+            if(specialItem != null){
+                specialItem.onItemPickup(e);
+            }                
         }
     }
 }

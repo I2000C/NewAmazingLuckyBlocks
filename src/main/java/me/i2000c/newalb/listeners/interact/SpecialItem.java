@@ -1,21 +1,28 @@
 package me.i2000c.newalb.listeners.interact;
 
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.Plugin;
 
 public abstract class SpecialItem{
+    protected static final String METADATA_TAG = "NewAmazingLuckyBlocks.MetadataTAG";
+    protected static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
     private final String itemPathKey;
     private Map<UUID, Long> cooldownMap;
     
     private ItemStack item;
-    private int id = -1;    
     
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public SpecialItem(){
@@ -34,12 +41,9 @@ public abstract class SpecialItem{
     
     public void loadItem(){
         this.item = buildItem();
-        if(id == -1){
-            id = PlayerInteractListener.registerSpecialtem(this);
-        }
-        
-        this.item = PlayerInteractListener.setSpecialtemID(this.item, id);
+        this.item = setSpecialItemID(this.item);
         this.clearCooldownMap();
+        PlayerInteractListener.registerSpecialtem(this);
     }
     
     public boolean checkPermission(Player player){
@@ -121,4 +125,38 @@ public abstract class SpecialItem{
             itemInHand.setAmount(amount);
         }
     }
+    
+    // Special item ID methods
+    private ItemStack setSpecialItemID(ItemStack stack){
+        return NBTEditor.set(stack, getSpecialItemName().ordinal(), ITEM_TAG);
+    }
+    protected static int getSpecialItemID(ItemStack stack){
+        if(NBTEditor.contains(stack, ITEM_TAG)){
+            return NBTEditor.getInt(stack, ITEM_TAG);
+        }else{
+            return -1;
+        }
+    }
+    
+    // Metadata methods
+    protected void addMetadata(Entity entity){
+        Plugin plugin = NewAmazingLuckyBlocks.getInstance();
+        entity.setMetadata(METADATA_TAG, new FixedMetadataValue(plugin, this));
+    }
+    
+    protected static SpecialItem getMetadata(Entity entity){
+        if(entity.hasMetadata(METADATA_TAG)){
+            Object value = entity.getMetadata(METADATA_TAG).get(0).value();
+            if(value instanceof SpecialItem){
+                return (SpecialItem) value;
+            }
+        }
+        
+        return null;
+    }
+    
+    // Overridable events
+    public abstract void onPlayerInteract(PlayerInteractEvent e);
+    
+    public void onItemPickup(PlayerPickupItemEvent e){}
 }
