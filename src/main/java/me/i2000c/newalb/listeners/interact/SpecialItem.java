@@ -112,7 +112,7 @@ public abstract class SpecialItem{
         Logger.sendMessage(message, player, false);
     }
     
-    protected static void decreaseAmountOfItem(PlayerInteractEvent e){
+    protected void decreaseAmountOfItem(PlayerInteractEvent e){
         ItemStack itemInHand = e.getItem();
         int amount = itemInHand.getAmount() - 1;
         if(amount == 0){
