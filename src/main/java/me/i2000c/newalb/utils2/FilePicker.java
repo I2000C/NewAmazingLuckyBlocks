@@ -1,7 +1,6 @@
 package me.i2000c.newalb.utils2;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.math.BigDecimal;
@@ -11,15 +10,16 @@ import java.util.Arrays;
 import java.util.List;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class FilePicker{
     private static final int MAX_TITLE_LONG = 32;
@@ -99,27 +99,9 @@ public class FilePicker{
             
             Inventory inv = GUIFactory.createInventory(CustomInventoryType.FILE_PICKER, 54, title);
             
-            ItemStack back = new ItemStack(Material.ENDER_PEARL);
-            ItemMeta meta = back.getItemMeta();
-            meta.setDisplayName("&2Previous page");
-            back.setItemMeta(meta);
-            inv.setItem(50, back);
-            
-            ItemStack next = new ItemStack(Material.MAGMA_CREAM);
-            meta = next.getItemMeta();
-            meta.setDisplayName("&5Next page");
-            next.setItemMeta(meta);
-            inv.setItem(52, next);
-            
-            ItemStack page = new ItemStack(Material.NAME_TAG);
-            meta = page.getItemMeta();
-            meta.setDisplayName("&6Pag &3? &6of &5?");
-            page.setItemMeta(meta);
-            
-            ItemStack refresh = new ItemStack(Material.WATER_BUCKET);
-            meta = refresh.getItemMeta();
-            meta.setDisplayName("&bRefresh data");
-            refresh.setItemMeta(meta);
+            ItemStack refresh = ItemBuilder.newItem(XMaterial.WATER_BUCKET)
+                    .withDisplayName("&bRefresh data")
+                    .build();
             inv.setItem(53, refresh);
             
             List<File> fileList;
@@ -141,7 +123,7 @@ public class FilePicker{
             }
             
             if(fileList == null){
-                inv.setItem(51, page);
+                inv.setItem(51, GUIItem.getCurrentPageItem(index+1, maxPage));
                 player.openInventory(inv);
                 return;
             }
@@ -151,44 +133,31 @@ public class FilePicker{
             maxPage = fileList.size() / MENU_SIZE;
             }else{
             maxPage = (fileList.size() / MENU_SIZE) + 1;
-            }*/
+            }*/            
             
-            meta = page.getItemMeta();
-            meta.setDisplayName("&6Pag &3" + (index+1) + " &6of &5" + (maxPage+1));
-            page.setItemMeta(meta);
-            inv.setItem(51, page);
-            
-            
-            ItemStack stack;
             int n = Integer.min(fileList.size()-MENU_SIZE*index, MENU_SIZE);
             for(int i=0; i<n; i++){
                 File file = fileList.get(i+index*MENU_SIZE);
+                XMaterial material = extensionToMaterial(file);
+                ItemBuilder builder = ItemBuilder.newItem(material);
                 if(file.getName().equals("..")){
-                    stack = new ItemStack(Material.ENDER_CHEST);
-                    meta = stack.getItemMeta();
-                    meta.setDisplayName("&6Name: &b..");
-                    stack.setItemMeta(meta);
+                    builder.withDisplayName("&6Name: &b..");
                 }else if(file.isDirectory()){
-                    stack = new ItemStack(extensionToMaterial(file));
-                    meta = stack.getItemMeta();
-                    meta.setDisplayName("&6Name: &b" + file.getName());
-                    List<String> lore;
+                    builder.withDisplayName("&6Name: &b" + file.getName());
                     if(file.list() == null){
-                        lore = Arrays.asList("&6Directory elements: &b?", "&6id: &b" + i);
+                        builder.addLoreLine("&6Directory elements: &b?");
                     }else{
-                        lore = Arrays.asList("&6Directory elements: &b" + file.list().length, "&6id: &b" + i);
+                        builder.addLoreLine("&6Directory elements: &b" + file.list().length);
                     }
-                    meta.setLore(lore);
-                    stack.setItemMeta(meta);
+                    builder.addLoreLine("&6id: &b" + i);
                 }else{
-                    stack = new ItemStack(extensionToMaterial(file));
-                    meta = stack.getItemMeta();
-                    meta.setDisplayName("&6Name: &b" + file.getName());
-                    List<String> lore = Arrays.asList("&6File size: " + getFormatedSize(file.length()), "&6id: &b" + i);
-                    meta.setLore(lore);
-                    stack.setItemMeta(meta);
+                    builder.withDisplayName("&6Name: &b" + file.getName());
+                    builder.addLoreLine(title);
+                    builder.addLoreLine("&6File size: " + getFormatedSize(file.length()));
+                    builder.addLoreLine("&6id: &b" + i);
                 }
-                inv.setItem(i, stack);
+                
+                inv.setItem(i, builder.build());
             }
             player.openInventory(inv);
         }catch(NullPointerException | IllegalArgumentException ex){
@@ -237,7 +206,9 @@ public class FilePicker{
                     openFileMenu(p, rootDirectory, currentDirectory, mainFilter);
                     break;
                 default:
-                    String itemName = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+                    String displayName = ItemBuilder.fromItem(e.getCurrentItem())
+                            .getDisplayName();
+                    String itemName = Logger.stripColor(displayName);
                     String path = itemName.split(":")[1].trim();
                     File file = new File(currentDirectory, path);
                     if(file.isFile()){
@@ -269,42 +240,46 @@ public class FilePicker{
 //</editor-fold>
     }
     
-    private static Material extensionToMaterial(File file){
+    private static XMaterial extensionToMaterial(File file){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(file == null){
             return null;
         }else if(file.isDirectory()){
-            return Material.BOOKSHELF;
+            if(file.getName().equals("..")){
+                return XMaterial.ENDER_CHEST;
+            }else{
+                return XMaterial.BOOKSHELF;
+            }            
         }else{
             String data[] = file.getName().split("[.]");
             String extension = data[data.length-1];
             switch(extension){
                 case "schem":
                 case "schematic":
-                    return Material.MAP;
+                    return XMaterial.MAP;
                 case "txt":
                 case "yml":
                 case "yaml":
                 case "json":
                 case "properties":
-                    return Material.SIGN;
+                    return XMaterial.OAK_SIGN;
                 case "jpg":
                 case "jpeg":
                 case "png":
                 case "gif":
                 case "bmp":
-                    return Material.PAINTING;
+                    return XMaterial.PAINTING;
                 case "doc":
                 case "docx":
-                    return Material.BOOK;
+                    return XMaterial.BOOK;
                 case "jar":
                 case "exe":
                 case "msi":
                 case "bat":
                 case "cmd":
-                    return XMaterial.COMMAND_BLOCK.parseMaterial();
+                    return XMaterial.COMMAND_BLOCK;
                 default:
-                    return Material.ITEM_FRAME;
+                    return XMaterial.ITEM_FRAME;
             }
         }
 //</editor-fold>
