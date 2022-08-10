@@ -14,11 +14,13 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 
 public class ItemBuilder{
@@ -179,6 +181,22 @@ public class ItemBuilder{
         return this;
     }
     
+    public ItemBuilder withOwner(String playerName){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof SkullMeta){
+            ((SkullMeta) meta).setOwner(playerName);
+            item.setItemMeta(meta);
+        }
+        return this;
+    }
+    public ItemBuilder withOwner(Player player){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof SkullMeta){
+            ((SkullMeta) meta).setOwningPlayer(player);
+            item.setItemMeta(meta);
+        }
+        return this;
+    }
     public ItemBuilder withTextureID(String textureID){
         try{
             Texture texture = new Texture(textureID);
