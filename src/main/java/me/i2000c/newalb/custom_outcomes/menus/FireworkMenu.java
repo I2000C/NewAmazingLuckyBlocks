@@ -129,7 +129,7 @@ public class FireworkMenu{
                 XMaterial.BLAZE_ROD);
         
         ItemStack withFlicker = GUIItem.getBooleanItem(
-                inventoriesRegistered, 
+                reward.withFlicker(), 
                 "&5Flicker", 
                 XMaterial.TNT, 
                 XMaterial.TNT);
