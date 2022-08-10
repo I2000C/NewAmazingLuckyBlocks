@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import me.i2000c.newalb.lang_utils.LangLoader;
-import me.i2000c.newalb.listeners.interact.PlayerInteractListener;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.entity.Player;
@@ -13,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class SpecialItem{
     private final String itemPathKey;
-    private final Map<UUID, Long> cooldownMap;
+    private Map<UUID, Long> cooldownMap;
     
     private ItemStack item;
     private int id = -1;    
@@ -26,7 +25,7 @@ public abstract class SpecialItem{
             itemPathKey = "Objects." + this.getClass().getSimpleName();
         }
         
-        cooldownMap = new HashMap<>();
+        cooldownMap = null;
     }
     
     public ItemStack getItem(){
@@ -40,7 +39,7 @@ public abstract class SpecialItem{
         }
         
         this.item = PlayerInteractListener.setSpecialtemID(this.item, id);
-        this.cooldownMap.clear();
+        this.clearCooldownMap();
     }
     
     public String getPermissionPath(){
@@ -60,25 +59,43 @@ public abstract class SpecialItem{
     // Cooldown map methods
     protected void updatePlayerCooldown(Player player){
         int cooldownSeconds = ConfigManager.getConfig().getInt(itemPathKey + ".cooldown-time");
+        if(cooldownSeconds <= 0){
+            return;
+        }
+        
+        if(cooldownMap == null){
+            cooldownMap = new HashMap<>();
+        }
+        
         cooldownMap.put(player.getUniqueId(), System.currentTimeMillis() + cooldownSeconds*1000);
     }
     
     protected boolean isCooldownExpired(Player player){
-        if(cooldownMap.isEmpty()){
-            return false;
-        }else{
-            long cooldownValue = cooldownMap.getOrDefault(player, 0L);
-            return System.currentTimeMillis() > cooldownValue;
-        }            
+        if(cooldownMap == null){
+            return true;
+        }
+        
+        long cooldownValue = cooldownMap.getOrDefault(player, 0L);
+        return System.currentTimeMillis() > cooldownValue;
     }
     
-    protected long getRemainingSeconds(Player player){
+    protected void clearCooldownMap(){
+        if(cooldownMap != null){
+            cooldownMap.clear();
+        }
+    }
+    
+    protected int getRemainingSeconds(Player player){
+        if(cooldownMap == null){
+            return 0;
+        }
+        
         long cooldownValue = cooldownMap.getOrDefault(player, 0L);
         long remainingTime = cooldownValue - System.currentTimeMillis();
         if(remainingTime < 0){
             remainingTime = 0;
         }
-        return remainingTime / 1000L;
+        return (int)remainingTime / 1000;
     }
     
     protected void sendRemainingSecondsMessage(Player player){
