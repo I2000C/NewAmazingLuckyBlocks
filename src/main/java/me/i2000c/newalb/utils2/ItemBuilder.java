@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.logger.LogLevel;
@@ -145,6 +146,8 @@ public class ItemBuilder{
     }
     
     public ItemBuilder addEnchantment(Enchantment enchantment, int level){
+        Objects.requireNonNull(enchantment);
+        
         item.addUnsafeEnchantment(enchantment, level);
         return this;
     }
@@ -158,6 +161,8 @@ public class ItemBuilder{
         enchantments.forEach(enchant -> {
             String[] splitted = enchant.split(";");
             Enchantment enchantment = Enchantment.getByName(splitted[0]);
+            Objects.requireNonNull(enchantment);
+            
             int level = Integer.parseInt(splitted[1]);
             item.addUnsafeEnchantment(enchantment, level);
         });
@@ -169,7 +174,7 @@ public class ItemBuilder{
     public List<String> getEnchantmentsIntoStringList(){
         List<String> enchantments = new ArrayList<>();
         item.getEnchantments().forEach((enchantment, level) -> {
-            enchantments.add(enchantment + ";" + level);
+            enchantments.add(enchantment.getName() + ";" + level);
         });
         return enchantments;
     }
