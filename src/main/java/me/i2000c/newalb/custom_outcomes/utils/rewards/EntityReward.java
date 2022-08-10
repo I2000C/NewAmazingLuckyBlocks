@@ -95,9 +95,13 @@ public class EntityReward extends Reward{
         builder.withDisplayName("&2Entity");
         builder.addLoreLine("&bID: &r" + entityID);
         builder.addLoreLine("&btype: &e" + Logger.stripColor(type.name()));
-        builder.addLoreLine("&bcustom-name: &r" + custom_name);
+        if(custom_name == null){
+            builder.addLoreLine("&bcustom-name: &cnull");
+        }else{
+            builder.addLoreLine("&bcustom-name: &r" + custom_name);
+        }        
         if(effects.isEmpty()){
-            builder.addLoreLine("&beffects: &rnull");
+            builder.addLoreLine("&beffects: &cnull");
         }else{
             builder.addLoreLine("&beffects: &r");
             effects.forEach((str) -> {
@@ -110,15 +114,15 @@ public class EntityReward extends Reward{
         }else{
             builder.addLoreLine("&bequipment:");
             if(equipment.helmet == null){
-                builder.addLoreLine("   &6Helmet: &cnull");
+                builder.addLoreLine("    &6Helmet: &cnull");
             }else{
-                builder.addLoreLine("   &6Helmet: &d" + this.equipment.helmet.getType().name());
+                builder.addLoreLine("    &6Helmet: &d" + this.equipment.helmet.getType().name());
             }
             
             if(equipment.chestplate == null){
-                builder.addLoreLine("   &6Chestplate: &cnull");
+                builder.addLoreLine("    &6Chestplate: &cnull");
             }else{
-                builder.addLoreLine("   &6Chestplate: &d" + this.equipment.chestplate.getType().name());
+                builder.addLoreLine("    &6Chestplate: &d" + this.equipment.chestplate.getType().name());
             }
             
             if(equipment.leggings == null){
