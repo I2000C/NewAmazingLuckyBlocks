@@ -59,7 +59,7 @@ public class PlayerInteractListener implements Listener{
             if(specialItemID >= 0 && specialItemID < EVENTS.size()){
                 SpecialItem specialItem = EVENTS.get(specialItemID);
                 if(specialItem != null){                    
-                    if(!OtherUtils.checkPermission(player, specialItem.getPermissionPath())){
+                    if(!specialItem.checkPermission(player)){
                         return;
                     }
                     
