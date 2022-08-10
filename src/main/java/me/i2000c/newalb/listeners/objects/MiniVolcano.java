@@ -15,7 +15,7 @@ public class MiniVolcano extends SpecialItem{
     @Override
     public void onPlayerInteract(PlayerInteractEvent e){
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK){
-            SpecialItem.decreaseAmountOfItem(e);
+            super.decreaseAmountOfItem(e);
             
             Location location = e.getClickedBlock().getLocation();
             Timer.getTimer().executeMiniVolcano(e.getPlayer(), location);

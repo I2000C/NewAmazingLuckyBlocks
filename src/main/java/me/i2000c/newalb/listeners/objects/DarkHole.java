@@ -17,7 +17,7 @@ public class DarkHole extends SpecialItem{
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK){
             e.setCancelled(true);
             
-            SpecialItem.decreaseAmountOfItem(e);
+            super.decreaseAmountOfItem(e);
             
             Location location = e.getClickedBlock().getLocation();
             Timer.getTimer().executeDarkHole(e.getPlayer(), location);

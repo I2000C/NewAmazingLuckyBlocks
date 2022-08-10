@@ -22,8 +22,7 @@ public class EndermanSoup extends SpecialItem{
         if(e.getAction() == Action.RIGHT_CLICK_AIR){            
             e.setCancelled(true);
             super.updatePlayerCooldown(e.getPlayer());
-
-            SpecialItem.decreaseAmountOfItem(e);
+            super.decreaseAmountOfItem(e);
             
             Player p = e.getPlayer();
             Vector v = p.getEyeLocation().getDirection();
