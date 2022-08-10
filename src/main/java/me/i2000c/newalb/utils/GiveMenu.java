@@ -1,24 +1,22 @@
 package me.i2000c.newalb.utils;
 
-import me.i2000c.newalb.utils.logger.Logger;
 import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
-import me.i2000c.newalb.listeners.inventories.GUIFactory;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
-import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import java.util.stream.Collectors;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
+import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
+import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.InventoryFunction;
+import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class GiveMenu{
     public static Player target = null;
@@ -40,40 +38,34 @@ public class GiveMenu{
             target = p;
         }
         
-        if(playerItem == null){
-            playerItem = XMaterial.PLAYER_HEAD.parseItem();
-            SkullMeta sk = (SkullMeta) playerItem.getItemMeta();
-            sk.setDisplayName("&2Player Selected:");
-            sk.setLore(Arrays.asList("&b" + target.getName()));
-            sk.setOwner(target.getName());
-            playerItem.setItemMeta(sk);
-        }
-        
-        ItemStack wands = XMaterial.MUSIC_DISC_FAR.parseItem();
-        ItemMeta meta = wands.getItemMeta();
-        meta.setDisplayName("&aGive Wands");
-        wands.setItemMeta(meta);
-        
-        ItemStack objects = new ItemStack(Material.BUCKET);
-        meta = objects.getItemMeta();
-        meta.setDisplayName("&bGive Objects");
-        objects.setItemMeta(meta);
-        
-        ItemStack luckyBlocks = TypeManager.getMenuItemStack();
-        meta = luckyBlocks.getItemMeta();
-        meta.setDisplayName("&6Give LuckyBlocks");
-        meta.setLore(null);
-        luckyBlocks.setItemMeta(meta);
-        
-        ItemStack luckyTool = SpecialItemManager.getLuckyTool().getItem();
-        meta = luckyTool.getItemMeta();
-        meta.setDisplayName("&eGive the LuckyTool");
-        meta.setLore(null);
-        luckyTool.setItemMeta(meta);
-        
-        
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.GIVE_MENU, 9, "&d&lGive Menu");
         InventoryListener.registerInventory(CustomInventoryType.GIVE_MENU, GIVE_MENU_FUNCTION);
+        
+        if(playerItem == null){
+            playerItem = ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
+                    .withDisplayName("&2Player Selected:")
+                    .addLoreLine("&b" + target.getName())
+                    .withOwner(target.getName())
+                    .build();
+        }
+        
+        ItemStack wands = ItemBuilder.newItem(XMaterial.MUSIC_DISC_FAR)
+                .withDisplayName("&aGive Wands")
+                .build();
+        
+        ItemStack objects = ItemBuilder.newItem(XMaterial.BUCKET)
+                .withDisplayName("&bGive Objects")
+                .build();
+        
+        ItemStack luckyBlocks = ItemBuilder
+                .fromItem(TypeManager.getMenuItemStack(), false)
+                .withDisplayName("&6Give LuckyBlocks")
+                .build();
+        
+        ItemStack luckyTool = ItemBuilder
+                .fromItem(SpecialItemManager.getLuckyTool().getItem(), false)
+                .withDisplayName("&eGive LuckyTool")
+                .build();        
         
         inv.setItem(0, wands);
         inv.setItem(1, objects);
@@ -120,11 +112,12 @@ public class GiveMenu{
     
     private static void openPlayerSelectionMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        List<String> onlinePlayers = new ArrayList<>();
-        Bukkit.getOnlinePlayers().forEach(player -> onlinePlayers.add(player.getName()));
-        onlinePlayers.remove(p.getName());
-        Collections.sort(onlinePlayers);
-        onlinePlayers.add(0, p.getName());
+        List<Player> onlinePlayers = Bukkit.getOnlinePlayers()
+                .stream()
+                .filter(player -> !player.equals(p))
+                .sorted((player1, player2) -> player1.getName().compareTo(player2.getName()))
+                .collect(Collectors.toList());
+        onlinePlayers.add(0, p);
         
         maxPages = onlinePlayers.size() / 51;
         if(onlinePlayers.size() % 51 != 0){
@@ -133,32 +126,15 @@ public class GiveMenu{
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.PLAYER_SELECTION_MENU, 54, "&2&lOnline Player List");
         
-        ItemStack previous = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = previous.getItemMeta();
-        meta.setDisplayName("&dPrevious");
-        previous.setItemMeta(meta);
+        inv.setItem(51, GUIItem.getPreviousPageItem());
+        inv.setItem(52, GUIItem.getCurrentPageItem(inventoryPage, maxPages));
+        inv.setItem(53, GUIItem.getNextPageItem());
         
-        ItemStack page = new ItemStack(Material.MAGMA_CREAM);
-        meta = page.getItemMeta();
-        meta.setDisplayName("&6Page &b(&e" + inventoryPage + "&b/&e" + maxPages + "&b)");
-        page.setItemMeta(meta);
-        
-        ItemStack next = XMaterial.ENDER_EYE.parseItem();
-        meta = next.getItemMeta();
-        meta.setDisplayName("&dNext");
-        next.setItemMeta(meta);
-        
-        inv.setItem(51, previous);
-        inv.setItem(52, page);
-        inv.setItem(53, next);
-        
-        
-        ItemStack player = XMaterial.PLAYER_HEAD.parseItem();
-        SkullMeta sk = (SkullMeta) player.getItemMeta();
         for(int i=51*(inventoryPage-1);i<onlinePlayers.size();i++){
-            sk.setDisplayName("&2" + onlinePlayers.get(i));
-            sk.setOwner(onlinePlayers.get(i));
-            player.setItemMeta(sk);
+            ItemStack player = ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
+                    .withDisplayName("&2" + onlinePlayers.get(i).getName())
+                    .withOwner(onlinePlayers.get(i))
+                    .build();
             
             inv.setItem(i%51, player);
             if(i%51 == 50){
@@ -202,16 +178,17 @@ public class GiveMenu{
                 default:
                     ItemStack sk = e.getCurrentItem();
                     if(sk != null && !sk.getType().equals(Material.AIR)){
-                        String playerName = Logger.stripColor(sk.getItemMeta().getDisplayName());
+                        String displayName = ItemBuilder.fromItem(sk)
+                                .getDisplayName();
+                        String playerName = Logger.stripColor(displayName);
                         target = Bukkit.getPlayer(playerName);
                         openGiveMenu(p);
                         
-                        playerItem = XMaterial.PLAYER_HEAD.parseItem();
-                        SkullMeta skmeta = (SkullMeta) playerItem.getItemMeta();
-                        skmeta.setDisplayName("&2Player Selected:");
-                        skmeta.setLore(Arrays.asList("&b" + playerName));
-                        skmeta.setOwner(playerName);
-                        playerItem.setItemMeta(skmeta);
+                        playerItem = ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
+                                .withDisplayName("&2Player Selected:")
+                                .addLoreLine("&b" + playerName)
+                                .withOwner(playerName)
+                                .build();
                     }
                     openGiveMenu(p);
                     break;
@@ -222,16 +199,10 @@ public class GiveMenu{
     
     
     private static void openWandsMenu(Player p){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName("&dBack");
-        back.setItemMeta(meta);
-        
-        ItemStack close = new ItemStack(Material.MAGMA_CREAM);
-        meta = close.getItemMeta();
-        meta.setDisplayName("&cClose");
-        close.setItemMeta(meta);
+        //<editor-fold defaultstate="collapsed" desc="Code">        
+        ItemStack close = ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
+                .withDisplayName("&cClose")
+                .build();
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.WANDS_MENU, 27, "&aGive Wands");
         
@@ -242,7 +213,7 @@ public class GiveMenu{
         
         inv.setItem(18, playerItem);
         
-        inv.setItem(25, back);
+        inv.setItem(25, GUIItem.getBackItem());
         inv.setItem(26, close);
         
         InventoryListener.registerInventory(CustomInventoryType.WANDS_MENU, WANDS_MENU_FUNCTION);
@@ -278,25 +249,9 @@ public class GiveMenu{
     
     private static void openObjectsMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName("&dBack");
-        back.setItemMeta(meta);
-        
-        ItemStack close = new ItemStack(Material.MAGMA_CREAM);
-        meta = close.getItemMeta();
-        meta.setDisplayName("&cClose");
-        close.setItemMeta(meta);
-        
-        ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = plus.getItemMeta();
-        meta.setDisplayName("&a&l+");
-        plus.setItemMeta(meta);
-        
-        ItemStack less = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = less.getItemMeta();
-        meta.setDisplayName("&c&l-");
-        less.setItemMeta(meta);
+        ItemStack close = ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
+                .withDisplayName("&cClose")
+                .build();
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.OBJECTS_MENU, 27, "&bGive Objects");
         
@@ -309,10 +264,10 @@ public class GiveMenu{
         
         inv.setItem(18, playerItem);
         
-        inv.setItem(16, plus);
-        inv.setItem(17, less);
+        inv.setItem(16, GUIItem.getPlusLessItem(+1));
+        inv.setItem(17, GUIItem.getPlusLessItem(-1));
         
-        inv.setItem(25, back);
+        inv.setItem(25, GUIItem.getBackItem());
         inv.setItem(26, close);
         
         InventoryListener.registerInventory(CustomInventoryType.OBJECTS_MENU, OBJECTS_MENU_FUNCTION);
@@ -362,26 +317,10 @@ public class GiveMenu{
     };
     
     private static void openLuckyBlocksMenu(Player p){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        ItemStack back = new ItemStack(Material.ENDER_PEARL);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName("&dBack");
-        back.setItemMeta(meta);
-        
-        ItemStack close = new ItemStack(Material.MAGMA_CREAM);
-        meta = close.getItemMeta();
-        meta.setDisplayName("&cClose");
-        close.setItemMeta(meta);
-        
-        ItemStack plus = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = plus.getItemMeta();
-        meta.setDisplayName("&a&l+");
-        plus.setItemMeta(meta);
-        
-        ItemStack less = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = less.getItemMeta();
-        meta.setDisplayName("&c&l-");
-        less.setItemMeta(meta);
+        //<editor-fold defaultstate="collapsed" desc="Code">        
+        ItemStack close = ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
+                .withDisplayName("&cClose")
+                .build();
         
         //LuckyBlock
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.LUCKYBLOCKS_MENU, 27, "&6Give LuckyBlocks");
@@ -395,10 +334,10 @@ public class GiveMenu{
         
         inv.setItem(18, playerItem);
         
-        inv.setItem(16, plus);
-        inv.setItem(17, less);
+        inv.setItem(16, GUIItem.getPlusLessItem(+1));
+        inv.setItem(17, GUIItem.getPlusLessItem(-1));
         
-        inv.setItem(25, back);
+        inv.setItem(25, GUIItem.getBackItem());
         inv.setItem(26, close);
         
         InventoryListener.registerInventory(CustomInventoryType.LUCKYBLOCKS_MENU, LUCKYBLOCKS_MENU_FUNCTION);
