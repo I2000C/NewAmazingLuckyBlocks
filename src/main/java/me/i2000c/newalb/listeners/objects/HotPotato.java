@@ -26,7 +26,7 @@ public class HotPotato extends SpecialItem{
             
             Location loc = e.getPlayer().getEyeLocation();
             Item item = loc.getWorld().dropItem(loc, getItem());
-            super.addMetadata(item);
+            super.setClassMetadata(item);
             item.setVelocity(e.getPlayer().getLocation().getDirection());
             
             long delayTicks = ConfigManager.getConfig().getLong("Objects.HotPotato.ticksBeforeExplosion");

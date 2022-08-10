@@ -10,6 +10,9 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +20,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
 public abstract class SpecialItem{
-    protected static final String METADATA_TAG = "NewAmazingLuckyBlocks.MetadataTAG";
+    protected static final String CLASS_METADATA_TAG = "NewAmazingLuckyBlocks.ClassMetadata";
+    protected static final String CUSTOM_METADATA_TAG = "NewAmazingLuckyBlocks.CustomMetadata";
     protected static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
     private final String itemPathKey;
     private Map<UUID, Long> cooldownMap;
@@ -64,9 +68,8 @@ public abstract class SpecialItem{
     
     protected abstract ItemStack buildItem();
     
-    public abstract void onPlayerInteract(PlayerInteractEvent e);
-    
-    public abstract SpecialItemName getSpecialItemName();
+    //public abstract SpecialItemName getSpecialItemName();
+    public SpecialItemName getSpecialItemName(){return SpecialItemName.regen_wand;}
     
     // Cooldown map methods
     protected void updatePlayerCooldown(Player player){
@@ -137,26 +140,55 @@ public abstract class SpecialItem{
             return -1;
         }
     }
-    
-    // Metadata methods
-    protected void addMetadata(Entity entity){
-        Plugin plugin = NewAmazingLuckyBlocks.getInstance();
-        entity.setMetadata(METADATA_TAG, new FixedMetadataValue(plugin, this));
+    protected static boolean hasSpecialItemID(ItemStack stack){
+        return NBTEditor.contains(stack, ITEM_TAG);
     }
     
-    protected static SpecialItem getMetadata(Entity entity){
-        if(entity.hasMetadata(METADATA_TAG)){
-            Object value = entity.getMetadata(METADATA_TAG).get(0).value();
+    // Metadata methods
+    protected void setClassMetadata(Entity entity){
+        Plugin plugin = NewAmazingLuckyBlocks.getInstance();
+        entity.setMetadata(CLASS_METADATA_TAG, new FixedMetadataValue(plugin, this));
+    }    
+    protected static SpecialItem getClassMetadata(Entity entity){
+        if(entity.hasMetadata(CLASS_METADATA_TAG)){
+            Object value = entity.getMetadata(CLASS_METADATA_TAG).get(0).value();
             if(value instanceof SpecialItem){
                 return (SpecialItem) value;
             }
-        }
-        
+        }        
         return null;
+    }
+    protected static boolean hasClassMetadata(Entity entity){
+        return entity.hasMetadata(CLASS_METADATA_TAG) &&
+                !entity.getMetadata(CLASS_METADATA_TAG).isEmpty();
+    }
+    protected static void removeClassMetadata(Entity entity){
+        entity.removeMetadata(CLASS_METADATA_TAG, NewAmazingLuckyBlocks.getInstance());
+    }
+    
+    protected void setCustomMetadata(Entity entity, Object value){
+        Plugin plugin = NewAmazingLuckyBlocks.getInstance();
+        entity.setMetadata(CUSTOM_METADATA_TAG, new FixedMetadataValue(plugin, value));
+    }
+    protected static Object getCustomMetadata(Entity entity){
+        if(entity.hasMetadata(CUSTOM_METADATA_TAG)){
+            Object value = entity.getMetadata(CUSTOM_METADATA_TAG).get(0).value();
+            return value;
+        }        
+        return null;
+    }
+    protected static boolean hasCustomMetadata(Entity entity){
+        return entity.hasMetadata(CUSTOM_METADATA_TAG);
     }
     
     // Overridable events
-    public abstract void onPlayerInteract(PlayerInteractEvent e);
+    public void onPlayerInteract(PlayerInteractEvent e){}
     
     public void onItemPickup(PlayerPickupItemEvent e){}
+    
+    public void onArrowHitEntity(EntityDamageByEntityEvent e){}
+    
+    public void onArrowHit(ProjectileHitEvent e){}
+    
+    public void onArrowShooted(EntityShootBowEvent e){}
 }

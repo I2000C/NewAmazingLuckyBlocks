@@ -5,11 +5,16 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.objects.MaterialChecker;
 import me.i2000c.newalb.utils.WorldList;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -25,6 +30,7 @@ public class PlayerInteractListener implements Listener{
     
     @EventHandler(priority = EventPriority.HIGHEST)
     private static void onPlayerInteract(PlayerInteractEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack stack = e.getItem();
         if(stack != null){
             Player player = e.getPlayer();
@@ -47,7 +53,7 @@ public class PlayerInteractListener implements Listener{
             if(specialItemID >= 0 && specialItemID < SPECIAL_ITEM_NAMES.length){
                 SpecialItemName specialItemName = SPECIAL_ITEM_NAMES[specialItemID];
                 SpecialItem specialItem = EVENTS.get(specialItemName);
-                if(specialItem != null){                    
+                if(specialItem != null){
                     if(!specialItem.checkPermission(player)){
                         return;
                     }
@@ -61,16 +67,96 @@ public class PlayerInteractListener implements Listener{
                 }
             }
         }
+//</editor-fold>
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
     private static void onItemPickup(PlayerPickupItemEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         Item item = e.getItem();
-        if(item.hasMetadata(SpecialItem.METADATA_TAG)){
-            SpecialItem specialItem = SpecialItem.getMetadata(item);
+        
+        if(!WorldList.isRegistered(item.getWorld().getName())) {
+            return;
+        }
+        
+        if(item.hasMetadata(SpecialItem.CLASS_METADATA_TAG)){
+            SpecialItem specialItem = SpecialItem.getClassMetadata(item);
             if(specialItem != null){
                 specialItem.onItemPickup(e);
-            }                
+            }
         }
+//</editor-fold>
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private static void onArrowHitEntity(EntityDamageByEntityEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Entity damager = e.getDamager();
+        if(damager instanceof Arrow){
+            Arrow arrow = (Arrow) damager;
+            
+            if(!WorldList.isRegistered(arrow.getWorld().getName())) {
+                return;
+            }
+            
+            SpecialItem specialItem = SpecialItem.getClassMetadata(arrow);
+            if(specialItem != null){
+                specialItem.onArrowHitEntity(e);
+            }
+        }
+//</editor-fold>
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private static void onArrowHit(ProjectileHitEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Entity projectile = e.getEntity();
+        if(projectile instanceof Arrow){
+            Arrow arrow = (Arrow) projectile;
+            
+            if(!WorldList.isRegistered(arrow.getWorld().getName())) {
+                return;
+            }
+            
+            SpecialItem specialItem = SpecialItem.getClassMetadata(arrow);
+            if(specialItem != null){
+                specialItem.onArrowHit(e);
+                
+            }
+        }
+//</editor-fold>
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private static void onArrowShooted(EntityShootBowEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(e.getEntity() == null || !(e.getEntity() instanceof Player)){
+            return;
+        }
+        
+        Player player = (Player) e.getEntity();
+        
+        if(!WorldList.isRegistered(player.getWorld().getName())){
+            return;
+        }
+        
+        int specialItemID = SpecialItem.getSpecialItemID(e.getBow());
+        if(specialItemID >= 0 && specialItemID < SPECIAL_ITEM_NAMES.length){
+            SpecialItemName specialItemName = SPECIAL_ITEM_NAMES[specialItemID];
+            SpecialItem specialItem = EVENTS.get(specialItemName);
+            if(specialItem != null){
+                if(!specialItem.checkPermission(player)){
+                    return;
+                }
+                
+                if(!specialItem.isCooldownExpired(player)){
+                    specialItem.sendRemainingSecondsMessage(player);
+                    return;
+                }
+                
+                specialItem.onArrowShooted(e);
+            }
+        }
+//</editor-fold>
     }
 }
