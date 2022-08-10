@@ -63,7 +63,7 @@ public class TextureManager{
             
             update = null;
         }catch(Exception ex){
-            Logger.log("An error ocurred while enabling TextureManager:", LogLevel.INFO);
+            Logger.log("An error ocurred while enabling TextureManager:", LogLevel.ERROR);
             ex.printStackTrace();
         }        
     }
@@ -79,11 +79,8 @@ public class TextureManager{
         
         try{
             if(profileFieldItem == null){
-                long timeA = System.nanoTime();
                 profileFieldItem = meta.getClass().getDeclaredField("profile");
                 profileFieldItem.setAccessible(true);
-                long timeB = System.nanoTime();
-                Logger.log((timeB - timeA) + " ns");
             }
             GameProfile profile = (GameProfile) profileFieldItem.get(skMeta);
             return new Texture(profile);
@@ -219,11 +216,6 @@ public class TextureManager{
                 setPlayerProfile.invoke(sk, playerProfile);
             }catch(Exception ex){
                 ex.printStackTrace();
-                for(Method method : sk.getClass().getMethods()){
-                    if(method.getName().contains("setOwnerProfile")){
-                        Logger.log(method.toGenericString());
-                    }                   
-                }
                 return false;
             }                
         }
