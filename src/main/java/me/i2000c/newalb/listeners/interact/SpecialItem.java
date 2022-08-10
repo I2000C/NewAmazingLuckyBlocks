@@ -42,8 +42,16 @@ public abstract class SpecialItem{
         this.clearCooldownMap();
     }
     
-    public String getPermissionPath(){
-        return this.itemPathKey;
+    public boolean checkPermission(Player player){
+        boolean requiredPermission = ConfigManager.getConfig().getBoolean(itemPathKey + ".required-permission");
+        String permission = ConfigManager.getConfig().getString(itemPathKey + ".permission");
+        
+        if(requiredPermission && !player.hasPermission(permission)){
+            Logger.sendMessage(LangLoader.getMessages().get("need-permission"), player);
+            return false;
+        }else{
+            return true;
+        }
     }
     
     public String getDisplayName(){
