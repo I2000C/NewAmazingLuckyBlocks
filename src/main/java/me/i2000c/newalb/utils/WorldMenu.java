@@ -1,21 +1,21 @@
 package me.i2000c.newalb.utils;
 
-import me.i2000c.newalb.utils.logger.Logger;
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class WorldMenu{
     private static int index;
@@ -51,50 +51,31 @@ public class WorldMenu{
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.WORLD_MENU, 54, "&3&lWorlds Menu");
         
-        ItemStack exit = XMaterial.BARRIER.parseItem();
-        ItemMeta meta = exit.getItemMeta();
-        meta.setDisplayName("&cExit");
-        exit.setItemMeta(meta);
+        ItemStack exit = ItemBuilder.newItem(XMaterial.BARRIER)
+                .withDisplayName("&cExit")
+                .build();
         
-        ItemStack save = XMaterial.MAGMA_CREAM.parseItem();
-        meta = exit.getItemMeta();
-        meta.setDisplayName("&6Save and exit");
-        save.setItemMeta(meta);
+        ItemStack save = ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
+                .withDisplayName("&6Save and exit")
+                .build();
         
-        ItemStack allNormal = XMaterial.LIME_STAINED_GLASS_PANE.parseItem();
-        meta = allNormal.getItemMeta();
-        meta.setDisplayName("&3Set all worlds to &aENABLED");
-        allNormal.setItemMeta(meta);
+        ItemStack allNormal = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+                .withDisplayName("&3Set all worlds to &aENABLED")
+                .build();
         
-        ItemStack allDisabled = XMaterial.RED_STAINED_GLASS_PANE.parseItem();
-        meta = allDisabled.getItemMeta();
-        meta.setDisplayName("&3Set all worlds to &cDISABLED");
-        allDisabled.setItemMeta(meta);
+        ItemStack allDisabled = ItemBuilder.newItem(XMaterial.RED_STAINED_GLASS_PANE)
+                .withDisplayName("&3Set all worlds to &cDISABLED")
+                .build();
         
         inv.setItem(50, allNormal);
         inv.setItem(51, allDisabled);
         inv.setItem(52, save);
         inv.setItem(53, exit);
         
-        if(worlds.size() > MENU_SIZE){
-            ItemStack back = XMaterial.ENDER_PEARL.parseItem();
-            meta = back.getItemMeta();
-            meta.setDisplayName("&2Previous page");
-            back.setItemMeta(meta);
-            
-            ItemStack currentPage = new ItemStack(Material.BOOK, index+1);
-            meta = currentPage.getItemMeta();
-            meta.setDisplayName("&6Page &3" + (index+1) + " &a/ &3" + max_pages);
-            currentPage.setItemMeta(meta);
-            
-            ItemStack next = XMaterial.ENDER_EYE.parseItem();
-            meta = next.getItemMeta();
-            meta.setDisplayName("&2Next page");
-            next.setItemMeta(meta);
-            
-            inv.setItem(46, back);
-            inv.setItem(47, currentPage);
-            inv.setItem(48, next);
+        if(worlds.size() > MENU_SIZE){            
+            inv.setItem(46, GUIItem.getPreviousPageItem());
+            inv.setItem(47, GUIItem.getCurrentPageItem(index+1, max_pages));
+            inv.setItem(48, GUIItem.getNextPageItem());
         }
         
         int n = Integer.min((WorldList.getWorlds().size()-MENU_SIZE*index),MENU_SIZE);
@@ -104,13 +85,13 @@ public class WorldMenu{
             String worldName = worldsAux.get(i+index*MENU_SIZE);
             boolean worldType = worlds.get(worldName);
             
-            ItemStack w = new ItemStack(getMaterialByType(worldType));
-            meta = w.getItemMeta();
-            meta.setDisplayName("&d" + worldName);
-            meta.setLore(getLoreByType(worldType));
-            w.setItemMeta(meta);
+            Material material = getMaterialByType(worldType);
+            ItemStack worldItem = ItemBuilder.newItem(XMaterial.matchXMaterial(material))
+                    .withDisplayName("&d" + worldName)
+                    .withLore(getLoreByType(worldType))
+                    .build();
             
-            inv.setItem(i, w);
+            inv.setItem(i, worldItem);
         }
         
         p.openInventory(inv);
@@ -193,7 +174,12 @@ public class WorldMenu{
                     break;
                 default:
                     if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                        String old_type = Logger.stripColor(e.getCurrentItem().getItemMeta().getLore().get(0));
+                        ItemBuilder builder = ItemBuilder.fromItem(e.getCurrentItem(), false);
+                        
+                        String displayName = builder.getDisplayName();
+                        List<String> lore = builder.getLore();
+                        
+                        String old_type = Logger.stripColor(lore.get(0));
                         boolean new_type;
                         switch(old_type){
                             case "ENABLED WORLD":
@@ -203,7 +189,7 @@ public class WorldMenu{
                                 new_type = true;
                         }
 
-                        String worldName = Logger.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+                        String worldName = Logger.stripColor(displayName);
                         worlds.put(worldName, new_type);
                         openWorldsMenu(p);
                     }
