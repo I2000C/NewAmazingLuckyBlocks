@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import me.i2000c.newalb.listeners.objects.AutoBow;
 import me.i2000c.newalb.listeners.objects.DarkHole;
 import me.i2000c.newalb.listeners.objects.EndermanSoup;
@@ -26,8 +25,8 @@ import me.i2000c.newalb.listeners.wands.RegenWand;
 import me.i2000c.newalb.listeners.wands.ShieldWand;
 import me.i2000c.newalb.listeners.wands.SlimeWand;
 import me.i2000c.newalb.listeners.wands.TntWand;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 
 public class SpecialItemManager{
     private static final Map<SpecialItemName, SpecialItem> specialItems;
@@ -133,6 +132,9 @@ public class SpecialItemManager{
     public static SpecialItem getSpecialItem(String name){
         SpecialItemName specialItemName = SpecialItemName.fromString(name);
         return specialItems.get(specialItemName);
+    }    
+    public static SpecialItem getSpecialItem(SpecialItemName specialItemName){
+        return specialItems.get(specialItemName);
     }
     
     public static List<SpecialItem> getWands(){
@@ -171,49 +173,5 @@ public class SpecialItemManager{
         }
             
         return cachedNamesList;
-    }
-    
-    private static enum SpecialItemName{
-        luckytool(false),
-        
-        regen_wand(true),
-        inv_wand(true),
-        tnt_wand(true),
-        slime_wand(true),
-        fire_wand(true),
-        lightning_wand(true),
-        shield_wand(true),
-        potion_wand(true),
-        frost_path_wand(true),
-
-        dark_hole(false),
-        mini_volcano(false),
-        player_tracker(false),
-        enderman_soup(false),
-        hot_potato(false),
-        ice_bow(false),
-        auto_bow(false),
-        multi_bow(false),
-        explosive_bow(false),
-        homing_bow(false),
-        hook_bow(false);
-        
-        private final boolean isWand;
-        
-        private SpecialItemName(boolean isWand){
-            this.isWand = isWand;
-        }
-        
-        public boolean isWand(){
-            return this.isWand;
-        }
-
-        public static SpecialItemName fromString(String str){
-            try{
-                return SpecialItemName.valueOf(str.replace("%", ""));
-            }catch(IllegalArgumentException ex){
-                return null;
-            }
-        }
     }
 }
