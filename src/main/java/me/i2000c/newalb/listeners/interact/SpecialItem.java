@@ -75,7 +75,7 @@ public abstract class SpecialItem{
             return true;
         }
         
-        long cooldownValue = cooldownMap.getOrDefault(player, 0L);
+        long cooldownValue = cooldownMap.getOrDefault(player.getUniqueId(), 0L);
         return System.currentTimeMillis() > cooldownValue;
     }
     
@@ -90,7 +90,7 @@ public abstract class SpecialItem{
             return 0;
         }
         
-        long cooldownValue = cooldownMap.getOrDefault(player, 0L);
+        long cooldownValue = cooldownMap.getOrDefault(player.getUniqueId(), 0L);
         long remainingTime = cooldownValue - System.currentTimeMillis();
         if(remainingTime < 0){
             remainingTime = 0;
@@ -99,7 +99,7 @@ public abstract class SpecialItem{
     }
     
     protected void sendRemainingSecondsMessage(Player player){
-        String message = LangLoader.getMessages().getString("Cooldown-messsage");
+        String message = LangLoader.getMessages().getString("Cooldown-message");
         message = message.replace("%time%", String.valueOf(getRemainingSeconds(player)));
         Logger.sendMessage(message, player, false);
     }
