@@ -181,6 +181,12 @@ Objects:
     cooldown-time: 10
     required-permission: false
     permission: amazinglb.objects.hookbow
+  LuckyTool:
+    enable: true
+    onlyCanBreakLuckyBlocksWithLuckyTool: false
+    cooldown-time: 0
+    required-permission: false
+    permission: 'amazinglb.lucky_tool'
 Commands:
     Worlds-permission: amazinglb.worlds
     Update-message-permission: amazinglb.update
@@ -226,12 +232,6 @@ LuckyBlock:
         place:
             enable: false
             permission: 'amazinglb.lucky_block.place'
-LuckyTool:
-    enable: false
-    onlyCanBreakLuckyBlocksWithLuckyTool: true
-    cooldown-time: 0
-    required-permission: false
-    permission: 'amazinglb.lucky_tool'
 GenerateRandomblocks-OnChunkCreated:
     enable: false
     radx: 8
