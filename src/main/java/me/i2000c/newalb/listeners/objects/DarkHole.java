@@ -6,7 +6,6 @@ import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -18,17 +17,10 @@ public class DarkHole extends SpecialItem{
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK){
             e.setCancelled(true);
             
-            Player player = e.getPlayer();
-            ItemStack itemInHand = e.getItem();
-            int amount = itemInHand.getAmount() - 1;
-            if(amount == 0){
-                player.setItemInHand(null);
-            }else{
-                itemInHand.setAmount(amount);
-            }
+            SpecialItem.decreaseAmountOfItem(e);
             
             Location location = e.getClickedBlock().getLocation();
-            Timer.getTimer().executeDarkHole(player, location);
+            Timer.getTimer().executeDarkHole(e.getPlayer(), location);
         }
     }
     
