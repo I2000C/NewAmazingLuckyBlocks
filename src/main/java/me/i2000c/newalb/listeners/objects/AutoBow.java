@@ -1,14 +1,15 @@
 package me.i2000c.newalb.listeners.objects;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.lang_utils.LangLoader;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.GameMode;
@@ -23,7 +24,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 
@@ -216,19 +216,13 @@ public class AutoBow extends SpecialItem{
                 ex.printStackTrace();
             }
         }
-        
-        
     }
     
     @Override
     public ItemStack buildItem(){
-        ItemStack stack = new ItemStack(Material.BOW, 1);
-        
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(LangLoader.getMessages().getString("Objects.AutoBow.name"));
-        meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
-        stack.setItemMeta(meta);
-        
-        return stack;
+        return ItemBuilder.newItem(XMaterial.BOW)
+                .withDisplayName(LangLoader.getMessages().getString("Objects.AutoBow.name"))
+                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+                .build();
     }
 }
