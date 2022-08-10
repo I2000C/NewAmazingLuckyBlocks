@@ -20,7 +20,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.BlockProtect;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LocationManager;
-import me.i2000c.newalb.utils.SpecialItemManager;
+import me.i2000c.newalb.listeners.interact.SpecialItemManager;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils.Updater;
 import me.i2000c.newalb.utils.WorldList;

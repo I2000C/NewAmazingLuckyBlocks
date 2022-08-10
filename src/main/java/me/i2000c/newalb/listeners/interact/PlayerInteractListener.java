@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.objects.MaterialChecker;
-import me.i2000c.newalb.utils.SpecialItem;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.entity.Player;
@@ -61,9 +60,16 @@ public class PlayerInteractListener implements Listener{
             if(specialItemID >= 0 && specialItemID < EVENTS.size()){
                 SpecialItem specialItem = EVENTS.get(specialItemID);
                 if(specialItem != null){                    
-                    if(OtherUtils.checkPermission(player, specialItem.getPermissionPath())){
-                        specialItem.onPlayerInteract(e);
+                    if(!OtherUtils.checkPermission(player, specialItem.getPermissionPath())){
+                        return;
                     }
+                    
+                    if(!specialItem.isCooldownExpired(player)){
+                        specialItem.sendRemainingSecondsMessage(player);
+                        return;
+                    }
+                    
+                    specialItem.onPlayerInteract(e);
                 }
             }
         }

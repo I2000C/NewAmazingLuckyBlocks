@@ -1,4 +1,4 @@
-package me.i2000c.newalb.utils;
+package me.i2000c.newalb.listeners.interact;
 
 public enum SpecialItemName{
     luckytool(false),

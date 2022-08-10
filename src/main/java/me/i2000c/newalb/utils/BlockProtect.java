@@ -1,5 +1,7 @@
 package me.i2000c.newalb.utils;
 
+import me.i2000c.newalb.listeners.interact.SpecialItemManager;
+import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;

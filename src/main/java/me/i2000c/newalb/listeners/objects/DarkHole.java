@@ -1,8 +1,8 @@
 package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.utils.SpecialItem;
-import me.i2000c.newalb.utils.SpecialItemName;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;

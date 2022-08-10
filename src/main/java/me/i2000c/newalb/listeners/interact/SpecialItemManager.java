@@ -1,4 +1,4 @@
-package me.i2000c.newalb.utils;
+package me.i2000c.newalb.listeners.interact;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -25,6 +25,7 @@ import me.i2000c.newalb.listeners.wands.RegenWand;
 import me.i2000c.newalb.listeners.wands.ShieldWand;
 import me.i2000c.newalb.listeners.wands.SlimeWand;
 import me.i2000c.newalb.listeners.wands.TntWand;
+import me.i2000c.newalb.utils.BowItem;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 

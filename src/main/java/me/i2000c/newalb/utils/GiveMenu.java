@@ -1,5 +1,7 @@
 package me.i2000c.newalb.utils;
 
+import me.i2000c.newalb.listeners.interact.SpecialItemManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.List;
 import java.util.stream.Collectors;
