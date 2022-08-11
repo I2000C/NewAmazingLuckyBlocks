@@ -1,58 +1,45 @@
 package me.i2000c.newalb.listeners.objects;
 
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.lang_utils.LangLoader;
-import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils2.OtherUtils;
-import me.i2000c.newalb.utils.WorldList;
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.BowItem;
+import me.i2000c.newalb.utils.ConfigManager;
+import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.TippedArrow;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.util.Vector;
 
 public class MultiBow extends BowItem{
     
-    @EventHandler
+    @Override
     public void onArrowShooted(EntityShootBowEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(!(e.getEntity() instanceof Player)){
             return;
         }
-        Player player = (Player) e.getEntity();
-        
-        ItemStack object = getItem();
-        ItemStack stack = player.getItemInHand();
-        if(!OtherUtils.checkItemStack(stack, object)){
-            return;
-        }
-        
-        if(!WorldList.isRegistered(player.getWorld().getName())){
-            return;
-        }
-        if(!OtherUtils.checkPermission(player, "Objects.MultiBow")){
-            return;
-        }
-        
         e.setCancelled(true);
+        
+        Player player = (Player) e.getEntity();
+        ItemStack stack = e.getBow();
+        
         boolean withFire = stack.getEnchantments().containsKey(Enchantment.ARROW_FIRE);
-
+        
         int slot = -1;
         for(int i=0;i<player.getInventory().getContents().length;i++){
             ItemStack sk = player.getInventory().getItem(i);
@@ -64,19 +51,19 @@ public class MultiBow extends BowItem{
                 break;
             }
         }
-
+        
         ItemStack arrowItem;
         if(slot != -1){
             arrowItem = player.getInventory().getItem(slot).clone();
         }else{
             arrowItem = new ItemStack(Material.ARROW);
         }
-
+        
         if(player.getGameMode() == GameMode.CREATIVE){
-            launchMultipleArrows(player, true, withFire, arrowItem, e);                
+            launchMultipleArrows(player, true, withFire, arrowItem, e);
             return;
         }
-
+        
         if(slot != -1){
             if(!stack.getEnchantments().containsKey(Enchantment.DURABILITY)){
                 stack.setDurability((short)(stack.getDurability()+6));
@@ -87,25 +74,22 @@ public class MultiBow extends BowItem{
                 }
             }
             if(384-stack.getDurability() <= 0){
-                if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
-                    player.playSound(player.getLocation(), Sound.valueOf("ITEM_BREAK"), 20, 1);
-                }else{
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 20, 1);
-                }
+                player.playSound(player.getLocation(), XSound.ENTITY_ITEM_BREAK.parseSound(), 20, 1);
                 player.setItemInHand(null);
                 return;
             }
-
-
+            
             if(stack.getEnchantments().containsKey(Enchantment.ARROW_INFINITE)){
                 launchMultipleArrows(player, true, withFire, arrowItem, e);
             }else{
                 launchMultipleArrows(player, false, withFire, arrowItem, e);
-            } 
+            }
         }
+//</editor-fold>
     }
     
     private void launchMultipleArrows(Player player, boolean infinityBow, boolean fireBow, ItemStack arrowStack, EntityShootBowEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         //Source: https://bukkit.org/threads/arrows-aiming-off-depending-on-direction.179547/#post-1889651
         int arrowCount = ConfigManager.getConfig().getInt("Objects.MultiBow.numberOfArrows");
         arrowCount--;
@@ -114,13 +98,13 @@ public class MultiBow extends BowItem{
         }
         // you can tune the following value for different spray. Higher number means less spray.
         double spray = ConfigManager.getConfig().getDouble("Objects.MultiBow.spread");
-        
+
         Vector velocity = e.getProjectile().getVelocity();
         double speed = velocity.length();
         Vector direction = new Vector(velocity.getX() / speed, velocity.getY() / speed, velocity.getZ() / speed);
-        
+
         boolean firstArrow = true;
-        if(infinityBow){            
+        if(infinityBow){
             for(int i=0; i<arrowCount; i++){
                 Vector newSpeed;
                 if(firstArrow){
@@ -128,7 +112,7 @@ public class MultiBow extends BowItem{
                     firstArrow = false;
                 }else{
                     newSpeed = new Vector(direction.getX() + (Math.random() - 0.5) / spray, direction.getY() + (Math.random() - 0.5) / spray, direction.getZ() + (Math.random() - 0.5) / spray).normalize().multiply(speed);
-                }                
+                }
                 Arrow arrow = this.launchArrow(player, infinityBow, fireBow, arrowStack, newSpeed);
             }
         }else{
@@ -152,7 +136,7 @@ public class MultiBow extends BowItem{
                         inv.setItem(j, null);
                         i = i + amount;
                     }
-                    
+
                     for(int k=0; k<arrowsToShoot; k++){
                         Vector newSpeed;
                         if(firstArrow){
@@ -165,7 +149,8 @@ public class MultiBow extends BowItem{
                     }
                 }
             }
-        }            
+        }
+//</editor-fold>
     }
     
     private static Method setBasePotionMeta;
@@ -177,6 +162,7 @@ public class MultiBow extends BowItem{
     private static boolean initialized = false;
     
     private Arrow launchArrow(Player player, boolean infinityBow, boolean fireBow, ItemStack arrowStack, Vector newSpeed){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         try{
             if(!initialized){
                 if(!NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
@@ -249,29 +235,26 @@ public class MultiBow extends BowItem{
                 }else{
                     if(pickupStatus == null){
                         Class pickupStatusClass = OtherUtils.getNMSClass("net.minecraft.world.entity.projectile", "EntityArrow$PickupStatus");
-                        pickupStatus = pickupStatusClass.getMethod("valueOf", String.class).invoke(pickupStatusClass, "CREATIVE_ONLY"); 
+                        pickupStatus = pickupStatusClass.getMethod("valueOf", String.class).invoke(pickupStatusClass, "CREATIVE_ONLY");
                     }
                     
                     fromPlayer.set(craftArrow, pickupStatus);
                 }
-            }catch(Exception ex){    
+            }catch(Exception ex){
                 ex.printStackTrace();
             }
         }
         
         return arrow;
+//</editor-fold>
     }
     
     @Override
     public ItemStack buildItem(){
-        ItemStack stack = new ItemStack(Material.BOW, 1);
-        
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(LangLoader.getMessages().getString("Objects.MultiBow.name"));
-        meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
-        stack.setItemMeta(meta);
-        
-        return stack;
+        return ItemBuilder.newItem(XMaterial.BOW)
+                .withDisplayName(getDisplayName())
+                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+                .build();
     }
 }
 
