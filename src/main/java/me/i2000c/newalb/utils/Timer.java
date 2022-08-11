@@ -241,12 +241,12 @@ public class Timer implements Listener{
     }
     
     public void executeFrostPathWand(Player player, int distance, Location endLoc){        
-        int maxBlocks = ConfigManager.getConfig().getInt("Wands.Frost.maxBlocks");
-        Material frostMaterial = Material.valueOf(ConfigManager.getConfig().getString("Wands.Frost.frostMaterial"));
-        long before_ticks = ConfigManager.getConfig().getLong("Wands.Frost.time-before-frostpath");
-        long ticks = ConfigManager.getConfig().getLong("Wands.Frost.time-between-one-block-and-the-next");
-        int blocks = ConfigManager.getConfig().getInt("Wands.Frost.rows-of-blocks-each-time");
-        int width = ConfigManager.getConfig().getInt("Wands.Frost.row-width");
+        int maxBlocks = ConfigManager.getConfig().getInt("Wands.FrostPathWand.maxBlocks");
+        Material frostMaterial = Material.valueOf(ConfigManager.getConfig().getString("Wands.FrostPathWand.frostMaterial"));
+        long before_ticks = ConfigManager.getConfig().getLong("Wands.FrostPathWand.time-before-frostpath");
+        long ticks = ConfigManager.getConfig().getLong("Wands.FrostPathWand.time-between-one-block-and-the-next");
+        int blocks = ConfigManager.getConfig().getInt("Wands.FrostPathWand.rows-of-blocks-each-time");
+        int width = ConfigManager.getConfig().getInt("Wands.FrostPathWand.row-width");
         
         executeFrostPathWand(player, frostMaterial, blocks, maxBlocks, width, distance, endLoc, before_ticks, ticks);
     }
