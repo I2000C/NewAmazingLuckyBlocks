@@ -210,28 +210,11 @@ Enable-openMenu-confirmation: true
 Enable-randomBlocks-percentaje: true
 RandomBlocks-PacketSize: 10
 LuckyBlock:
-    Name: '&6&lLuckyBlock'
-    Lore:
-        - '&3This is a lucky block'
-        - '&bEnjoy it'
-    Material: 'SPONGE'
-    HeadMode:
-        enable: false
-        skull-ID: 4b92cb43333aa621c70eef4ebf299ba412b446fe12e341ccc582f3192189
-        #Don't change this option unless you know what you are doing
-        show-enabled-disabled-info: true
     DropOnBlockBreak:
         #If enabled, when you break a block (not LuckyBlock), there is a probability that it dropped a LuckyBlock
         enable: false
         survivalOnly: true
         probability: 50
-    Permissions:
-        break:
-            enable: false
-            permission: 'amazinglb.lucky_block.break'
-        place:
-            enable: false
-            permission: 'amazinglb.lucky_block.place'
 GenerateRandomblocks-OnChunkCreated:
     enable: false
     radx: 8
