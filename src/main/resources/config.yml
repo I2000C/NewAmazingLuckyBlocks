@@ -1,7 +1,7 @@
 #List of worlds where lucky blocks will be enabled.
 Worlds-list: []
 Wands:
-  Regen:
+  RegenWand:
     cooldown-time: 20
     #The time must be in seconds
     effect-time: 10
@@ -10,7 +10,7 @@ Wands:
     limited-uses:
         enable: false
         uses: 5
-  Fire:
+  FireWand:
     cooldown-time: 20
     fire-radius: 1.5
     required-permission: false
@@ -18,7 +18,7 @@ Wands:
     limited-uses:
         enable: false
         uses: 5
-  Invisibility:
+  InvisibilityWand:
     cooldown-time: 20
     #The time must be in seconds
     effect-time: 10
@@ -27,28 +27,28 @@ Wands:
     limited-uses:
         enable: false
         uses: 5
-  TNT:
+  TntWand:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.tntwand
     limited-uses:
         enable: false
         uses: 5
-  Slime:
+  SlimeWand:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.slimewand
     limited-uses:
         enable: false
         uses: 5
-  Lightning:
+  LightningWand:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.lightning
     limited-uses:
         enable: false
         uses: 5
-  Shield:
+  ShieldWand:
     cooldown-time: 20
     ShieldWandBlock: 'OAK_LEAVES'
     radius: 3.0
@@ -59,7 +59,7 @@ Wands:
     limited-uses:
         enable: false
         uses: 5
-  Potion:
+  PotionWand:
     cooldown-time: 20
     effects:
         - JUMP;10;30;100
@@ -69,7 +69,7 @@ Wands:
     limited-uses:
         enable: false
         uses: 5
-  Frost:
+  FrostPathWand:
     cooldown-time: 20
     frostMaterial: PACKED_ICE
     maxBlocks: 20

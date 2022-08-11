@@ -1,13 +1,16 @@
 package me.i2000c.newalb.listeners.interact;
 
 import io.github.bananapuncher714.nbteditor.NBTEditor;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -131,6 +134,7 @@ public abstract class SpecialItem{
         Logger.sendMessage(message, player, false);
     }
     
+    // Decrease amount of special item (Used in some objects)
     protected void decreaseAmountOfItem(PlayerInteractEvent e){
         ItemStack itemInHand = e.getItem();
         int amount = itemInHand.getAmount() - 1;
@@ -138,6 +142,52 @@ public abstract class SpecialItem{
             e.getPlayer().setItemInHand(null);
         }else{
             itemInHand.setAmount(amount);
+        }
+    }
+    
+    private static String getChatcolorString(int uses){
+        String intColor;  
+        if(uses >= 10){
+          intColor = "&a";  
+        }else if(uses >= 5){
+          intColor = "&6";    
+        }else if(uses >= 0){
+          intColor = "&4";    
+        }else{
+          intColor = "&8";    
+        }
+        return intColor;
+    }
+    protected List<String> getLoreOfWand(){
+        List<String> lore = new ArrayList<>();        
+        if(ConfigManager.getConfig().getBoolean(itemPathKey + ".limited-uses.enable")){
+            int uses = ConfigManager.getConfig().getInt(itemPathKey + ".limited-uses.uses");
+            lore.add("&5Uses left:");
+            lore.add(getChatcolorString(uses) + uses);
+        }        
+        return lore;
+    }
+    protected boolean decreaseWandUses(ItemStack stack, Player player){
+        ItemBuilder builder = ItemBuilder.fromItem(stack, false);
+        if(ConfigManager.getConfig().getBoolean(itemPathKey + ".limited-uses.enable")){
+            List<String> lore = builder.getLore();
+            if(lore == null){
+                builder.withLore(getLoreOfWand());
+                return true;
+            }else{
+                int usesLeft = Integer.parseInt(Logger.stripColor(lore.get(1))) - 1;
+                if(usesLeft >= 0){
+                    lore.set(1, getChatcolorString(usesLeft) + usesLeft);
+                    builder.withLore(lore);
+                    return true;
+                }else{
+                    Logger.sendMessage("&cThis wand has expired", player, false);
+                    return false;
+                }                
+            }
+        }else{
+            builder.withLore();
+            return true;
         }
     }
     

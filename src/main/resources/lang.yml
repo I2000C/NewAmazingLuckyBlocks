@@ -1,21 +1,21 @@
 Wands:
-  Regen:
+  RegenWand:
     name: '&dRegen wand &7- &6Right Click'
-  Fire:
+  FireWand:
     name: '&cFire wand &7- &6Right Click'
-  Invisibility:
+  InvisibilityWand:
     name: '&8Invisibility wand &7- &6Right Click'
-  TNT:
+  TntWand:
     name: '&4TNT wand &7- &6Right Click'
-  Slime:
+  SlimeWand:
     name: '&2Slime wand &7- &6Right Click'
-  Lightning:
+  LightningWand:
     name: '&eLightning wand &7- &6Right Click'
-  Shield:
+  ShieldWand:
     name: '&3Shield wand &7- &6Right Click'
-  Potion:
+  PotionWand:
     name: '&1Potion wand &7- &6Right Click'
-  Frost:
+  FrostPathWand:
     name: '&bFrost Path Wand &7- &6Right Click'
 Objects:
   DarkHole: 
