@@ -5,6 +5,8 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.objects.MaterialChecker;
 import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils2.Task;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -101,12 +103,15 @@ public class PlayerInteractListener implements Listener{
             
             SpecialItem specialItem = SpecialItem.getClassMetadata(arrow);
             if(specialItem != null){
-                specialItem.onArrowHitEntity(e);
+                boolean entityHit = true;
+                specialItem.setCustomMetadata(damager, entityHit);
+                
+                CustomProjectileHitEvent event = new CustomProjectileHitEvent(e);
+                specialItem.onArrowHit(event);
             }
         }
 //</editor-fold>
-    }
-    
+    }    
     @EventHandler(priority = EventPriority.HIGHEST)
     private static void onArrowHit(ProjectileHitEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
@@ -120,8 +125,19 @@ public class PlayerInteractListener implements Listener{
             
             SpecialItem specialItem = SpecialItem.getClassMetadata(arrow);
             if(specialItem != null){
-                specialItem.onArrowHit(e);
+                specialItem.setCustomMetadata(arrow, false);
                 
+                Task.runTask(() -> {
+                    Boolean entityHit = (Boolean) SpecialItem.getCustomMetadata(arrow);
+                    
+                    if(!entityHit){
+                        Block block = arrow.getLocation().getBlock();
+                        CustomProjectileHitEvent event = new CustomProjectileHitEvent(arrow, block);
+                        specialItem.onArrowHit(event);
+                    }
+                    
+                    SpecialItem.removeClassMetadata(arrow);
+                }, 2L);
             }
         }
 //</editor-fold>

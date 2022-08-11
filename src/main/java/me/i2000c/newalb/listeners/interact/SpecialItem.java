@@ -10,9 +10,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -180,15 +178,16 @@ public abstract class SpecialItem{
     protected static boolean hasCustomMetadata(Entity entity){
         return entity.hasMetadata(CUSTOM_METADATA_TAG);
     }
+    protected static void removeCustomMetadata(Entity entity){
+        entity.removeMetadata(CUSTOM_METADATA_TAG, NewAmazingLuckyBlocks.getInstance());
+    }
     
     // Overridable events
     public void onPlayerInteract(PlayerInteractEvent e){}
     
     public void onItemPickup(PlayerPickupItemEvent e){}
     
-    public void onArrowHitEntity(EntityDamageByEntityEvent e){}
-    
-    public void onArrowHit(ProjectileHitEvent e){}
+    public void onArrowHit(CustomProjectileHitEvent e){}
     
     public void onArrowShooted(EntityShootBowEvent e){}
 }
