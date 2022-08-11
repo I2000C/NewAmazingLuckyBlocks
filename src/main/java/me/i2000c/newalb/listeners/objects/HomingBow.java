@@ -1,7 +1,7 @@
 package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.utils.BowItem;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-public class HomingBow extends BowItem{
+public class HomingBow extends SpecialItem{
   
     @Override
     public void onArrowShooted(EntityShootBowEvent e){

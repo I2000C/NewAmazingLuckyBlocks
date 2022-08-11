@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.BowItem;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
@@ -25,7 +25,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.util.Vector;
 
-public class MultiBow extends BowItem{
+public class MultiBow extends SpecialItem{
     
     @Override
     public void onArrowShooted(EntityShootBowEvent e){

@@ -2,7 +2,7 @@ package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
-import me.i2000c.newalb.utils.BowItem;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 
 
-public class ExplosiveBow extends BowItem{
+public class ExplosiveBow extends SpecialItem{
     
     @Override
     public void onArrowHit(CustomProjectileHitEvent e){

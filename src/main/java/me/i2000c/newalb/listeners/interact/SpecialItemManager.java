@@ -25,9 +25,6 @@ import me.i2000c.newalb.listeners.wands.RegenWand;
 import me.i2000c.newalb.listeners.wands.ShieldWand;
 import me.i2000c.newalb.listeners.wands.SlimeWand;
 import me.i2000c.newalb.listeners.wands.TntWand;
-import me.i2000c.newalb.utils.BowItem;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 
 public class SpecialItemManager{
     private static final Map<SpecialItemName, SpecialItem> specialItems;
@@ -42,7 +39,7 @@ public class SpecialItemManager{
         cachedNamesList = new ArrayList<>();
     }
     
-    public static void loadSpecialItems(PluginManager pm, Plugin plugin){
+    public static void loadSpecialItems(){
         specialItems.clear();
         
         SpecialItem item;
@@ -120,9 +117,6 @@ public class SpecialItemManager{
         //Register all events and load all special items
         specialItems.values().forEach(specialItem -> {
             specialItem.loadItem();
-            if(specialItem instanceof BowItem){
-                pm.registerEvents((BowItem) specialItem, plugin);
-            }
         });
     }
     

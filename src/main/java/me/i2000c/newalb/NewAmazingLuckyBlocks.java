@@ -16,11 +16,11 @@ import me.i2000c.newalb.listeners.BlockPlace;
 import me.i2000c.newalb.listeners.ChunkEvent;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.PlayerInteractListener;
+import me.i2000c.newalb.listeners.interact.SpecialItemManager;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.BlockProtect;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LocationManager;
-import me.i2000c.newalb.listeners.interact.SpecialItemManager;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils.Updater;
 import me.i2000c.newalb.utils.WorldList;
@@ -77,8 +77,10 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         Logger.log(LangLoader.getMessages().getString("Loading.line3"));
         
         Task.initializeTaskManager(this);
+        SpecialItemManager.loadSpecialItems();
         
         registerEvents();
+        
         getCommand("alb").setExecutor(new CommandManager(this));
         getCommand("nalb").setExecutor(new CommandManager(this));
         
@@ -116,8 +118,6 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         pm.registerEvents(new PlayerInteractListener(), this);
         
         pm.registerEvents(new TrapManager(), this);
-        
-        SpecialItemManager.loadSpecialItems(pm, this);
 //</editor-fold>
     }
     
