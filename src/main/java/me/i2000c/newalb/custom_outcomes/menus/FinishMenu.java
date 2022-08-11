@@ -261,8 +261,8 @@ public class FinishMenu{
                 }
                 p.closeInventory();
                 testRewardsPlayerList.put(p, currentOutcome);
-                p.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected outcome");
-                p.sendMessage("&3To leave testing mode, use &7/alb return&r");
+                Logger.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected outcome", p);
+                Logger.sendMessage("&3To leave testing mode, use &7/alb return&r", p);
                 break;
             case TEST_REWARD_SLOT:
                 if(deleteMode || editMode || cloneMode || delayMode){
@@ -337,9 +337,9 @@ public class FinishMenu{
                     if(rewardID < currentOutcome.getNumberOfRewards()){
                         Reward reward = currentOutcome.getReward(rewardID);
                         testRewardsPlayerList.put(p, reward);
-                        p.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected reward");
-                        p.sendMessage("&5Selected reward: &e" + e.getSlot());
-                        p.sendMessage("&3To leave testing mode, use &7/alb return&r");
+                        Logger.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected reward", p);
+                        Logger.sendMessage("&5Selected reward: &e" + e.getSlot(), p);
+                        Logger.sendMessage("&3To leave testing mode, use &7/alb return&r", p);
                         p.closeInventory();
                     }
                 }else if(editMode){

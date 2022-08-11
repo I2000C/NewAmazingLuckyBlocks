@@ -1,20 +1,21 @@
 package me.i2000c.newalb.utils;
 
 import com.google.common.base.Strings;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.block.Block;
-import org.bukkit.Material;
-import org.bukkit.Location;
-import org.bukkit.World;
-import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ActionBarUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class RandomBlocks {
@@ -131,7 +132,7 @@ public class RandomBlocks {
                                 sender = Bukkit.getConsoleSender();
                             }
 
-                            sender.sendMessage("&b" + blocks_placed + " &aBlocks have been placed");
+                            Logger.sendMessage("&b" + blocks_placed + " &aBlocks have been placed", sender);
                         }                        
 
                         sh.cancelTask(taskID2);
@@ -181,7 +182,7 @@ public class RandomBlocks {
                                 sender = Bukkit.getConsoleSender();
                             }
 
-                            sender.sendMessage("&b" + blocks_placed + " &aBlocks have been placed");
+                            Logger.sendMessage("&b" + blocks_placed + " &aBlocks have been placed", sender);
                         }                        
 
                         sh.cancelTask(taskID);

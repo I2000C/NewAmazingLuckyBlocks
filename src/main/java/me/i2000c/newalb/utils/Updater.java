@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import me.i2000c.newalb.utils.logger.LogLevel;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
@@ -52,13 +51,13 @@ public class Updater implements Listener{
         }
         
         Player player = event.getPlayer();
-        if((player.hasPermission(ConfigManager.getConfig().getString("Commands.Update-message-permission")))&&(update == true)){
+        if(update && player.hasPermission(ConfigManager.getConfig().getString("Commands.Update-message-permission"))){
             
-            player.sendMessage("&a========================================");
-            player.sendMessage("&6New Amazing Lucky Blocks");
-            player.sendMessage("&cThere is a new version available: &e("+ChatColor.GRAY+latestversion+"&e)");
-            player.sendMessage("&cYou can download it at:&f https://www.spigotmc.org/resources/62644/");
-            player.sendMessage("&a========================================");
+            Logger.sendMessage("&a========================================", player);
+            Logger.sendMessage("&6New Amazing Lucky Blocks", player);
+            Logger.sendMessage("&cThere is a new version available: &e(&7" + latestversion + "&e)", player);
+            Logger.sendMessage("&cYou can download it at:&f https://www.spigotmc.org/resources/62644/", player);
+            Logger.sendMessage("&a========================================", player);
         }
     }
 }

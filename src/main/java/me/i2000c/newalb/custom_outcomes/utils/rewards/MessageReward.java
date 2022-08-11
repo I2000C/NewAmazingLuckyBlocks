@@ -93,7 +93,7 @@ public class MessageReward extends Reward{
                 ActionBarUtils.sendMessage(player, replacedTitle);
                 break;
             case CHAT:
-                player.sendMessage(replacedTitle);
+                Logger.sendMessage(replacedTitle, player);
                 break;
         }        
     }

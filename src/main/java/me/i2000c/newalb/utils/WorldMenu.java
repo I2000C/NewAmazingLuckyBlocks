@@ -167,7 +167,7 @@ public class WorldMenu{
                     WorldList.setWorlds(worlds);
                     WorldList.saveWorlds();
                     p.closeInventory();
-                    p.sendMessage(Logger.color("&aWorlds list has been saved"));
+                    Logger.sendMessage("&aWorlds list has been saved", p);
                     break;
                 case 53:
                     p.closeInventory();

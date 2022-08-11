@@ -164,7 +164,7 @@ public class ItemMenu{
                 case 12:
                     //Close menu
                     p.closeInventory();
-                    p.sendMessage("&6Use &b/alb return &6to return to the menu");
+                    Logger.sendMessage("&6Use &b/alb return &6to return to the menu", p);
                     break;
             }
         }else{
