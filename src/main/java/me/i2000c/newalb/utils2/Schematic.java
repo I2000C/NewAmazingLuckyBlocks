@@ -75,6 +75,9 @@ public class Schematic{
     private static void initialize(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         try{
+            Class bukkitWorldClass = Class.forName("com.sk89q.worldedit.bukkit.BukkitWorld");
+            bukkitWorldConstructor = bukkitWorldClass.getConstructor(World.class);
+            
             if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
                 Class clipboardFormatClass = ClipboardFormat.class;
                 findByFile = clipboardFormatClass.getDeclaredMethod("findByFile", File.class);
@@ -83,8 +86,6 @@ public class Schematic{
                 worldDataClass = Class.forName("com.sk89q.worldedit.world.registry.WorldData");
                 read = ClipboardReader.class.getMethod("read", worldDataClass);
                 
-                Class bukkitWorldClass = Class.forName("com.sk89q.worldedit.bukkit.BukkitWorld");
-                bukkitWorldConstructor = bukkitWorldClass.getConstructor(World.class);
                 getWorldData = bukkitWorldClass.getMethod("getWorldData");
                 
                 Class schematicWriterClass = Class.forName("com.sk89q.worldedit.extent.clipboard.io.SchematicWriter");
