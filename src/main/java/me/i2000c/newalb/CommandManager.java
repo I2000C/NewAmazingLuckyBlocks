@@ -14,12 +14,12 @@ import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.listeners.chat.ChatListener;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.listeners.interact.SpecialItemManager;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.RandomBlocks;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemManager;
 import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils.WorldMenu;
 import me.i2000c.newalb.utils.logger.LogLevel;
@@ -43,20 +43,6 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     public CommandManager(NewAmazingLuckyBlocks instance){
         this.plugin = instance;
-    }
-    
-    public String intColorSet(int uses){
-        String intColor;  
-        if(uses >= 10){
-          intColor = "&a";  
-        }else if(uses < 10 && uses >= 5){
-          intColor = "&e";    
-        }else if(uses < 5 && uses >= 1){
-          intColor = "&6";    
-        }else{
-          intColor = "&4";    
-        }
-        return intColor;
     }
   
     public static boolean confirmMenu = false;
