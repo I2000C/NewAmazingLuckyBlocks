@@ -1,41 +1,25 @@
 package me.i2000c.newalb.listeners.objects;
 
+import com.cryptomorin.xseries.XMaterial;
+import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.BowItem;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.lang_utils.LangLoader;
-import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 public class HomingBow extends BowItem{
   
-    @EventHandler
-    private void onArrowShooted(EntityShootBowEvent e){
-        if(e.getEntity() != null && e.getEntity() instanceof Player){
-            Player shooter = (Player) e.getEntity();
-            ItemStack item = e.getBow();
-            if(item != null && item.hasItemMeta()){
-                ItemMeta meta = item.getItemMeta();
-                if(meta.hasDisplayName()){
-                    ItemStack object = getItem();
-                    String name = object.getItemMeta().getDisplayName();
-                    if(item.getType().equals(Material.BOW) && meta.getDisplayName().equalsIgnoreCase(name)){                        
-                        if(OtherUtils.checkPermission(shooter, "Objects.HomingBow")){
-                            executeTask(shooter, e.getProjectile());
-                        }
-                    }
-                }
-            }
+    @Override
+    public void onArrowShooted(EntityShootBowEvent e){
+        if(e.getEntity() instanceof Player){
+            executeTask((Player) e.getEntity(), e.getProjectile());
         }
     }
     
@@ -46,12 +30,13 @@ public class HomingBow extends BowItem{
         boolean playersOnly = ConfigManager.getConfig().getBoolean("Objects.HomingBow.followPlayersOnly");
         
         Task task = new Task(){
-            private double distanceS = -1.0;
+            private double minDistanceSquared = -1.0;
             private LivingEntity nearestEnt = null;
+            private final Vector zeroVector = new Vector();
             
             @Override
             public void run(){
-                if(projectile.isOnGround() || projectile.isDead() || projectile.getVelocity().equals(new Vector())){
+                if(projectile.isOnGround() || projectile.isDead() || projectile.getVelocity().equals(zeroVector)){
                     this.cancel();
                     return;
                 }
@@ -64,11 +49,11 @@ public class HomingBow extends BowItem{
                             }
                             
                             LivingEntity le = p;
-                            double distanceSAux = projectile.getLocation().distanceSquared(le.getEyeLocation());
-                            if(nearestEnt == null || distanceSAux < distanceS){
-                                if(distanceSAux <= radiusS){
+                            double distanceSquared = projectile.getLocation().distanceSquared(le.getEyeLocation());
+                            if(nearestEnt == null || distanceSquared < minDistanceSquared){
+                                if(distanceSquared <= radiusS){
                                     nearestEnt = le;
-                                    distanceS = distanceSAux;
+                                    minDistanceSquared = distanceSquared;
                                 }
                             }
                         }
@@ -84,9 +69,9 @@ public class HomingBow extends BowItem{
                             
                             LivingEntity le = (LivingEntity) ent;
                             double distanceSAux = projectile.getLocation().distanceSquared(le.getEyeLocation());
-                            if(nearestEnt == null || distanceSAux < distanceS){
+                            if(nearestEnt == null || distanceSAux < minDistanceSquared){
                                 nearestEnt = le;
-                                distanceS = distanceSAux;
+                                minDistanceSquared = distanceSAux;
                             }
                         }
                     }
@@ -96,7 +81,7 @@ public class HomingBow extends BowItem{
                         this.cancel();
                     }else{
                         Vector v = nearestEnt.getEyeLocation().toVector().subtract(projectile.getLocation().toVector());                    
-                        if(distanceS < 1.5){
+                        if(minDistanceSquared < 1.5){
                             projectile.setVelocity(v);
                             this.cancel();
                             //https://www.spigotmc.org/threads/homing-arrows.435839/
@@ -113,13 +98,14 @@ public class HomingBow extends BowItem{
     
     @Override
     public ItemStack buildItem(){
-        ItemStack stack = new ItemStack(Material.BOW);
-        
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(LangLoader.getMessages().getString("Objects.HomingBow.name"));
-        meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
-        stack.setItemMeta(meta);
-        
-        return stack;       
+        return ItemBuilder.newItem(XMaterial.BOW)
+                .withDisplayName(getDisplayName())
+                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+                .build();
+    }
+    
+    @Override
+    public SpecialItemName getSpecialItemName(){
+        return SpecialItemName.homing_bow;
     }
 }
