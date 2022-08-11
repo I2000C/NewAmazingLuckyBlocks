@@ -8,7 +8,7 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
@@ -22,7 +22,6 @@ import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.TippedArrow;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
@@ -31,34 +30,12 @@ public class AutoBow extends SpecialItem{
     
     @Override
     public void onPlayerInteract(PlayerInteractEvent e){
-        Player player = e.getPlayer();
-        Action action = e.getAction();
-        
-        if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
-            if(e.getHand() == EquipmentSlot.OFF_HAND){
-                //return;
-            }
-        }
-        
-        ItemStack object = getItem();
-        ItemStack stack = player.getItemInHand();
-        if(!OtherUtils.checkItemStack(stack, object)){
-            return;
-        }
-        
-        if(action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR){
-            if(!WorldList.isRegistered(player.getWorld().getName())){
-                return;
-            }
-            if(!OtherUtils.checkPermission(player, "Objects.AutoBow")){
-                return;
-            }
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR){
+            e.setCancelled(true);
             
-            if(MaterialChecker.check(e)){
-                return;
-            }else{
-                e.setCancelled(true);
-            }
+            Player player = e.getPlayer();
+            ItemStack stack = e.getItem();
             
             boolean withFire = stack.getEnchantments().containsKey(Enchantment.ARROW_FIRE);
             
@@ -82,7 +59,7 @@ public class AutoBow extends SpecialItem{
             }
             
             if(player.getGameMode() == GameMode.CREATIVE){
-                launchArrow(player, true, withFire, arrowItem);                
+                launchArrow(player, true, withFire, arrowItem);
                 return;
             }
             
@@ -113,9 +90,10 @@ public class AutoBow extends SpecialItem{
                         player.getInventory().setItem(slot, null);
                     }
                     launchArrow(player, false, withFire, arrowItem);
-                } 
+                }
             }
         }
+//</editor-fold>
     }
     
     private static Method setBasePotionMeta;
@@ -127,6 +105,7 @@ public class AutoBow extends SpecialItem{
     private static boolean initialized = false;
     
     private static void launchArrow(Player player, boolean infinityBow, boolean fireBow, ItemStack arrowStack){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         try{
             if(!initialized){
                 if(!NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
@@ -207,15 +186,16 @@ public class AutoBow extends SpecialItem{
                 }else{
                     if(pickupStatus == null){
                         Class pickupStatusClass = OtherUtils.getNMSClass("net.minecraft.world.entity.projectile", "EntityArrow$PickupStatus");
-                        pickupStatus = pickupStatusClass.getMethod("valueOf", String.class).invoke(pickupStatusClass, "CREATIVE_ONLY"); 
+                        pickupStatus = pickupStatusClass.getMethod("valueOf", String.class).invoke(pickupStatusClass, "CREATIVE_ONLY");
                     }
                     
                     fromPlayer.set(craftArrow, pickupStatus);
                 }
-            }catch(Exception ex){    
+            }catch(Exception ex){
                 ex.printStackTrace();
             }
         }
+//</editor-fold>
     }
     
     @Override
@@ -224,5 +204,10 @@ public class AutoBow extends SpecialItem{
                 .withDisplayName(LangLoader.getMessages().getString("Objects.AutoBow.name"))
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
                 .build();
+    }
+    
+    @Override
+    public SpecialItemName getSpecialItemName(){
+        return SpecialItemName.auto_bow;
     }
 }
