@@ -2,7 +2,6 @@ package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
@@ -54,10 +53,5 @@ public class HotPotato extends SpecialItem{
                 .withDisplayName(getDisplayName())
                 .addEnchantment(Enchantment.FIRE_ASPECT, 1)
                 .build();
-    }
-    
-    @Override
-    public SpecialItemName getSpecialItemName(){
-        return SpecialItemName.hot_potato;
     }
 }

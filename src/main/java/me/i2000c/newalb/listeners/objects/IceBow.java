@@ -4,7 +4,6 @@ import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -100,10 +99,5 @@ public class IceBow extends SpecialItem{
                 .withDisplayName(getDisplayName())
                 .addEnchantment(Enchantment.DURABILITY, 5)
                 .build();
-    }
-    
-    @Override
-    public SpecialItemName getSpecialItemName(){
-        return SpecialItemName.ice_bow;
     }
 }

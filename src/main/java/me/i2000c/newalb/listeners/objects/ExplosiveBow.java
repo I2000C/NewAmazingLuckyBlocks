@@ -2,7 +2,6 @@ package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.BowItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -37,10 +36,5 @@ public class ExplosiveBow extends BowItem{
                 .withDisplayName(getDisplayName())
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
                 .build();
-    }
-    
-    @Override
-    public SpecialItemName getSpecialItemName(){
-        return SpecialItemName.explosive_bow;
     }
 }

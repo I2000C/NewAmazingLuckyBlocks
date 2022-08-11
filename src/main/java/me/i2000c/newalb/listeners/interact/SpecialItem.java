@@ -22,33 +22,47 @@ public abstract class SpecialItem{
     protected static final String CUSTOM_METADATA_TAG = "NewAmazingLuckyBlocks.CustomMetadata";
     protected static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
     private final String itemPathKey;
+    private final SpecialItemName specialItemName;
     private Map<UUID, Long> cooldownMap;
     
     private ItemStack item;
     
-    @SuppressWarnings("OverridableMethodCallInConstructor")
     public SpecialItem(){
-        if(getSpecialItemName().isWand()){
-            itemPathKey = "Wands." + this.getClass().getSimpleName();
+        String className = this.getClass().getSimpleName();
+        
+        String[] splitted_name = className.split("(?=[A-Z])");
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String string : splitted_name){
+            stringBuilder.append(string.toLowerCase()).append('_');
+        }
+        stringBuilder.setLength(stringBuilder.length() - 1);
+        specialItemName = SpecialItemName.valueOf(stringBuilder.toString());
+        
+        if(specialItemName.isWand()){
+            itemPathKey = "Wands." + className;
         }else{
-            itemPathKey = "Objects." + this.getClass().getSimpleName();
+            itemPathKey = "Objects." + className;
         }
         
         cooldownMap = null;
     }
     
-    public ItemStack getItem(){
+    public final SpecialItemName getSpecialItemName(){
+        return this.specialItemName;
+    }
+    
+    public final ItemStack getItem(){
         return this.item.clone();
     }
     
-    public void loadItem(){
+    public final void loadItem(){
         this.item = buildItem();
         this.item = setSpecialItemID(this.item);
         this.clearCooldownMap();
         PlayerInteractListener.registerSpecialtem(this);
     }
     
-    public boolean checkPermission(Player player){
+    public final boolean checkPermission(Player player){
         boolean requiredPermission = ConfigManager.getConfig().getBoolean(itemPathKey + ".required-permission");
         String permission = ConfigManager.getConfig().getString(itemPathKey + ".permission");
         
@@ -60,14 +74,11 @@ public abstract class SpecialItem{
         }
     }
     
-    public String getDisplayName(){
+    public final String getDisplayName(){
         return LangLoader.getMessages().getString(this.itemPathKey + ".name");
     }
     
     protected abstract ItemStack buildItem();
-    
-    //public abstract SpecialItemName getSpecialItemName();
-    public SpecialItemName getSpecialItemName(){return SpecialItemName.regen_wand;}
     
     // Cooldown map methods
     protected void updatePlayerCooldown(Player player){

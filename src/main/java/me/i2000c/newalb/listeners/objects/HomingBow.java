@@ -1,7 +1,6 @@
 package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.BowItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -24,6 +23,7 @@ public class HomingBow extends BowItem{
     }
     
     private static void executeTask(Player player, Entity projectile){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         double radius = ConfigManager.getConfig().getDouble("Objects.HomingBow.arrowRadius");
         double radiusS = radius * radius;
         double multiplier = ConfigManager.getConfig().getDouble("Objects.HomingBow.velocityMultiplier");
@@ -75,12 +75,12 @@ public class HomingBow extends BowItem{
                             }
                         }
                     }
-                }                    
+                }
                 if(nearestEnt != null){
                     if(nearestEnt.isDead()){
                         this.cancel();
                     }else{
-                        Vector v = nearestEnt.getEyeLocation().toVector().subtract(projectile.getLocation().toVector());                    
+                        Vector v = nearestEnt.getEyeLocation().toVector().subtract(projectile.getLocation().toVector());
                         if(minDistanceSquared < 1.5){
                             projectile.setVelocity(v);
                             this.cancel();
@@ -94,6 +94,7 @@ public class HomingBow extends BowItem{
             }
         };
         task.runTask(0L, 1L);
+//</editor-fold>
     }
     
     @Override
@@ -102,10 +103,5 @@ public class HomingBow extends BowItem{
                 .withDisplayName(getDisplayName())
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
                 .build();
-    }
-    
-    @Override
-    public SpecialItemName getSpecialItemName(){
-        return SpecialItemName.homing_bow;
     }
 }

@@ -2,7 +2,6 @@ package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
@@ -29,10 +28,5 @@ public class DarkHole extends SpecialItem{
         return ItemBuilder.newItem(XMaterial.BUCKET)
                 .withDisplayName(getDisplayName())
                 .build();
-    }
-    
-    @Override
-    public SpecialItemName getSpecialItemName(){
-        return SpecialItemName.dark_hole;
     }
 }

@@ -1,7 +1,7 @@
 package me.i2000c.newalb.listeners.interact;
 
 public enum SpecialItemName{
-    luckytool(false),
+    lucky_tool(false),
 
     regen_wand(true),
     inv_wand(true),

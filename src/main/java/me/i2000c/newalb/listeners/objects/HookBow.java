@@ -7,8 +7,8 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.BowItem;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
@@ -259,7 +259,7 @@ public class HookBow extends BowItem{
     
     
     @EventHandler
-    private void onArrowShooted(EntityShootBowEvent e) throws Exception{
+    public void onArrowShooted(EntityShootBowEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(!WorldList.isRegistered(e.getEntity().getWorld().getName())){
             return;

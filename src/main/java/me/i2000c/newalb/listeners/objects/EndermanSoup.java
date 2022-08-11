@@ -3,7 +3,6 @@ package me.i2000c.newalb.listeners.objects;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
@@ -42,10 +41,5 @@ public class EndermanSoup extends SpecialItem{
         return ItemBuilder.newItem(XMaterial.RABBIT_STEW)
                 .withDisplayName(getDisplayName())
                 .build();
-    }
-    
-    @Override
-    public SpecialItemName getSpecialItemName(){
-        return SpecialItemName.enderman_soup;
     }
 }

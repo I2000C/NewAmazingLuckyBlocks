@@ -8,7 +8,6 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
@@ -204,10 +203,5 @@ public class AutoBow extends SpecialItem{
                 .withDisplayName(LangLoader.getMessages().getString("Objects.AutoBow.name"))
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
                 .build();
-    }
-    
-    @Override
-    public SpecialItemName getSpecialItemName(){
-        return SpecialItemName.auto_bow;
     }
 }

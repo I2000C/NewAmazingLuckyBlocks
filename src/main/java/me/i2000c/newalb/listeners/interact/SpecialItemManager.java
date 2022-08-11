@@ -115,7 +115,7 @@ public class SpecialItemManager{
         
         //Load LuckyTool
         item = new LuckyTool();
-        specialItems.put(SpecialItemName.luckytool, item);
+        specialItems.put(SpecialItemName.lucky_tool, item);
         
         //Register all events and load all special items
         specialItems.values().forEach(specialItem -> {
@@ -163,7 +163,7 @@ public class SpecialItemManager{
     }
     
     public static SpecialItem getLuckyTool(){
-        return specialItems.get(SpecialItemName.luckytool);
+        return specialItems.get(SpecialItemName.lucky_tool);
     }
     
     public static List<String> getSpecialNames(){

@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ActionBarUtils;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -91,10 +90,5 @@ public class PlayerTracker extends SpecialItem{
         return ItemBuilder.newItem(XMaterial.COMPASS)
                 .withDisplayName(getDisplayName())
                 .build();
-    }
-
-    @Override
-    public SpecialItemName getSpecialItemName(){
-        return SpecialItemName.player_tracker;
     }
 }
