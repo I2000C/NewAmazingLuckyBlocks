@@ -10,6 +10,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -199,6 +200,8 @@ public abstract class SpecialItem{
     public void onItemPickup(PlayerPickupItemEvent e){}
     
     public void onArrowHit(CustomProjectileHitEvent e){}
+    
+    public void onEntityDamaged(EntityDamageByEntityEvent e){}
     
     public void onArrowShooted(EntityShootBowEvent e){}
 }

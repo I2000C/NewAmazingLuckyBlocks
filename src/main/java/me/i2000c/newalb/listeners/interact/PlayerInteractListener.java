@@ -11,6 +11,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -93,23 +94,24 @@ public class PlayerInteractListener implements Listener{
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
-    private static void onArrowHitEntity(EntityDamageByEntityEvent e){
+    private static void onProjectileHitEntity(EntityDamageByEntityEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity damager = e.getDamager();
-        if(damager instanceof Arrow){
-            Arrow arrow = (Arrow) damager;
-            
-            if(!WorldList.isRegistered(arrow.getWorld().getName())) {
-                return;
-            }
-            
-            SpecialItem specialItem = SpecialItem.getClassMetadata(arrow);
-            if(specialItem != null){
+        
+        if(!WorldList.isRegistered(damager.getWorld().getName())) {
+            return;
+        }
+
+        SpecialItem specialItem = SpecialItem.getClassMetadata(damager);
+        if(specialItem != null){
+            if(damager instanceof Projectile){
                 boolean entityHit = true;
                 specialItem.setCustomMetadata(damager, entityHit);
                 
                 CustomProjectileHitEvent event = new CustomProjectileHitEvent(e);
                 specialItem.onArrowHit(event);
+            }else{
+                specialItem.onEntityDamaged(e);
             }
         }
 //</editor-fold>
