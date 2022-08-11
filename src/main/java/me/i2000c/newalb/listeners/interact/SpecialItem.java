@@ -53,7 +53,7 @@ public abstract class SpecialItem{
         String permission = ConfigManager.getConfig().getString(itemPathKey + ".permission");
         
         if(requiredPermission && !player.hasPermission(permission)){
-            Logger.sendMessage(LangLoader.getMessages().get("need-permission"), player);
+            Logger.sendMessage(LangLoader.getMessages().get("need-permission"), player, false);
             return false;
         }else{
             return true;

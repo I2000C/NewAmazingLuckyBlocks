@@ -57,11 +57,13 @@ public class PlayerInteractListener implements Listener{
                 SpecialItem specialItem = EVENTS.get(specialItemName);
                 if(specialItem != null){
                     if(!specialItem.checkPermission(player)){
+                        e.setCancelled(true);
                         return;
                     }
                     
                     if(!specialItem.isCooldownExpired(player)){
                         specialItem.sendRemainingSecondsMessage(player);
+                        e.setCancelled(true);
                         return;
                     }
                     
@@ -162,11 +164,13 @@ public class PlayerInteractListener implements Listener{
             SpecialItem specialItem = EVENTS.get(specialItemName);
             if(specialItem != null){
                 if(!specialItem.checkPermission(player)){
+                    e.setCancelled(true);
                     return;
                 }
                 
                 if(!specialItem.isCooldownExpired(player)){
                     specialItem.sendRemainingSecondsMessage(player);
+                    e.setCancelled(true);
                     return;
                 }
                 
