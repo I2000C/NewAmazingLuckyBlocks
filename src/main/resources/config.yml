@@ -215,6 +215,8 @@ LuckyBlock:
         enable: false
         survivalOnly: true
         probability: 50
+# Enable this option to check if all textures are valid
+CheckIfTexturesAreValid: true
 GenerateRandomblocks-OnChunkCreated:
     enable: false
     radx: 8

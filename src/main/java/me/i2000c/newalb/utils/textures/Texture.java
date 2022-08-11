@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import me.i2000c.newalb.utils.ConfigManager;
 
 public final class Texture{
     private String ID;
@@ -18,13 +19,15 @@ public final class Texture{
     public Texture(String ID) throws TextureException{
         try{
             String textureURL = "http://textures.minecraft.net/texture/" + ID;
-            URL url = new URL(textureURL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(1000);
-            connection.setRequestMethod("GET");
-            int code = connection.getResponseCode();
-            if(code == 404){
-                throw new InvalidTextureException(ID);
+            if(ConfigManager.getConfig().getBoolean("CheckIfTexturesAreValid")){                
+                URL url = new URL(textureURL);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setConnectTimeout(1000);
+                connection.setRequestMethod("GET");
+                int code = connection.getResponseCode();
+                if(code == 404){
+                    throw new InvalidTextureException(ID);
+                }
             }
 
             this.ID = ID;
