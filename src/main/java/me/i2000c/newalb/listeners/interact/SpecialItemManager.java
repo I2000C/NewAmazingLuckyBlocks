@@ -18,7 +18,7 @@ import me.i2000c.newalb.listeners.objects.MultiBow;
 import me.i2000c.newalb.listeners.objects.PlayerTracker;
 import me.i2000c.newalb.listeners.wands.FireWand;
 import me.i2000c.newalb.listeners.wands.FrostPathWand;
-import me.i2000c.newalb.listeners.wands.InvWand;
+import me.i2000c.newalb.listeners.wands.InvisibilityWand;
 import me.i2000c.newalb.listeners.wands.LightningWand;
 import me.i2000c.newalb.listeners.wands.PotionWand;
 import me.i2000c.newalb.listeners.wands.RegenWand;
@@ -49,8 +49,8 @@ public class SpecialItemManager{
         item = new RegenWand();
         specialItems.put(SpecialItemName.regen_wand, item);
         
-        item = new InvWand();
-        specialItems.put(SpecialItemName.inv_wand, item);
+        item = new InvisibilityWand();
+        specialItems.put(SpecialItemName.invisibility_wand, item);
         
         item = new TntWand();
         specialItems.put(SpecialItemName.tnt_wand, item);

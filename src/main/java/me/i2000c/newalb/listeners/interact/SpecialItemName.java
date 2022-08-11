@@ -4,7 +4,7 @@ public enum SpecialItemName{
     lucky_tool(false),
 
     regen_wand(true),
-    inv_wand(true),
+    invisibility_wand(true),
     tnt_wand(true),
     slime_wand(true),
     fire_wand(true),
