@@ -25,7 +25,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-public class PlayerInteractListener implements Listener{
+public class SpecialEventListener implements Listener{
     private static final EnumMap<SpecialItemName, SpecialItem> EVENTS = new EnumMap<>(SpecialItemName.class);
     private static final SpecialItemName[] SPECIAL_ITEM_NAMES = SpecialItemName.values();
     

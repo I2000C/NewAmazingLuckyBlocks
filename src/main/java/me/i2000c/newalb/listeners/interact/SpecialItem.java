@@ -62,7 +62,7 @@ public abstract class SpecialItem{
         this.item = buildItem();
         this.item = setSpecialItemID(this.item);
         this.clearCooldownMap();
-        PlayerInteractListener.registerSpecialtem(this);
+        SpecialEventListener.registerSpecialtem(this);
     }
     
     public final boolean checkPermission(Player player){
