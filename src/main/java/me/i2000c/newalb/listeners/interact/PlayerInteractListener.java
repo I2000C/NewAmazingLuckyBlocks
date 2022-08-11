@@ -186,6 +186,7 @@ public class PlayerInteractListener implements Listener{
     
     @EventHandler(priority = EventPriority.HIGHEST)
     private static void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getRightClicked();
         
         if(!WorldList.isRegistered(entity.getWorld().getName())) {
@@ -198,10 +199,12 @@ public class PlayerInteractListener implements Listener{
                 specialItem.onPlayerInteractAtEntity(e);
             }
         }
+//</editor-fold>
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
     private static void onFallingBlockConvert(EntityChangeBlockEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getEntity();
         
         if(!WorldList.isRegistered(entity.getWorld().getName())) {
@@ -214,5 +217,6 @@ public class PlayerInteractListener implements Listener{
                 specialItem.onFallingBlockConvert(e);
             }
         }
+//</editor-fold>
     }
 }
