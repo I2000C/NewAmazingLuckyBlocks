@@ -87,9 +87,7 @@ public class MessageReward extends Reward{
         
         switch(type){
             case TITLE:
-                String titleAux = replacedTitle.isEmpty() ? "&o" : replacedTitle;
-                String subtitleAux = replacedSubtitle.isEmpty() ? "&o" : replacedSubtitle;
-                player.sendTitle(Logger.color(titleAux), Logger.color(subtitleAux));
+                Logger.sendTitle(title, subtitle, player);
                 break;
             case ACTION_BAR:
                 ActionBarUtils.sendMessage(player, replacedTitle);

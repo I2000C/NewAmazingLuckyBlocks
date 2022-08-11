@@ -12,13 +12,16 @@ import org.bukkit.entity.Player;
 
 public class Logger{
     public static String color(String str){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(str == null){
             return str;
         }else{
             return ChatColor.translateAlternateColorCodes('&', str);
-        }        
+        }
+//</editor-fold>
     }
     public static List<String> color(List<String> list){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(list == null){
             return list;
         }else{
@@ -27,17 +30,21 @@ public class Logger{
                 coloredList.add(Logger.color(str));
             }
             return coloredList;
-        }            
+        }
+//</editor-fold>
     }
     public static String deColor(String str){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(str == null){
             return str;
         }else{
             //https://www.spigotmc.org/threads/solved-itemstack-chatcolor-to-string.52095/
             return str.replace(ChatColor.COLOR_CHAR, '&');
-        }            
+        }
+//</editor-fold>
     }    
     public static List<String> deColor(List<String> list){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(list == null){
             return null;
         }else{
@@ -46,26 +53,53 @@ public class Logger{
                 decolored_list.add(Logger.deColor(str));
             }
             return decolored_list;
-        }            
+        }
+//</editor-fold>
     }
     public static String stripColor(String str){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(str == null){
             return str;
         }else{
             return ChatColor.stripColor(str);
-        }        
+        }
+//</editor-fold>
     }
     
     private static final NewAmazingLuckyBlocks PLUGIN = NewAmazingLuckyBlocks.getInstance();
     
+    public static void sendTitle(Object titleObject, Object subtitleObject, Player player){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        String title = titleObject.toString();
+        if(title.isEmpty()){
+            title = "&o";
+        }
+        
+        String subtitle = subtitleObject.toString();
+        if(subtitle.isEmpty()){
+            subtitle = "&o";
+        }
+        
+        player.sendTitle(color(title), color(subtitle));
+//</editor-fold>
+    }
+    public static void removeTitle(Player player){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        sendTitle("", "", player);
+//</editor-fold>
+    }
+    
     public static void log(Object object){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(ConfigManager.getConfig().getBoolean("ColoredLogger")){
             Bukkit.getConsoleSender().sendMessage(Logger.color(PLUGIN.prefix + " " + object));
         }else{
             Bukkit.getConsoleSender().sendMessage(ChatColor.stripColor(Logger.color(PLUGIN.prefix + " " + object)));
         }
+//</editor-fold>
     }
     public static void log(Object object, LogLevel level){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         switch(level){
             case INFO:
                 log(object);
@@ -77,9 +111,11 @@ public class Logger{
                 Bukkit.getLogger().log(Level.SEVERE, ChatColor.stripColor(Logger.color(PLUGIN.prefix + " " + object)));
                 break;
         }
+//</editor-fold>
     }
     
     public static void sendMessage(Object object, CommandSender sender, boolean withPrefix){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(withPrefix){
             sendMessage(object, sender);
         }else{
@@ -89,27 +125,34 @@ public class Logger{
                 sender.sendMessage(ChatColor.stripColor(Logger.color(object.toString())));
             }
         }
+//</editor-fold>
     }
     
     public static void sendMessage(Object object, CommandSender sender){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(ConfigManager.getConfig().getBoolean("ColoredLogger") || sender instanceof Player){
             sender.sendMessage(Logger.color(PLUGIN.prefix + " " + object.toString()));
         }else{
             sender.sendMessage(ChatColor.stripColor(Logger.color(PLUGIN.prefix + " " + object.toString())));
-        }        
+        }
+//</editor-fold>
     }
     
     public static void logAndMessage(Object object, CommandSender sender){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(sender instanceof Player){
             Logger.sendMessage(object, sender);
         }
         Logger.log(object);
+//</editor-fold>
     }
     
     public static void logAndMessage(Object object, CommandSender sender, LogLevel level){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(sender instanceof Player){
             Logger.sendMessage(object, sender);
         }
         Logger.log(object, level);
+//</editor-fold>
     }
 }

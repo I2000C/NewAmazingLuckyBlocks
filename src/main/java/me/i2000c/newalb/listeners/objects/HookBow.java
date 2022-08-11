@@ -180,7 +180,7 @@ public class HookBow extends SpecialItem{
         if(shooter.isOnline() && shooter.getWorld().equals(arrow.getWorld())){
             int leashPacketRadius = ConfigManager.getConfig().getInt("Objects.HookBow.leashPacketRadius");
             HookBowAux.sendLeashAttachPacket(shooter, hookData.chicken, getPlayersNearPlayer(shooter, leashPacketRadius));
-            shooter.sendTitle(Logger.color("&o"), Logger.color("&6Punch to pull (Right click)"));
+            Logger.sendTitle("", "&6Punch to pull (Right click)", shooter);
         }
         
         hookData.removeArrow();
@@ -205,7 +205,7 @@ public class HookBow extends SpecialItem{
         if(shooter.isOnline() && shooter.getWorld().equals(arrow.getWorld())){
             int leashPacketRadius = ConfigManager.getConfig().getInt("Objects.HookBow.leashPacketRadius");
             HookBowAux.sendLeashAttachPacket(shooter, hookData.chicken, getPlayersNearPlayer(shooter, leashPacketRadius));
-            shooter.sendTitle(Logger.color("&o"), Logger.color("&6Punch to pull (Right click)"));
+            Logger.sendTitle("", "&6Punch to pull (Right click)", shooter);
         }
         
         hookData.removeArrow();
@@ -263,14 +263,14 @@ public class HookBow extends SpecialItem{
                     if(!hookData.isArrowAlive()){
                         cancel();
                         if(hookData.arrow != null && hookData.arrow.getLocation().getBlockY() < minY){
-                            shooter.sendTitle("Max distance", "exceeded");
+                            Logger.sendTitle("Max distance", "exceeded", shooter);
                             hookData.removeArrow();
                             hookData.state = HookState.BEFORE_ARROW_SHOOT;
                         }
                     }else if(i >= maxFlyTicks){
                         cancel();
                         if(hookData.arrow != null){
-                            shooter.sendTitle("Max flying time", "exceeded");
+                            Logger.sendTitle("Max flying time", "exceeded", shooter);
                             hookData.removeArrow();
                             hookData.state = HookState.BEFORE_ARROW_SHOOT;
                         }
@@ -278,7 +278,7 @@ public class HookBow extends SpecialItem{
                              hookData.arrow.getLocation().distanceSquared(playerLocation) > maxDistanceSquared){
                         cancel();
                         if(hookData.arrow != null){
-                            shooter.sendTitle("Max flying distance", "exceeded");
+                            Logger.sendTitle("Max flying distance", "exceeded", shooter);
                             hookData.removeArrow();
                             hookData.state = HookState.BEFORE_ARROW_SHOOT;
                         }
@@ -357,7 +357,7 @@ public class HookBow extends SpecialItem{
             int heightGain = ConfigManager.getConfig().getInt("Objects.HookBow.heightGain");
             double gravity = ConfigManager.getConfig().getDouble("Objects.HookBow.gravity");
             
-            player.sendTitle(Logger.color("&o"), Logger.color("&o"));
+            Logger.removeTitle(player);
             
             Location loc1 = player.getLocation();
             Location loc2 = hookData.targetLocation != null ? hookData.targetLocation : hookData.chicken.getLocation();
@@ -390,7 +390,7 @@ public class HookBow extends SpecialItem{
             };
             task.runTask(5L, 1L);
         }else if(e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_AIR){
-            e.getPlayer().sendTitle(Logger.color("&o"), Logger.color("&o"));
+            Logger.removeTitle(e.getPlayer());
             
             hookData.stopLeashingTimeout();
             hookData.removeChicken();            
