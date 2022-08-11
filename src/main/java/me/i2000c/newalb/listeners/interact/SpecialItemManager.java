@@ -4,27 +4,8 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import me.i2000c.newalb.listeners.objects.AutoBow;
-import me.i2000c.newalb.listeners.objects.DarkHole;
-import me.i2000c.newalb.listeners.objects.EndermanSoup;
-import me.i2000c.newalb.listeners.objects.ExplosiveBow;
-import me.i2000c.newalb.listeners.objects.HomingBow;
-import me.i2000c.newalb.listeners.objects.HookBow;
-import me.i2000c.newalb.listeners.objects.HotPotato;
-import me.i2000c.newalb.listeners.objects.IceBow;
-import me.i2000c.newalb.listeners.objects.LuckyTool;
-import me.i2000c.newalb.listeners.objects.MiniVolcano;
-import me.i2000c.newalb.listeners.objects.MultiBow;
-import me.i2000c.newalb.listeners.objects.PlayerTracker;
-import me.i2000c.newalb.listeners.wands.FireWand;
-import me.i2000c.newalb.listeners.wands.FrostPathWand;
-import me.i2000c.newalb.listeners.wands.InvisibilityWand;
-import me.i2000c.newalb.listeners.wands.LightningWand;
-import me.i2000c.newalb.listeners.wands.PotionWand;
-import me.i2000c.newalb.listeners.wands.RegenWand;
-import me.i2000c.newalb.listeners.wands.ShieldWand;
-import me.i2000c.newalb.listeners.wands.SlimeWand;
-import me.i2000c.newalb.listeners.wands.TntWand;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 
 public class SpecialItemManager{
     private static final Map<SpecialItemName, SpecialItem> specialItems;
@@ -40,84 +21,38 @@ public class SpecialItemManager{
     }
     
     public static void loadSpecialItems(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         specialItems.clear();
         
-        SpecialItem item;
-        
-        //Load wands
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        item = new RegenWand();
-        specialItems.put(SpecialItemName.regen_wand, item);
-        
-        item = new InvisibilityWand();
-        specialItems.put(SpecialItemName.invisibility_wand, item);
-        
-        item = new TntWand();
-        specialItems.put(SpecialItemName.tnt_wand, item);
-        
-        item = new SlimeWand();
-        specialItems.put(SpecialItemName.slime_wand, item);
-        
-        item = new FireWand();
-        specialItems.put(SpecialItemName.fire_wand, item);
-        
-        item = new LightningWand();
-        specialItems.put(SpecialItemName.lightning_wand, item);
-        
-        item = new ShieldWand();
-        specialItems.put(SpecialItemName.shield_wand, item);
-        
-        item = new PotionWand();
-        specialItems.put(SpecialItemName.potion_wand, item);
-        
-        item = new FrostPathWand();
-        specialItems.put(SpecialItemName.frost_path_wand, item);
+        for(SpecialItemName specialItemName : SpecialEventListener.SPECIAL_ITEM_NAMES){
+            String[] splittedName = specialItemName.name().split("_");
+            StringBuilder stringBuilder = new StringBuilder();
+            for(String string : splittedName){
+                stringBuilder.append(string.substring(0, 1).toUpperCase());
+                stringBuilder.append(string.substring(1));
+            }
+            
+            String packageName;
+            if(specialItemName.isWand()){
+                packageName = "me.i2000c.newalb.listeners.wands.";
+            }else{
+                packageName = "me.i2000c.newalb.listeners.objects.";
+            }
+            stringBuilder.insert(0, packageName);
+            
+            String className = stringBuilder.toString();
+            try{
+                Class clazz = Class.forName(className);
+                SpecialItem specialItem = (SpecialItem) clazz.newInstance();
+                specialItem.loadItem();
+                specialItems.put(specialItemName, specialItem);
+            }catch(Exception ex){
+                Logger.log("An error occurred while loading special items:", LogLevel.ERROR);
+                Logger.log(ex, LogLevel.ERROR);
+                return;
+            }
+        }
 //</editor-fold>
-        
-        //Load objects
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        item = new DarkHole();
-        specialItems.put(SpecialItemName.dark_hole, item);
-        
-        item = new MiniVolcano();
-        specialItems.put(SpecialItemName.mini_volcano, item);
-        
-        item = new PlayerTracker();
-        specialItems.put(SpecialItemName.player_tracker, item);
-        
-        item = new EndermanSoup();
-        specialItems.put(SpecialItemName.enderman_soup, item);
-        
-        item = new HotPotato();
-        specialItems.put(SpecialItemName.hot_potato, item);
-        
-        item = new IceBow();
-        specialItems.put(SpecialItemName.ice_bow, item);
-        
-        item = new AutoBow();
-        specialItems.put(SpecialItemName.auto_bow, item);
-        
-        item = new MultiBow();
-        specialItems.put(SpecialItemName.multi_bow, item);
-        
-        item = new ExplosiveBow();
-        specialItems.put(SpecialItemName.explosive_bow, item);
-        
-        item = new HomingBow();
-        specialItems.put(SpecialItemName.homing_bow, item);
-        
-        item = new HookBow();
-        specialItems.put(SpecialItemName.hook_bow, item);
-//</editor-fold>
-        
-        //Load LuckyTool
-        item = new LuckyTool();
-        specialItems.put(SpecialItemName.lucky_tool, item);
-        
-        //Register all events and load all special items
-        specialItems.values().forEach(specialItem -> {
-            specialItem.loadItem();
-        });
     }
     
     public static void reloadSpecialItems(){
