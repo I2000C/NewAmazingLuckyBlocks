@@ -10,8 +10,10 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -204,4 +206,8 @@ public abstract class SpecialItem{
     public void onEntityDamaged(EntityDamageByEntityEvent e){}
     
     public void onArrowShooted(EntityShootBowEvent e){}
+    
+    public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent e){}
+    
+    public void onFallingBlockConvert(EntityChangeBlockEvent e){}
 }

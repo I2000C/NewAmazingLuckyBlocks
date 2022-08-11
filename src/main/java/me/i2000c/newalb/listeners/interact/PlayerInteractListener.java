@@ -15,9 +15,11 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -180,5 +182,37 @@ public class PlayerInteractListener implements Listener{
             }
         }
 //</editor-fold>
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private static void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent e){
+        Entity entity = e.getRightClicked();
+        
+        if(!WorldList.isRegistered(entity.getWorld().getName())) {
+            return;
+        }
+        
+        if(entity.hasMetadata(SpecialItem.CLASS_METADATA_TAG)){
+            SpecialItem specialItem = SpecialItem.getClassMetadata(entity);
+            if(specialItem != null){
+                specialItem.onPlayerInteractAtEntity(e);
+            }
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private static void onFallingBlockConvert(EntityChangeBlockEvent e){
+        Entity entity = e.getEntity();
+        
+        if(!WorldList.isRegistered(entity.getWorld().getName())) {
+            return;
+        }
+        
+        if(entity.hasMetadata(SpecialItem.CLASS_METADATA_TAG)){
+            SpecialItem specialItem = SpecialItem.getClassMetadata(entity);
+            if(specialItem != null){
+                specialItem.onFallingBlockConvert(e);
+            }
+        }
     }
 }
