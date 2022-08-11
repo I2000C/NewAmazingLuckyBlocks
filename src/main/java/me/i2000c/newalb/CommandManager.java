@@ -528,7 +528,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeWorlds(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!checkHasPermission(sender, "Commands.World-permission")){
+        if(!checkHasPermission(sender, "Commands.Worlds-permission")){
             return false;
         }
         
