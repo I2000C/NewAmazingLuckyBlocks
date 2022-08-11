@@ -2,8 +2,6 @@ package me.i2000c.newalb.utils2;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 public abstract class Task implements Runnable{
     //Static behaviour
@@ -31,55 +29,55 @@ public abstract class Task implements Runnable{
     public static int runTaskAsynchronously(Runnable runnable, long preTicks, long periodTicks){
         return Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, runnable, preTicks, periodTicks);
     }
+    public static void cancelTask(int taskID){
+        Bukkit.getScheduler().cancelTask(taskID);
+    }
     
     
     //Non-static behaviour
-    private final BukkitRunnable br;
+    private static final int INVALID_TASKID = -1;
+    private int taskID;
     
     public Task(){
-        br = new BukkitRunnable(){
-            @Override
-            public void run(){
-                Task.this.run();
-            }
-        };
-    }
-
-    public synchronized boolean isCancelled() throws IllegalStateException {
-        return br.isCancelled();
-    }
-
-    public synchronized void cancel() throws IllegalStateException {
-        br.cancel();
-    }
-
-    public synchronized BukkitTask runTask() throws IllegalArgumentException, IllegalStateException {
-        return br.runTask(plugin);
-    }
-
-    public synchronized BukkitTask runTaskAsynchronously() throws IllegalArgumentException, IllegalStateException {
-        return br.runTaskAsynchronously(plugin);
-    }
-
-    public synchronized BukkitTask runTask(long delay) throws IllegalArgumentException, IllegalStateException {
-        return br.runTaskLater(plugin, delay);
-    }
-
-    public synchronized BukkitTask runTaskAsynchronously(long delay) throws IllegalArgumentException, IllegalStateException {
-        return br.runTaskLaterAsynchronously(plugin, delay);
-    }
-
-    public synchronized BukkitTask runTask(long delay, long period) throws IllegalArgumentException, IllegalStateException {
-        return br.runTaskTimer(plugin, delay, period);
-    }
-
-    public synchronized BukkitTask runTaskAsynchronously(long delay, long period) throws IllegalArgumentException, IllegalStateException {
-        return br.runTaskTimerAsynchronously(plugin, delay, period);
+        taskID = INVALID_TASKID;
     }
     
-    public synchronized int getTaskId() throws IllegalStateException {
-        return br.getTaskId();
+    public synchronized boolean isStarted(){
+        return taskID != INVALID_TASKID;
+    }
+
+    public synchronized void cancel(){
+        if(isStarted()){
+            cancelTask(taskID);
+            taskID = INVALID_TASKID;
+        }
+    }
+
+    public synchronized void runTask(){
+        taskID = Task.runTask(this);
+    }
+
+    public synchronized void runTaskAsynchronously(){
+        taskID = Task.runTaskAsynchronously(this);
+    }
+
+    public synchronized void runTask(long delay){
+        taskID = Task.runTask(this, delay);
+    }
+
+    public synchronized void runTaskAsynchronously(long delay){
+        taskID = Task.runTaskAsynchronously(this, delay);
+    }
+
+    public synchronized void runTask(long delay, long period){
+        taskID = Task.runTask(this, delay, period);
+    }
+
+    public synchronized void runTaskAsynchronously(long delay, long period){
+        taskID = Task.runTaskAsynchronously(this, delay, period);
     }
     
-    
+    public synchronized int getTaskId(){
+        return taskID;
+    }
 }
