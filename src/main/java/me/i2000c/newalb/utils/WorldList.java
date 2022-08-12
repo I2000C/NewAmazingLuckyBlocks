@@ -106,6 +106,12 @@ public class WorldList{
         saveWorlds();
         reloadAll();
     }
+    
+    public static void toggleAllWorlds(){
+        WORLDS.replaceAll((worldName, enabled) -> !enabled);
+        saveWorlds();
+        reloadAll();
+    }
    
     public static void reloadAll(){
         String prefix = NewAmazingLuckyBlocks.getInstance().prefix;   
