@@ -1,48 +1,53 @@
 package me.i2000c.newalb.utils;
 
-import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.lang_utils.LangLoader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
 
 public class WorldList{    
-    private static Map<String, Boolean> WORLDS = new HashMap<>();
+    private static Map<String, Boolean> WORLDS = new LinkedHashMap<>();
     
     public static Map<String, Boolean> getWorlds(){
         return WORLDS;
     }
+    
     static void setWorlds(Map<String, Boolean> worlds){
         WORLDS = worlds;
     }
     
     private static boolean needToUpdateWorlds(List<String> serverWorlds){
-        boolean reloadWorlds = false;
-        if(WORLDS.size() == serverWorlds.size()){
-            int i=0;
-            for(String worldName : WORLDS.keySet()){
-                if(!serverWorlds.get(i).equals(worldName)){
-                    reloadWorlds = true;
-                    break;
+        if(WORLDS.size() == serverWorlds.size()){            
+            Iterator<String> worldsIterator = WORLDS.keySet().iterator();
+            Iterator<String> serverWorldsIterator = serverWorlds.iterator();
+            while(worldsIterator.hasNext()){
+                String serverWorldName = serverWorldsIterator.next();
+                String worldName = worldsIterator.next();
+                if(!serverWorldName.equals(worldName)){
+                    return true;
                 }
-                i++;
             }
+            
+            return false;
         }else{
-            reloadWorlds = true;
+            return true;
         }
-        return reloadWorlds;
     }
     
     public static void updateWorlds(boolean force){
-        List<String> serverWorlds = new ArrayList<>();
-        Bukkit.getWorlds().forEach((w) -> {
-            serverWorlds.add(w.getName());
-        });
+        List<String> serverWorlds = Bukkit.getWorlds()
+                .stream()
+                .sorted((world1, world2) -> world1.getName().compareTo(world2.getName()))
+                .map(world -> world.getName())
+                .collect(Collectors.toList());
         
         boolean reloadWorlds = needToUpdateWorlds(serverWorlds);
         if(!force && !reloadWorlds){
@@ -50,26 +55,32 @@ public class WorldList{
         }
         
         WORLDS.clear();
-        ConfigManager.getConfig().getStringList("Worlds-list").forEach((world) -> {
-            try{
-                String[] data = world.split(";");
-                if(data[1].equals("true")){
-                    WORLDS.put(data[0], true);
-                }else{
-                    WORLDS.put(data[0], false);
+        ConfigManager.getConfig()
+                .getStringList("Worlds-list")
+                .forEach(worldName -> {
+                    try{
+                        String[] splitted = worldName.split(";");
+                        if(splitted[1].equals("true")){
+                            WORLDS.put(splitted[0], true);
+                        }else{
+                            WORLDS.put(splitted[0], false);
+                        }
+                    }catch(Exception ex){
+                        Logger.log("Couldn't load world \"" + worldName + "\" (incorrect format)", LogLevel.WARN);
+                    }
                 }
-            }catch(Exception ex){
-                Logger.log("Couldn't load world \"" + world + "\" (incorrect format)");
-            }
-        });
-        
+            );        
         
         if(reloadWorlds){
+            Map<String, Boolean> oldWorlds = WORLDS;
+            WORLDS = new LinkedHashMap<>();
+            
             // Delete old worlds from list
-            WORLDS.keySet().retainAll(serverWorlds);
-
-            // Add existing worlds to list
-            serverWorlds.forEach(worldName -> WORLDS.putIfAbsent(worldName, true));
+            //  and add existing worlds to list
+            serverWorlds.forEach(worldName -> {
+                boolean state = oldWorlds.getOrDefault(worldName, true);
+                WORLDS.put(worldName, state);
+            });
 
             // Save worlds into config
             saveWorlds();

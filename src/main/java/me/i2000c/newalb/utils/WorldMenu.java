@@ -2,7 +2,7 @@ package me.i2000c.newalb.utils;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
@@ -36,7 +36,7 @@ public class WorldMenu{
         
         index = 0;
         
-        worlds = new HashMap<>(WorldList.getWorlds());
+        worlds = new LinkedHashMap<>(WorldList.getWorlds());
     }
     
     public static void openWorldsMenu(Player p){
