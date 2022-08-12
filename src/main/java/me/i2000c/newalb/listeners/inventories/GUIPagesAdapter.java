@@ -95,6 +95,16 @@ public class GUIPagesAdapter<T>{
     }
     
     public void updateMenu(Inventory inv){
+        if(previousPageSlot < 0){
+            throw new IllegalArgumentException("Previous page slot is invalid");
+        }
+        if(currentPageSlot < 0){
+            throw new IllegalArgumentException("Current page slot is invalid");
+        }
+        if(nextPageSlot < 0){
+            throw new IllegalArgumentException("Next page slot is invalid");
+        }
+        
         if(showPageItems){
             inv.setItem(previousPageSlot, GUIItem.getPreviousPageItem());
             inv.setItem(currentPageSlot, GUIItem.getCurrentPageItem(pageIndex+1, maxPages));
