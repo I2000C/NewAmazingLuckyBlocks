@@ -104,14 +104,22 @@ public class GUIPagesAdapter<T>{
             throw new IllegalArgumentException("Next page slot is invalid");
         }
         
+        if(menuSize > inv.getSize()){
+            return;
+        }
+        
+        if(pageIndex >= maxPages){
+            // If pageIndex is greater than maxPages, go to last page
+            pageIndex = maxPages - 1;
+        }else if(pageIndex < 0){
+            // If pageIndex is lower than 0, go to first page
+            pageIndex = 0;
+        }
+        
         if(showPageItems){
             inv.setItem(previousPageSlot, GUIItem.getPreviousPageItem());
             inv.setItem(currentPageSlot, GUIItem.getCurrentPageItem(pageIndex+1, maxPages));
             inv.setItem(nextPageSlot, GUIItem.getNextPageItem());
-        }
-        
-        if(menuSize > inv.getSize()){
-            return;
         }
         
         int firstItemIndex = menuSize*pageIndex;
