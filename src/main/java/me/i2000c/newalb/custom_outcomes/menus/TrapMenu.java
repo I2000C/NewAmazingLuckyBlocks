@@ -45,7 +45,7 @@ public class TrapMenu{
             
             packListAdapter = new GUIPagesAdapter<>(
                     PACK_LIST_MENU_SIZE,
-                    outcome -> {
+                    (outcome, index) -> {
                         ItemBuilder builder = ItemBuilder.fromItem(outcome.getItemToDisplay(), false);
             
                         if(reward.getTrapOutcome() != null && reward.getTrapOutcome().equals(outcome)){
@@ -253,6 +253,7 @@ public class TrapMenu{
                 auxPack = PackManager.getPack(packName);
                 
                 packListAdapter.setItemList(auxPack.getSortedOutcomes());
+                packListAdapter.goToMainPage();
                 openTrapOutcomesMenu(p);
             }
         }            

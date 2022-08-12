@@ -35,7 +35,7 @@ public class WorldMenu{
             
             adapter = new GUIPagesAdapter<>(
                     MENU_SIZE,
-                    worldName -> {
+                    (worldName, index) -> {
                         boolean worldType = worlds.get(worldName);            
                         Material material = getMaterialByType(worldType);
                         return ItemBuilder

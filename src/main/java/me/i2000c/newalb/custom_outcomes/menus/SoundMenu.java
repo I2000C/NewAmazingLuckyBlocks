@@ -44,7 +44,7 @@ public class SoundMenu{
             
             soundListAdapter = new GUIPagesAdapter<>(
                     SOUND_LIST_MENU_SIZE,
-                    sound -> {
+                    (sound, index) -> {
                         ItemBuilder builder = ItemBuilder.newItem(XMaterial.NOTE_BLOCK);
                         builder.withDisplayName("&3" + sound.name());
                         if(reward.getType() != null && sound.name().equals(reward.getType())){
@@ -66,6 +66,7 @@ public class SoundMenu{
             });
             
             soundListAdapter.setItemList(soundList);
+            soundListAdapter.goToMainPage();
             
             inventoriesRegistered = true;
         }

@@ -1,14 +1,14 @@
 package me.i2000c.newalb.listeners.inventories;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
+import java.util.ListIterator;
+import java.util.function.BiFunction;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class GUIPagesAdapter<T>{
     private final int menuSize;    
-    private final Function<T, ItemStack> itemFunction;
+    private final BiFunction<T, Integer, ItemStack> itemFunction;
     private List<T> itemList;
     
     private int maxPages;
@@ -21,7 +21,7 @@ public class GUIPagesAdapter<T>{
     
     public GUIPagesAdapter(
             int menuSize, 
-            Function<T, ItemStack> itemFunction){        
+            BiFunction<T, Integer, ItemStack> itemFunction){        
         this.menuSize = menuSize;        
         this.itemFunction = itemFunction;
         this.itemList = null;
@@ -34,7 +34,6 @@ public class GUIPagesAdapter<T>{
     
     public void setItemList(List<T> itemList){
         this.itemList = itemList;
-        this.pageIndex = 0;
         this.showPageItems = itemList.size() > this.menuSize;
         
         if(itemList.size() % menuSize == 0){
@@ -120,10 +119,11 @@ public class GUIPagesAdapter<T>{
             return;
         }
         
-        Iterator<T> iterator = itemList.listIterator(firstItemIndex);
+        ListIterator<T> iterator = itemList.listIterator(firstItemIndex);
         for(int i=0; i<menuSize && iterator.hasNext(); i++){
+            int index = iterator.nextIndex();
             T item = iterator.next();
-            ItemStack stack = itemFunction.apply(item);
+            ItemStack stack = itemFunction.apply(item, index);
             inv.setItem(i, stack);
         }
     }

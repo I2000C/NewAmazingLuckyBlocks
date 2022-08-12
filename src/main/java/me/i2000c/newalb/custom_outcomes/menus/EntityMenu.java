@@ -54,7 +54,7 @@ public class EntityMenu{
             
             entityListAdapter = new GUIPagesAdapter<>(
                     ENTITY_LIST_MENU_SIZE,
-                    entityType -> {
+                    (entityType, index) -> {
                         ItemBuilder builder = ItemBuilder.newItem(XMaterial.GHAST_SPAWN_EGG);
                         builder.withDisplayName("&3" + entityType.name());
                         if(entityType.isAlive()){
@@ -79,6 +79,7 @@ public class EntityMenu{
             });
             
             entityListAdapter.setItemList(entityTypes);
+            entityListAdapter.goToMainPage();
             
             inventoriesRegistered = true;
         }
