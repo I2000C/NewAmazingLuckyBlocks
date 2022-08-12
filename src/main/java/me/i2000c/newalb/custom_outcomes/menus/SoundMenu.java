@@ -3,12 +3,15 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.List;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.SoundReward;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
@@ -24,6 +27,13 @@ import org.bukkit.inventory.ItemStack;
 public class SoundMenu{
     public static SoundReward reward;
     
+    private static final int SOUND_LIST_MENU_SIZE = 45;
+    private static final int PREVIOUS_PAGE_SLOT = 51;
+    private static final int CURRENT_PAGE_SLOT = 52;
+    private static final int NEXT_PAGE_SLOT = 53;
+    private static GUIPagesAdapter<Sound> soundListAdapter;
+    private static List<Sound> soundList;
+    
     private static boolean inventoriesRegistered = false;
     
     public static void reset(){
@@ -32,10 +42,36 @@ public class SoundMenu{
             InventoryListener.registerInventory(CustomInventoryType.SOUND_MENU, SOUND_MENU_FUNCTION);
             InventoryListener.registerInventory(CustomInventoryType.SOUND_TYPE_MENU, SOUND_TYPE_MENU_FUNCTION);
             
+            soundListAdapter = new GUIPagesAdapter<>(
+                    SOUND_LIST_MENU_SIZE,
+                    sound -> {
+                        ItemBuilder builder = ItemBuilder.newItem(XMaterial.NOTE_BLOCK);
+                        builder.withDisplayName("&3" + sound.name());
+                        if(reward.getType() != null && sound.name().equals(reward.getType())){
+                            builder.addEnchantment(Enchantment.DURABILITY, 1);
+                            builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                        }
+                        return builder.build();
+                    }
+            );
+            soundListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+            soundListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+            soundListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
+            
+            soundList = Arrays.asList(Sound.values());
+            soundList.sort((sound1, sound2) -> {
+                String name1 = sound1.name();
+                String name2 = sound2.name();
+                return name1.compareTo(name2);
+            });
+            
+            soundListAdapter.setItemList(soundList);
+            
             inventoriesRegistered = true;
         }
         
-        index = 0;
+        soundListAdapter.goToMainPage();
+        
         reward = null;
     }
     
@@ -157,22 +193,8 @@ public class SoundMenu{
 //</editor-fold>
     };
     
-    private static final Sound[] soundList = Sound.values();
-    private static final int MENU_SIZE = 45;
-    private static int max_pages = -1;
-    
-    private static int index = 0;
-    
     private static void openSoundTypeMenu(Player p){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        if(max_pages == -1){
-            if(soundList.length % MENU_SIZE == 0){
-                max_pages = (soundList.length / MENU_SIZE);
-            }else{
-                max_pages = (soundList.length / MENU_SIZE) + 1;
-            }
-        }
-        
+        //<editor-fold defaultstate="collapsed" desc="Code">        
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.SOUND_TYPE_MENU, 54, "&3&lSound Type");
         
         if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_10) >= 0){
@@ -185,20 +207,7 @@ public class SoundMenu{
         
         inv.setItem(45, GUIItem.getBackItem());
         
-        inv.setItem(51, GUIItem.getPreviousPageItem());
-        inv.setItem(52, GUIItem.getCurrentPageItem(index+1, max_pages));
-        inv.setItem(53, GUIItem.getNextPageItem());
-        
-        for(int i=45*index;(i-45*index)<MENU_SIZE && i<soundList.length;i++){
-            ItemBuilder builder = ItemBuilder.newItem(XMaterial.NOTE_BLOCK);
-            builder.withDisplayName("&3" + soundList[i].name());
-            if(reward.getType() != null && soundList[i].name().equals(reward.getType())){
-                builder.addEnchantment(Enchantment.DURABILITY, 1);
-                builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            }
-            
-            inv.setItem((i-45*index), builder.build());
-        }
+        soundListAdapter.updateMenu(inv);
         
         p.openInventory(inv);
         GUIManager.setCurrentInventory(inv);
@@ -224,20 +233,19 @@ public class SoundMenu{
                     }
                     break;
                 case 51:
-                    index--;
-                    if(index < 0){
-                        index = max_pages-1;
+                    if(soundListAdapter.goToPreviousPage()){
+                        openSoundTypeMenu(p);
                     }
-                    openSoundTypeMenu(p);
                     break;
                 case 52:
+                    if(soundListAdapter.goToMainPage()){
+                        openSoundTypeMenu(p);
+                    }
                     break;
                 case 53:
-                    index++;
-                    if(index >= max_pages){
-                        index = 0;
+                    if(soundListAdapter.goToNextPage()){
+                        openSoundTypeMenu(p);
                     }
-                    openSoundTypeMenu(p);
                     break;
                 default:
                     if(e.getCurrentItem() != null){
