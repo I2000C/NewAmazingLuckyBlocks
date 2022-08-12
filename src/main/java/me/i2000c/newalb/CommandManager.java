@@ -562,13 +562,37 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     Logger.sendMessage("&cUsage: &7/alb worlds list", sender);
                     return false;
                 }
+            case 3:
+                if(args[1].equals("toggle")){
+                    String worldName = args[2];
+                    
+                    String message = LangLoader.getMessages().getString("World-management2.line1").replace("%world%", worldName);
+                    if(Bukkit.getWorld(worldName) != null){
+                        boolean enabled = !WorldList.getWorlds().get(worldName);
+                        
+                        if(enabled){
+                            message += LangLoader.getMessages().getString("World-management1.enabledWorld");
+                        }else{
+                            message += LangLoader.getMessages().getString("World-management1.disabledWorld");
+                        }                        
+                        WorldList.setWorldEnabled(worldName, enabled);
+                        Logger.sendMessage(message, sender);
+                        return true;
+                    }else{
+                        Logger.sendMessage(LangLoader.getMessages().getString("World-management2.line4").replace("%world%", worldName), sender);
+                        return false;
+                    }
+                }else{
+                    Logger.sendMessage("&cUsage: &7/alb worlds toggle <world>", sender);
+                    return false;
+                }
             case 4:
                 // /alb worlds set <world> <type>
                 if(args[1].equals("set")){
                     String worldName = args[2];
                     String worldEnabled = args[3];
                     if(!args[3].equals("enabled") && !args[3].equals("disabled")){
-                        Logger.sendMessage("&cUsage: /alb set <world> <enabled/disabled>", sender);
+                        Logger.sendMessage("&cUsage: /alb worlds set <world> <enabled/disabled>", sender);
                         return false;
                     }
                     
@@ -581,15 +605,15 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         }else{
                             message += LangLoader.getMessages().getString("World-management1.disabledWorld");
                         }
-                        Logger.sendMessage(message, sender);
                         WorldList.setWorldEnabled(worldName, enabled);
+                        Logger.sendMessage(message, sender);                        
                         return true;
                     }else{
                         Logger.sendMessage(LangLoader.getMessages().getString("World-management2.line4").replace("%world%", worldName), sender);
                         return false;
                     }
                 }else{
-                    Logger.sendMessage("&cUsage: /alb set <world> <enabled/disabled>", sender);
+                    Logger.sendMessage("&cUsage: &7/alb worlds set <world> <enabled/disabled>", sender);
                     return false;
                 }
             default:
@@ -844,6 +868,9 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     if("set".startsWith(args[1].toLowerCase())){
                         ls.add("set");
                     }
+                    if("toggle".startsWith(args[1].toLowerCase())){
+                        ls.add("toggle");
+                    }
                     if("list".startsWith(args[1].toLowerCase())){
                         ls.add("list");
                     }                    
@@ -876,7 +903,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     break;
             }
         }else if(args.length == 3){
-            if(args[0].equalsIgnoreCase("worlds") && args[1].equalsIgnoreCase("set")){
+            if(args[0].equalsIgnoreCase("worlds") && 
+                    (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("toggle"))){
                 for(String world : ConfigManager.getConfig().getStringList("Worlds-list")){
                     String worldName = world.split(";")[0];
                     if(worldName.toLowerCase().startsWith(args[2].toLowerCase())){
