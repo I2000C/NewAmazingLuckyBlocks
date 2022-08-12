@@ -113,6 +113,7 @@ public class GUIItem{
     }
     public static ItemStack getCurrentPageItem(int currentPage, int maxPages){
         return ItemBuilder.newItem(XMaterial.BOOK)
+                .withAmount(currentPage)
                 .withDisplayName("&6Page &3" + currentPage + " &a/ &3" + maxPages)
                 .addLoreLine("&bClick to go to page 1")
                 .build();
