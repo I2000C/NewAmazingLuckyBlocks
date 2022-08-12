@@ -167,6 +167,9 @@ public class Outcome implements Displayable, Executable{
         this.ID = ID;
     }
     
+    public List<Reward> getRewards(){
+        return this.rewardList;
+    }
     public Reward getReward(int i){
         return this.rewardList.get(i);
     }

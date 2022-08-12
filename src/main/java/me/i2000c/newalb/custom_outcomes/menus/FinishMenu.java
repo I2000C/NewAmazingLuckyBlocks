@@ -1,6 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.HashMap;
 import java.util.Map;
 import me.i2000c.newalb.custom_outcomes.utils.Executable;
@@ -12,27 +13,27 @@ import me.i2000c.newalb.custom_outcomes.utils.rewards.Reward;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class FinishMenu{
-    private static int index;
-    private static final int MENU_SIZE = 36;
-    private static int max_pages;
-    
-    
     public static final Map<Player, Executable> testRewardsPlayerList = new HashMap<>();
     
     private static int rewardEditID = -1;
     
+    private static final int REWARD_LIST_MENU_SIZE = 36;
     private static final int PREVIOUS_PAGE_SLOT = 42;
     private static final int CURRENT_PAGE_SLOT = 43;
     private static final int NEXT_PAGE_SLOT = 44;
+    private static final String REWARD_ID_TAG = "reward_id";
+    private static GUIPagesAdapter<Reward> rewardListAdapter;
     
     private static final int NEW_REWARD_SLOT = 45;
     private static final int EDIT_REWARD_SLOT = 46;
@@ -59,10 +60,26 @@ public class FinishMenu{
             //Register inventories
             InventoryListener.registerInventory(CustomInventoryType.FINISH_MENU, FINISH_MENU_FUNCTION);
             
+            rewardListAdapter = new GUIPagesAdapter<>(
+                    REWARD_LIST_MENU_SIZE,
+                    (reward, index) -> {
+                        ItemBuilder builder = ItemBuilder
+                                .fromItem(reward.getItemToDisplay(), false);
+                        if(delayMode){
+                            builder.addLoreLine("");
+                            builder.addLoreLine("&6Reward Delay: &a" + reward.getDelay());
+                        }
+                        return NBTEditor.set(builder.build(), index, REWARD_ID_TAG);
+                    }
+            );
+            rewardListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+            rewardListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+            rewardListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
+            
             inventoriesRegistered = true;
         }
         
-        index = 0;
+        rewardListAdapter.goToMainPage();
         
         testRewardsPlayerList.clear();
         rewardEditID = -1;
@@ -103,23 +120,8 @@ public class FinishMenu{
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.FINISH_MENU, 54, "&bRewards list");
         currentOutcome.sortRewards();
         
-        int numberOfRewards = currentOutcome.getNumberOfRewards();
-        if(numberOfRewards > 0 && numberOfRewards % MENU_SIZE == 0){
-            max_pages = numberOfRewards / MENU_SIZE;
-        }else{
-            max_pages = numberOfRewards / MENU_SIZE + 1;
-        }
-        
-        int n = Integer.min(currentOutcome.getNumberOfRewards() - MENU_SIZE*index, MENU_SIZE);
-        for(int i=0;i<n;i++){
-            Reward reward = currentOutcome.getReward(i + index*MENU_SIZE);
-            ItemBuilder builder = ItemBuilder.fromItem(reward.getItemToDisplay(), false);
-            if(delayMode){
-                builder.addLoreLine("");
-                builder.addLoreLine("&6Reward Delay: &a" + reward.getDelay());
-            }
-            inv.setItem(i, builder.build());
-        }
+        rewardListAdapter.setItemList(currentOutcome.getRewards());
+        rewardListAdapter.updateMenu(inv);
         
         ItemStack saveAndExit = ItemBuilder.newItem(XMaterial.DARK_OAK_DOOR)
                 .withDisplayName("&dSave and exit")
@@ -184,10 +186,6 @@ public class FinishMenu{
         ItemBuilder.fromItem(delay, false)
                 .addLoreLine("")
                 .addLoreLine("&3Click here to configure the delay of a reward");
-
-        inv.setItem(PREVIOUS_PAGE_SLOT, GUIItem.getPreviousPageItem());
-        inv.setItem(CURRENT_PAGE_SLOT, GUIItem.getCurrentPageItem(index+1, max_pages));
-        inv.setItem(NEXT_PAGE_SLOT, GUIItem.getNextPageItem());
         
         if(!deleteMode && !testMode && !editMode && !cloneMode && !delayMode){
             inv.setItem(NEW_REWARD_SLOT, add);
@@ -223,22 +221,19 @@ public class FinishMenu{
         
         switch(e.getSlot()){
             case PREVIOUS_PAGE_SLOT:
-                index--;
-                if(index < 0){
-                    index = max_pages - 1;
+                if(rewardListAdapter.goToPreviousPage()){
+                    openFinishInventory(p);
                 }
-                openFinishInventory(p);
                 break;
             case CURRENT_PAGE_SLOT:
-                index = 0;
-                openFinishInventory(p);
+                if(rewardListAdapter.goToMainPage()){
+                    openFinishInventory(p);
+                }
                 break;
             case NEXT_PAGE_SLOT:
-                index++;
-                if(index >= max_pages){
-                    index = 0;
+                if(rewardListAdapter.goToNextPage()){
+                    openFinishInventory(p);
                 }
-                openFinishInventory(p);
                 break;
             case NEW_REWARD_SLOT:
                 if(deleteMode || testMode || editMode || cloneMode || delayMode){
@@ -261,8 +256,8 @@ public class FinishMenu{
                 }
                 p.closeInventory();
                 testRewardsPlayerList.put(p, currentOutcome);
-                Logger.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected outcome", p);
-                Logger.sendMessage("&3To leave testing mode, use &7/alb return&r", p);
+                Logger.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected outcome", p, false);
+                Logger.sendMessage("&3To leave testing mode, use &7/alb return&r", p, false);
                 break;
             case TEST_REWARD_SLOT:
                 if(deleteMode || editMode || cloneMode || delayMode){
@@ -328,7 +323,13 @@ public class FinishMenu{
                 
                 break;
             default:
-                int rewardID = e.getSlot() + index*MENU_SIZE;
+                ItemStack stack = e.getCurrentItem();
+                if(stack == null || stack.getType() == Material.AIR 
+                        || !NBTEditor.contains(stack, REWARD_ID_TAG)){
+                    return;
+                }
+                
+                int rewardID = NBTEditor.getInt(e.getCurrentItem(), REWARD_ID_TAG);
                 if(deleteMode){
                     if(currentOutcome.removeReward(rewardID)){
                         openFinishInventory(p);
@@ -337,9 +338,9 @@ public class FinishMenu{
                     if(rewardID < currentOutcome.getNumberOfRewards()){
                         Reward reward = currentOutcome.getReward(rewardID);
                         testRewardsPlayerList.put(p, reward);
-                        Logger.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected reward", p);
-                        Logger.sendMessage("&5Selected reward: &e" + e.getSlot(), p);
-                        Logger.sendMessage("&3To leave testing mode, use &7/alb return&r", p);
+                        Logger.sendMessage("&6Every block that you break from now will behave as a LuckyBlock with the selected reward", p, false);
+                        Logger.sendMessage("&5Selected reward: &e" + e.getSlot(), p, false);
+                        Logger.sendMessage("&3To leave testing mode, use &7/alb return&r", p, false);
                         p.closeInventory();
                     }
                 }else if(editMode){
