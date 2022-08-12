@@ -9,6 +9,7 @@ import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
@@ -26,9 +27,11 @@ public class TrapMenu{
     
     private static OutcomePack auxPack = null;
     
-    private static final int MENU_SIZE = 45;
-    private static int index;    
-    private static int max_pages;
+    private static final int PACK_LIST_MENU_SIZE = 45;
+    private static final int PREVIOUS_PAGE_SLOT = 51;
+    private static final int CURRENT_PAGE_SLOT = 52;
+    private static final int NEXT_PAGE_SLOT = 53;
+    private static GUIPagesAdapter<Outcome> packListAdapter;
     
     private static boolean inventoriesRegistered = false;
     
@@ -40,14 +43,30 @@ public class TrapMenu{
             InventoryListener.registerInventory(CustomInventoryType.TRAP_PACKS_MENU, TRAP_PACKS_MENU_FUNCTION);
             InventoryListener.registerInventory(CustomInventoryType.TRAP_OUTCOMES_MENU, TRAP_OUTCOMES_MENU_FUNCTION);
             
+            packListAdapter = new GUIPagesAdapter<>(
+                    PACK_LIST_MENU_SIZE,
+                    outcome -> {
+                        ItemBuilder builder = ItemBuilder.fromItem(outcome.getItemToDisplay(), false);
+            
+                        if(reward.getTrapOutcome() != null && reward.getTrapOutcome().equals(outcome)){
+                            builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+                            builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                        }
+                        
+                        return builder.build();
+                    }
+            );
+            packListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+            packListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+            packListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
+            
             inventoriesRegistered = true;
         }
         
         reward = null;
         auxPack = null;
         
-        index = 0;
-        max_pages = 0;
+        packListAdapter.goToMainPage();
     }
     
     //Trap inventory
@@ -76,10 +95,12 @@ public class TrapMenu{
         builder.addLoreLine("&3Click to change");
         ItemStack trapNameItem = builder.build();
         
-        builder = ItemBuilder.newItem(XMaterial.CHEST);        
-        if(reward.getTrapOutcome() == null){
+        Outcome outcome = reward.getTrapOutcome();
+        if(outcome == null){
+            builder = ItemBuilder.newItem(XMaterial.CHEST);
             builder.withDisplayName("&2Selected trap outcome: &cnull");
         }else{
+            builder = ItemBuilder.newItem(XMaterial.matchXMaterial(outcome.getIcon()));
             builder.withDisplayName("&2Selected trap outcome: &a" + reward.getTrapOutcome());
         }
         builder.addLoreLine("&3Click to select");
@@ -230,15 +251,9 @@ public class TrapMenu{
                         .getDisplayName();
                 String packName = Logger.stripColor(displayName);
                 auxPack = PackManager.getPack(packName);
-                if(auxPack != null){
-                    index = 0;
-                    if(auxPack.getOutcomes().size() % MENU_SIZE == 0){
-                        max_pages = (auxPack.getOutcomes().size() / MENU_SIZE);
-                    }else{
-                        max_pages = (auxPack.getOutcomes().size() / MENU_SIZE) + 1;
-                    }
-                    openTrapOutcomesMenu(p);
-                }
+                
+                packListAdapter.setItemList(auxPack.getSortedOutcomes());
+                openTrapOutcomesMenu(p);
             }
         }            
 //</editor-fold>
@@ -250,22 +265,8 @@ public class TrapMenu{
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_OUTCOMES_MENU, 54, "&3&lOutcomes list");
         
         inv.setItem(45, GUIItem.getBackItem());
-        inv.setItem(51, GUIItem.getPreviousPageItem());
-        inv.setItem(52, GUIItem.getCurrentPageItem(index+1, max_pages));
-        inv.setItem(53, GUIItem.getNextPageItem());
         
-        int n = Integer.min((auxPack.getOutcomes().size() - MENU_SIZE*index), MENU_SIZE);
-        for(int i=0;i<n;i++){
-            Outcome outcome = auxPack.getOutcome(i + index*MENU_SIZE);
-            ItemBuilder builder = ItemBuilder.fromItem(outcome.getItemToDisplay(), false);
-            
-            if(reward.getTrapOutcome() != null && reward.getTrapOutcome().equals(outcome)){
-                builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
-                builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            }
-            
-            inv.setItem(i, builder.build());
-        }
+        packListAdapter.updateMenu(inv);
         
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
@@ -280,33 +281,24 @@ public class TrapMenu{
         if(e.getClickedInventory().equals(e.getView().getTopInventory())){
             switch(e.getSlot()){
                 case 45:
-                    //Return to previous inventory
+                    // Return to previous inventory
                     openTrapPacksMenu(p);
                     break;
                 case 51:
-                    //Previous page
-                    if(max_pages > 1){
-                        index--;
-                        if(index < 0){
-                            index = max_pages - 1;
-                        }
+                    // Go to previous page
+                    if(packListAdapter.goToPreviousPage()){
                         openTrapOutcomesMenu(p);
                     }
                     break;
                 case 52:
-                    //Go to home page
-                    if(max_pages > 1){
-                        index = 0;
+                    // Go to main page
+                    if(packListAdapter.goToMainPage()){
                         openTrapOutcomesMenu(p);
                     }
                     break;
                 case 53:
-                    //Next page
-                    if(max_pages > 1){
-                        index++;
-                        if(index >= max_pages){
-                            index = 0;
-                        }
+                    // Go to next page
+                    if(packListAdapter.goToNextPage()){
                         openTrapOutcomesMenu(p);
                     }
                     break;
@@ -321,6 +313,7 @@ public class TrapMenu{
                     if(outcome != null){
                         reward.setTrapOutcome(outcome);
                         openTrapMenu(p);
+                        packListAdapter.goToMainPage();
                     }
                 }
             }
