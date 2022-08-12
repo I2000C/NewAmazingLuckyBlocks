@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
-import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.logger.Logger;
@@ -18,9 +18,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class WorldMenu{
-    private static int index;
-    private static final int MENU_SIZE = 47;
-    private static int max_pages;
+    private static final int MENU_SIZE = 36;
+    private static final int PREVIOUS_PAGE_SLOT = 42;
+    private static final int CURRENT_PAGE_SLOT = 43;
+    private static final int NEXT_PAGE_SLOT = 44;
+    private static GUIPagesAdapter<String> adapter;
     
     private static boolean inventoriesRegistered = false;
     
@@ -31,23 +33,33 @@ public class WorldMenu{
             //Register inventories
             InventoryListener.registerInventory(CustomInventoryType.WORLD_MENU, WORLD_MENU_FUNCTION);
             
+            adapter = new GUIPagesAdapter<>(
+                    MENU_SIZE,
+                    worldName -> {
+                        boolean worldType = worlds.get(worldName);            
+                        Material material = getMaterialByType(worldType);
+                        return ItemBuilder
+                                .newItem(XMaterial.matchXMaterial(material))
+                                .withDisplayName("&d" + worldName)
+                                .withLore(getLoreByType(worldType))
+                                .addLoreLine("&3Click to toggle")
+                                .build();
+                    }
+                );
+            adapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+            adapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+            adapter.setNextPageSlot(NEXT_PAGE_SLOT);
+            
             inventoriesRegistered = true;
         }
         
-        index = 0;
-        
         worlds = new LinkedHashMap<>(WorldList.getWorlds());
+        adapter.setItemList(new ArrayList<>(worlds.keySet()));
     }
     
     public static void openWorldsMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         WorldList.updateWorlds(false);
-        
-        if(WorldList.getWorlds().size() % MENU_SIZE == 0){
-            max_pages = WorldList.getWorlds().size() / MENU_SIZE;
-        }else{
-            max_pages = WorldList.getWorlds().size() / MENU_SIZE + 1;
-        }
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.WORLD_MENU, 54, "&3&lWorlds Menu");
         
@@ -59,40 +71,28 @@ public class WorldMenu{
                 .withDisplayName("&6Save and exit")
                 .build();
         
-        ItemStack allNormal = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+        ItemStack allNormal = ItemBuilder
+                .newItem(XMaterial.LIME_STAINED_GLASS_PANE)
                 .withDisplayName("&3Set all worlds to &aENABLED")
                 .build();
         
-        ItemStack allDisabled = ItemBuilder.newItem(XMaterial.RED_STAINED_GLASS_PANE)
+        ItemStack allDisabled = ItemBuilder
+                .newItem(XMaterial.RED_STAINED_GLASS_PANE)
                 .withDisplayName("&3Set all worlds to &cDISABLED")
                 .build();
         
-        inv.setItem(50, allNormal);
+        ItemStack toggleAllWorlds = ItemBuilder
+                .newItem(XMaterial.ORANGE_STAINED_GLASS_PANE)
+                .withDisplayName("&3Toggle all worlds")
+                .build();
+        
+        inv.setItem(49, allNormal);
+        inv.setItem(50, toggleAllWorlds);
         inv.setItem(51, allDisabled);
         inv.setItem(52, save);
         inv.setItem(53, exit);
         
-        if(worlds.size() > MENU_SIZE){            
-            inv.setItem(46, GUIItem.getPreviousPageItem());
-            inv.setItem(47, GUIItem.getCurrentPageItem(index+1, max_pages));
-            inv.setItem(48, GUIItem.getNextPageItem());
-        }
-        
-        int n = Integer.min((WorldList.getWorlds().size()-MENU_SIZE*index),MENU_SIZE);
-        List<String> worldsAux = new ArrayList<>();
-        worlds.keySet().stream().sorted().forEachOrdered(w -> worldsAux.add(w));
-        for(int i=0;i<n;i++){
-            String worldName = worldsAux.get(i+index*MENU_SIZE);
-            boolean worldType = worlds.get(worldName);
-            
-            Material material = getMaterialByType(worldType);
-            ItemStack worldItem = ItemBuilder.newItem(XMaterial.matchXMaterial(material))
-                    .withDisplayName("&d" + worldName)
-                    .withLore(getLoreByType(worldType))
-                    .build();
-            
-            inv.setItem(i, worldItem);
-        }
+        adapter.updateMenu(inv);
         
         p.openInventory(inv);
 //</editor-fold>
@@ -123,38 +123,33 @@ public class WorldMenu{
         e.setCancelled(true);
         
         if(e.getClickedInventory().equals(e.getView().getTopInventory())){
-
             switch(e.getSlot()){
-                case 46:
-                    //Back
-                    if(worlds.size() > MENU_SIZE){
-                        index = (index-1);
-                        if(index < 0){
-                            index = max_pages-1;
-                        }
+                case PREVIOUS_PAGE_SLOT:
+                    // Go to previous page
+                    if(adapter.goToPreviousPage()){
+                        openWorldsMenu(p);
+                    }                    
+                    break;
+                case CURRENT_PAGE_SLOT:
+                    // Go to main page
+                    if(adapter.goToMainPage()){
                         openWorldsMenu(p);
                     }
                     break;
-                case 47:
-                    //Go to main page
-                    if(worlds.size() > MENU_SIZE){
-                        index = 0;
+                case NEXT_PAGE_SLOT:
+                    // Go to next page
+                    if(adapter.goToNextPage()){
                         openWorldsMenu(p);
                     }
                     break;
-                case 48:
-                    //Next
-                    if(worlds.size() > MENU_SIZE){
-                        index = (index+1);
-                        if(index >= max_pages){
-                            index = 0;
-                        }
-                        openWorldsMenu(p);
-                    }
-                    break;
-                case 50:
+                case 49:
                     //Set all worlds to ENABLED
                     worlds.replaceAll((worldName, enabled) -> true);
+                    openWorldsMenu(p);
+                    break;
+                case 50:
+                    //Toggle all worlds
+                    worlds.replaceAll((worldName, enabled) -> !enabled);
                     openWorldsMenu(p);
                     break;
                 case 51:
