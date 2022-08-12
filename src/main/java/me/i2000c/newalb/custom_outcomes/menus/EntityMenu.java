@@ -3,7 +3,6 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
@@ -12,6 +11,7 @@ import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
@@ -32,6 +32,12 @@ public class EntityMenu{
     private static int effect_time = 60;
     private static int effect_amplifier = 0;
     
+    private static final int ENTITY_LIST_MENU_SIZE = 45;
+    private static final int PREVIOUS_PAGE_SLOT = 51;
+    private static final int CURRENT_PAGE_SLOT = 52;
+    private static final int NEXT_PAGE_SLOT = 53;
+    private static GUIPagesAdapter<EntityType> entityListAdapter;
+    
     private static int equipment_slot = 0;
     public static Equipment equipment = null;
     
@@ -46,16 +52,43 @@ public class EntityMenu{
             InventoryListener.registerInventory(CustomInventoryType.ENTITY_EFFECTS_MENU_2, EFFECTS_MENU_2_FUNCTION);
             InventoryListener.registerInventory(CustomInventoryType.EQUIPMENT_MENU, EQUIPMENT_MENU_FUNCTION);
             
+            entityListAdapter = new GUIPagesAdapter<>(
+                    ENTITY_LIST_MENU_SIZE,
+                    entityType -> {
+                        ItemBuilder builder = ItemBuilder.newItem(XMaterial.GHAST_SPAWN_EGG);
+                        builder.withDisplayName("&3" + entityType.name());
+                        if(entityType.isAlive()){
+                            builder.addLoreLine("&6Is living entity: &atrue");
+                        }else{
+                            builder.addLoreLine("&6Is living entity: &7false");
+                        }
+                        return builder.build();
+                    }
+            );
+            entityListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+            entityListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+            entityListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
+            
+            List<EntityType> entityTypes = new ArrayList<>(Arrays.asList(EntityType.values()));
+            entityTypes.removeIf(entityType -> 
+                    entityType == EntityType.PLAYER || !entityType.isSpawnable());
+            entityTypes.sort((entityType1, entityType2) -> {
+                String name1 = entityType1.name();
+                String name2 = entityType2.name();                
+                return name1.compareTo(name2);
+            });
+            
+            entityListAdapter.setItemList(entityTypes);
+            
             inventoriesRegistered = true;
         }
+        
+        entityListAdapter.goToMainPage();
         
         reward = null;
         
         equipment_slot = 0;
         equipment = null;
-        
-        max_pages = -1;
-        index = 0;
         
         effect_name = null;
         effect_time = 60;
@@ -210,52 +243,15 @@ public class EntityMenu{
 //</editor-fold>
     };
     
-    private static final int MENU_SIZE = 45;
-    private static int max_pages = 0;
-    
-    private static int index = 0;
-    
     //EntityType inventory
     private static void openEntityTypeInventory(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(max_pages == -1){
-            if(EntityType.values().length % MENU_SIZE == 0){
-                max_pages = (EntityType.values().length / MENU_SIZE);
-            }else{
-                max_pages = (EntityType.values().length / MENU_SIZE) + 1;
-            }
-        }
-        
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENTITY_TYPE_MENU, 54, "&d&lEntity List");
         
         inv.setItem(45, GUIItem.getBackItem());
         
-        inv.setItem(51, GUIItem.getPreviousPageItem());
-        inv.setItem(52, GUIItem.getCurrentPageItem(index+1, max_pages));
-        inv.setItem(53, GUIItem.getNextPageItem());
+        entityListAdapter.updateMenu(inv);
         
-        List<String> entTypeNames = new ArrayList();
-        for(EntityType ent : EntityType.values()){
-            if(ent.isSpawnable() && !ent.equals(EntityType.PLAYER)){
-                entTypeNames.add(ent.name());
-            }
-        }
-        Collections.sort(entTypeNames);
-        
-        int n = Integer.min((entTypeNames.size()-MENU_SIZE*index),MENU_SIZE);
-        for(int i=0;i<n;i++){
-            String typeName = entTypeNames.get(i + index*MENU_SIZE);
-            
-            ItemBuilder builder = ItemBuilder.newItem(XMaterial.GHAST_SPAWN_EGG);
-            builder.withDisplayName("&3" + typeName);
-            if(EntityType.valueOf(typeName).isAlive()){
-                builder.addLoreLine("&6Is living entity: &atrue");
-            }else{
-                builder.addLoreLine("&6Is living entity: &7false");
-            }
-            
-            inv.setItem(i, builder.build());
-        }
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
 //</editor-fold>
@@ -269,34 +265,25 @@ public class EntityMenu{
         if(e.getClickedInventory().equals(e.getView().getTopInventory())){
             switch(e.getSlot()){
                 case 45:
-                    //Back
-                    index = 0;
+                    // Back
+                    entityListAdapter.goToMainPage();
                     openEntityMenu(p);
                     break;
                 case 51:
-                    //Previous page
-                    if(max_pages > 1){
-                        index--;
-                        if(index < 0){
-                            index = max_pages - 1;
-                        }
+                    // Go to previous page
+                    if(entityListAdapter.goToPreviousPage()){
                         openEntityTypeInventory(p);
                     }
                     break;
                 case 52:
-                    //Home page
-                    if(max_pages > 1){
-                        index = 0;
+                    // Go to main page
+                    if(entityListAdapter.goToMainPage()){
                         openEntityTypeInventory(p);
                     }
                     break;
                 case 53:
-                    //Next page
-                    if(max_pages > 1){
-                        index++;
-                        if(index >= max_pages){
-                            index = 0;
-                        }
+                    // Go to next page
+                    if(entityListAdapter.goToNextPage()){
                         openEntityTypeInventory(p);
                     }
                     break;
@@ -308,7 +295,7 @@ public class EntityMenu{
                         if(displayName != null){
                             String typeName = Logger.stripColor(displayName);
                             reward.setType(EntityType.valueOf(typeName));
-                            index = 0;
+                            entityListAdapter.goToMainPage();
                             openEntityMenu(p);
                         }                            
                     }
