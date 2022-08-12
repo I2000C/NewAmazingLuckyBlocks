@@ -143,78 +143,68 @@ public class EntityMenu{
     private static final InventoryFunction ENTITY_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
         Player p = (Player) e.getWhoClicked();
-        String inv_name = "&2&lEntity Reward";
-        String name = Logger.stripColor(inv_name);
-        
-        if(e.getView() == null || e.getView().getTitle() == null || e.getClickedInventory() == null){
-            return;
-        }
-        
-        
-        if(Logger.stripColor(e.getView().getTitle()).equals(name)){
-            e.setCancelled(true);
-            if(e.getClickedInventory().equals(e.getView().getTopInventory())){
-                
-                switch(e.getSlot()){
-                    case 10:
-                        if(FinishMenu.editMode){
-                            FinishMenu.openFinishInventory(p);
-                        }else{
-                            RewardTypesMenu.openRewardTypesMenu(p);
-                        }
-                        break;
-                    case 11:
-                        //EntityType
-                        openEntityTypeInventory(p);
-                        break;
-                    case 12:
-                        //EntityCustomName
-                        ChatListener.registerPlayer(p, message -> {
-                            reward.setCustom_name(message);
-                            openEntityMenu(p);
-                        });
-                        p.closeInventory();
-                        break;
-                    case 13:
-                        //EntityEffects
-                        openEntityEffectsInventory(p);
-                        break;
-                    case 14:
-                        //EntityEquipment
-                        openEntityEquipmentInventory(p);
-                        break;
-                    case 15:
-                        //Set offset
-                        OffsetMenu.reset();
-                        OffsetMenu.setCurrentData(reward.getOffset(), pl -> openEntityMenu(pl));
-                        OffsetMenu.openOffsetMenu(p);
-                        break;
-                    case 16:
-                        if(reward.getType() == null){
-                            return;
-                        }
-                        //open FinishMenu
-                        if(!reward.getType().isAlive()){
-                            reward.setEffects(new ArrayList());
-                            reward.getEquipment().resetEquipment();
-                        }
-                        FinishMenu.addReward(reward);
-                        reset();
+        e.setCancelled(true);
+        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+
+            switch(e.getSlot()){
+                case 10:
+                    if(FinishMenu.editMode){
                         FinishMenu.openFinishInventory(p);
-                        break;
-                    case 21:
-                        reward.setCustom_name(null);
+                    }else{
+                        RewardTypesMenu.openRewardTypesMenu(p);
+                    }
+                    break;
+                case 11:
+                    //EntityType
+                    openEntityTypeInventory(p);
+                    break;
+                case 12:
+                    //EntityCustomName
+                    ChatListener.registerPlayer(p, message -> {
+                        reward.setCustom_name(message);
                         openEntityMenu(p);
-                        break;
-                    case 22:
-                        reward.getEffects().clear();
-                        openEntityMenu(p);
-                        break;
-                    case 23:
+                    });
+                    p.closeInventory();
+                    break;
+                case 13:
+                    //EntityEffects
+                    openEntityEffectsInventory(p);
+                    break;
+                case 14:
+                    //EntityEquipment
+                    openEntityEquipmentInventory(p);
+                    break;
+                case 15:
+                    //Set offset
+                    OffsetMenu.reset();
+                    OffsetMenu.setCurrentData(reward.getOffset(), pl -> openEntityMenu(pl));
+                    OffsetMenu.openOffsetMenu(p);
+                    break;
+                case 16:
+                    if(reward.getType() == null){
+                        return;
+                    }
+                    //open FinishMenu
+                    if(!reward.getType().isAlive()){
+                        reward.setEffects(new ArrayList());
                         reward.getEquipment().resetEquipment();
-                        openEntityMenu(p);
-                        break;
-                }
+                    }
+                    FinishMenu.addReward(reward);
+                    reset();
+                    FinishMenu.openFinishInventory(p);
+                    break;
+                case 21:
+                    reward.setCustom_name(null);
+                    openEntityMenu(p);
+                    break;
+                case 22:
+                    reward.getEffects().clear();
+                    openEntityMenu(p);
+                    break;
+                case 23:
+                    reward.getEquipment().resetEquipment();
+                    openEntityMenu(p);
+                    break;
             }
         }
 //</editor-fold>
