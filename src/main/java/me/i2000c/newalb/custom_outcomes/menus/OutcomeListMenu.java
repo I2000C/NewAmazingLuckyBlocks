@@ -1,11 +1,13 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -17,9 +19,12 @@ import org.bukkit.inventory.ItemStack;
 public class OutcomeListMenu{
     private static OutcomePack currentPack;
     
-    private static final int MENU_SIZE = 45;
-    private static int index;    
-    private static int max_pages;
+    private static final int OUTCOME_LIST_MENU_SIZE = 45;
+    private static final int PREVIOUS_PAGE_SLOT = 51;    
+    private static final int CURRENT_PAGE_SLOT = 52;    
+    private static final int NEXT_PAGE_SLOT = 53;    
+    private static final String OUTCOME_ID_TAG = "outcome_id";
+    private static GUIPagesAdapter<Outcome> outcomeListAdapter;
     
     private static boolean editMode;
     private static boolean cloneMode;
@@ -32,13 +37,23 @@ public class OutcomeListMenu{
             //Register inventories
             InventoryListener.registerInventory(CustomInventoryType.OUTCOME_LIST_MENU, OUTCOME_LIST_MENU_FUNCTION);
             
+            outcomeListAdapter = new GUIPagesAdapter<>(
+                    OUTCOME_LIST_MENU_SIZE,
+                    (outcome, index) -> {
+                        ItemStack stack = outcome.getItemToDisplay();
+                        return NBTEditor.set(stack, index, OUTCOME_ID_TAG);
+                    }
+            );
+            outcomeListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+            outcomeListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+            outcomeListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
+            
             inventoriesRegistered = true;
         }
         
         currentPack = null;
         
-        index = 0;
-        max_pages = 0;
+        outcomeListAdapter.goToMainPage();
         
         editMode = false;
         cloneMode = false;
@@ -49,21 +64,13 @@ public class OutcomeListMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(currentPack == null){
             currentPack = pack;
-            
-            int numberOfOutcomes = pack.getOutcomes().size();
-            if(numberOfOutcomes > 0 && numberOfOutcomes % MENU_SIZE == 0){
-                max_pages = numberOfOutcomes / MENU_SIZE;
-            }else{
-                max_pages = numberOfOutcomes / MENU_SIZE + 1;
-            }
         }
+        
+        outcomeListAdapter.setItemList(currentPack.getSortedOutcomes());
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.OUTCOME_LIST_MENU, 54, "&3&lOutcomes list");
         
-        int n = Integer.min((currentPack.getOutcomes().size() - MENU_SIZE*index), MENU_SIZE);
-        for(int i=0;i<n;i++){
-            inv.setItem(i, currentPack.getOutcome(i + index*MENU_SIZE).getItemToDisplay());
-        }
+        outcomeListAdapter.updateMenu(inv);
         
         ItemStack createOutcome = ItemBuilder.newItem(XMaterial.SLIME_BALL)
                 .withDisplayName("&aCreate new outcome")
@@ -110,10 +117,6 @@ public class OutcomeListMenu{
             inv.setItem(48, deleteOutcome);
         }
         
-        inv.setItem(51, GUIItem.getPreviousPageItem());
-        inv.setItem(52, GUIItem.getCurrentPageItem(index+1, max_pages));
-        inv.setItem(53, GUIItem.getNextPageItem());
-        
         GUIManager.setCurrentInventory(inv);
         p.openInventory(inv);
 //</editor-fold>
@@ -157,34 +160,32 @@ public class OutcomeListMenu{
                         }
                         break;
                     case 51:
-                        //Previous page
-                        if(max_pages > 1){
-                            index--;
-                            if(index < 0){
-                                index = max_pages - 1;
-                            }
+                        // Go to previous page
+                        if(outcomeListAdapter.goToPreviousPage()){
                             openOutcomeListMenu(p, currentPack);
                         }
                         break;
                     case 52:
-                        //Go to home page
-                        if(max_pages > 1){
-                            index = 0;
+                        // Go to main page
+                        if(outcomeListAdapter.goToMainPage()){
                             openOutcomeListMenu(p, currentPack);
                         }
                         break;
                     case 53:
-                        //Next page
-                        if(max_pages > 1){
-                            index++;
-                            if(index >= max_pages){
-                                index = 0;
-                            }
+                        // Go to next page
+                        if(outcomeListAdapter.goToNextPage()){
                             openOutcomeListMenu(p, currentPack);
                         }
                         break;
                     default:
-                        Outcome outcome = currentPack.getOutcome(e.getSlot() + index*MENU_SIZE);
+                        ItemStack stack = e.getCurrentItem();
+                        if(stack == null || stack.getType() == Material.AIR
+                                || !NBTEditor.contains(stack, OUTCOME_ID_TAG)){
+                            return;
+                        }
+                        
+                        int outcomeID = NBTEditor.getInt(stack, OUTCOME_ID_TAG);
+                        Outcome outcome = currentPack.getOutcome(outcomeID);
                         if(editMode){
                             //Edit outcome
                             /*FinishMenu.reset();
