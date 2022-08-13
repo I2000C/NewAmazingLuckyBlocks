@@ -55,7 +55,8 @@ public class EntityMenu{
             entityListAdapter = new GUIPagesAdapter<>(
                     ENTITY_LIST_MENU_SIZE,
                     (entityType, index) -> {
-                        ItemBuilder builder = ItemBuilder.newItem(XMaterial.GHAST_SPAWN_EGG);
+                        XMaterial material = EntityReward.getXMaterialFromEntityType(entityType);
+                        ItemBuilder builder = ItemBuilder.newItem(material);
                         builder.withDisplayName("&3" + entityType.name());
                         if(entityType.isAlive()){
                             builder.addLoreLine("&6Is living entity: &atrue");
@@ -105,7 +106,8 @@ public class EntityMenu{
         }
         ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.GHAST_SPAWN_EGG);
+        XMaterial material = EntityReward.getXMaterialFromEntityType(reward.getType());
+        ItemBuilder builder = ItemBuilder.newItem(material);
         if(reward.getType() == null){
             builder.withDisplayName("&6Select entityType");
         }else{

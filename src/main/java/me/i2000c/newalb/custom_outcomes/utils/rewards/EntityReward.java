@@ -89,9 +89,19 @@ public class EntityReward extends Reward{
         this.equipment = equipment;
     }
     
+    public static XMaterial getXMaterialFromEntityType(EntityType type){        
+        try{
+            String materialName = type.name() + "_SPAWN_EGG";
+            return XMaterial.valueOf(materialName);
+        }catch(Exception ex){
+            return XMaterial.GHAST_SPAWN_EGG;
+        }
+    }
+    
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.GHAST_SPAWN_EGG);
+        XMaterial material = getXMaterialFromEntityType(type);
+        ItemBuilder builder = ItemBuilder.newItem(material);
         builder.withDisplayName("&2Entity");
         builder.addLoreLine("&bID: &r" + entityID);
         builder.addLoreLine("&btype: &e" + Logger.stripColor(type.name()));
