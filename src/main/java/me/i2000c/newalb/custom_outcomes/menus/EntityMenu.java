@@ -101,7 +101,7 @@ public class EntityMenu{
     public static void openEntityMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new EntityReward(FinishMenu.getCurrentOutcome(), FinishMenu.getCurrentOutcome().getEntityRewardList().size());
+            reward = new EntityReward(FinishMenu.getCurrentOutcome(), FinishMenu.getCurrentOutcome().getEntityRewardsNumber());
             equipment = reward.getEquipment();
         }
         ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);

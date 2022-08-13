@@ -100,6 +100,7 @@ public class EntityReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         XMaterial material = getXMaterialFromEntityType(type);
         ItemBuilder builder = ItemBuilder.newItem(material);
         builder.withDisplayName("&2Entity");
@@ -109,7 +110,7 @@ public class EntityReward extends Reward{
             builder.addLoreLine("&bcustom-name: &cnull");
         }else{
             builder.addLoreLine("&bcustom-name: &r" + custom_name);
-        }        
+        }
         if(effects.isEmpty()){
             builder.addLoreLine("&beffects: &cnull");
         }else{
@@ -117,8 +118,8 @@ public class EntityReward extends Reward{
             effects.forEach((str) -> {
                 builder.addLoreLine("   " + str);
             });
-        }                   
-
+        }
+        
         if(equipment.isEmpty()){
             builder.addLoreLine("&bequipment: &cnull");
         }else{
@@ -160,10 +161,12 @@ public class EntityReward extends Reward{
         builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
         
         return builder.build();
+//</editor-fold>
     }
 
     @Override
     public void saveRewardIntoConfig(FileConfiguration config, String path){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         config.set(path + ".type", this.type.name());
         config.set(path + ".custom_name", this.custom_name);
         if(this.type.isAlive()){
@@ -194,12 +197,14 @@ public class EntityReward extends Reward{
                     }
                 }
             }
-        }        
+        }
         offset.saveToConfig(config, path + ".offset");
+//</editor-fold>
     }
     
     @Override
     public void loadRewardFromConfig(FileConfiguration config, String path){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         this.type = EntityType.valueOf(config.getString(path + ".type"));
         this.custom_name = config.getString(path + ".custom_name");
         if(this.type.isAlive()){
@@ -252,10 +257,12 @@ public class EntityReward extends Reward{
         if(config.contains(path + ".offset")){
             this.offset = new Offset(config, path + ".offset");
         }
+//</editor-fold>
     }
 
     @Override
     public void execute(Player player, Location location){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         Location target = this.offset.addToLocation(location.clone());
         try{
             this.lastSpawnedEntity = target.getWorld().spawnEntity(target, this.type);
@@ -283,7 +290,7 @@ public class EntityReward extends Reward{
                 int amplifier = Integer.parseInt(effectData[2]);
                 le.addPotionEffect(new PotionEffect(effectType, time, amplifier), true);
             }
-
+            
             if(!this.equipment.isEmpty()){
                 if(this.equipment.helmet != null){
                     le.getEquipment().setHelmet(this.equipment.helmet.clone());
@@ -302,6 +309,7 @@ public class EntityReward extends Reward{
                 }
             }
         }
+//</editor-fold>
     }
     
     @Override

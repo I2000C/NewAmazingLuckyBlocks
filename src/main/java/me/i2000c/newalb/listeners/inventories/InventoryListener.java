@@ -21,7 +21,7 @@ public class InventoryListener implements Listener{
     
     @EventHandler
     private static void onInventoryClick(InventoryClickEvent e){
-        if(e.getView() == null || e.getView().getTitle() == null || e.getClickedInventory() == null){
+        if(e.getView() == null || e.getView().getTitle() == null){
             return;
         }
         

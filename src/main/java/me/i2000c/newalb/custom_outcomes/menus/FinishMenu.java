@@ -8,7 +8,6 @@ import me.i2000c.newalb.custom_outcomes.utils.Executable;
 import me.i2000c.newalb.custom_outcomes.utils.Outcome;
 import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityTowerReward;
 import me.i2000c.newalb.custom_outcomes.utils.rewards.Reward;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
@@ -344,28 +343,17 @@ public class FinishMenu{
                         p.closeInventory();
                     }
                 }else if(editMode){
-                    try{
-                        Reward r = currentOutcome.getReward(rewardID).clone();
-                        rewardEditID = rewardID;
-                        r.edit(p);
-                    }catch(IndexOutOfBoundsException ex){
-                    }
+                    Reward r = currentOutcome.getReward(rewardID).clone();
+                    rewardEditID = rewardID;
+                    r.edit(p);
                 }else if(cloneMode){
-                    try{
-                        Reward r = currentOutcome.getReward(rewardID);
-                        if(r instanceof EntityTowerReward){
-                            
-                        }else if(r instanceof EntityReward){
-                            EntityReward er = (EntityReward) r.clone();
-                            er.setID(currentOutcome.getEntityRewardList().size());
-                            FinishMenu.currentOutcome.addReward(er);
-                            openFinishInventory(p);
-                        }else{
-                            FinishMenu.currentOutcome.addReward(r.clone());
-                            openFinishInventory(p);
-                        }
-                    }catch(IndexOutOfBoundsException ex){
+                    Reward reward = currentOutcome.getReward(rewardID).clone();
+                    if(reward instanceof EntityReward){
+                        EntityReward entityReward = (EntityReward) reward;
+                        entityReward.setID(currentOutcome.getEntityRewardsNumber());
                     }
+                    currentOutcome.addReward(reward);
+                    openFinishInventory(p);
                 }else if(delayMode){
                     if(rewardID < currentOutcome.getNumberOfRewards()){
                         DelayerMenu.reset();

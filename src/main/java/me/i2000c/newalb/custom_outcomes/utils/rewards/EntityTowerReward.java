@@ -9,11 +9,13 @@ import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityTowerReward extends Reward{
     public static final int PLAYER_ENTITY_ID = -1;
+    public static final int INVALID_ENTITY_ID = -2;
     private List<Integer> entityList;
     
     public EntityTowerReward(Outcome outcome){
@@ -28,17 +30,40 @@ public class EntityTowerReward extends Reward{
         this.entityList = new ArrayList(entityList);
     }
     
+    public static ItemStack getPlayerItem(){
+        return ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
+                .withDisplayName("&2Player")
+                .build();
+    }
+    public static EntityReward getPlayerEntityReward(){
+        EntityReward playerEntityReward = new EntityReward(null, PLAYER_ENTITY_ID){
+            @Override
+            public ItemStack getItemToDisplay(){
+                return getPlayerItem();
+            }
+        };
+        playerEntityReward.setType(EntityType.PLAYER);
+        
+        return playerEntityReward;
+    }
+    
     @Override
     public ItemStack getItemToDisplay(){
         ItemBuilder builder = ItemBuilder.newItem(XMaterial.ARMOR_STAND);
         builder.withDisplayName("&eEntityTower");
         
         StringBuilder stringBuilder = new StringBuilder();
-        if(!entityList.isEmpty()){
-            stringBuilder.append(entityList.get(0));            
-            for(int i=1; i<this.entityList.size(); i++){
-                stringBuilder.append(", ").append(entityList.get(i));
-            }
+        if(!entityList.isEmpty()){        
+            this.entityList.forEach(entityID -> {                
+                if(entityID == PLAYER_ENTITY_ID){
+                    stringBuilder.append("&2Player&r");
+                }else{
+                    stringBuilder.append(entityID);
+                }
+                stringBuilder.append(", ");
+            });
+            
+            stringBuilder.setLength(stringBuilder.length() - 2);
         }
         
         builder.addLoreLine("&3Entities: &r" + stringBuilder.toString());
@@ -48,15 +73,15 @@ public class EntityTowerReward extends Reward{
 
     @Override
     public void saveRewardIntoConfig(FileConfiguration config, String path){
-        String data = "";
-        for(int i=0;i<this.entityList.size();i++){
-            data += this.entityList.get(i);
-            if(i < this.entityList.size()-1){
-                data += ",";
-            }
+        StringBuilder stringBuilder = new StringBuilder();
+        this.entityList.forEach(entityID -> {
+            stringBuilder.append(entityID).append(",");
+        });
+        if(stringBuilder.length() > 0){
+            stringBuilder.setLength(stringBuilder.length() - 1);
         }
         
-        config.set(path, data);
+        config.set(path, stringBuilder.toString());
     }
     
     @Override
@@ -71,34 +96,22 @@ public class EntityTowerReward extends Reward{
     
     @Override
     public void execute(Player player, Location location){
+        List<Entity> entities = new ArrayList<>(this.entityList.size());
         for(int entityID : this.entityList){
             if(entityID == PLAYER_ENTITY_ID){
-                continue;
+                entities.add(player);
+            }else{
+                EntityReward entityReward = this.getOutcome().getEntityReward(entityID);
+                entityReward.execute(player, location);
+                entities.add(entityReward.lastSpawnedEntity);
             }
-            
-            EntityReward er = this.getOutcome().getEntityRewardList().get(entityID);
-            er.execute(player, location);
         }
+        
         for(int i=0;i<this.entityList.size()-1;i++){
-            int entityID1 = this.entityList.get(i);
-            int entityID2 = this.entityList.get(i+1);
-            Entity ent1, ent2;
+            Entity entity1 = entities.get(i);
+            Entity entity2 = entities.get(i+1);
             
-            if(entityID1 == PLAYER_ENTITY_ID){
-                ent1 = player;
-            }else{
-                EntityReward er1 = this.getOutcome().getEntityRewardList().get(entityID1);
-                ent1 = er1.lastSpawnedEntity;
-            }
-            
-            if(entityID2 == PLAYER_ENTITY_ID){
-                ent2 = player;
-            }else{
-                EntityReward er2 = this.getOutcome().getEntityRewardList().get(entityID2);
-                ent2 = er2.lastSpawnedEntity;
-            }
-            
-            ent1.setPassenger(ent2);
+            entity1.setPassenger(entity2);
         }
     }
     
