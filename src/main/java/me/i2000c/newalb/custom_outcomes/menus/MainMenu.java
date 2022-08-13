@@ -7,6 +7,7 @@ import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -59,7 +60,7 @@ public class MainMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 3:
                     //Open outcome packs menu

@@ -17,6 +17,7 @@ import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -144,7 +145,7 @@ public class LuckyBlockTypesMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 45:
                     //Back to main menu
@@ -393,7 +394,7 @@ public class LuckyBlockTypesMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 18:
                     //Back to previous menu
@@ -543,7 +544,7 @@ public class LuckyBlockTypesMenu{
                     e.setCancelled(false);
                     break;
             }
-        }else{
+        }else if(e.getLocation() == InventoryLocation.BOTTOM){
             // Click player inventory
             e.setCancelled(false);
         }
@@ -633,7 +634,7 @@ public class LuckyBlockTypesMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 45:
                     //Back to edit LuckyBlock type menu
@@ -741,7 +742,7 @@ public class LuckyBlockTypesMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             if(e.getSlot() == 45){
                 // Back to previous menu
                 openPackManageMenu(p);

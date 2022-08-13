@@ -1,17 +1,18 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
+import me.i2000c.newalb.custom_outcomes.utils.rewards.MessageReward;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.MessageReward;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class MessageMenu{
     public static MessageReward reward = null;
@@ -130,7 +131,7 @@ public class MessageMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
                     if(FinishMenu.editMode){

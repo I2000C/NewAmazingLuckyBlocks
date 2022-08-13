@@ -31,7 +31,7 @@ public class InventoryListener implements Listener{
             CustomInventoryType inventoryType = holder.getInventoryType();
             InventoryFunction function = inventoriesToNotify.get(inventoryType);
             if(function != null){
-                function.execute(e);
+                function.execute(new CustomInventoryClickEvent(e));
             }
         }
     }

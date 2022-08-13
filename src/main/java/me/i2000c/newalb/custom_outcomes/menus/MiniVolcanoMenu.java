@@ -8,6 +8,7 @@ import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -124,7 +125,7 @@ public class MiniVolcanoMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 18:
                     //Back
@@ -237,7 +238,7 @@ public class MiniVolcanoMenu{
                     openMiniVolcanoMenu(p);
                     break;
             }
-        }else{
+        }else if(e.getLocation() == InventoryLocation.BOTTOM){
             ItemStack stack = e.getCurrentItem();
             if(stack != null && stack.getType().isSolid()){
                 reward.setBaseMaterial(stack.getType());

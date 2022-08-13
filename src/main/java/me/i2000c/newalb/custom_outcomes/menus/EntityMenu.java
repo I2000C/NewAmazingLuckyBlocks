@@ -15,6 +15,7 @@ import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
@@ -180,7 +181,7 @@ public class EntityMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
 
             switch(e.getSlot()){
                 case 10:
@@ -265,7 +266,7 @@ public class EntityMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 45:
                     // Back
@@ -343,8 +344,7 @@ public class EntityMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
-
+        if(e.getLocation() == InventoryLocation.TOP){
             if(e.getSlot() == 45){
                 openEntityMenu(p);
                 return;
@@ -435,8 +435,7 @@ public class EntityMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
-
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
                     //Return to the previous menu
@@ -647,7 +646,7 @@ public class EntityMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             //Change the 'equipment_slot' depending on what slot has been clicked from {13, 22, 31, 40, 49}
             switch(e.getSlot()){
                 case 45:
@@ -684,7 +683,7 @@ public class EntityMenu{
                     openEntityMenu(p);
                     break;
             }
-        }else if(e.getClickedInventory().equals(e.getView().getBottomInventory())){
+        }else if(e.getLocation() == InventoryLocation.BOTTOM){
             if(equipment_slot != 0){
                 switch(equipment_slot){
                     case 13:

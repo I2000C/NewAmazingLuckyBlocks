@@ -13,6 +13,7 @@ import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
@@ -130,7 +131,7 @@ public class TrapMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
                     //Return to the previous menu
@@ -197,7 +198,7 @@ public class TrapMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             if(e.getSlot() == 0){
                 //Return to previous inventory
                 openTrapMenu(p);
@@ -241,7 +242,7 @@ public class TrapMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             if(e.getSlot() == 0){
                 //Return to previous inventory
                 openTrapMenu(p);
@@ -279,7 +280,7 @@ public class TrapMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 45:
                     // Return to previous inventory

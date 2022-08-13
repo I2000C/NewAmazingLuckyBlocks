@@ -13,6 +13,7 @@ import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -119,13 +120,11 @@ public class EntityTowerMenu{
     
     private static final InventoryFunction ENTITY_TOWER_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory towerInv = e.getView().getTopInventory();
-        
         Player p = (Player) e.getWhoClicked();
         
-        if(e.getClickedInventory() == null){
-            e.setCancelled(true);
-            e.setCurrentItem(null);
+        if(e.getLocation() == InventoryLocation.NONE){
+            e.setCursor(null);
+            e.setCancelled(true);            
             return;
         }
         
@@ -134,12 +133,14 @@ public class EntityTowerMenu{
             return;
         }
         
-        if(e.getClickedInventory().equals(e.getView().getBottomInventory())){
+        if(e.getLocation() == InventoryLocation.BOTTOM){
             if(e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR){
                 e.setCursor(null);
             }
             e.setCancelled(true);
-        }else if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        }else if(e.getLocation() == InventoryLocation.TOP){
+            Inventory towerInv = e.getView().getTopInventory();
+            
             switch(e.getSlot()){
                 case 7:
                 case 16:

@@ -12,6 +12,7 @@ import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.FilePicker;
 import me.i2000c.newalb.utils2.FilePickerEvent;
@@ -108,7 +109,7 @@ public class StructureMenu implements Listener{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 12:
                     //Toggle fromPlayer

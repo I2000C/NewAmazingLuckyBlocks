@@ -15,6 +15,7 @@ import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
@@ -132,7 +133,7 @@ public class ItemMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
-        if(e.getClickedInventory() == e.getView().getTopInventory()){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
                     if(FinishMenu.editMode){
@@ -167,13 +168,11 @@ public class ItemMenu{
                     Logger.sendMessage("&6Use &b/alb return &6to return to the menu", p);
                     break;
             }
-        }else{
-            if(e.getClickedInventory() == e.getView().getBottomInventory() && e.getClickedInventory().getType() == InventoryType.PLAYER){
-                if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                    reward.setItem(e.getCurrentItem().clone());
-                    amount = reward.getItem().getAmount();
-                    openItemMenu(p);
-                }
+        }else if(e.getLocation() == InventoryLocation.BOTTOM && e.getClickedInventory().getType() == InventoryType.PLAYER){
+            if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
+                reward.setItem(e.getCurrentItem().clone());
+                amount = reward.getItem().getAmount();
+                openItemMenu(p);
             }
         }
 //</editor-fold>
@@ -707,8 +706,7 @@ public class ItemMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
-            
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 15:
                     ChatListener.registerPlayer(p, message -> {
@@ -861,8 +859,7 @@ public class ItemMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
-
+        if(e.getLocation() == InventoryLocation.TOP){
             if(e.getSlot() == 45){
                 openItemMenu2(p);
                 return;
@@ -951,8 +948,7 @@ public class ItemMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
-
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
                     //Return to the previous menu

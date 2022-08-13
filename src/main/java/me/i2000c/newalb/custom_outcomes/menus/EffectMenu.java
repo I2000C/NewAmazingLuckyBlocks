@@ -11,6 +11,7 @@ import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
@@ -148,7 +149,7 @@ public class EffectMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             if(reward.isClearEffects() && e.getSlot() != 10 && e.getSlot() != 16 && e.getSlot() != 12 && e.getSlot() != 13 && e.getSlot() != 14){
                 return;
             }
@@ -358,7 +359,7 @@ public class EffectMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
 
             if(e.getSlot() == 45){
                 openEffectMenu(p);

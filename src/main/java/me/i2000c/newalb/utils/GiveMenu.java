@@ -1,17 +1,18 @@
 package me.i2000c.newalb.utils;
 
-import me.i2000c.newalb.listeners.interact.SpecialItemManager;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.List;
 import java.util.stream.Collectors;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.listeners.interact.SpecialItemManager;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Bukkit;
@@ -84,7 +85,7 @@ public class GiveMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             if(target == null){
                 target = p;
             }
@@ -154,7 +155,7 @@ public class GiveMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 51:
                     if(inventoryPage == 1){
@@ -228,7 +229,7 @@ public class GiveMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 18:
                     //Do nothing
@@ -282,7 +283,7 @@ public class GiveMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 16:
                     if(amount == 64){
@@ -352,7 +353,7 @@ public class GiveMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 16:
                     if(amount == 64){

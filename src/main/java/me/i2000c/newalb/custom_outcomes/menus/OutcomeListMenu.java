@@ -10,6 +10,7 @@ import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -127,7 +128,7 @@ public class OutcomeListMenu{
         Player p = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getClickedInventory().equals(e.getView().getTopInventory())){
+        if(e.getLocation() == InventoryLocation.TOP){
             if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 switch(e.getSlot()){
                     case 45:
