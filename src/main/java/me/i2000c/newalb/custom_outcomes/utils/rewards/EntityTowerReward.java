@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityTowerReward extends Reward{
+    public static final int PLAYER_ENTITY_ID = -1;
     private List<Integer> entityList;
     
     public EntityTowerReward(Outcome outcome){
@@ -71,17 +72,32 @@ public class EntityTowerReward extends Reward{
     @Override
     public void execute(Player player, Location location){
         for(int entityID : this.entityList){
+            if(entityID == PLAYER_ENTITY_ID){
+                continue;
+            }
+            
             EntityReward er = this.getOutcome().getEntityRewardList().get(entityID);
             er.execute(player, location);
         }
         for(int i=0;i<this.entityList.size()-1;i++){
             int entityID1 = this.entityList.get(i);
             int entityID2 = this.entityList.get(i+1);
-            EntityReward er1 = this.getOutcome().getEntityRewardList().get(entityID1);
-            EntityReward er2 = this.getOutcome().getEntityRewardList().get(entityID2);
+            Entity ent1, ent2;
             
-            Entity ent1 = er1.lastSpawnedEntity;
-            Entity ent2 = er2.lastSpawnedEntity;
+            if(entityID1 == PLAYER_ENTITY_ID){
+                ent1 = player;
+            }else{
+                EntityReward er1 = this.getOutcome().getEntityRewardList().get(entityID1);
+                ent1 = er1.lastSpawnedEntity;
+            }
+            
+            if(entityID2 == PLAYER_ENTITY_ID){
+                ent2 = player;
+            }else{
+                EntityReward er2 = this.getOutcome().getEntityRewardList().get(entityID2);
+                ent2 = er2.lastSpawnedEntity;
+            }
+            
             ent1.setPassenger(ent2);
         }
     }
