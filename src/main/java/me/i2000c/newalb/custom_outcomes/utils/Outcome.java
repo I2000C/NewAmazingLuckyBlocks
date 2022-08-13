@@ -33,7 +33,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Outcome implements Displayable, Executable{
+public class Outcome implements Displayable, Executable, Cloneable{
     private final OutcomePack pack;
     
     private String name;
@@ -418,25 +418,28 @@ public class Outcome implements Displayable, Executable{
                 .build();
     }
     
-    public Outcome cloneOutcome(){
-        Outcome outcome = new Outcome(this.name, this.probability, this.ID, this.pack);
-        outcome.icon = this.icon;
-        
-        outcome.entityRewardList = new ArrayList<>();
-        outcome.entityTowerRewardList = new ArrayList<>();
-        outcome.rewardList = new ArrayList<>();
-        
-        for(Reward reward : this.rewardList){
-            Reward clone = reward.clone();
-            outcome.rewardList.add(clone);
-            if(reward instanceof EntityReward){
-                outcome.entityRewardList.add((EntityReward) clone);
-            }else if(reward instanceof EntityTowerReward){
-                outcome.entityTowerRewardList.add((EntityTowerReward) clone);
-            }
+    @Override
+    @SuppressWarnings("CloneDeclaresCloneNotSupported")
+    public Outcome clone(){
+        try{
+            Outcome copy = (Outcome) super.clone();
+            copy.rewardList = new ArrayList<>();
+            copy.entityRewardList = new ArrayList<>();
+            copy.entityTowerRewardList = new ArrayList<>();            
+            
+            this.rewardList.forEach(reward -> {
+                Reward clone = reward.clone();
+                copy.rewardList.add(clone);
+                if(clone instanceof EntityReward){
+                    copy.entityRewardList.add((EntityReward) clone);
+                }else if(clone instanceof EntityTowerReward){
+                    copy.entityTowerRewardList.add((EntityTowerReward) clone);
+                }
+            });
+            return copy;
+        }catch(CloneNotSupportedException ex){
+            return null;
         }
-        
-        return outcome;
     }
     
     @Override

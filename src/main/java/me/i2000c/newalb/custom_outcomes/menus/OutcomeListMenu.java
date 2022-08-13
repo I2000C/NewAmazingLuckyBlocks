@@ -198,7 +198,7 @@ public class OutcomeListMenu{
                             GUIManager.newOutcome(p);*/
                         }else if(cloneMode){
                             //Clone outcome
-                            Outcome clone = outcome.cloneOutcome();
+                            Outcome clone = outcome.clone();
                             clone.setName(clone.getName() + " (clone)");
                             currentPack.addOutcome(clone, true);
                             openOutcomeListMenu(p, currentPack);
@@ -211,7 +211,7 @@ public class OutcomeListMenu{
                             //Edit outcome
                             FinishMenu.reset();
                             FinishMenu.setCurrentPack(currentPack);
-                            FinishMenu.setCurrentOutcome(outcome.cloneOutcome());
+                            FinishMenu.setCurrentOutcome(outcome.clone());
                             GUIManager.reset();
                             GUIManager.outcomeName = outcome.getName();
                             GUIManager.outcomeProb = outcome.getProbability();
