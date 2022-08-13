@@ -558,8 +558,14 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         Logger.sendMessage(message, sender);
                     });
                     return true;
+                }else if(args[1].equals("set")){
+                    Logger.sendMessage("&cUsage: &7/alb worlds set <world/*> <enabled/disabled>", sender);
+                    return false;
+                }else if(args[1].equals("toggle")){
+                    Logger.sendMessage("&cUsage: &7/alb worlds toggle <world/*>", sender);
+                    return false;
                 }else{
-                    Logger.sendMessage("&cUsage: &7/alb worlds list", sender);
+                    Logger.sendMessage("&cUsage: &7/alb worlds [list/set/toggle]", sender);
                     return false;
                 }
             case 3:
