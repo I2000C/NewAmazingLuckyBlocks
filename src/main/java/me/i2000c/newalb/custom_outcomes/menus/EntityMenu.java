@@ -310,12 +310,13 @@ public class EntityMenu{
     //EntityEffects inventory
     private static void openEntityEffectsInventory(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EFFECT_MENU_2, 54, "&d&lEffect List");
+        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENTITY_EFFECTS_MENU, 54, "&d&lEffect List");
         
-        List<PotionEffectType> effectTypes = Arrays.asList(PotionEffectType.values());
+        List<PotionEffectType> effectTypes = new ArrayList<>(Arrays.asList(PotionEffectType.values()));
+        effectTypes.removeIf(effectType -> effectType == null);
         effectTypes.sort((effectType1, effectType2) -> {
             String effectTypeName1 = effectType1.getName();
-            String effectTypeName2 = effectType2.getName();
+            String effectTypeName2 = effectType2.getName();            
             return effectTypeName1.compareTo(effectTypeName2);
         });
         
