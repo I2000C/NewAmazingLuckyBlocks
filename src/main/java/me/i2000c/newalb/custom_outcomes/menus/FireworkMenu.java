@@ -102,7 +102,7 @@ public class FireworkMenu{
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.FIREWORK_MENU, 27, "&b&lFirework Reward");
         
         if(reward == null){
-            reward = new FireworkReward(FinishMenu.getCurrentOutcome());
+            reward = new FireworkReward(RewardListMenu.getCurrentOutcome());
         }
         
         if(typeMaterial.isEmpty()){
@@ -208,8 +208,8 @@ public class FireworkMenu{
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 9:
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -286,9 +286,9 @@ public class FireworkMenu{
                 case 17:
                     //Open Finish Menu
                     if(!reward.getHEXColors().isEmpty()){
-                        FinishMenu.addReward(reward);
+                        RewardListMenu.addReward(reward);
                         reset();
-                        FinishMenu.openFinishInventory(p);
+                        RewardListMenu.openFinishInventory(p);
                     }
                     break;
             }

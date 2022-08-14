@@ -139,8 +139,8 @@ public class OutcomeListMenu{
                     case 46:
                         //Create outcome
                         if(!editMode && !cloneMode && !deleteMode){
-                            FinishMenu.reset();
-                            FinishMenu.setCurrentPack(currentPack);
+                            RewardListMenu.reset();
+                            RewardListMenu.setCurrentPack(currentPack);
                             GUIManager.reset();
                             GUIManager.editMode = false;
                             GUIManager.newOutcome(p);
@@ -210,9 +210,9 @@ public class OutcomeListMenu{
                             openOutcomeListMenu(p, currentPack);
                         }else{
                             //Edit outcome
-                            FinishMenu.reset();
-                            FinishMenu.setCurrentPack(currentPack);
-                            FinishMenu.setCurrentOutcome(outcome.clone());
+                            RewardListMenu.reset();
+                            RewardListMenu.setCurrentPack(currentPack);
+                            RewardListMenu.setCurrentOutcome(outcome.clone());
                             GUIManager.reset();
                             GUIManager.outcomeName = outcome.getName();
                             GUIManager.outcomeProb = outcome.getProbability();

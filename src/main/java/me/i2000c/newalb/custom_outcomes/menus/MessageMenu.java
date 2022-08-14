@@ -33,7 +33,7 @@ public class MessageMenu{
     public static void openMessageMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new MessageReward(FinishMenu.getCurrentOutcome());
+            reward = new MessageReward(RewardListMenu.getCurrentOutcome());
         }
         
         ItemStack glass = ItemBuilder.newItem(XMaterial.CYAN_STAINED_GLASS_PANE)
@@ -134,8 +134,8 @@ public class MessageMenu{
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -171,9 +171,9 @@ public class MessageMenu{
                     break;
                 case 16:
                     //Open next inventory
-                    FinishMenu.addReward(reward);
+                    RewardListMenu.addReward(reward);
                     reset();
-                    FinishMenu.openFinishInventory(p);
+                    RewardListMenu.openFinishInventory(p);
                     break;
             }
         }

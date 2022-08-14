@@ -64,7 +64,7 @@ public class EntityTowerMenu{
     public static void openEntityTowerMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new EntityTowerReward(FinishMenu.getCurrentOutcome());
+            reward = new EntityTowerReward(RewardListMenu.getCurrentOutcome());
         }
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENTITY_TOWER_MENU, 54, "&e&lEntityTower Reward");
@@ -83,7 +83,7 @@ public class EntityTowerMenu{
         inv.setItem(46, reset);
         inv.setItem(47, GUIItem.getNextItem());
         
-        List<EntityReward> entityRewardList = FinishMenu
+        List<EntityReward> entityRewardList = RewardListMenu
                 .getCurrentOutcome()
                 .getEntityRewards();
         for(int i=0; i<TOWER_SLOTS.length && i<reward.getEntityList().size(); i++){
@@ -175,8 +175,8 @@ public class EntityTowerMenu{
                 case 45:
                     //Back
                     e.setCancelled(true);
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -193,10 +193,10 @@ public class EntityTowerMenu{
                         return;
                     }
 
-                    FinishMenu.addReward(reward);
+                    RewardListMenu.addReward(reward);
                     reset();
                     //Open FinishMenu
-                    FinishMenu.openFinishInventory(p);
+                    RewardListMenu.openFinishInventory(p);
                     break;
                 default:
                     if((e.getSlot()+1) % 9 == 0){

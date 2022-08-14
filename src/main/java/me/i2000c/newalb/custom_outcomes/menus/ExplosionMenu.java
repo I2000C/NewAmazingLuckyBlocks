@@ -34,7 +34,7 @@ public class ExplosionMenu{
     public static void openExplosionMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new ExplosionReward(FinishMenu.getCurrentOutcome());
+            reward = new ExplosionReward(RewardListMenu.getCurrentOutcome());
         }
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.EXPLOSION_MENU, 36, "&4&lExplosion Reward");
@@ -96,17 +96,17 @@ public class ExplosionMenu{
             switch(e.getSlot()){
                 case 19:
                     //Return to the previous menu
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
                     break;
                 case 25:
                     //Open next menu
-                    FinishMenu.addReward(reward);
+                    RewardListMenu.addReward(reward);
                     reset();
-                    FinishMenu.openFinishInventory(p);
+                    RewardListMenu.openFinishInventory(p);
                     break;
                 case 21:
                     //Toggle with fire

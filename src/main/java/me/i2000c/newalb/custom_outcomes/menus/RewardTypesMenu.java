@@ -33,7 +33,7 @@ public class RewardTypesMenu{
         ItemBuilder builder = ItemBuilder.newItem(XMaterial.ARMOR_STAND);
         builder.withDisplayName("&eCreate EntityTower Rewards");
         
-        if(FinishMenu.getCurrentOutcome().getEntityRewardsNumber() < 1){
+        if(RewardListMenu.getCurrentOutcome().getEntityRewardsNumber() < 1){
             builder.addLoreLine("&cYou need to have created at least 1 entity");
             builder.addLoreLine("  &cin order to use this reward");
         }
@@ -139,7 +139,7 @@ public class RewardTypesMenu{
                     break;
                 case 3:
                     //Open entityTower inventory
-                    int availableEntities = FinishMenu.getCurrentOutcome().getEntityRewardsNumber();
+                    int availableEntities = RewardListMenu.getCurrentOutcome().getEntityRewardsNumber();
                     if(availableEntities >= 1){
                         EntityTowerMenu.reset();
                         EntityTowerMenu.openEntityTowerMenu(p);
@@ -209,7 +209,7 @@ public class RewardTypesMenu{
                     break;
                 case 18:
                     //Back to the previous menu
-                    FinishMenu.openFinishInventory(p);
+                    RewardListMenu.openFinishInventory(p);
                     break;
             }
         }

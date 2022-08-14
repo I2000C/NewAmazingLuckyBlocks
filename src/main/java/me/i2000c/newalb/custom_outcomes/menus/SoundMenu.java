@@ -80,7 +80,7 @@ public class SoundMenu{
     public static void openSoundMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new SoundReward(FinishMenu.getCurrentOutcome());
+            reward = new SoundReward(RewardListMenu.getCurrentOutcome());
         }
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.SOUND_MENU, 27, "&d&lSound Reward");
@@ -176,8 +176,8 @@ public class SoundMenu{
                     break;
                 case 10:
                     //Back
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -185,9 +185,9 @@ public class SoundMenu{
                 case 16:
                     //Next
                     if(reward.getType() != null){
-                        FinishMenu.addReward(reward);
+                        RewardListMenu.addReward(reward);
                         reset();
-                        FinishMenu.openFinishInventory(p);
+                        RewardListMenu.openFinishInventory(p);
                     }
                     break;
             }

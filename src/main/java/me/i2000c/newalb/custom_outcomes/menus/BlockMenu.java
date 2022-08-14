@@ -34,7 +34,7 @@ public class BlockMenu{
     public static void openBlockMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new BlockReward(FinishMenu.getCurrentOutcome());
+            reward = new BlockReward(RewardListMenu.getCurrentOutcome());
         }
                 
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.BLOCK_MENU, 45, "&d&lBlock Reward");
@@ -106,17 +106,17 @@ public class BlockMenu{
             switch(e.getSlot()){
                 case 10:
                     reset();
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
                     break;
                 case 16:
                     if(reward.getItemBlock() != null){
-                        FinishMenu.addReward(reward);
+                        RewardListMenu.addReward(reward);
                         reset();
-                        FinishMenu.openFinishInventory(p);
+                        RewardListMenu.openFinishInventory(p);
                     }
                     break;
                 case 12:

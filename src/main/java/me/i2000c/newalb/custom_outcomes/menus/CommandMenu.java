@@ -34,7 +34,7 @@ public class CommandMenu{
     public static void openCommandMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new CommandReward(FinishMenu.getCurrentOutcome());
+            reward = new CommandReward(RewardListMenu.getCurrentOutcome());
         }
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
@@ -94,8 +94,8 @@ public class CommandMenu{
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -115,9 +115,9 @@ public class CommandMenu{
                     try{
                         if(!reward.getCommand().equals("&6Write the command")){
                             //Open next inventory
-                            FinishMenu.addReward(reward);
+                            RewardListMenu.addReward(reward);
                             reset();
-                            FinishMenu.openFinishInventory(p);
+                            RewardListMenu.openFinishInventory(p);
                         }
                     }catch(Exception ex){
                     }

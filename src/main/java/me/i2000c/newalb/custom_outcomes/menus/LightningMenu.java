@@ -33,7 +33,7 @@ public class LightningMenu{
     public static void openLightningMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new LightningReward(FinishMenu.getCurrentOutcome());
+            reward = new LightningReward(RewardListMenu.getCurrentOutcome());
         }
                 
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.LIGHTNING_MENU, 27, "&e&lLightning Reward");
@@ -82,16 +82,16 @@ public class LightningMenu{
             switch(e.getSlot()){
                 case 10:
                     reset();
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
                     break;
                 case 16:
-                    FinishMenu.addReward(reward);
+                    RewardListMenu.addReward(reward);
                     reset();
-                    FinishMenu.openFinishInventory(p);
+                    RewardListMenu.openFinishInventory(p);
                     break;
                 case 12:
                     reward.setUsePlayerLoc(!reward.getUsePlayerLoc());

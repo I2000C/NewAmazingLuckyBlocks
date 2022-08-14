@@ -102,7 +102,7 @@ public class EntityMenu{
     public static void openEntityMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new EntityReward(FinishMenu.getCurrentOutcome(), FinishMenu.getCurrentOutcome().getEntityRewardsNumber());
+            reward = new EntityReward(RewardListMenu.getCurrentOutcome(), RewardListMenu.getCurrentOutcome().getEntityRewardsNumber());
             equipment = reward.getEquipment();
         }
         ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
@@ -185,8 +185,8 @@ public class EntityMenu{
 
             switch(e.getSlot()){
                 case 10:
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -226,9 +226,9 @@ public class EntityMenu{
                         reward.setEffects(new ArrayList());
                         reward.getEquipment().resetEquipment();
                     }
-                    FinishMenu.addReward(reward);
+                    RewardListMenu.addReward(reward);
                     reset();
-                    FinishMenu.openFinishInventory(p);
+                    RewardListMenu.openFinishInventory(p);
                     break;
                 case 21:
                     reward.setCustom_name(null);

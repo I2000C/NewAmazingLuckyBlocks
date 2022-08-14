@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class FinishMenu{
+public class RewardListMenu{
     public static final Map<Player, Executable> testRewardsPlayerList = new HashMap<>();
     
     private static int rewardEditID = -1;

@@ -33,7 +33,7 @@ public class DarkHoleMenu{
     public static void openDarkHoleMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new DarkHoleReward(FinishMenu.getCurrentOutcome());
+            reward = new DarkHoleReward(RewardListMenu.getCurrentOutcome());
         }
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.DARK_HOLE_MENU, 45, "&0&lDarkHole Rewards");
@@ -118,17 +118,17 @@ public class DarkHoleMenu{
                 case 18:
                     //Back
                     reset();
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
                     break;
                 case 26:
                     //Next
-                    FinishMenu.addReward(reward);
+                    RewardListMenu.addReward(reward);
                     reset();
-                    FinishMenu.openFinishInventory(p);
+                    RewardListMenu.openFinishInventory(p);
                     break;
                 //<editor-fold defaultstate="collapsed" desc="Depth">
                 case 10:

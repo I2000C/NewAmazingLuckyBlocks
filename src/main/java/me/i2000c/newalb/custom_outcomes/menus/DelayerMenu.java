@@ -120,7 +120,7 @@ public class DelayerMenu{
                     reward.setDelay(delayValue);
                 case 10:
                     reset();
-                    FinishMenu.openFinishInventory(p);
+                    RewardListMenu.openFinishInventory(p);
                     break;
             }
         }

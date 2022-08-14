@@ -36,7 +36,7 @@ public class BlockReplacingSphereMenu{
     public static void openBRSMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new BlockReplacingSphereReward(FinishMenu.getCurrentOutcome());
+            reward = new BlockReplacingSphereReward(RewardListMenu.getCurrentOutcome());
         }
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.BLOCK_REPLACING_SPHERE_MENU, 54, "&b&lBRS Reward");
@@ -140,8 +140,8 @@ public class BlockReplacingSphereMenu{
             switch(e.getSlot()){
                 case 10:
                     //Return to the previous menu
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -149,9 +149,9 @@ public class BlockReplacingSphereMenu{
                 case 16:
                     //Open next menu
                     if(!reward.emptyMaterialList()){
-                        FinishMenu.addReward(reward);
+                        RewardListMenu.addReward(reward);
                         reset();
-                        FinishMenu.openFinishInventory(p);
+                        RewardListMenu.openFinishInventory(p);
                     }
                     break;
                 case 12:

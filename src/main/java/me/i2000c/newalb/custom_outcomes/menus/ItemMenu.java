@@ -84,7 +84,7 @@ public class ItemMenu{
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.ITEM_MENU, 27, "&b&lItem Reward");
         
         if(reward == null){
-            reward = new ItemReward(FinishMenu.getCurrentOutcome());
+            reward = new ItemReward(RewardListMenu.getCurrentOutcome());
         }
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
@@ -136,8 +136,8 @@ public class ItemMenu{
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -371,9 +371,9 @@ public class ItemMenu{
                 break;
             case 17:
                 //Finish Menu
-                FinishMenu.addReward(reward);
+                RewardListMenu.addReward(reward);
                 reset();
-                FinishMenu.openFinishInventory(p);
+                RewardListMenu.openFinishInventory(p);
                 break;
             case 31:
                 //Reset custom name

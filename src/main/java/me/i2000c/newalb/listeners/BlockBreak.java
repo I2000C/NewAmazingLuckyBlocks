@@ -1,7 +1,7 @@
 package me.i2000c.newalb.listeners;
 
 import java.util.Random;
-import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
+import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.utils.Executable;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
 import me.i2000c.newalb.utils.ConfigManager;
@@ -28,7 +28,7 @@ public class BlockBreak implements Listener{
         Player p = e.getPlayer();
         World w = p.getWorld();
         
-        Executable exec = FinishMenu.testRewardsPlayerList.get(p);
+        Executable exec = RewardListMenu.testRewardsPlayerList.get(p);
         if(exec != null){
             b.setType(Material.AIR);
             exec.execute(p, loc);

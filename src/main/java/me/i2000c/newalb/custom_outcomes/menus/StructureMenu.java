@@ -42,7 +42,7 @@ public class StructureMenu implements Listener{
     public static void openStructureMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new StructureReward(FinishMenu.getCurrentOutcome());
+            reward = new StructureReward(RewardListMenu.getCurrentOutcome());
         }
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.STRUCTURE_MENU, 27, "&3&lStructure Reward");
@@ -156,8 +156,8 @@ public class StructureMenu implements Listener{
                     break;
                 case 10:
                     //Back
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -165,9 +165,9 @@ public class StructureMenu implements Listener{
                 case 16:
                     //Next
                     if(reward.getSchematicName()!= null){
-                        FinishMenu.addReward(reward);
+                        RewardListMenu.addReward(reward);
                         reset();
-                        FinishMenu.openFinishInventory(p);
+                        RewardListMenu.openFinishInventory(p);
                     }
                     break;
             }

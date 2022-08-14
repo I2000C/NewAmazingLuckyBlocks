@@ -45,7 +45,7 @@ public class GUIManager{
             inventoriesRegistered = true;
         }
         
-        outcomeName = "New outcome " + FinishMenu.getCurrentPack().getOutcomes().size();
+        outcomeName = "New outcome " + RewardListMenu.getCurrentPack().getOutcomes().size();
         outcomeProb = 100;
         outcomeIcon = Outcome.getDefaultIcon();
         
@@ -117,8 +117,8 @@ public class GUIManager{
                 case 10:
                     //Back
                     reset();
-                    OutcomeListMenu.openOutcomeListMenu(p, FinishMenu.getCurrentPack());
-                    FinishMenu.reset();
+                    OutcomeListMenu.openOutcomeListMenu(p, RewardListMenu.getCurrentPack());
+                    RewardListMenu.reset();
                     break;
                 case 12:
                     ChatListener.registerPlayer(p, message -> {
@@ -148,18 +148,18 @@ public class GUIManager{
                         //Open next inventory
                         if(editMode){
                             editMode = false;
-                            FinishMenu.getCurrentOutcome().setName(outcomeName);
-                            FinishMenu.getCurrentOutcome().setProbability(outcomeProb);
+                            RewardListMenu.getCurrentOutcome().setName(outcomeName);
+                            RewardListMenu.getCurrentOutcome().setProbability(outcomeProb);
                         }else{
-                            if(FinishMenu.getCurrentOutcome() == null){
-                                FinishMenu.setCurrentOutcome(new Outcome(outcomeName, outcomeProb, -1, FinishMenu.getCurrentPack()));
+                            if(RewardListMenu.getCurrentOutcome() == null){
+                                RewardListMenu.setCurrentOutcome(new Outcome(outcomeName, outcomeProb, -1, RewardListMenu.getCurrentPack()));
                             }else{
-                                FinishMenu.getCurrentOutcome().setName(outcomeName);
-                                FinishMenu.getCurrentOutcome().setProbability(outcomeProb);
+                                RewardListMenu.getCurrentOutcome().setName(outcomeName);
+                                RewardListMenu.getCurrentOutcome().setProbability(outcomeProb);
                             }
                         }
-                        FinishMenu.getCurrentOutcome().setIcon(outcomeIcon);
-                        FinishMenu.openFinishInventory(p);
+                        RewardListMenu.getCurrentOutcome().setIcon(outcomeIcon);
+                        RewardListMenu.openFinishInventory(p);
                         reset();
                     }
                     break;

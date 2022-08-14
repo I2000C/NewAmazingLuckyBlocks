@@ -74,7 +74,7 @@ public class TrapMenu{
     public static void openTrapMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new TrapReward(FinishMenu.getCurrentOutcome());
+            reward = new TrapReward(RewardListMenu.getCurrentOutcome());
         }
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_MENU, 27, "&5&lTrap Reward");
@@ -135,8 +135,8 @@ public class TrapMenu{
             switch(e.getSlot()){
                 case 10:
                     //Return to the previous menu
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
@@ -144,9 +144,9 @@ public class TrapMenu{
                 case 16:
                     //Open next menu
                     if(reward.getTrapName() != null && reward.getTrapOutcome() != null){
-                        FinishMenu.addReward(reward);
+                        RewardListMenu.addReward(reward);
                         reset();
-                        FinishMenu.openFinishInventory(p);
+                        RewardListMenu.openFinishInventory(p);
                     }
                     break;
                 case 12:

@@ -34,7 +34,7 @@ public class MiniVolcanoMenu{
     public static void openMiniVolcanoMenu(Player p){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(reward == null){
-            reward = new MiniVolcanoReward(FinishMenu.getCurrentOutcome());
+            reward = new MiniVolcanoReward(RewardListMenu.getCurrentOutcome());
         }
         
         Inventory inv = GUIFactory.createInventory(CustomInventoryType.MINI_VOLCANO_MENU, 45, "&c&lMiniVolcano Rewards");
@@ -130,17 +130,17 @@ public class MiniVolcanoMenu{
                 case 18:
                     //Back
                     reset();
-                    if(FinishMenu.editMode){
-                        FinishMenu.openFinishInventory(p);
+                    if(RewardListMenu.editMode){
+                        RewardListMenu.openFinishInventory(p);
                     }else{
                         RewardTypesMenu.openRewardTypesMenu(p);
                     }
                     break;
                 case 26:
                     //Next
-                    FinishMenu.addReward(reward);
+                    RewardListMenu.addReward(reward);
                     reset();
-                    FinishMenu.openFinishInventory(p);
+                    RewardListMenu.openFinishInventory(p);
                     break;
                 //<editor-fold defaultstate="collapsed" desc="Height">
                 case 11:

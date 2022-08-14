@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
+import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.menus.GUIManager;
 import me.i2000c.newalb.custom_outcomes.menus.MainMenu;
 import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
@@ -344,7 +344,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 
         LocationManager.saveLocations();
 
-        FinishMenu.testRewardsPlayerList.clear();
+        RewardListMenu.testRewardsPlayerList.clear();
 
         String reload1 = LangLoader.getMessages().getString("Reload.line1");
         String reload2 = LangLoader.getMessages().getString("Reload.line2");
@@ -490,7 +490,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             confirmMenu = true;
         }
         
-        FinishMenu.testRewardsPlayerList.remove(player);
+        RewardListMenu.testRewardsPlayerList.remove(player);
         ChatListener.removePlayer(player);
                 
         //Open main menu
@@ -512,7 +512,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         Player player = (Player) sender;
-        FinishMenu.testRewardsPlayerList.remove(player);
+        RewardListMenu.testRewardsPlayerList.remove(player);
         ChatListener.removePlayer(player);
         
         if(GUIManager.getCurrentInventory() == null){

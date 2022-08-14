@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import me.i2000c.newalb.custom_outcomes.menus.FinishMenu;
+import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
 import me.i2000c.newalb.custom_outcomes.utils.PackManager;
 import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
@@ -124,7 +124,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
     @Override
     public void onDisable(){
         if(minecraftVersion != null){
-            FinishMenu.testRewardsPlayerList.clear();
+            RewardListMenu.testRewardsPlayerList.clear();
             LocationManager.saveLocations();
         }
         Logger.log(LangLoader.getMessages().getString("Disable.line1").replace("%prefix%", ""));
