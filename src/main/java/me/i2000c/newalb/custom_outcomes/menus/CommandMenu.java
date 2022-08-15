@@ -1,49 +1,48 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.CommandReward;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.CommandReward;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class CommandMenu{ 
-    public static CommandReward reward = null;
-    
-    private static boolean inventoriesRegistered = false;
-    
-    public static void reset(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.COMMAND_MENU, COMMAND_MENU_FUNCTION);
-            
-            inventoriesRegistered = true;
-        }
-        
-        reward = null;
+public class CommandMenu extends Editor<CommandReward>{
+    public CommandMenu(){
+        InventoryListener.registerInventory(CustomInventoryType.COMMAND_MENU, COMMAND_MENU_FUNCTION);
     }
     
-    public static void openCommandMenu(Player p){
+    @Override
+    protected void newItem(Player player){
+        Outcome outcome = RewardListMenu.getCurrentOutcome();
+        item = new CommandReward(outcome);
+        openCommandMenu(player);
+    }
+
+    @Override
+    protected void editItem(Player player){
+        openCommandMenu(player);
+    }
+    
+    public void openCommandMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(reward == null){
-            reward = new CommandReward(RewardListMenu.getCurrentOutcome());
-        }
-        
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
         ItemBuilder builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
-        if(reward.getCommand() == null){
+        if(item.getCommand() == null){
             builder.withDisplayName("&6Command selected: &cnull");
         }else{
-            builder.withDisplayName("&6Command selected: &r/" + reward.getCommand());
+            builder.withDisplayName("&6Command selected: &r/" + item.getCommand());
         }
         builder.addLoreLine("&7Click here and then, write the command");
         builder.addLoreLine("");
@@ -55,7 +54,7 @@ public class CommandMenu{
         builder.addLoreLine("&7  to use the LuckyBlock's coordinates");
         ItemStack cmd_item = builder.build();
                 
-        if(reward.getSenderIsPlayer()){
+        if(item.getSenderIsPlayer()){
             builder = ItemBuilder.newItem(XMaterial.PLAYER_HEAD);
             builder.withDisplayName("&dSender: &2Player");
         }else{
@@ -65,61 +64,49 @@ public class CommandMenu{
         builder.addLoreLine("&3Click to toggle");
         ItemStack sender_item = builder.build();
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.COMMAND_MENU, 27, "&7&lCommand Reward");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.COMMAND_MENU, 27, "&7&lCommand Reward");
         for(int i=0;i<9;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         for(int i=18;i<27;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
-        inv.setItem(9, glass);
-        inv.setItem(17, glass);
+        menu.setItem(9, glass);
+        menu.setItem(17, glass);
         
-        inv.setItem(11, sender_item);
-        inv.setItem(13, cmd_item);
-        inv.setItem(10, GUIItem.getBackItem());
-        inv.setItem(16, GUIItem.getNextItem());
+        menu.setItem(11, sender_item);
+        menu.setItem(13, cmd_item);
+        menu.setItem(10, GUIItem.getBackItem());
+        menu.setItem(16, GUIItem.getNextItem());
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
-    }
+    }    
     
-    
-    private static final InventoryFunction COMMAND_MENU_FUNCTION = e -> {
+    private final InventoryFunction COMMAND_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
-                    if(RewardListMenu.editMode){
-                        RewardListMenu.openFinishInventory(p);
-                    }else{
-                        RewardTypesMenu.openRewardTypesMenu(p);
-                    }
+                    onBack.accept(player);
                     break;
                 case 11:
-                    reward.setSenderIsPlayer(!reward.getSenderIsPlayer());
-                    openCommandMenu(p);
+                    item.setSenderIsPlayer(!item.getSenderIsPlayer());
+                    openCommandMenu(player);
                     break;
                 case 13:
-                    ChatListener.registerPlayer(p, message -> {
-                        reward.setCommand(message);
-                        openCommandMenu(p);
+                    ChatListener.registerPlayer(player, message -> {
+                        item.setCommand(message);
+                        openCommandMenu(player);
                     });
-                    p.closeInventory();
+                    player.closeInventory();
                     break;
                 case 16:
-                    try{
-                        if(!reward.getCommand().equals("&6Write the command")){
-                            //Open next inventory
-                            RewardListMenu.addReward(reward);
-                            reset();
-                            RewardListMenu.openFinishInventory(p);
-                        }
-                    }catch(Exception ex){
+                    if(item.getCommand() != null){
+                        onNext.accept(player, item);
                     }
                     break;
             }

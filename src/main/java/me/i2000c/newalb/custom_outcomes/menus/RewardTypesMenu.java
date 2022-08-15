@@ -2,21 +2,37 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.editor.EditorType;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class RewardTypesMenu{
-    public static void openRewardTypesMenu(Player p){
+public class RewardTypesMenu extends Editor<Editor>{
+    public RewardTypesMenu(){
+        InventoryListener.registerInventory(CustomInventoryType.REWARD_TYPES_MENU, REWARD_TYPES_MENU_FUNCTION);
+    }
+    
+    @Override
+    public void newItem(Player player){
+        openRewardTypesMenu(player);
+    }
+    
+    @Override
+    public void editItem(Player player){
+        throw new UnsupportedOperationException();
+    }
+    
+    private void openRewardTypesMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.REWARD_TYPES_MENU, 27, "&2&lSelect reward type");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.REWARD_TYPES_MENU, 27, "&2&lSelect reward type");
         
         ItemStack stack = ItemBuilder.newItem(XMaterial.IRON_INGOT)
                 .withDisplayName("&aCreate Item rewards")
@@ -90,127 +106,123 @@ public class RewardTypesMenu{
                 .withDisplayName("&5Create trap rewards")
                 .build();
         
-        inv.setItem(0, stack);
-        inv.setItem(1, stack2);
-        inv.setItem(2, stack3);
-        inv.setItem(3, stack4);
-        inv.setItem(4, stack5);
-        inv.setItem(5, stack6);
-        inv.setItem(6, stack7);
-        inv.setItem(7, stack8);
-        inv.setItem(8, stack9);
-        inv.setItem(9, stack10);
-        inv.setItem(10, stack11);
-        inv.setItem(11, stack12);
-        inv.setItem(12, stack13);
-        inv.setItem(13, stack14);
-        inv.setItem(14, stack15);
-        inv.setItem(15, stack16);
+        menu.setItem(0, stack);
+        menu.setItem(1, stack2);
+        menu.setItem(2, stack3);
+        menu.setItem(3, stack4);
+        menu.setItem(4, stack5);
+        menu.setItem(5, stack6);
+        menu.setItem(6, stack7);
+        menu.setItem(7, stack8);
+        menu.setItem(8, stack9);
+        menu.setItem(9, stack10);
+        menu.setItem(10, stack11);
+        menu.setItem(11, stack12);
+        menu.setItem(12, stack13);
+        menu.setItem(13, stack14);
+        menu.setItem(14, stack15);
+        menu.setItem(15, stack16);
         
-        inv.setItem(18, GUIItem.getBackItem());
+        menu.setItem(18, GUIItem.getBackItem());
         
-        InventoryListener.registerInventory(CustomInventoryType.REWARD_TYPES_MENU, REWARD_TYPES_MENU_FUNCTION);
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction REWARD_TYPES_MENU_FUNCTION = e -> {
+    private final InventoryFunction REWARD_TYPES_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
-        if(e.getLocation() == InventoryLocation.TOP){            
+        if(e.getLocation() == InventoryLocation.TOP){
+            EditorType type = null;
             switch(e.getSlot()){
-                case 0:
-                    //Open item inventory
-                    ItemMenu.reset();
-                    ItemMenu.openItemMenu(p);
-                    break;
-                case 1:
-                    //Open command inventory
-                    CommandMenu.reset();
-                    CommandMenu.openCommandMenu(p);
-                    break;
-                case 2:
-                    //Open entity inventory
-                    EntityMenu.reset();
-                    EntityMenu.openEntityMenu(p);
-                    break;
-                case 3:
-                    //Open entityTower inventory
-                    int availableEntities = RewardListMenu.getCurrentOutcome().getEntityRewardsNumber();
-                    if(availableEntities >= 1){
-                        EntityTowerMenu.reset();
-                        EntityTowerMenu.openEntityTowerMenu(p);
-                    }
-                    break;
-                case 4:
-                    //Open firework inventory
-                    FireworkMenu.reset();
-                    FireworkMenu.openFireworkMenu(p);
-                    break;
-                case 5:
-                    //Open sound inventory
-                    SoundMenu.reset();
-                    SoundMenu.openSoundMenu(p);
-                    break;
-                case 6:
-                    //Open structure inventory
-                    if(NewAmazingLuckyBlocks.getWorldEditPlugin() != null){
-                        StructureMenu.reset();
-                        StructureMenu.openStructureMenu(p);
-                    }
-                    break;
-                case 7:
-                    //Open block inventory
-                    BlockMenu.reset();
-                    BlockMenu.openBlockMenu(p);
-                    break;
-                case 8:
-                    //Open lightning inventory
-                    LightningMenu.reset();
-                    LightningMenu.openLightningMenu(p);
-                    break;
-                case 9:
-                    //Open dark hole inventory
-                    DarkHoleMenu.reset();
-                    DarkHoleMenu.openDarkHoleMenu(p);
-                    break;
-                case 10:
-                    //Open mini volcano inventory
-                    MiniVolcanoMenu.reset();
-                    MiniVolcanoMenu.openMiniVolcanoMenu(p);
-                    break;
-                case 11:
-                    //Open message inventory
-                    MessageMenu.reset();
-                    MessageMenu.openMessageMenu(p);
-                    break;
-                case 12:
-                    //Open effect inventory
-                    EffectMenu.reset();
-                    EffectMenu.openEffectMenu(p);
-                    break;
-                case 13:
-                    //Open explosion inventory
-                    ExplosionMenu.reset();
-                    ExplosionMenu.openExplosionMenu(p);
-                    break;
-                case 14:
-                    //Open block replacing sphere inventory
-                    BlockReplacingSphereMenu.reset();
-                    BlockReplacingSphereMenu.openBRSMenu(p);
-                    break;
-                case 15:
-                    //Open trap inventory
-                    TrapMenu.reset();
-                    TrapMenu.openTrapMenu(p);
-                    break;
                 case 18:
                     //Back to the previous menu
-                    RewardListMenu.openFinishInventory(p);
+                    onBack.accept(player);
+                    return;
+                case 0:
+                    // item reward editor
+                    type = EditorType.ITEM_REWARD;
                     break;
+                case 1:
+                    // command reward editor
+                    type = EditorType.COMMAND_REWARD;
+                    break;
+                case 2:
+                    // entity reward editor
+                    type = EditorType.ENTITY_REWARD;
+                    break;
+                case 3:
+                    // entityTower reward editor
+                    int availableEntities = RewardListMenu.getCurrentOutcome().getEntityRewardsNumber();
+                    if(availableEntities < 1){
+                        break;
+                    }
+                    
+                    type = EditorType.ENTITY_TOWER_REWARD;
+                    break;
+                case 4:
+                    // firework reward editor
+                    type = EditorType.FIREWORK_REWARD;
+                    break;
+                case 5:
+                    // sound reward editor
+                    type = EditorType.SOUND_REWARD;
+                    break;
+                case 6:
+                    // structure reward editor
+                    if(NewAmazingLuckyBlocks.getWorldEditPlugin() == null){
+                        break;
+                    }
+                    
+                    type = EditorType.STRUCTURE_REWARD;
+                    break;
+                case 7:
+                    // block reward editor
+                    type = EditorType.BLOCK_REWARD;
+                    break;
+                case 8:
+                    // lightning reward editor
+                    type = EditorType.LIGHTNING_REWARD;
+                    break;
+                case 9:
+                    // dark hole reward editor
+                    type = EditorType.DARK_HOLE_REWARD;
+                    break;
+                case 10:
+                    // mini volcano reward editor
+                    type = EditorType.MINI_VOLCANO_REWARD;
+                    break;
+                case 11:
+                    // message reward editor
+                    type = EditorType.MESSAGE_REWARD;
+                    break;
+                case 12:
+                    // effect reward editor
+                    type = EditorType.EFFECT_REWARD;
+                    EffectMenu.setShowClearEffectsItem(true);
+                    break;
+                case 13:
+                    // explosion reward editor
+                    type = EditorType.EXPLOSION_REWARD;
+                    break;
+                case 14:
+                    // block replacing sphere reward editor
+                    type = EditorType.BLOCK_REPLACING_SPHERE_REWARD;
+                    break;
+                case 15:
+                    // trap reward editor
+                    type = EditorType.TRAP_REWARD;
+                    break;                
+            }
+            
+            if(type != null){
+                Editor editor = type.getEditor();
+                editor.createNewItem(
+                        player, 
+                        p -> openRewardTypesMenu(p), 
+                        onNext);
             }
         }
 //</editor-fold>

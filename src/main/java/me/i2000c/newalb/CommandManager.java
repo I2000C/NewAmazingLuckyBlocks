@@ -5,17 +5,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.menus.GUIManager;
-import me.i2000c.newalb.custom_outcomes.menus.MainMenu;
-import me.i2000c.newalb.custom_outcomes.utils.LuckyBlockType;
-import me.i2000c.newalb.custom_outcomes.utils.PackManager;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
+import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
+import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
+import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
+import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapManager;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItemManager;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
 import me.i2000c.newalb.utils.LocationManager;
@@ -328,7 +330,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return false;
         }
         
-        GUIManager.setCurrentInventory(null);
+        GUIManager.setCurrentMenu(null);
 
         ConfigManager.reloadConfig();
         ConfigManager.saveConfig();
@@ -482,8 +484,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         Player player = (Player) sender;
         if(confirmMenu && ConfigManager.getConfig().getBoolean("Enable-openMenu-confirmation")){
             Logger.sendMessage(LangLoader.getMessages().getString("MenuConfirmation.line1"), sender);
-            Logger.sendMessage(LangLoader.getMessages().getString("MenuConfirmation.line2"), sender);
-            Logger.sendMessage(LangLoader.getMessages().getString("MenuConfirmation.line3"), sender);
+            Logger.sendMessage(LangLoader.getMessages().getString("MenuConfirmation.line2"), sender, false);
+            Logger.sendMessage(LangLoader.getMessages().getString("MenuConfirmation.line3"), sender, false);
             confirmMenu = false;
             return false;
         }else{
@@ -494,8 +496,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         ChatListener.removePlayer(player);
                 
         //Open main menu
-        MainMenu.reset();
-        MainMenu.openMainMenu(player);
+        Editor editor = EditorType.MAIN_MENU.getEditor();
+        editor.createNewItem(player, p -> {
+            GUIManager.setCurrentMenu(null);
+            p.closeInventory();
+        }, null);
         
         return true;
 //</editor-fold>
@@ -515,12 +520,13 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         RewardListMenu.testRewardsPlayerList.remove(player);
         ChatListener.removePlayer(player);
         
-        if(GUIManager.getCurrentInventory() == null){
+        Menu currentMenu = GUIManager.getCurrentMenu();
+        if(currentMenu == null){
             Logger.sendMessage("&cYou haven't opened any menu recently", sender);
             return false;
         }else{
             confirmMenu = true;
-            player.openInventory(GUIManager.getCurrentInventory());
+            currentMenu.openToPlayer(player, false);
             return true;
         }
 //</editor-fold>

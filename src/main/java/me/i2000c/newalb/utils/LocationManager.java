@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

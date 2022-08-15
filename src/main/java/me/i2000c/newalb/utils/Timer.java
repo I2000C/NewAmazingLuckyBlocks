@@ -111,7 +111,7 @@ public class Timer implements Listener{
     public void executeMiniVolcano(Player player, Location location){
         int height = ConfigManager.getConfig().getInt("Objects.MiniVolcano.height");
         
-        Material baseMaterial = Material.getMaterial(ConfigManager.getConfig().getString("Objects.MiniVolcano.base-material"));
+        ItemStack baseMaterial = OtherUtils.parseMaterial(ConfigManager.getConfig().getString("Objects.MiniVolcano.base-material"));
         Material lavaMaterial = Material.getMaterial(ConfigManager.getConfig().getString("Objects.MiniVolcano.lava-material"));
         
         long ticks = ConfigManager.getConfig().getLong("Objects.MiniVolcano.time-between-one-block-and-the-next");
@@ -120,7 +120,7 @@ public class Timer implements Listener{
         boolean throwBlocks = ConfigManager.getConfig().getBoolean("Objects.MiniVolcano.throwBlocks.enable");
         executeMiniVolcano(player, location, height, baseMaterial, lavaMaterial, ticks, before_ticks, false, throwBlocks);
     }
-    public void executeMiniVolcano(Player player, Location location, int height, Material baseMaterial, Material lavaMaterial, long ticks, long before_ticks, boolean squared, boolean throwBlocks){
+    public void executeMiniVolcano(Player player, Location location, int height, ItemStack baseMaterial, Material lavaMaterial, long ticks, long before_ticks, boolean squared, boolean throwBlocks){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Sound sound = XSound.ENTITY_TNT_PRIMED.parseSound();
         Effect effect;
@@ -147,7 +147,7 @@ public class Timer implements Listener{
             
             Location loc = null;
             
-            HashMap<Location,Material> block_list = new HashMap<>();
+            HashMap<Location, ItemStack> block_list = new HashMap<>();
             
             @Override
             public void run(){
@@ -158,7 +158,7 @@ public class Timer implements Listener{
                     loc = new Location(location.getWorld(), x, y, z);
                     
                     loc.getBlock().setType(lavaMaterial);
-                    block_list.put(loc, lavaMaterial);
+                    block_list.put(loc, new ItemStack(lavaMaterial));
                 }else if(floor >= height+1){
                     this.cancel();  
                     if(throwBlocks){
@@ -166,9 +166,9 @@ public class Timer implements Listener{
                     }
                 }else{
                     for(Location l : new ArrayList<>(block_list.keySet())){
-                        Material m = block_list.get(l);
+                        ItemStack stack = block_list.get(l);
                         block_list.remove(l);
-                        block_list.put(l.add(0, 1, 0), m);
+                        block_list.put(l.add(0, 1, 0), stack);
                     }
                     Location center = new Location(loc.getWorld(), x, y, z);
                     int radiusSquared = radius*radius;
@@ -180,9 +180,13 @@ public class Timer implements Listener{
                             }
                         }
                     }
-                    block_list.put(new Location(loc.getWorld(), x, y, z), lavaMaterial);
+                    block_list.put(new Location(loc.getWorld(), x, y, z), new ItemStack(lavaMaterial));
                     for(Location l : block_list.keySet()){
-                        l.getBlock().setType(block_list.get(l));
+                        ItemStack stack = block_list.get(l);
+                        l.getBlock().setType(stack.getType());
+                        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                            l.getBlock().setData((byte) stack.getDurability());
+                        }
                     }
                     radius++;
                 }

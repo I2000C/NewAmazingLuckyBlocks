@@ -8,63 +8,106 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
+import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class FilePicker{
-    private static final int MAX_TITLE_LONG = 32;
-    private static File currentDirectory;
-    private static File rootDirectory;
-    private static FilenameFilter mainFilter;
-    
-    private static final int MENU_SIZE = 50;
-    private static int index;
-    private static int maxPage;
-    
-    private static boolean inventoriesRegistered = false;
-    
-    public static void resetFilePicker(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.FILE_PICKER, FILE_PICKER_FUNCTION);
-            
-            inventoriesRegistered = true;
-        }
-        
-        index = 0;
-        currentDirectory = null;
-        rootDirectory = null;
-        mainFilter = null;
+public class FilePicker extends Editor<File>{
+    public FilePicker(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        InventoryListener.registerInventory(CustomInventoryType.FILE_PICKER, FILE_PICKER_FUNCTION);
+        fileAdapter = new GUIPagesAdapter<>(
+                MENU_SIZE,
+                (file, index) -> {
+                    XMaterial material = extensionToMaterial(file);
+                    ItemBuilder builder = ItemBuilder.newItem(material);
+                    if(file.getName().equals("..")){
+                        builder.withDisplayName("&6Name: &b..");
+                    }else if(file.isDirectory()){
+                        builder.withDisplayName("&6Name: &b" + file.getName());
+                        builder.addLoreLine("&6id: &b" + index);
+                        if(file.list() == null){
+                            builder.addLoreLine("&6Directory elements: &b?");
+                        }else{
+                            builder.addLoreLine("&6Directory elements: &b" + file.list().length);
+                        }
+                    }else{
+                        builder.withDisplayName("&6Name: &b" + file.getName());
+                        builder.addLoreLine("&6id: &b" + index);
+                        builder.addLoreLine("&6File size: " + getFormatedSize(file.length()));
+                    }
+                    return builder.build();
+                }
+        );
+        fileAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+        fileAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+        fileAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
+//</editor-fold>
     }
     
-    public static void openFileMenu(Player player, File rootPath, File currentPath, FilenameFilter filter){
+    private static final int MAX_TITLE_LONG = 32;    
+    private static final int MENU_SIZE = 45;
+    private static final int PREVIOUS_PAGE_SLOT = 48;
+    private static final int CURRENT_PAGE_SLOT = 49;
+    private static final int NEXT_PAGE_SLOT = 50;
+    private static GUIPagesAdapter<File> fileAdapter;
+    
+    private static FilenameFilter filenameFilter;
+    private static File currentDirectory;
+    private static File rootDirectory;    
+    
+    public static void setFilenameFilter(FilenameFilter filter){
+        filenameFilter = filter;
+    }
+    public static void setCurrentDirectory(File file){
+        currentDirectory = file;
+    }
+    public static void setRootDirectory(File file){
+        rootDirectory = file;
+    }
+    
+    @Override
+    protected void reset(){
+        fileAdapter.goToMainPage();
+    }
+    
+    @Override
+    protected void newItem(Player player){
+        openFileMenu(player, rootDirectory, currentDirectory);
+    }
+    
+    @Override
+    protected void editItem(Player player){
+        openFileMenu(player, rootDirectory, currentDirectory);
+    }
+    
+    private void openFileMenu(Player player, File rootPath, File currentPath){
         //<editor-fold defaultstate="collapsed" desc="Code">
         try{
             if(rootPath == null){
-                openFileMenu(player, null, currentPath.getAbsolutePath(), filter);
+                openFileMenu(player, null, currentPath.getAbsolutePath());
             }else{
-                openFileMenu(player, rootPath.getAbsolutePath(), currentPath.getAbsolutePath(), filter);
+                openFileMenu(player, rootPath.getAbsolutePath(), currentPath.getAbsolutePath());
             }
         }catch(NullPointerException ex){
-            Logger.log("File: \"" + currentPath + "\" doesn't have parent (Maybe it is the root)", LogLevel.INFO);
+            Logger.log("File: \"" + currentPath + "\" doesn't have parent (Maybe it is the root)", LogLevel.WARN);
         }
 //</editor-fold>
     }
     
-    public static void openFileMenu(Player player, String rootPath, String currentPath, FilenameFilter filter){
+    private void openFileMenu(Player player, String rootPath, String currentPath){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        mainFilter = filter;
         if(rootPath != null){
             rootDirectory = new File(rootPath);
         }
@@ -98,69 +141,42 @@ public class FilePicker{
                 title = title.substring(0, MAX_TITLE_LONG-5) + "...";
             }
             
-            Inventory inv = GUIFactory.createInventory(CustomInventoryType.FILE_PICKER, 54, title);
+            Menu menu = GUIFactory.newMenu(CustomInventoryType.FILE_PICKER, 54, title);
             
             ItemStack refresh = ItemBuilder.newItem(XMaterial.WATER_BUCKET)
                     .withDisplayName("&bRefresh data")
                     .build();
-            inv.setItem(53, refresh);
+            
+            menu.setItem(45, GUIItem.getBackItem());
+            menu.setItem(53, refresh);
             
             List<File> fileList;
-            File[] files = currentDirectory.listFiles(filter);
+            File[] files = currentDirectory.listFiles(filenameFilter);
             if(rootDirectory != null && currentDirectory.getParentFile().equals(rootDirectory)){
                 if(files == null){
                     fileList = null;
                 }else{
-                    fileList = Arrays.asList(currentDirectory.listFiles(filter));
+                    fileList = Arrays.asList(currentDirectory.listFiles(filenameFilter));
                 }
             }else{
                 if(files == null){
                     fileList = Arrays.asList(new File(".."));
                 }else{
-                    fileList = new ArrayList();
+                    fileList = new ArrayList<>();
                     fileList.add(new File(".."));
-                    fileList.addAll(Arrays.asList(currentDirectory.listFiles(filter)));
+                    fileList.addAll(Arrays.asList(currentDirectory.listFiles(filenameFilter)));
                 }
             }
             
             if(fileList == null){
-                inv.setItem(51, GUIItem.getCurrentPageItem(index+1, maxPage));
-                player.openInventory(inv);
+                menu.openToPlayer(player, false);
                 return;
             }
             
-            maxPage = fileList.size() / MENU_SIZE;
-            /*if(fileList.size() % MENU_SIZE == 0){
-            maxPage = fileList.size() / MENU_SIZE;
-            }else{
-            maxPage = (fileList.size() / MENU_SIZE) + 1;
-            }*/            
+            fileAdapter.setItemList(fileList);
+            fileAdapter.updateMenu(menu);
             
-            int n = Integer.min(fileList.size()-MENU_SIZE*index, MENU_SIZE);
-            for(int i=0; i<n; i++){
-                File file = fileList.get(i+index*MENU_SIZE);
-                XMaterial material = extensionToMaterial(file);
-                ItemBuilder builder = ItemBuilder.newItem(material);
-                if(file.getName().equals("..")){
-                    builder.withDisplayName("&6Name: &b..");
-                }else if(file.isDirectory()){
-                    builder.withDisplayName("&6Name: &b" + file.getName());
-                    if(file.list() == null){
-                        builder.addLoreLine("&6Directory elements: &b?");
-                    }else{
-                        builder.addLoreLine("&6Directory elements: &b" + file.list().length);
-                    }
-                    builder.addLoreLine("&6id: &b" + i);
-                }else{
-                    builder.withDisplayName("&6Name: &b" + file.getName());
-                    builder.addLoreLine(title);
-                    builder.addLoreLine("&6File size: " + getFormatedSize(file.length()));
-                    builder.addLoreLine("&6id: &b" + i);
-                }
-                
-                inv.setItem(i, builder.build());
-            }
-            player.openInventory(inv);
+            menu.openToPlayer(player, false);
         }catch(NullPointerException | IllegalArgumentException ex){
             currentDirectory = oldDirectory;
             ex.printStackTrace();
@@ -168,9 +184,9 @@ public class FilePicker{
 //</editor-fold>
     }
     
-    private static final InventoryFunction FILE_PICKER_FUNCTION = e -> {
+    private final InventoryFunction FILE_PICKER_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         if(currentDirectory == null){
             return;
@@ -181,30 +197,31 @@ public class FilePicker{
                 return;
             }
             switch(e.getSlot()){
-                case 50:
-                    //Goto previous page
-                    index--;
-                    if(index < 0){
-                        index = maxPage;
-                    }
-                    openFileMenu(p, rootDirectory, currentDirectory, mainFilter);
+                case 45:
+                    // Go to previous menu
+                    onBack.accept(player);
                     break;
-                case 51:
-                    //Goto page 1
-                    index = 0;
-                    openFileMenu(p, rootDirectory, currentDirectory, mainFilter);
-                    break;
-                case 52:
-                    //Goto next page
-                    index++;
-                    if(index > maxPage){
-                        index = 0;
+                case PREVIOUS_PAGE_SLOT:
+                    // Go to previous page
+                    if(fileAdapter.goToPreviousPage()){
+                        openFileMenu(player, rootDirectory, currentDirectory);
                     }
-                    openFileMenu(p, rootDirectory, currentDirectory, mainFilter);
+                    break;
+                case CURRENT_PAGE_SLOT:
+                    // Go to main page
+                    if(fileAdapter.goToMainPage()){
+                        openFileMenu(player, rootDirectory, currentDirectory);
+                    }
+                    break;
+                case NEXT_PAGE_SLOT:
+                    // Go to next page
+                    if(fileAdapter.goToNextPage()){
+                        openFileMenu(player, rootDirectory, currentDirectory);
+                    }
                     break;
                 case 53:
-                    //Refresh data
-                    openFileMenu(p, rootDirectory, currentDirectory, mainFilter);
+                    // Refresh data
+                    openFileMenu(player, rootDirectory, currentDirectory);
                     break;
                 default:
                     String displayName = ItemBuilder.fromItem(e.getCurrentItem())
@@ -213,13 +230,13 @@ public class FilePicker{
                     String path = itemName.split(":")[1].trim();
                     File file = new File(currentDirectory, path);
                     if(file.isFile()){
-                        Bukkit.getPluginManager().callEvent(new FilePickerEvent(p, file.getAbsoluteFile()));
+                        onNext.accept(player, file);
                     }else{
-                        index = 0;
+                        fileAdapter.goToMainPage();
                         if(path.equals("..")){
-                            openFileMenu(p, rootDirectory, currentDirectory.getParentFile(), mainFilter);
+                            openFileMenu(player, rootDirectory, currentDirectory.getParentFile());
                         }else{
-                            openFileMenu(p, rootDirectory, file, mainFilter);
+                            openFileMenu(player, rootDirectory, file);
                         }
                     }
                 }

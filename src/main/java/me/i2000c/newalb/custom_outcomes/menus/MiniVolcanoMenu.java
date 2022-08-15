@@ -1,79 +1,82 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.MiniVolcanoReward;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.MiniVolcanoReward;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class MiniVolcanoMenu{
-    public static MiniVolcanoReward reward;
-    
-    private static boolean inventoriesRegistered = false;
-    
-    public static void reset(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.MINI_VOLCANO_MENU, MINI_VOLCANO_MENU_FUNCTION);
-            
-            inventoriesRegistered = true;
-        }
-        
-        reward = null;
+public class MiniVolcanoMenu extends Editor<MiniVolcanoReward>{
+    public MiniVolcanoMenu(){
+        InventoryListener.registerInventory(CustomInventoryType.MINI_VOLCANO_MENU, MINI_VOLCANO_MENU_FUNCTION);
     }
     
-    public static void openMiniVolcanoMenu(Player p){
+    @Override
+    protected void newItem(Player player){
+        Outcome outcome = RewardListMenu.getCurrentOutcome();
+        item = new MiniVolcanoReward(outcome);
+        openMiniVolcanoMenu(player);
+    }
+    
+    @Override
+    protected void editItem(Player player){
+        openMiniVolcanoMenu(player);
+    }
+    
+    private void openMiniVolcanoMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(reward == null){
-            reward = new MiniVolcanoReward(RewardListMenu.getCurrentOutcome());
-        }
-        
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.MINI_VOLCANO_MENU, 45, "&c&lMiniVolcano Rewards");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.MINI_VOLCANO_MENU, 45, "&c&lMiniVolcano Rewards");
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.ORANGE);
         
         for(int i=0;i<9;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         for(int i=36;i<45;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
-        inv.setItem(9, glass);
-        inv.setItem(17, glass);
-        inv.setItem(27, glass);
-        inv.setItem(35, glass);        
+        menu.setItem(9, glass);
+        menu.setItem(17, glass);
+        menu.setItem(27, glass);
+        menu.setItem(35, glass);        
         
         ItemStack squaredStack = GUIItem.getBooleanItem(
-                reward.isSquared(), 
+                item.isSquared(), 
                 "&bSquared", 
                 XMaterial.SNOW_BLOCK, 
                 XMaterial.SNOWBALL);
         
         ItemStack heightStack = ItemBuilder.newItem(XMaterial.LADDER)
-                .withDisplayName("&3Height: &b" + reward.getHeight())
+                .withDisplayName("&3Height: &b" + item.getHeight())
+                .addLoreLine("&2Click to reset")
                 .build();
         
         ItemStack ticksStack = ItemBuilder.newItem(XMaterial.CLOCK)
-                .withDisplayName("&5Ticks between blocks: &6" + reward.getTicks())
+                .withDisplayName("&5Ticks between blocks: &6" + item.getTicks())
+                .addLoreLine("&3Click to reset")
                 .build();
         
-        ItemStack baseMaterialStack = ItemBuilder.newItem(XMaterial.matchXMaterial(reward.getBaseMaterial()))
-                .withDisplayName("&6Base material: &b" + reward.getBaseMaterial().name())
+        ItemStack baseMaterialStack = ItemBuilder.newItem(XMaterial.matchXMaterial(item.getBaseMaterial()))
+                .withDisplayName("&6Base material: &b" + OtherUtils.parseItemStack(item.getBaseMaterial()))
                 .addLoreLine("&3Click on a &3&lblock &3of your inventory")
                 .addLoreLine("&3to change it")
                 .build();
         
         ItemStack lavaMaterialStack;
-        switch(reward.getLavaMaterial()){
+        switch(item.getLavaMaterial()){
             case LAVA:
                 lavaMaterialStack = new ItemStack(Material.LAVA_BUCKET);
                 break;
@@ -81,168 +84,163 @@ public class MiniVolcanoMenu{
                 lavaMaterialStack = new ItemStack(Material.WATER_BUCKET);
                 break;
             default:
-                lavaMaterialStack = new ItemStack(reward.getLavaMaterial());
+                lavaMaterialStack = new ItemStack(item.getLavaMaterial());
                 break;
         }
         ItemBuilder.fromItem(lavaMaterialStack, false)
-                .withDisplayName("&cLava material: &b" + reward.getLavaMaterial().name())
+                .withDisplayName("&cLava material: &b" + item.getLavaMaterial().name())
                 .addLoreLine("&3Click to change");
         
         ItemStack throwBlocksStack = GUIItem.getBooleanItem(
-                reward.isThrowBlocks(), 
+                item.isThrowBlocks(), 
                 "&cThrow blocks", 
                 XMaterial.FIRE_CHARGE, 
                 XMaterial.LAPIS_BLOCK);
         
-        inv.setItem(18, GUIItem.getBackItem());
-        inv.setItem(26, GUIItem.getNextItem());
+        menu.setItem(18, GUIItem.getBackItem());
+        menu.setItem(26, GUIItem.getNextItem());
         
-        inv.setItem(11, GUIItem.getPlusLessItem(-10));
-        inv.setItem(12, GUIItem.getPlusLessItem(-1));
-        inv.setItem(13, heightStack);
-        inv.setItem(14, GUIItem.getPlusLessItem(+1));
-        inv.setItem(15, GUIItem.getPlusLessItem(+10));
+        menu.setItem(11, GUIItem.getPlusLessItem(-10));
+        menu.setItem(12, GUIItem.getPlusLessItem(-1));
+        menu.setItem(13, heightStack);
+        menu.setItem(14, GUIItem.getPlusLessItem(+1));
+        menu.setItem(15, GUIItem.getPlusLessItem(+10));
         
-        inv.setItem(20, GUIItem.getPlusLessItem(-10));
-        inv.setItem(21, GUIItem.getPlusLessItem(-1));
-        inv.setItem(22, ticksStack);
-        inv.setItem(23, GUIItem.getPlusLessItem(+1));
-        inv.setItem(24, GUIItem.getPlusLessItem(+10));
+        menu.setItem(20, GUIItem.getPlusLessItem(-10));
+        menu.setItem(21, GUIItem.getPlusLessItem(-1));
+        menu.setItem(22, ticksStack);
+        menu.setItem(23, GUIItem.getPlusLessItem(+1));
+        menu.setItem(24, GUIItem.getPlusLessItem(+10));
         
-        inv.setItem(29, baseMaterialStack);
-        inv.setItem(30, lavaMaterialStack);
+        menu.setItem(29, baseMaterialStack);
+        menu.setItem(30, lavaMaterialStack);
         
-        inv.setItem(32, squaredStack);
-        inv.setItem(33, throwBlocksStack);
+        menu.setItem(32, squaredStack);
+        menu.setItem(33, throwBlocksStack);
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction MINI_VOLCANO_MENU_FUNCTION = e -> {
+    private final InventoryFunction MINI_VOLCANO_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 18:
-                    //Back
-                    reset();
-                    if(RewardListMenu.editMode){
-                        RewardListMenu.openFinishInventory(p);
-                    }else{
-                        RewardTypesMenu.openRewardTypesMenu(p);
-                    }
+                    // Go to previous menu
+                    onBack.accept(player);
                     break;
                 case 26:
-                    //Next
-                    RewardListMenu.addReward(reward);
-                    reset();
-                    RewardListMenu.openFinishInventory(p);
+                    // Go to next menu
+                    onNext.accept(player, item);
                     break;
                 //<editor-fold defaultstate="collapsed" desc="Height">
                 case 11:
                     //Height -10
-                    int height = reward.getHeight() - 10;
+                    int height = item.getHeight() - 10;
                     if(height < 1){
-                        reward.setHeight(1);
+                        item.setHeight(1);
                     }else{
-                        reward.setHeight(height);
+                        item.setHeight(height);
                     }
-                    openMiniVolcanoMenu(p);
+                    openMiniVolcanoMenu(player);
                     break;
                 case 12:
                     //Height -1
-                    height = reward.getHeight() - 1;
+                    height = item.getHeight() - 1;
                     if(height < 1){
-                        reward.setHeight(1);
+                        item.setHeight(1);
                     }else{
-                        reward.setHeight(height);
+                        item.setHeight(height);
                     }
-                    openMiniVolcanoMenu(p);
+                    openMiniVolcanoMenu(player);
                     break;
                 case 13:
                     //Height = 1
-                    reward.setHeight(1);
-                    openMiniVolcanoMenu(p);
+                    item.setHeight(1);
+                    openMiniVolcanoMenu(player);
                     break;
                 case 14:
                     //Depath +1
-                    reward.setHeight(reward.getHeight() + 1);
-                    openMiniVolcanoMenu(p);
+                    item.setHeight(item.getHeight() + 1);
+                    openMiniVolcanoMenu(player);
                     break;
                 case 15:
                     //Height +10
-                    reward.setHeight(reward.getHeight() + 10);
-                    openMiniVolcanoMenu(p);
+                    item.setHeight(item.getHeight() + 10);
+                    openMiniVolcanoMenu(player);
                     break;
 //</editor-fold>
                 //<editor-fold defaultstate="collapsed" desc="Ticks">
                 case 20:
                     //Ticks -10
-                    long ticks = reward.getTicks() - 10;
+                    long ticks = item.getTicks() - 10;
                     if(ticks < 0){
-                        reward.setTicks(0);
+                        item.setTicks(0);
                     }else{
-                        reward.setTicks(ticks);
+                        item.setTicks(ticks);
                     }
-                    openMiniVolcanoMenu(p);
+                    openMiniVolcanoMenu(player);
                     break;
                 case 21:
                     //Ticks -1
-                    ticks = reward.getTicks() - 1;
+                    ticks = item.getTicks() - 1;
                     if(ticks < 0){
-                        reward.setTicks(0);
+                        item.setTicks(0);
                     }else{
-                        reward.setTicks(ticks);
+                        item.setTicks(ticks);
                     }
-                    openMiniVolcanoMenu(p);
+                    openMiniVolcanoMenu(player);
                     break;
                 case 22:
                     //Ticks = 0
-                    reward.setTicks(0);
-                    openMiniVolcanoMenu(p);
+                    item.setTicks(0);
+                    openMiniVolcanoMenu(player);
                     break;
                 case 23:
                     //Depath +1
-                    reward.setTicks(reward.getTicks() + 1);
-                    openMiniVolcanoMenu(p);
+                    item.setTicks(item.getTicks() + 1);
+                    openMiniVolcanoMenu(player);
                     break;
                 case 24:
                     //Ticks +10
-                    reward.setTicks(reward.getTicks() + 10);
-                    openMiniVolcanoMenu(p);
+                    item.setTicks(item.getTicks() + 10);
+                    openMiniVolcanoMenu(player);
                     break;
 //</editor-fold>
                 case 29:
                     break;
                 case 30:
                     //Toggle lava material
-                    if(reward.getLavaMaterial() == Material.LAVA){
-                        reward.setLavaMaterial(Material.WATER);
+                    if(item.getLavaMaterial() == Material.LAVA){
+                        item.setLavaMaterial(Material.WATER);
                     }else{
-                        reward.setLavaMaterial(Material.LAVA);
+                        item.setLavaMaterial(Material.LAVA);
                     }
-                    openMiniVolcanoMenu(p);
+                    openMiniVolcanoMenu(player);
                     break;
                 case 32:
                     //Toggle isSquared
-                    reward.setSquared(!reward.isSquared());
-                    openMiniVolcanoMenu(p);
+                    item.setSquared(!item.isSquared());
+                    openMiniVolcanoMenu(player);
                     break;
                 case 33:
                     //Toggle throw blocks
-                    reward.setThrowBlocks(!reward.isThrowBlocks());
-                    openMiniVolcanoMenu(p);
+                    item.setThrowBlocks(!item.isThrowBlocks());
+                    openMiniVolcanoMenu(player);
                     break;
             }
         }else if(e.getLocation() == InventoryLocation.BOTTOM){
             ItemStack stack = e.getCurrentItem();
             if(stack != null && stack.getType().isSolid()){
-                reward.setBaseMaterial(stack.getType());
-                openMiniVolcanoMenu(p);
+                item.setBaseMaterial(new ItemStack(stack.getType()));
+                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                    item.getBaseMaterial().setDurability(stack.getDurability());
+                }
+                openMiniVolcanoMenu(player);
             }
         }
         //</editor-fold>

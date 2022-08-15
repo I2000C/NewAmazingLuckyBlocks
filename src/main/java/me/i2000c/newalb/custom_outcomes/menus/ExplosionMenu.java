@@ -1,179 +1,170 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.ExplosionReward;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ExplosionReward;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class ExplosionMenu{
-    public static ExplosionReward reward = null;
-    
-    private static boolean inventoriesRegistered = false;
-    
-    public static void reset(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.EXPLOSION_MENU, EXPLOSION_MENU_FUNCTION);
-            
-            inventoriesRegistered = true;
-        }
-        
-        reward = null;
+public class ExplosionMenu extends Editor<ExplosionReward>{
+    public ExplosionMenu(){
+        InventoryListener.registerInventory(CustomInventoryType.EXPLOSION_MENU, EXPLOSION_MENU_FUNCTION);
     }
     
-    //Explosion inventory
-    public static void openExplosionMenu(Player p){
+    @Override
+    protected void newItem(Player player){
+        Outcome outcome = RewardListMenu.getCurrentOutcome();
+        item = new ExplosionReward(outcome);
+        openExplosionMenu(player);
+    }
+    
+    @Override
+    protected void editItem(Player player){
+        openExplosionMenu(player);
+    }
+    
+    private void openExplosionMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(reward == null){
-            reward = new ExplosionReward(RewardListMenu.getCurrentOutcome());
-        }
-        
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EXPLOSION_MENU, 36, "&4&lExplosion Reward");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.EXPLOSION_MENU, 36, "&4&lExplosion Reward");
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.ORANGE);
         
         ItemStack tntItem = ItemBuilder.newItem(XMaterial.TNT)
-                .withDisplayName("&6Explosion power: &e" + reward.getPower())
+                .withDisplayName("&6Explosion power: &e" + item.getPower())
                 .addLoreLine("&3Click to reset")
                 .build();
         
         ItemStack fireItem = GUIItem.getBooleanItem(
-                reward.isWithFire(), 
+                item.isWithFire(), 
                 "&6Generate fire", 
                 XMaterial.FIRE_CHARGE, 
                 XMaterial.FIREWORK_STAR);
         
         ItemStack breakBlocksItem = GUIItem.getBooleanItem(
-                reward.isBreakBlocks(), 
+                item.isBreakBlocks(), 
                 "&6Break blocks", 
                 XMaterial.IRON_PICKAXE, 
                 XMaterial.STONE);
         
         for(int i=0;i<=9;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         for(int i=17;i<=18;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         for(int i=26;i<36;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         
-        inv.setItem(19, GUIItem.getBackItem());
-        inv.setItem(25, GUIItem.getNextItem());
+        menu.setItem(19, GUIItem.getBackItem());
+        menu.setItem(25, GUIItem.getNextItem());
         
-        inv.setItem(21, fireItem);
-        inv.setItem(23, breakBlocksItem);
+        menu.setItem(21, fireItem);
+        menu.setItem(23, breakBlocksItem);
 
-        inv.setItem(10, GUIItem.getPlusLessItem(-100));
-        inv.setItem(11, GUIItem.getPlusLessItem(-10));
-        inv.setItem(12, GUIItem.getPlusLessItem(-1));
-        inv.setItem(13, tntItem);
-        inv.setItem(14, GUIItem.getPlusLessItem(+1));
-        inv.setItem(15, GUIItem.getPlusLessItem(+10));
-        inv.setItem(16, GUIItem.getPlusLessItem(+100));
+        menu.setItem(10, GUIItem.getPlusLessItem(-100));
+        menu.setItem(11, GUIItem.getPlusLessItem(-10));
+        menu.setItem(12, GUIItem.getPlusLessItem(-1));
+        menu.setItem(13, tntItem);
+        menu.setItem(14, GUIItem.getPlusLessItem(+1));
+        menu.setItem(15, GUIItem.getPlusLessItem(+10));
+        menu.setItem(16, GUIItem.getPlusLessItem(+100));
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction EXPLOSION_MENU_FUNCTION = e -> {
+    private final InventoryFunction EXPLOSION_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 19:
                     //Return to the previous menu
-                    if(RewardListMenu.editMode){
-                        RewardListMenu.openFinishInventory(p);
-                    }else{
-                        RewardTypesMenu.openRewardTypesMenu(p);
-                    }
+                    onBack.accept(player);
                     break;
                 case 25:
                     //Open next menu
-                    RewardListMenu.addReward(reward);
-                    reset();
-                    RewardListMenu.openFinishInventory(p);
+                    onNext.accept(player, item);
                     break;
                 case 21:
                     //Toggle with fire
-                    reward.setWithFire(!reward.isWithFire());
-                    openExplosionMenu(p);
+                    item.setWithFire(!item.isWithFire());
+                    openExplosionMenu(player);
                     break;
                 case 23:
                     //Toggle effect showParticles
-                    reward.setBreakBlocks(!reward.isBreakBlocks());
-                    openExplosionMenu(p);
+                    item.setBreakBlocks(!item.isBreakBlocks());
+                    openExplosionMenu(player);
                     break;
                 //<editor-fold defaultstate="collapsed" desc="Explosion power">
                 case 10:
                     //Explosion power -100
-                    int power = reward.getPower();
+                    int power = item.getPower();
                     power -= 100;
                     if(power < 0){
                         power = 0;
                     }
-                    reward.setPower(power);
-                    openExplosionMenu(p);
+                    item.setPower(power);
+                    openExplosionMenu(player);
                     break;
                 case 11:
                     //Explosion power -10
-                    power = reward.getPower();
+                    power = item.getPower();
                     power -= 10;
                     if(power < 0){
                         power = 0;
                     }
-                    reward.setPower(power);
-                    openExplosionMenu(p);
+                    item.setPower(power);
+                    openExplosionMenu(player);
                     break;
                 case 12:
                     //Explosion power -1
-                    power = reward.getPower();
+                    power = item.getPower();
                     power--;
                     if(power < 0){
                         power = 0;
                     }
-                    reward.setPower(power);
-                    openExplosionMenu(p);
+                    item.setPower(power);
+                    openExplosionMenu(player);
                     break;
                 case 13:
                     //Explosion power = 4
-                    reward.setPower(4);
-                    openExplosionMenu(p);
+                    item.setPower(4);
+                    openExplosionMenu(player);
                     break;
                 case 14:
                     //Explosion power +1
-                    power = reward.getPower();
+                    power = item.getPower();
                     power++;
-                    reward.setPower(power);
-                    openExplosionMenu(p);
+                    item.setPower(power);
+                    openExplosionMenu(player);
                     break;
                 case 15:
                     //Explosion power +10
-                    power = reward.getPower();
+                    power = item.getPower();
                     power += 10;
-                    reward.setPower(power);
-                    openExplosionMenu(p);
+                    item.setPower(power);
+                    openExplosionMenu(player);
                     break;
                 case 16:
                     //Explosion power +100
-                    power = reward.getPower();
+                    power = item.getPower();
                     power += 100;
-                    reward.setPower(power);
-                    openExplosionMenu(p);
+                    item.setPower(power);
+                    openExplosionMenu(player);
                     break;
 //</editor-fold>
 

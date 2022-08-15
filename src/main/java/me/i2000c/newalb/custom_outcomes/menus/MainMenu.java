@@ -1,35 +1,37 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.CommandManager;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.editor.EditorType;
+import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class MainMenu{    
-    private static boolean inventoriesRegistered = false;
-    
-    public static void reset(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.MAIN_MENU, MAIN_MENU_FUNCTION);
-            
-            inventoriesRegistered = true;
-        }
-        
-        CommandManager.confirmMenu = false;
+public class MainMenu extends Editor{
+    public MainMenu(){
+        InventoryListener.registerInventory(CustomInventoryType.MAIN_MENU, MAIN_MENU_FUNCTION);
     }
     
-    public static void openMainMenu(Player p){
+    @Override
+    protected void newItem(Player player){
+        openMainMenu(player);
+    }
+    
+    @Override
+    protected void editItem(Player player){
+        openMainMenu(player);
+    }
+    
+    private void openMainMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.MAIN_MENU, 9, "&a&lMain menu");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.MAIN_MENU, 9, "&a&lMain menu");
         
         ItemStack exit = ItemBuilder
                 .newItem(XMaterial.IRON_DOOR)
@@ -46,37 +48,40 @@ public class MainMenu{
                 .withDisplayName("&6Manage lucky block types")
                 .build();
         
-        inv.setItem(3, packsItem);
-        inv.setItem(5, typesItem);
-        inv.setItem(8, exit);
+        menu.setItem(3, packsItem);
+        menu.setItem(5, typesItem);
+        menu.setItem(8, exit);
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction MAIN_MENU_FUNCTION = e -> {
+    private final InventoryFunction MAIN_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 3:
                     //Open outcome packs menu
-                    GUIPackManager.reset();
-                    GUIPackManager.openMainMenu(p);
+                    Editor editor = EditorType.PACK_LIST.getEditor();
+                    editor.createNewItem(
+                            player, 
+                            p -> openMainMenu(p), 
+                            null);
                     break;
                 case 5:
                     //Open lucky block types menu
-                    LuckyBlockTypesMenu.reset();
-                    LuckyBlockTypesMenu.openMainMenu(p);
+                    editor = EditorType.LUCKY_BLOCK_TYPE_LIST.getEditor();
+                    editor.createNewItem(
+                            player, 
+                            p -> openMainMenu(p), 
+                            null);
                     break;
                 case 8:
                     //Exit
-                    reset();
-                    GUIManager.setCurrentInventory(null);
-                    p.closeInventory();
+                    onBack.accept(player);
                     break;
             }
         }

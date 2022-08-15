@@ -111,7 +111,7 @@ public class ItemBuilder{
         }else{
             lore = new ArrayList<>();
         }
-        lore.addAll(loreLines);
+        lore.addAll(Logger.color(loreLines));
         meta.setLore(lore);
         item.setItemMeta(meta);
         return this;

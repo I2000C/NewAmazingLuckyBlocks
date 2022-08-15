@@ -1,5 +1,6 @@
 package me.i2000c.newalb.listeners.chat;
 
+import me.i2000c.newalb.functions.ChatFunction;
 import java.util.HashMap;
 import java.util.Map;
 import me.i2000c.newalb.utils2.Task;
@@ -20,7 +21,7 @@ public class ChatListener implements Listener{
         if(autoRemove){
             players.put(player, (message) -> {
                 players.remove(player);
-                function.execute(message);
+                function.accept(message);
             });
         }else{
             players.put(player, function);
@@ -40,7 +41,7 @@ public class ChatListener implements Listener{
         ChatFunction function = players.get(e.getPlayer());
         if(function != null){
             e.setCancelled(true);
-            Task.runTask(() -> function.execute(e.getMessage()));
+            Task.runTask(() -> function.accept(e.getMessage()));
         }
     }
 }

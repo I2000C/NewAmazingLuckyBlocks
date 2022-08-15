@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ActionBarUtils;
 import org.bukkit.Bukkit;
@@ -117,7 +117,7 @@ public class RandomBlocks {
                             int percentajeValue = (totalBlocks-restBlocks)*100/totalBlocks;
                             String message = percentaje + " " + percentajeValue + "%";
                             
-                            ActionBarUtils.sendMessage(Bukkit.getPlayer(playerName), message);
+                            ActionBarUtils.sendMessage(message, Bukkit.getPlayer(playerName));
                         }catch(Exception ex){
                         }
                     }                    
@@ -167,7 +167,7 @@ public class RandomBlocks {
                             int percentajeValue = (totalBlocks-restBlocks)*100/totalBlocks;
                             String message = percentaje + " " + percentajeValue + "%";
                             
-                            ActionBarUtils.sendMessage(Bukkit.getPlayer(playerName), message);
+                            ActionBarUtils.sendMessage(message, Bukkit.getPlayer(playerName));
                         }catch(Exception ex){
                         }
                     }                    

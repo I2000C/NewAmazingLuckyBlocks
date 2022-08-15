@@ -1,5 +1,6 @@
 package me.i2000c.newalb.listeners.inventories;
 
+import me.i2000c.newalb.functions.InventoryFunction;
 import java.util.EnumMap;
 import java.util.Map;
 import org.bukkit.event.EventHandler;
@@ -31,7 +32,7 @@ public class InventoryListener implements Listener{
             CustomInventoryType inventoryType = holder.getInventoryType();
             InventoryFunction function = inventoriesToNotify.get(inventoryType);
             if(function != null){
-                function.execute(new CustomInventoryClickEvent(e));
+                function.accept(new CustomInventoryClickEvent(e));
             }
         }
     }

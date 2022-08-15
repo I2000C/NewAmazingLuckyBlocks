@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 import java.util.function.BiFunction;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class GUIPagesAdapter<T>{
@@ -130,7 +129,7 @@ public class GUIPagesAdapter<T>{
         }        
     }
     
-    public void updateMenu(Inventory inv){
+    public void updateMenu(Menu menu){
         if(previousPageSlot < 0){
             throw new IllegalArgumentException("Previous page slot is invalid");
         }
@@ -141,7 +140,7 @@ public class GUIPagesAdapter<T>{
             throw new IllegalArgumentException("Next page slot is invalid");
         }
         
-        if(menuSize > inv.getSize()){
+        if(menuSize > menu.getSize()){
             return;
         }
         
@@ -154,9 +153,9 @@ public class GUIPagesAdapter<T>{
         }
         
         if(showPageItems){
-            inv.setItem(previousPageSlot, GUIItem.getPreviousPageItem());
-            inv.setItem(currentPageSlot, GUIItem.getCurrentPageItem(pageIndex+1, maxPages));
-            inv.setItem(nextPageSlot, GUIItem.getNextPageItem());
+            menu.setItem(previousPageSlot, GUIItem.getPreviousPageItem());
+            menu.setItem(currentPageSlot, GUIItem.getCurrentPageItem(pageIndex+1, maxPages));
+            menu.setItem(nextPageSlot, GUIItem.getNextPageItem());
         }
         
         int firstItemIndex = itemsPerPage*pageIndex;
@@ -171,7 +170,7 @@ public class GUIPagesAdapter<T>{
                 int index = iterator.nextIndex();
                 T item = iterator.next();
                 ItemStack stack = itemFunction.apply(item, index);
-                inv.setItem(slot, stack);
+                menu.setItem(slot, stack);
             }
             
             column++;

@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import me.i2000c.newalb.custom_outcomes.utils.Displayable;
+import me.i2000c.newalb.custom_outcomes.rewards.Displayable;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Location;

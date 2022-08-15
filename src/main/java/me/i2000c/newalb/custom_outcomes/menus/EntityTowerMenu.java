@@ -4,16 +4,19 @@ import com.cryptomorin.xseries.XMaterial;
 import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
 import java.util.List;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityTowerReward;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityTowerReward;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,8 +24,42 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class EntityTowerMenu{
-    public static EntityTowerReward reward = null;
+public class EntityTowerMenu extends Editor<EntityTowerReward>{
+    public EntityTowerMenu(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        InventoryListener.registerInventory(CustomInventoryType.ENTITY_TOWER_MENU, ENTITY_TOWER_MENU_FUNCTION);
+        
+        entityListAdapter = new GUIPagesAdapter<>(
+                ENTITY_LIST_MENU_SIZE,
+                (entityReward, index) -> {
+                    ItemStack stack = entityReward.getItemToDisplay();
+                    return NBTEditor.set(stack, entityReward.getID(), ENTITY_ID_TAG);
+                }
+        );
+        entityListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+        entityListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+        entityListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
+        
+        entityListAdapter.setIgnoredColumns(7, 8);
+//</editor-fold>
+    }
+    
+    @Override
+    protected void reset(){
+        entityListAdapter.goToMainPage();
+    }
+    
+    @Override
+    protected void newItem(Player player){
+        Outcome outcome = RewardListMenu.getCurrentOutcome();
+        item = new EntityTowerReward(outcome);
+        openEntityTowerMenu(player);
+    }
+
+    @Override
+    protected void editItem(Player player){
+        openEntityTowerMenu(player);
+    }
     
     private static final int TOWER_SLOTS[] = {53, 44, 35, 26, 17, 8};
     
@@ -33,41 +70,9 @@ public class EntityTowerMenu{
     private static final String ENTITY_ID_TAG = "entity_id";
     private static GUIPagesAdapter<EntityReward> entityListAdapter;
     
-    private static boolean inventoriesRegistered = false;
-    
-    public static void reset(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.ENTITY_TOWER_MENU, ENTITY_TOWER_MENU_FUNCTION);
-            
-            entityListAdapter = new GUIPagesAdapter<>(
-                    ENTITY_LIST_MENU_SIZE,
-                    (entityReward, index) -> {
-                        ItemStack stack = entityReward.getItemToDisplay();
-                        return NBTEditor.set(stack, entityReward.getID(), ENTITY_ID_TAG);
-                    }
-            );
-            entityListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
-            entityListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
-            entityListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
-            
-            entityListAdapter.setIgnoredColumns(7, 8);
-            
-            inventoriesRegistered = true;
-        }
-        
-        entityListAdapter.goToMainPage();
-        
-        reward = null;
-    }
-    
-    public static void openEntityTowerMenu(Player p){
+    private void openEntityTowerMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(reward == null){
-            reward = new EntityTowerReward(RewardListMenu.getCurrentOutcome());
-        }
-        
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENTITY_TOWER_MENU, 54, "&e&lEntityTower Reward");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.ENTITY_TOWER_MENU, 54, "&e&lEntityTower Reward");
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
@@ -76,19 +81,19 @@ public class EntityTowerMenu{
                 .build();
         
         for(int i=7;i<54;i+=9){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         
-        inv.setItem(45, GUIItem.getBackItem());
-        inv.setItem(46, reset);
-        inv.setItem(47, GUIItem.getNextItem());
+        menu.setItem(45, GUIItem.getBackItem());
+        menu.setItem(46, reset);
+        menu.setItem(47, GUIItem.getNextItem());
         
         List<EntityReward> entityRewardList = RewardListMenu
                 .getCurrentOutcome()
                 .getEntityRewards();
-        for(int i=0; i<TOWER_SLOTS.length && i<reward.getEntityList().size(); i++){
+        for(int i=0; i<TOWER_SLOTS.length && i<item.getEntityList().size(); i++){
             int slot = TOWER_SLOTS[i];            
-            int entityID = reward.getEntityList().get(i);
+            int entityID = item.getEntityList().get(i);
             
             ItemStack entityItem;
             switch(entityID){
@@ -104,23 +109,22 @@ public class EntityTowerMenu{
             }
             
             if(entityItem != null){
-                inv.setItem(slot, NBTEditor.set(entityItem, entityID, ENTITY_ID_TAG));
+                menu.setItem(slot, NBTEditor.set(entityItem, entityID, ENTITY_ID_TAG));
             }
         }
         
         entityRewardList.add(EntityTowerReward.getPlayerEntityReward());
         entityListAdapter.setItemList(entityRewardList);
         
-        entityListAdapter.updateMenu(inv);
+        entityListAdapter.updateMenu(menu);
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction ENTITY_TOWER_MENU_FUNCTION = e -> {
+    private final InventoryFunction ENTITY_TOWER_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         
         if(e.getLocation() == InventoryLocation.NONE){
             e.setCursor(null);
@@ -155,48 +159,39 @@ public class EntityTowerMenu{
                     e.setCancelled(true);
                     if(entityListAdapter.goToPreviousPage()){
                         saveTowerEntities(towerInv);
-                        openEntityTowerMenu(p);
+                        openEntityTowerMenu(player);
                     }
                     break;
                 case CURRENT_PAGE_SLOT:
                     e.setCancelled(true);
                     if(entityListAdapter.goToMainPage()){
                         saveTowerEntities(towerInv);
-                        openEntityTowerMenu(p);
+                        openEntityTowerMenu(player);
                     }
                     break;
                 case NEXT_PAGE_SLOT:
                     e.setCancelled(true);
                     if(entityListAdapter.goToNextPage()){
                         saveTowerEntities(towerInv);
-                        openEntityTowerMenu(p);
+                        openEntityTowerMenu(player);
                     }
                     break;
                 case 45:
-                    //Back
+                    // Go to previous menu
                     e.setCancelled(true);
-                    if(RewardListMenu.editMode){
-                        RewardListMenu.openFinishInventory(p);
-                    }else{
-                        RewardTypesMenu.openRewardTypesMenu(p);
-                    }
+                    onBack.accept(player);
                     break;
                 case 46:
                     //Reset
                     e.setCancelled(true);
-                    EntityTowerMenu.openEntityTowerMenu(p);
+                    openEntityTowerMenu(player);
                     break;
                 case 47:
-                    e.setCancelled(true);
-                    
-                    if(!saveTowerEntities(towerInv)){
-                        return;
+                    // Go to next menu
+                    e.setCancelled(true);                    
+                    if(saveTowerEntities(towerInv)){
+                        onNext.accept(player, item);
                     }
-
-                    RewardListMenu.addReward(reward);
-                    reset();
-                    //Open FinishMenu
-                    RewardListMenu.openFinishInventory(p);
                     break;
                 default:
                     if((e.getSlot()+1) % 9 == 0){
@@ -212,7 +207,8 @@ public class EntityTowerMenu{
 //</editor-fold>
     };
     
-    private static boolean saveTowerEntities(Inventory towerInv){        
+    private boolean saveTowerEntities(Inventory towerInv){        
+        //<editor-fold defaultstate="collapsed" desc="Code">
         boolean towerValid = true;
         boolean towerEnd = false;
         List<Integer> entityIDList = new ArrayList<>();
@@ -231,15 +227,16 @@ public class EntityTowerMenu{
             }
         }
         
-        //Add entities' ids to reward entity list
-        reward.getEntityList().clear();
-        reward.getEntityList().addAll(entityIDList);
+        //Add entities' ids to item entity list
+        item.getEntityList().clear();
+        item.getEntityList().addAll(entityIDList);
         
         if(towerValid){
-            reward.getEntityList().removeIf(entityID -> 
+            item.getEntityList().removeIf(entityID ->
                     entityID == EntityTowerReward.INVALID_ENTITY_ID);
         }
-                
-        return towerValid && reward.getEntityList().size() >= 2;
+        
+        return towerValid && item.getEntityList().size() >= 2;
+//</editor-fold>
     }
 }

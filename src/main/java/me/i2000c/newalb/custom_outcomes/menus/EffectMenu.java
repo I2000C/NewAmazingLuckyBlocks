@@ -1,84 +1,100 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EffectReward;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EffectReward;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class EffectMenu{
-    public static EffectReward reward = null;
-    
-    private static boolean inventoriesRegistered = false;
-    
-    public static void reset(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.EFFECT_MENU, EFFECT_MENU_FUNCTION);
-            InventoryListener.registerInventory(CustomInventoryType.EFFECT_MENU_2, EFFECT_MENU_2_FUNCTION);
-            
-            inventoriesRegistered = true;
-        }
+public class EffectMenu extends Editor<EffectReward>{
+    public EffectMenu(){
+        InventoryListener.registerInventory(CustomInventoryType.EFFECT_MENU, EFFECT_MENU_FUNCTION);
+        InventoryListener.registerInventory(CustomInventoryType.EFFECT_MENU_2, EFFECT_MENU_2_FUNCTION);
         
-        reward = null;
+        POTION_EFFECT_TYPES = new ArrayList<>(Arrays.asList(PotionEffectType.values()));
+        POTION_EFFECT_TYPES.removeIf(potionEffectType -> potionEffectType == null);
+        POTION_EFFECT_TYPES.sort((effectType1, effectType2) -> {
+            String effectTypeName1 = effectType1.getName();
+            String effectTypeName2 = effectType2.getName();
+            return effectTypeName1.compareTo(effectTypeName2);
+        });
     }
     
-    //Effects inventory
-    public static void openEffectMenu(Player p){
+    private final List<PotionEffectType> POTION_EFFECT_TYPES;        
+    
+    private static boolean showClearEffectsItem;
+    
+    public static void setShowClearEffectsItem(boolean showItem){
+        showClearEffectsItem = showItem;
+    }
+    
+    @Override
+    protected void newItem(Player player){
+        Outcome outcome = RewardListMenu.getCurrentOutcome();
+        item = new EffectReward(outcome);
+        openEffectMenu(player);
+    }
+    
+    @Override
+    protected void editItem(Player player){
+        openEffectMenu(player);
+    }
+    
+    private void openEffectMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(reward == null){
-            reward = new EffectReward(RewardListMenu.getCurrentOutcome());
-        }
-        
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EFFECT_MENU, 45, "&5&lEffect Reward");
+        String invTitle = showClearEffectsItem ? "&5&lEffect Reward" : "&5&lEffect Menu";        
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.EFFECT_MENU, 45, invTitle);
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
         
         ItemBuilder builder = ItemBuilder.newItem(XMaterial.CLOCK);
-        if(reward.getDuration() < 0){
+        if(item.getDuration() < 0){
             builder.withDisplayName("&6Effect time (seconds): &ainfinite");
         }else{
-            builder.withDisplayName("&6Effect time (seconds): &a" + reward.getDuration());
+            builder.withDisplayName("&6Effect time (seconds): &a" + item.getDuration());
         }
         builder.addLoreLine("&3Click to reset");
         ItemStack time_item = builder.build();
         
         ItemStack amplifier = ItemBuilder.newItem(XMaterial.BEACON)
-                .withDisplayName("&6Effect amplifier: &a" + reward.getAmplifier())
+                .withDisplayName("&6Effect amplifier: &a" + item.getAmplifier())
                 .addLoreLine("&3Click to reset")
                 .build();
         
-        if(reward.isClearEffects()){
+        if(item.isClearEffects()){
             builder = ItemBuilder.newItem(XMaterial.MILK_BUCKET);
             builder.withDisplayName("&bSelected effect: &d" + EffectReward.CLEAR_EFFECTS_TAG);
         }else{
             builder = ItemBuilder.newItem(XMaterial.POTION);
-            if(reward.getPotionEffect() == null){
+            if(item.getPotionEffect() == null){
                 builder.withDisplayName("&bSelected effect: &dnull");
             }else{
-                builder.withDisplayName("&bSelected effect: &d" + reward.getPotionEffect().getName());
-                builder.addPotionEffect(new PotionEffect(reward.getPotionEffect(), 0, 0));
+                builder.withDisplayName("&bSelected effect: &d" + item.getPotionEffect().getName());
+                builder.addPotionEffect(new PotionEffect(item.getPotionEffect(), 0, 0));
             }
         }
         builder.addLoreLine("&3Click to select");
         ItemStack effectStack = builder.build();
         
-        if(reward.isAmbient()){
+        if(item.isAmbient()){
             builder = ItemBuilder.newItem(XMaterial.GLASS_PANE);
             builder.withDisplayName("&bIs ambient: &atrue");
         }else{
@@ -88,7 +104,7 @@ public class EffectMenu{
         builder.addLoreLine("&3Click to toggle");
         ItemStack ambientItem = builder.build();
                 
-        if(reward.isShowParticles()){
+        if(item.isShowParticles()){
             builder = ItemBuilder.newItem(XMaterial.MELON_SEEDS);
             builder.withDisplayName("&bShow particles: &atrue");
         }else{
@@ -100,216 +116,208 @@ public class EffectMenu{
         
         
         for(int i=0;i<9;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         for(int i=36;i<45;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
-        inv.setItem(9, glass);
-        inv.setItem(17, glass);
-        inv.setItem(18, glass);
-        inv.setItem(26, glass);
-        inv.setItem(27, glass);
-        inv.setItem(35, glass);
+        menu.setItem(9, glass);
+        menu.setItem(17, glass);
+        menu.setItem(18, glass);
+        menu.setItem(26, glass);
+        menu.setItem(27, glass);
+        menu.setItem(35, glass);
         
-        inv.setItem(10, GUIItem.getBackItem());
-        inv.setItem(16, GUIItem.getNextItem());
+        menu.setItem(10, GUIItem.getBackItem());
+        menu.setItem(16, GUIItem.getNextItem());
         
-        inv.setItem(13, effectStack);
+        menu.setItem(13, effectStack);
         
-        if(!reward.isClearEffects()){
-            inv.setItem(12, ambientItem);
-            inv.setItem(14, showParticlesItem);
+        if(!item.isClearEffects()){
+            menu.setItem(12, ambientItem);
+            menu.setItem(14, showParticlesItem);
             
-            inv.setItem(19, GUIItem.getPlusLessItem(-100));
-            inv.setItem(20, GUIItem.getPlusLessItem(-10));
-            inv.setItem(21, GUIItem.getPlusLessItem(-1));
-            inv.setItem(22, time_item);
-            inv.setItem(23, GUIItem.getPlusLessItem(+1));
-            inv.setItem(24, GUIItem.getPlusLessItem(+10));
-            inv.setItem(25, GUIItem.getPlusLessItem(+100));
+            menu.setItem(19, GUIItem.getPlusLessItem(-100));
+            menu.setItem(20, GUIItem.getPlusLessItem(-10));
+            menu.setItem(21, GUIItem.getPlusLessItem(-1));
+            menu.setItem(22, time_item);
+            menu.setItem(23, GUIItem.getPlusLessItem(+1));
+            menu.setItem(24, GUIItem.getPlusLessItem(+10));
+            menu.setItem(25, GUIItem.getPlusLessItem(+100));
 
-            inv.setItem(28, GUIItem.getPlusLessItem(-100));
-            inv.setItem(29, GUIItem.getPlusLessItem(-10));
-            inv.setItem(30, GUIItem.getPlusLessItem(-1));
-            inv.setItem(31, amplifier);
-            inv.setItem(32, GUIItem.getPlusLessItem(+1));
-            inv.setItem(33, GUIItem.getPlusLessItem(+10));
-            inv.setItem(34, GUIItem.getPlusLessItem(+100));
+            menu.setItem(28, GUIItem.getPlusLessItem(-100));
+            menu.setItem(29, GUIItem.getPlusLessItem(-10));
+            menu.setItem(30, GUIItem.getPlusLessItem(-1));
+            menu.setItem(31, amplifier);
+            menu.setItem(32, GUIItem.getPlusLessItem(+1));
+            menu.setItem(33, GUIItem.getPlusLessItem(+10));
+            menu.setItem(34, GUIItem.getPlusLessItem(+100));
         }
-            
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction EFFECT_MENU_FUNCTION = e -> {
+    private final InventoryFunction EFFECT_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
-            if(reward.isClearEffects() && e.getSlot() != 10 && e.getSlot() != 16 && e.getSlot() != 12 && e.getSlot() != 13 && e.getSlot() != 14){
+            if(item.isClearEffects() && e.getSlot() != 10 && e.getSlot() != 16 && e.getSlot() != 12 && e.getSlot() != 13 && e.getSlot() != 14){
                 return;
             }
             
             switch(e.getSlot()){
                 case 10:
-                    //Return to the previous menu
-                    if(RewardListMenu.editMode){
-                        RewardListMenu.openFinishInventory(p);
-                    }else{
-                        RewardTypesMenu.openRewardTypesMenu(p);
-                    }
+                    // Go to previous menu
+                    onBack.accept(player);
                     break;
                 case 16:
-                    //Open next menu
-                    if(reward.isClearEffects() || reward.getPotionEffect() != null){
-                        RewardListMenu.addReward(reward);
-                        reset();
-                        RewardListMenu.openFinishInventory(p);
+                    // Go to next menu
+                    if(item.isClearEffects() || item.getPotionEffect() != null){
+                        onNext.accept(player, item);
                     }
                     break;
                 case 13:
                     //Open effect types menu
-                    openEffectMenu2(p);
+                    openEffectMenu2(player);
                     break;
                 case 12:
                     //Toggle effect ambient
-                    reward.setAmbient(!reward.isAmbient());
-                    openEffectMenu(p);
+                    item.setAmbient(!item.isAmbient());
+                    openEffectMenu(player);
                     break;
                 case 14:
                     //Toggle effect showParticles
-                    reward.setShowParticles(!reward.isShowParticles());
-                    openEffectMenu(p);
+                    item.setShowParticles(!item.isShowParticles());
+                    openEffectMenu(player);
                     break;
                 //<editor-fold defaultstate="collapsed" desc="EffectTime">
                 case 19:
                     //Effect time -100
-                    int effect_time = reward.getDuration();
+                    int effect_time = item.getDuration();
                     effect_time -= 100;
                     if(effect_time < -1){
                         effect_time = -1;
                     }
-                    reward.setDuration(effect_time);
-                    openEffectMenu(p);
+                    item.setDuration(effect_time);
+                    openEffectMenu(player);
                     break;
                 case 20:
                     //Effect time -10
-                    effect_time = reward.getDuration();
+                    effect_time = item.getDuration();
                     effect_time -= 10;
                     if(effect_time < -1){
                         effect_time = -1;
                     }
-                    reward.setDuration(effect_time);
-                    openEffectMenu(p);
+                    item.setDuration(effect_time);
+                    openEffectMenu(player);
                     break;
                 case 21:
                     //Effect time -1
-                    effect_time = reward.getDuration();
+                    effect_time = item.getDuration();
                     effect_time--;
                     if(effect_time < -1){
                         effect_time = -1;
                     }
-                    reward.setDuration(effect_time);
-                    openEffectMenu(p);
+                    item.setDuration(effect_time);
+                    openEffectMenu(player);
                     break;
                 case 22:
                     //Effect time = 30
                     effect_time = 30;
-                    reward.setDuration(effect_time);
-                    openEffectMenu(p);
+                    item.setDuration(effect_time);
+                    openEffectMenu(player);
                     break;
                 case 23:
                     //Effect time +1
-                    effect_time = reward.getDuration();
+                    effect_time = item.getDuration();
                     effect_time ++;
-                    reward.setDuration(effect_time);
-                    openEffectMenu(p);
+                    item.setDuration(effect_time);
+                    openEffectMenu(player);
                     break;
                 case 24:
                     //Effect time +10
-                    effect_time = reward.getDuration();
+                    effect_time = item.getDuration();
                     effect_time += 10;
-                    reward.setDuration(effect_time);
-                    openEffectMenu(p);
+                    item.setDuration(effect_time);
+                    openEffectMenu(player);
                     break;
                 case 25:
                     //Effect time +100
-                    effect_time = reward.getDuration();
+                    effect_time = item.getDuration();
                     effect_time += 100;
-                    reward.setDuration(effect_time);
-                    openEffectMenu(p);
+                    item.setDuration(effect_time);
+                    openEffectMenu(player);
                     break;
 //</editor-fold>
                 //<editor-fold defaultstate="collapsed" desc="EffectAmplifier">
                 case 28:
                     //Effect amplifier -100
-                    int effect_amplifier = reward.getAmplifier();
+                    int effect_amplifier = item.getAmplifier();
                     effect_amplifier -= 100;
                     if(effect_amplifier < 0){
                         effect_amplifier = 0;
                     }
-                    reward.setAmplifier(effect_amplifier);
-                    openEffectMenu(p);
+                    item.setAmplifier(effect_amplifier);
+                    openEffectMenu(player);
                     break;
                 case 29:
                     //Effect amplifier -10
-                    effect_amplifier = reward.getAmplifier();
+                    effect_amplifier = item.getAmplifier();
                     effect_amplifier -= 10;
                     if(effect_amplifier < 0){
                         effect_amplifier = 0;
                     }
-                    reward.setAmplifier(effect_amplifier);
-                    openEffectMenu(p);
+                    item.setAmplifier(effect_amplifier);
+                    openEffectMenu(player);
                     break;
                 case 30:
                     //Effect amplifier -1
-                    effect_amplifier = reward.getAmplifier();
+                    effect_amplifier = item.getAmplifier();
                     effect_amplifier--;
                     if(effect_amplifier < 0){
                         effect_amplifier = 0;
                     }
-                    reward.setAmplifier(effect_amplifier);
-                    openEffectMenu(p);
+                    item.setAmplifier(effect_amplifier);
+                    openEffectMenu(player);
                     break;
                 case 31:
                     //Effect amplifier = 1
                     effect_amplifier = 1;
-                    reward.setAmplifier(effect_amplifier);
-                    openEffectMenu(p);
+                    item.setAmplifier(effect_amplifier);
+                    openEffectMenu(player);
                     break;
                 case 32:
                     //Effect amplifier +1
-                    effect_amplifier = reward.getAmplifier();
+                    effect_amplifier = item.getAmplifier();
                     effect_amplifier ++;
                     if(effect_amplifier > 255){
                         effect_amplifier = 255;
                     }
-                    reward.setAmplifier(effect_amplifier);
-                    openEffectMenu(p);
+                    item.setAmplifier(effect_amplifier);
+                    openEffectMenu(player);
                     break;
                 case 33:
                     //Effect amplifier +10
-                    effect_amplifier = reward.getAmplifier();
+                    effect_amplifier = item.getAmplifier();
                     effect_amplifier += 10;
                     if(effect_amplifier > 255){
                         effect_amplifier = 255;
                     }
-                    reward.setAmplifier(effect_amplifier);
-                    openEffectMenu(p);
+                    item.setAmplifier(effect_amplifier);
+                    openEffectMenu(player);
                     break;
                 case 34:
                     //Effect amplifier +100
-                    effect_amplifier = reward.getAmplifier();
+                    effect_amplifier = item.getAmplifier();
                     effect_amplifier += 100;
                     if(effect_amplifier > 255){
                         effect_amplifier = 255;
                     }
-                    reward.setAmplifier(effect_amplifier);
-                    openEffectMenu(p);
+                    item.setAmplifier(effect_amplifier);
+                    openEffectMenu(player);
                     break;
 //</editor-fold>
 
@@ -318,66 +326,62 @@ public class EffectMenu{
 //</editor-fold>
     };
     
-    //Effects2 inventory
-    private static void openEffectMenu2(Player p){
+    private void openEffectMenu2(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EFFECT_MENU_2, 54, "&d&lEffect List");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.EFFECT_MENU_2, 54, "&d&lEffect List");
         
-        List<PotionEffectType> effectTypes = Arrays.asList(PotionEffectType.values());
-        effectTypes.sort((effectType1, effectType2) -> {
-            String effectTypeName1 = effectType1.getName();
-            String effectTypeName2 = effectType2.getName();
-            return effectTypeName1.compareTo(effectTypeName2);
-        });
-        
-        ItemStack clearEffects = ItemBuilder.newItem(XMaterial.MILK_BUCKET)
+        int initialSlot;
+        if(showClearEffectsItem){
+            ItemStack clearEffects = ItemBuilder.newItem(XMaterial.MILK_BUCKET)
                 .withDisplayName("&d" + EffectReward.CLEAR_EFFECTS_TAG)
                 .build();
+            menu.setItem(0, clearEffects);
+            initialSlot = 1;
+        }else{
+            initialSlot = 0;
+        }        
         
-        inv.setItem(0, clearEffects);
-        
-        Iterator<PotionEffectType> iterator = effectTypes.iterator();
-        for(int i=1; iterator.hasNext() && i<45; i++){
+        Iterator<PotionEffectType> iterator = POTION_EFFECT_TYPES.iterator();
+        for(int i=initialSlot; iterator.hasNext() && i<45; i++){
             PotionEffectType effectType = iterator.next();
             PotionEffect potionEffect = new PotionEffect(effectType, 0, 0);
             ItemStack effectItem = ItemBuilder.newItem(XMaterial.POTION)
                     .withDisplayName("&d" + effectType.getName())
                     .addPotionEffect(potionEffect)
                     .build();
-            inv.setItem(i, effectItem);
+            menu.setItem(i, effectItem);
         }
         
-        inv.setItem(45, GUIItem.getBackItem());
+        menu.setItem(45, GUIItem.getBackItem());
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction EFFECT_MENU_2_FUNCTION = e -> {
+    private final InventoryFunction EFFECT_MENU_2_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
-
             if(e.getSlot() == 45){
-                openEffectMenu(p);
+                openEffectMenu(player);
                 return;
             }
+            
             if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
                         .getDisplayName();
                 if(displayName != null){
                     String effect_name = Logger.stripColor(displayName);
                     if(effect_name.equals(EffectReward.CLEAR_EFFECTS_TAG)){
-                        reward.setClearEffects(true);
-                        reward.setPotionEffect(null);
+                        item.setClearEffects(true);
+                        item.setPotionEffect(null);
                     }else{
-                        reward.setClearEffects(false);
-                        reward.setPotionEffect(PotionEffectType.getByName(effect_name));
+                        item.setClearEffects(false);
+                        item.setPotionEffect(PotionEffectType.getByName(effect_name));
                     }
-                    openEffectMenu(p);
+                    openEffectMenu(player);
                 }                    
             }
         }

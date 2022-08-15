@@ -3,35 +3,66 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.EntityReward.Equipment;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.editor.EditorType;
+import me.i2000c.newalb.custom_outcomes.rewards.Equipment;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EffectReward;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import org.bukkit.Material;
+import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-public class EntityMenu{
-    public static EntityReward reward = null;
-    
-    private static String effect_name = null;
-    private static int effect_time = 60;
-    private static int effect_amplifier = 0;
+public class EntityMenu extends Editor<EntityReward>{
+    public EntityMenu(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        InventoryListener.registerInventory(CustomInventoryType.ENTITY_MENU, ENTITY_MENU_FUNCTION);
+        InventoryListener.registerInventory(CustomInventoryType.ENTITY_TYPE_MENU, ENTITY_TYPE_MENU_FUNCTION);
+        
+        entityListAdapter = new GUIPagesAdapter<>(
+                ENTITY_LIST_MENU_SIZE,
+                (entityType, index) -> {
+                    XMaterial material = EntityReward.getXMaterialFromEntityType(entityType);
+                    ItemBuilder builder = ItemBuilder.newItem(material);
+                    builder.withDisplayName("&3" + entityType.name());
+                    if(entityType.isAlive()){
+                        builder.addLoreLine("&6Is living entity: &atrue");
+                    }else{
+                        builder.addLoreLine("&6Is living entity: &7false");
+                    }
+                    return builder.build();
+                }
+        );
+        entityListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+        entityListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+        entityListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
+        
+        List<EntityType> entityTypes = new ArrayList<>(Arrays.asList(EntityType.values()));
+        entityTypes.removeIf(entityType ->
+                entityType == EntityType.PLAYER || !entityType.isSpawnable());
+        entityTypes.sort((entityType1, entityType2) -> {
+            String name1 = entityType1.name();
+            String name2 = entityType2.name();
+            return name1.compareTo(name2);
+        });
+        
+        entityListAdapter.setItemList(entityTypes);
+//</editor-fold>
+    }
     
     private static final int ENTITY_LIST_MENU_SIZE = 45;
     private static final int PREVIOUS_PAGE_SLOT = 51;
@@ -39,95 +70,51 @@ public class EntityMenu{
     private static final int NEXT_PAGE_SLOT = 53;
     private static GUIPagesAdapter<EntityType> entityListAdapter;
     
-    private static int equipment_slot = 0;
-    public static Equipment equipment = null;
-    
-    private static boolean inventoriesRegistered = false;
-    
-    public static void reset(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.ENTITY_MENU, ENTITY_MENU_FUNCTION);
-            InventoryListener.registerInventory(CustomInventoryType.ENTITY_TYPE_MENU, ENTITY_TYPE_MENU_FUNCTION);
-            InventoryListener.registerInventory(CustomInventoryType.ENTITY_EFFECTS_MENU, EFFECTS_MENU_FUNCTION);
-            InventoryListener.registerInventory(CustomInventoryType.ENTITY_EFFECTS_MENU_2, EFFECTS_MENU_2_FUNCTION);
-            InventoryListener.registerInventory(CustomInventoryType.EQUIPMENT_MENU, EQUIPMENT_MENU_FUNCTION);
-            
-            entityListAdapter = new GUIPagesAdapter<>(
-                    ENTITY_LIST_MENU_SIZE,
-                    (entityType, index) -> {
-                        XMaterial material = EntityReward.getXMaterialFromEntityType(entityType);
-                        ItemBuilder builder = ItemBuilder.newItem(material);
-                        builder.withDisplayName("&3" + entityType.name());
-                        if(entityType.isAlive()){
-                            builder.addLoreLine("&6Is living entity: &atrue");
-                        }else{
-                            builder.addLoreLine("&6Is living entity: &7false");
-                        }
-                        return builder.build();
-                    }
-            );
-            entityListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
-            entityListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
-            entityListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
-            
-            List<EntityType> entityTypes = new ArrayList<>(Arrays.asList(EntityType.values()));
-            entityTypes.removeIf(entityType -> 
-                    entityType == EntityType.PLAYER || !entityType.isSpawnable());
-            entityTypes.sort((entityType1, entityType2) -> {
-                String name1 = entityType1.name();
-                String name2 = entityType2.name();                
-                return name1.compareTo(name2);
-            });
-            
-            entityListAdapter.setItemList(entityTypes);
-            entityListAdapter.goToMainPage();
-            
-            inventoriesRegistered = true;
-        }
-        
+    @Override
+    protected void reset(){
         entityListAdapter.goToMainPage();
-        
-        reward = null;
-        
-        equipment_slot = 0;
-        equipment = null;
-        
-        effect_name = null;
-        effect_time = 60;
-        effect_amplifier = 0;
+    }
+    
+    @Override
+    protected void newItem(Player player){
+        Outcome outcome = RewardListMenu.getCurrentOutcome();
+        item = new EntityReward(outcome);
+        openEntityMenu(player);
+    }
+    
+    @Override
+    protected void editItem(Player player){
+        openEntityMenu(player);
     }
     
     //Entity inventory
-    public static void openEntityMenu(Player p){
+    private void openEntityMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(reward == null){
-            reward = new EntityReward(RewardListMenu.getCurrentOutcome(), RewardListMenu.getCurrentOutcome().getEntityRewardsNumber());
-            equipment = reward.getEquipment();
-        }
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.ENTITY_MENU, 27, "&2&lEntity Reward");
+        
         ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
         
-        XMaterial material = EntityReward.getXMaterialFromEntityType(reward.getType());
+        XMaterial material = EntityReward.getXMaterialFromEntityType(item.getType());
         ItemBuilder builder = ItemBuilder.newItem(material);
-        if(reward.getType() == null){
+        if(item.getType() == null){
             builder.withDisplayName("&6Select entityType");
         }else{
-            builder.withDisplayName("&6entityType: &r" + reward.getType());
+            builder.withDisplayName("&6entityType: &r" + item.getType());
         }
         ItemStack ent_type = builder.build();
         
         builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
-        if(reward.getCustom_name() == null){
+        if(item.getCustom_name() == null){
             builder.withDisplayName("&aSelect entityCustomName (optional)");
         }else{
-            builder.withDisplayName("&aentityCustomName: &r" + reward.getCustom_name());
+            builder.withDisplayName("&aentityCustomName: &r" + item.getCustom_name());
         }
         ItemStack ent_name = builder.build();
         
         builder = ItemBuilder.newItem(XMaterial.POTION);
         builder.withDisplayName("&3Select entityEffects (optional)");
-        if(!reward.getEffects().isEmpty()){
-            builder.withLore(reward.getEffects());
+        if(!item.getEffects().isEmpty()){
+            builder.withLore(item.getEffects());
         }
         ItemStack ent_effects = builder.build();
         
@@ -135,7 +122,7 @@ public class EntityMenu{
                 .withDisplayName("&eSelect entityEquipment (optional)")
                 .build();
         
-        ItemStack offsetStack = reward.getOffset().getItemToDisplay();
+        ItemStack offsetStack = item.getOffset().getItemToDisplay();
         
         ItemStack resetName = ItemBuilder.newItem(XMaterial.BARRIER)
                 .withDisplayName("&cReset custom name")
@@ -149,98 +136,121 @@ public class EntityMenu{
                 .withDisplayName("&cReset equipment")
                 .build();
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENTITY_MENU, 27, "&2&lEntity Reward");
-        
-        inv.setItem(10, GUIItem.getBackItem());
-        inv.setItem(11, ent_type);
-        inv.setItem(12, ent_name);
-        inv.setItem(13, ent_effects);
-        inv.setItem(14, ent_equipment);
-        inv.setItem(15, offsetStack);
-        inv.setItem(16, GUIItem.getNextItem());
+        menu.setItem(10, GUIItem.getBackItem());
+        menu.setItem(11, ent_type);
+        menu.setItem(12, ent_name);
+        menu.setItem(13, ent_effects);
+        menu.setItem(14, ent_equipment);
+        menu.setItem(15, offsetStack);
+        menu.setItem(16, GUIItem.getNextItem());
         
         for(int i=0;i<9;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         for(int i=18;i<27;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
-        inv.setItem(9, glass);
-        inv.setItem(17, glass);
+        menu.setItem(9, glass);
+        menu.setItem(17, glass);
         
-        inv.setItem(21, resetName);
-        inv.setItem(22, resetEffects);
-        inv.setItem(23, resetEquipment);
+        menu.setItem(21, resetName);
+        menu.setItem(22, resetEffects);
+        menu.setItem(23, resetEquipment);
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction ENTITY_MENU_FUNCTION = e -> {
+    private final InventoryFunction ENTITY_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         if(e.getLocation() == InventoryLocation.TOP){
 
             switch(e.getSlot()){
                 case 10:
-                    if(RewardListMenu.editMode){
-                        RewardListMenu.openFinishInventory(p);
-                    }else{
-                        RewardTypesMenu.openRewardTypesMenu(p);
+                    // Go to previous menu
+                    onBack.accept(player);
+                    break;
+                case 16:
+                    // Go to next menu and generate entityID
+                    if(item.getType() == null){
+                        break;
                     }
+                    
+                    if(!item.getType().isAlive()){
+                        item.setEffects(new ArrayList());
+                        item.getEquipment().resetEquipment();
+                    }
+                    
+                    int entityID = item.getOutcome().getEntityRewardsNumber();
+                    item.setID(entityID);
+                    
+                    onNext.accept(player, item);
                     break;
                 case 11:
                     //EntityType
-                    openEntityTypeInventory(p);
+                    openEntityTypeInventory(player);
                     break;
                 case 12:
                     //EntityCustomName
-                    ChatListener.registerPlayer(p, message -> {
-                        reward.setCustom_name(message);
-                        openEntityMenu(p);
+                    ChatListener.registerPlayer(player, message -> {
+                        item.setCustom_name(message);
+                        openEntityMenu(player);
                     });
-                    p.closeInventory();
+                    player.closeInventory();
                     break;
                 case 13:
                     //EntityEffects
-                    openEntityEffectsInventory(p);
+                    Editor<EffectReward> editor = EditorType.EFFECT_REWARD.getEditor();
+                    EffectMenu.setShowClearEffectsItem(false);
+                    editor.createNewItem(
+                            player, 
+                            p -> openEntityMenu(p), 
+                            (p, effectReward) -> {
+                                String effectName = effectReward.getPotionEffect().getName();
+                                int effectDuration = effectReward.getDuration();
+                                int effectAmplifier = effectReward.getAmplifier();
+                                item.getEffects().add(effectName + ";" + effectDuration + ";" + effectAmplifier);
+                                
+                                openEntityMenu(p);
+                            });
                     break;
                 case 14:
                     //EntityEquipment
-                    openEntityEquipmentInventory(p);
+                    Editor<Equipment> editor2 = EditorType.EQUIPMENT.getEditor();
+                    editor2.editExistingItem(
+                            item.getEquipment().clone(), 
+                            player, 
+                            p -> openEntityMenu(p), 
+                            (p, equipment) -> {
+                                item.setEquipment(equipment);
+                                openEntityMenu(p);
+                            });
                     break;
                 case 15:
                     //Set offset
-                    OffsetMenu.reset();
-                    OffsetMenu.setCurrentData(reward.getOffset(), pl -> openEntityMenu(pl));
-                    OffsetMenu.openOffsetMenu(p);
-                    break;
-                case 16:
-                    if(reward.getType() == null){
-                        return;
-                    }
-                    //open FinishMenu
-                    if(!reward.getType().isAlive()){
-                        reward.setEffects(new ArrayList());
-                        reward.getEquipment().resetEquipment();
-                    }
-                    RewardListMenu.addReward(reward);
-                    reset();
-                    RewardListMenu.openFinishInventory(p);
+                    Editor<Offset> editor3 = EditorType.OFFSET.getEditor();
+                    editor3.editExistingItem(
+                            item.getOffset().clone(), 
+                            player, 
+                            p -> openEntityMenu(p), 
+                            (p, offset) -> {
+                                item.setOffset(offset);
+                                openEntityMenu(p);
+                            });
                     break;
                 case 21:
-                    reward.setCustom_name(null);
-                    openEntityMenu(p);
+                    item.setCustom_name(null);
+                    openEntityMenu(player);
                     break;
                 case 22:
-                    reward.getEffects().clear();
-                    openEntityMenu(p);
+                    item.getEffects().clear();
+                    openEntityMenu(player);
                     break;
                 case 23:
-                    reward.getEquipment().resetEquipment();
-                    openEntityMenu(p);
+                    item.getEquipment().resetEquipment();
+                    openEntityMenu(player);
                     break;
             }
         }
@@ -248,22 +258,21 @@ public class EntityMenu{
     };
     
     //EntityType inventory
-    private static void openEntityTypeInventory(Player p){
+    private void openEntityTypeInventory(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENTITY_TYPE_MENU, 54, "&d&lEntity List");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.ENTITY_TYPE_MENU, 54, "&d&lEntity List");
         
-        inv.setItem(45, GUIItem.getBackItem());
+        menu.setItem(45, GUIItem.getBackItem());
         
-        entityListAdapter.updateMenu(inv);
+        entityListAdapter.updateMenu(menu);
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction ENTITY_TYPE_MENU_FUNCTION = e -> {
+    private final InventoryFunction ENTITY_TYPE_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
@@ -271,24 +280,24 @@ public class EntityMenu{
                 case 45:
                     // Back
                     entityListAdapter.goToMainPage();
-                    openEntityMenu(p);
+                    openEntityMenu(player);
                     break;
                 case 51:
                     // Go to previous page
                     if(entityListAdapter.goToPreviousPage()){
-                        openEntityTypeInventory(p);
+                        openEntityTypeInventory(player);
                     }
                     break;
                 case 52:
                     // Go to main page
                     if(entityListAdapter.goToMainPage()){
-                        openEntityTypeInventory(p);
+                        openEntityTypeInventory(player);
                     }
                     break;
                 case 53:
                     // Go to next page
                     if(entityListAdapter.goToNextPage()){
-                        openEntityTypeInventory(p);
+                        openEntityTypeInventory(player);
                     }
                     break;
                 default:
@@ -298,435 +307,13 @@ public class EntityMenu{
                                 .getDisplayName();
                         if(displayName != null){
                             String typeName = Logger.stripColor(displayName);
-                            reward.setType(EntityType.valueOf(typeName));
+                            item.setType(EntityType.valueOf(typeName));
                             entityListAdapter.goToMainPage();
-                            openEntityMenu(p);
+                            openEntityMenu(player);
                         }                            
                     }
             }
         }
 //</editor-fold>
-    };
-    
-    //EntityEffects inventory
-    private static void openEntityEffectsInventory(Player p){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENTITY_EFFECTS_MENU, 54, "&d&lEffect List");
-        
-        List<PotionEffectType> effectTypes = new ArrayList<>(Arrays.asList(PotionEffectType.values()));
-        effectTypes.removeIf(effectType -> effectType == null);
-        effectTypes.sort((effectType1, effectType2) -> {
-            String effectTypeName1 = effectType1.getName();
-            String effectTypeName2 = effectType2.getName();            
-            return effectTypeName1.compareTo(effectTypeName2);
-        });
-        
-        Iterator<PotionEffectType> iterator = effectTypes.iterator();
-        for(int i=0; iterator.hasNext() && i<45; i++){
-            PotionEffectType effectType = iterator.next();
-            PotionEffect potionEffect = new PotionEffect(effectType, 0, 0);
-            ItemStack effectItem = ItemBuilder.newItem(XMaterial.POTION)
-                    .withDisplayName("&d" + effectType.getName())
-                    .addPotionEffect(potionEffect)
-                    .build();
-            inv.setItem(i, effectItem);
-        }
-        
-        inv.setItem(45, GUIItem.getBackItem());
-        
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
-//</editor-fold>
-    }
-    
-    private static final InventoryFunction EFFECTS_MENU_FUNCTION = e -> {
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
-        e.setCancelled(true);
-        
-        if(e.getLocation() == InventoryLocation.TOP){
-            if(e.getSlot() == 45){
-                openEntityMenu(p);
-                return;
-            }
-            if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
-                        .getDisplayName();
-                if(displayName != null){
-                    effect_name = Logger.stripColor(displayName);
-                    openEntityEffects2Inventory(p);
-                }                    
-            }
-        }
-//</editor-fold>
-    };
-    
-    //EntityEffects2 inventory
-    private static void openEntityEffects2Inventory(Player p){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.ENTITY_EFFECTS_MENU_2, 45, "&5&lEffect Config");
-        
-        ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
-        
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.CLOCK);
-        if(effect_time < 0){
-            builder.withDisplayName("&6Effect time (seconds): &ainfinite");
-        }else{
-            builder.withDisplayName("&6Effect time (seconds): &a" + effect_time);
-        }
-        builder.addLoreLine("&3Click to reset");
-        ItemStack time_item = builder.build();
-        
-        ItemStack amplifier = ItemBuilder.newItem(XMaterial.BEACON)
-                .withDisplayName("&6Effect amplifier: &a" + effect_amplifier)
-                .addLoreLine("&3Click to reset")
-                .build();
-        
-        builder = ItemBuilder.newItem(XMaterial.POTION);
-        if(effect_name == null){
-            builder.withDisplayName("&bSelected effect: &dnull");
-        }else{
-            builder.withDisplayName("&bSelected effect: &d" + effect_name);
-            builder.addPotionEffect(new PotionEffect(PotionEffectType.getByName(effect_name), 0, 0));
-        }
-        ItemStack effectStack = builder.build();
-        
-        for(int i=0;i<9;i++){
-            inv.setItem(i, glass);
-        }
-        for(int i=36;i<45;i++){
-            inv.setItem(i, glass);
-        }
-        inv.setItem(9, glass);
-        inv.setItem(17, glass);
-        inv.setItem(18, glass);
-        inv.setItem(26, glass);
-        inv.setItem(27, glass);
-        inv.setItem(35, glass);
-        
-        inv.setItem(10, GUIItem.getBackItem());
-        inv.setItem(16, GUIItem.getNextItem());
-        
-        inv.setItem(13, effectStack);
-        
-        inv.setItem(19, GUIItem.getPlusLessItem(-100));
-        inv.setItem(20, GUIItem.getPlusLessItem(-10));
-        inv.setItem(21, GUIItem.getPlusLessItem(-1));
-        inv.setItem(22, time_item);
-        inv.setItem(23, GUIItem.getPlusLessItem(+1));
-        inv.setItem(24, GUIItem.getPlusLessItem(+10));
-        inv.setItem(25, GUIItem.getPlusLessItem(+100));
-        
-        inv.setItem(28, GUIItem.getPlusLessItem(-100));
-        inv.setItem(29, GUIItem.getPlusLessItem(-10));
-        inv.setItem(30, GUIItem.getPlusLessItem(-1));
-        inv.setItem(31, amplifier);
-        inv.setItem(32, GUIItem.getPlusLessItem(+1));
-        inv.setItem(33, GUIItem.getPlusLessItem(+10));
-        inv.setItem(34, GUIItem.getPlusLessItem(+100));
-        
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
-//</editor-fold>
-    }
-    
-    private static final InventoryFunction EFFECTS_MENU_2_FUNCTION = e -> {
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
-        e.setCancelled(true);
-        
-        if(e.getLocation() == InventoryLocation.TOP){
-            switch(e.getSlot()){
-                case 10:
-                    //Return to the previous menu
-                    openEntityEffectsInventory(p);
-                    break;
-                /*case 12:
-                    //Select effect time
-                    player = p;
-                    chat2 = true;
-                    p.closeInventory();
-                    break;
-                case 14:
-                    //Select effect amplifier
-                    player = p;
-                    chat3 = true;
-                    p.closeInventory();
-                    break;*/
-                case 16:
-                    //Open entity menu
-                    if(effect_name != null){
-                        reward.getEffects().add(effect_name + ";" + effect_time + ";" + effect_amplifier);
-                        effect_name = null;
-                        effect_time = 60;
-                        effect_amplifier = 0;
-                        openEntityMenu(p);
-                    }
-                    break;
-                //<editor-fold defaultstate="collapsed" desc="EffectTime">
-                case 19:
-                    //Effect time -100
-                    effect_time -= 100;
-                    if(effect_time < -1){
-                        effect_time = -1;
-                    }
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 20:
-                    //Effect time -10
-                    effect_time -= 10;
-                    if(effect_time < -1){
-                        effect_time = -1;
-                    }
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 21:
-                    //Effect time -1
-                    effect_time--;
-                    if(effect_time < -1){
-                        effect_time = -1;
-                    }
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 22:
-                    //Effect time = 60
-                    effect_time = 60;
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 23:
-                    //Effect time +1
-                    effect_time ++;
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 24:
-                    //Effect time +10
-                    effect_time += 10;
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 25:
-                    //Effect time +100
-                    effect_time += 100;
-                    openEntityEffects2Inventory(p);
-                    break;
-//</editor-fold>
-                //<editor-fold defaultstate="collapsed" desc="EffectAmplifier">
-                case 28:
-                    //Effect amplifier -100
-                    effect_amplifier -= 100;
-                    if(effect_amplifier < 0){
-                        effect_amplifier = 0;
-                    }
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 29:
-                    //Effect amplifier -10
-                    effect_amplifier -= 10;
-                    if(effect_amplifier < 0){
-                        effect_amplifier = 0;
-                    }
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 30:
-                    //Effect amplifier -1
-                    effect_amplifier--;
-                    if(effect_amplifier < 0){
-                        effect_amplifier = 0;
-                    }
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 31:
-                    //Effect amplifier = 0
-                    effect_amplifier = 0;
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 32:
-                    //Effect amplifier +1
-                    effect_amplifier ++;
-                    if(effect_amplifier > 255){
-                        effect_amplifier = 255;
-                    }
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 33:
-                    //Effect amplifier +10
-                    effect_amplifier += 10;
-                    if(effect_amplifier > 255){
-                        effect_amplifier = 255;
-                    }
-                    openEntityEffects2Inventory(p);
-                    break;
-                case 34:
-                    //Effect amplifier +100
-                    effect_amplifier += 100;
-                    if(effect_amplifier > 255){
-                        effect_amplifier = 255;
-                    }
-                    openEntityEffects2Inventory(p);
-                    break;
-//</editor-fold>
-
-            }
-        }
-//</editor-fold>
-    };
-    
-    //Equipment inventory
-    private static void openEntityEquipmentInventory(Player p){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.EQUIPMENT_MENU, 54, "&e&lEquipment Config");
-        
-        ItemStack glass = GUIItem.getGlassItem(GlassColor.BLACK);
-        
-        ItemStack creative = ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
-                .withDisplayName("&3Close menu to pick items from creative mode")
-                .build();
-        
-        ItemStack helmet = ItemBuilder.newItem(XMaterial.LIGHT_BLUE_STAINED_GLASS_PANE)
-                .withDisplayName("&bSelect helmet")
-                .build();
-        
-        ItemStack chestplate = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
-                .withDisplayName("&aSelect chestplate")
-                .build();
-        
-        ItemStack leggings = ItemBuilder.newItem(XMaterial.YELLOW_STAINED_GLASS_PANE)
-                .withDisplayName("&eSelect leggings")
-                .build();
-        
-        ItemStack boots = ItemBuilder.newItem(XMaterial.ORANGE_STAINED_GLASS_PANE)
-                .withDisplayName("&6Select boots")
-                .build();
-        
-        ItemStack itemInHand = ItemBuilder.newItem(XMaterial.RED_STAINED_GLASS_PANE)
-                .withDisplayName("&cSelect item in hand")
-                .build();
-        
-        for(int i=0;i<54;i++){
-            inv.setItem(i, glass);
-        }
-        
-        if(equipment.helmet == null){
-            inv.setItem(13, helmet);
-        }else{
-            inv.setItem(13, equipment.helmet);
-        }
-        if(equipment.chestplate == null){
-            inv.setItem(22, chestplate);
-        }else{
-            inv.setItem(22, equipment.chestplate);
-        }
-        if(equipment.leggings == null){
-            inv.setItem(31, leggings);
-        }else{
-            inv.setItem(31, equipment.leggings);
-        }
-        if(equipment.boots == null){
-            inv.setItem(40, boots);
-        }else{
-            inv.setItem(40, equipment.boots);
-        }
-        if(equipment.itemInHand == null){
-            inv.setItem(49, itemInHand);
-        }else{
-            inv.setItem(49, equipment.itemInHand);
-        }
-        
-        inv.setItem(27, GUIItem.getBackItem());
-        inv.setItem(35, GUIItem.getNextItem());
-        
-        inv.setItem(45, creative);
-        
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
-//</editor-fold>
-    }
-    
-    private static final InventoryFunction EQUIPMENT_MENU_FUNCTION = e -> {
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
-        e.setCancelled(true);
-        
-        if(e.getLocation() == InventoryLocation.TOP){
-            //Change the 'equipment_slot' depending on what slot has been clicked from {13, 22, 31, 40, 49}
-            switch(e.getSlot()){
-                case 45:
-                    //Close menu
-                    p.closeInventory();
-                    Logger.sendMessage("&6Use &b/alb return &6to return to the menu", p);
-                    break;
-                case 13:
-                    equipment_slot = 13;
-                    break;
-                case 22:
-                    equipment_slot = 22;
-                    break;
-                case 31:
-                    equipment_slot = 31;
-                    break;
-                case 40:
-                    equipment_slot = 40;
-                    break;
-                case 49:
-                    equipment_slot = 49;
-                    break;
-                case 35:
-                    //Open next inventory when "next" is clicked and then set 'equipment_slot' to 0
-                    //Add all ItemStacks to the 'equipment' list
-                    equipment_slot = 0;
-                    reward.setEquipment(equipment);
-
-                    openEntityMenu(p);
-                    break;
-                case 27:
-                    //Reset equipment
-                    equipment = reward.getEquipment().clone();
-                    openEntityMenu(p);
-                    break;
-            }
-        }else if(e.getLocation() == InventoryLocation.BOTTOM){
-            if(equipment_slot != 0){
-                switch(equipment_slot){
-                    case 13:
-                        if(e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)){
-                            equipment.helmet = null;
-                        }else{
-                            equipment.helmet = e.getCurrentItem().clone();
-                        }
-                        break;
-                    case 22:
-                        if(e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)){
-                            equipment.chestplate = null;
-                        }else{
-                            equipment.chestplate = e.getCurrentItem().clone();
-                        }
-                        break;
-                    case 31:
-                        if(e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)){
-                            equipment.leggings = null;
-                        }else{
-                            equipment.leggings = e.getCurrentItem().clone();
-                        }
-                        break;
-                    case 40:
-                        if(e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)){
-                            equipment.boots = null;
-                        }else{
-                            equipment.boots = e.getCurrentItem().clone();
-                        }
-                        break;
-                    case 49:
-                        if(e.getCurrentItem() == null || e.getCurrentItem().getType().equals(Material.AIR)){
-                            equipment.itemInHand = null;
-                        }else{
-                            equipment.itemInHand = e.getCurrentItem().clone();
-                        }
-                        break;
-                }
-
-                //Clone the selected item to the item in the 'equipment_slot' slot
-                openEntityEquipmentInventory(p);
-            }
-        }
-//</editor-fold>
-    };
+    };    
 }

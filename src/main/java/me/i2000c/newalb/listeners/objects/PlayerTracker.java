@@ -61,7 +61,7 @@ public class PlayerTracker extends SpecialItem{
                 String message;
                 if(nearestEntity == null){
                     message = LangLoader.getMessages().getString("Objects.PlayerTracker.message3");
-                    ActionBarUtils.sendMessage(player, message);
+                    ActionBarUtils.sendMessage(message, player);
                 }else{
                     player.setCompassTarget(nearestEntity.getLocation());
 
@@ -71,14 +71,14 @@ public class PlayerTracker extends SpecialItem{
 
                     if(nearestEntity instanceof Player){
                         message = LangLoader.getMessages().getString("Objects.PlayerTracker.message1");
-                        ActionBarUtils.sendMessage(player, message
+                        ActionBarUtils.sendMessage(message
                                 .replace("%player%", ((Player)nearestEntity).getName())
-                                .replace("%distance%", String.valueOf(distance)));
+                                .replace("%distance%", String.valueOf(distance)), player);
                     }else{
                         message = LangLoader.getMessages().getString("Objects.PlayerTracker.message2");
-                        ActionBarUtils.sendMessage(player, message
+                        ActionBarUtils.sendMessage(message
                                 .replace("%entity%", nearestEntity.getName())
-                                .replace("%distance%", String.valueOf(distance)));
+                                .replace("%distance%", String.valueOf(distance)), player);
                     }
                 }
                 break;

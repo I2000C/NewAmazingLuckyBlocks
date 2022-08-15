@@ -36,11 +36,11 @@ class ActionBar1_8{
 //</editor-fold>
     }
     
-    public static void sendMessage(Player p, String message){
+    public static void sendMessage(String message, Player player){
         try{
             Object component = chatComponentTextConstructor.newInstance(Logger.color(message));
             Object packet = packetPlayOutChatConstructor.newInstance(component, (byte) 2);            
-            Object nmsPlayer = getHandle.invoke(p);            
+            Object nmsPlayer = getHandle.invoke(player);            
             sendPacket.invoke(playerConnection.get(nmsPlayer), packet);            
         }catch(Exception ex){
             ex.printStackTrace();

@@ -5,17 +5,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class WorldMenu{
@@ -30,6 +30,7 @@ public class WorldMenu{
     private static Map<String, Boolean> worlds;
     
     public static void reset(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(!inventoriesRegistered){
             //Register inventories
             InventoryListener.registerInventory(CustomInventoryType.WORLD_MENU, WORLD_MENU_FUNCTION);
@@ -37,7 +38,7 @@ public class WorldMenu{
             adapter = new GUIPagesAdapter<>(
                     MENU_SIZE,
                     (worldName, index) -> {
-                        boolean worldType = worlds.get(worldName);            
+                        boolean worldType = worlds.get(worldName);
                         Material material = getMaterialByType(worldType);
                         return ItemBuilder
                                 .newItem(XMaterial.matchXMaterial(material))
@@ -46,7 +47,7 @@ public class WorldMenu{
                                 .addLoreLine("&3Click to toggle")
                                 .build();
                     }
-                );
+            );
             adapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
             adapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
             adapter.setNextPageSlot(NEXT_PAGE_SLOT);
@@ -54,15 +55,18 @@ public class WorldMenu{
             inventoriesRegistered = true;
         }
         
+        adapter.goToMainPage();
+        
         worlds = new LinkedHashMap<>(WorldList.getWorlds());
         adapter.setItemList(new ArrayList<>(worlds.keySet()));
+//</editor-fold>
     }
     
-    public static void openWorldsMenu(Player p){
+    public static void openWorldsMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
         WorldList.updateWorlds(false);
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.WORLD_MENU, 54, "&3&lWorlds Menu");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.WORLD_MENU, 54, "&3&lWorlds Menu");
         
         ItemStack exit = ItemBuilder.newItem(XMaterial.BARRIER)
                 .withDisplayName("&cExit")
@@ -87,15 +91,14 @@ public class WorldMenu{
                 .withDisplayName("&3Toggle all worlds")
                 .build();
         
-        inv.setItem(49, allNormal);
-        inv.setItem(50, toggleAllWorlds);
-        inv.setItem(51, allDisabled);
-        inv.setItem(52, save);
-        inv.setItem(53, exit);
+        menu.setItem(49, allNormal);
+        menu.setItem(50, toggleAllWorlds);
+        menu.setItem(51, allDisabled);
+        menu.setItem(52, save);
+        menu.setItem(53, exit);
         
-        adapter.updateMenu(inv);
-        
-        p.openInventory(inv);
+        adapter.updateMenu(menu);
+        menu.openToPlayer(player, false);
 //</editor-fold>
     }
 

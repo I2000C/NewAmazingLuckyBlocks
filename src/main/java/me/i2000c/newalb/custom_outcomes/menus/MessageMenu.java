@@ -1,47 +1,49 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.MessageReward;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.MessageReward;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
+import me.i2000c.newalb.listeners.inventories.GUIItem;
+import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class MessageMenu{
-    public static MessageReward reward = null;
-    
-    private static boolean inventoriesRegistered = false;
-    
-    public static void reset(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.MESSAGE_MENU, MESSAGE_MENU_FUNCTION);
-            
-            inventoriesRegistered = true;
-        }
-        
-        reward = null;
+public class MessageMenu extends Editor<MessageReward>{
+    public MessageMenu(){
+        InventoryListener.registerInventory(CustomInventoryType.MESSAGE_MENU, MESSAGE_MENU_FUNCTION);
     }
     
-    public static void openMessageMenu(Player p){
+    @Override
+    protected void newItem(Player player){
+        Outcome outcome = RewardListMenu.getCurrentOutcome();
+        item = new MessageReward(outcome);
+        openMessageMenu(player);
+    }
+    
+    @Override
+    protected void editItem(Player player){
+        openMessageMenu(player);
+    }
+    
+    private void openMessageMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(reward == null){
-            reward = new MessageReward(RewardListMenu.getCurrentOutcome());
-        }
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.MESSAGE_MENU, 27, "&7&lMessage Reward");
         
-        ItemStack glass = ItemBuilder.newItem(XMaterial.CYAN_STAINED_GLASS_PANE)
-                .withDisplayName(" ").build();
+        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
         ItemStack titleItem = ItemBuilder.newItem(XMaterial.BOOK)
                 .withDisplayName("&bSelect title")
-                .addLoreLine("&3Selected title: &r\"" + reward.getTitle() + "&r\"")
+                .addLoreLine("&3Selected title: &r\"" + item.getTitle() + "&r\"")
                 .addLoreLine("&eClick to change")
                 .addLoreLine("")
                 .addLoreLine("&7Use &a%player% &7if you want to use")
@@ -54,7 +56,7 @@ public class MessageMenu{
         
         ItemStack subtitleItem = ItemBuilder.newItem(XMaterial.BOOK)
                 .withDisplayName("&bSelect subtitle")
-                .addLoreLine("&3Selected subtitle: &r\"" + reward.getSubtitle() + "&r\"")
+                .addLoreLine("&3Selected subtitle: &r\"" + item.getSubtitle() + "&r\"")
                 .addLoreLine("&eClick to change")
                 .addLoreLine("")
                 .addLoreLine("&6The subtitle only is used")
@@ -69,7 +71,7 @@ public class MessageMenu{
                 .build();
         
         ItemBuilder builder;
-        switch(reward.getMessageType()){
+        switch(item.getMessageType()){
             case TITLE:
                 builder = ItemBuilder.newItem(XMaterial.PAINTING);
                 break;
@@ -81,7 +83,7 @@ public class MessageMenu{
                 builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
         }        
         builder.withDisplayName("&aSelect message type");
-        builder.withLore("&3Selected message type: &5" + reward.getMessageType().name());
+        builder.withLore("&3Selected message type: &5" + item.getMessageType().name());
         ItemStack typeItem = builder.build();
         
         ItemStack back = ItemBuilder.newItem(XMaterial.ENDER_PEARL)
@@ -100,80 +102,72 @@ public class MessageMenu{
                 .withDisplayName("&cRemove subtitle")
                 .build();
         
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.MESSAGE_MENU, 27, "&7&lMessage Reward");
         for(int i=0;i<9;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         for(int i=18;i<27;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
-        inv.setItem(9, glass);
-        inv.setItem(17, glass);
+        menu.setItem(9, glass);
+        menu.setItem(17, glass);
         
-        inv.setItem(12, titleItem);
-        inv.setItem(13, subtitleItem);
-        inv.setItem(14, typeItem);
+        menu.setItem(12, titleItem);
+        menu.setItem(13, subtitleItem);
+        menu.setItem(14, typeItem);
         
-        inv.setItem(21, deleteTitle);
-        inv.setItem(22, deleteSubtitle);
+        menu.setItem(21, deleteTitle);
+        menu.setItem(22, deleteSubtitle);
         
-        inv.setItem(10, back);
-        inv.setItem(16, next);
+        menu.setItem(10, back);
+        menu.setItem(16, next);
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
-    }
+    }    
     
-    
-    private static final InventoryFunction MESSAGE_MENU_FUNCTION = e -> {
+    private final InventoryFunction MESSAGE_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
-                    if(RewardListMenu.editMode){
-                        RewardListMenu.openFinishInventory(p);
-                    }else{
-                        RewardTypesMenu.openRewardTypesMenu(p);
-                    }
-                    break;
-                case 12:
-                    ChatListener.registerPlayer(p, message -> {
-                        reward.setTitle(message);
-                        openMessageMenu(p);
-                    });
-                    p.closeInventory();
-                    Logger.sendMessage("&3Write the title in the chat and press ENTER", p);
-                    break;
-                case 13:
-                    ChatListener.registerPlayer(p, message -> {
-                        reward.setSubtitle(message);
-                        openMessageMenu(p);
-                    });
-                    p.closeInventory();
-                    Logger.sendMessage("&3Write the subtitle in the chat and press ENTER", p);
-                    break;
-                case 14:
-                    MessageReward.MessageType type = reward.getMessageType();
-                    reward.setMessageType(type.getNextType());
-                    openMessageMenu(p);
-                    break;
-                case 21:
-                    reward.setTitle("");
-                    openMessageMenu(p);
-                    break;
-                case 22:
-                    reward.setSubtitle("");
-                    openMessageMenu(p);
+                    // Go to previous menu
+                    onBack.accept(player);
                     break;
                 case 16:
-                    //Open next inventory
-                    RewardListMenu.addReward(reward);
-                    reset();
-                    RewardListMenu.openFinishInventory(p);
+                    // Go to next menu
+                    onNext.accept(player, item);
+                    break;
+                case 12:
+                    ChatListener.registerPlayer(player, message -> {
+                        item.setTitle(message);
+                        openMessageMenu(player);
+                    });
+                    player.closeInventory();
+                    Logger.sendMessage("&3Write the title in the chat and press ENTER", player);
+                    break;
+                case 13:
+                    ChatListener.registerPlayer(player, message -> {
+                        item.setSubtitle(message);
+                        openMessageMenu(player);
+                    });
+                    player.closeInventory();
+                    Logger.sendMessage("&3Write the subtitle in the chat and press ENTER", player);
+                    break;
+                case 14:
+                    MessageReward.MessageType type = item.getMessageType();
+                    item.setMessageType(type.getNextType());
+                    openMessageMenu(player);
+                    break;
+                case 21:
+                    item.setTitle("");
+                    openMessageMenu(player);
+                    break;
+                case 22:
+                    item.setSubtitle("");
+                    openMessageMenu(player);
                     break;
             }
         }

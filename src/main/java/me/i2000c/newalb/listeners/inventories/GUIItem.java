@@ -1,7 +1,7 @@
 package me.i2000c.newalb.listeners.inventories;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
 

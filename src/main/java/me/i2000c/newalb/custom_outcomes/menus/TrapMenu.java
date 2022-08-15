@@ -1,32 +1,57 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.utils.Outcome;
-import me.i2000c.newalb.custom_outcomes.utils.OutcomePack;
-import me.i2000c.newalb.custom_outcomes.utils.PackManager;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapReward;
+import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.OutcomePack;
+import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapReward;
+import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.GlassColor;
-import me.i2000c.newalb.listeners.inventories.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
+import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-public class TrapMenu{
-    public static TrapReward reward = null;
+public class TrapMenu extends Editor<TrapReward>{
+    public TrapMenu(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        InventoryListener.registerInventory(CustomInventoryType.TRAP_MENU, TRAP_MENU_FUNCTION);
+        InventoryListener.registerInventory(CustomInventoryType.TRAP_TYPE_MENU, TRAP_TYPE_MENU_FUNCTION);
+        InventoryListener.registerInventory(CustomInventoryType.TRAP_PACKS_MENU, TRAP_PACKS_MENU_FUNCTION);
+        InventoryListener.registerInventory(CustomInventoryType.TRAP_OUTCOMES_MENU, TRAP_OUTCOMES_MENU_FUNCTION);
+        
+        packListAdapter = new GUIPagesAdapter<>(
+                PACK_LIST_MENU_SIZE,
+                (outcome, index) -> {
+                    ItemBuilder builder = ItemBuilder.fromItem(outcome.getItemToDisplay(), false);
+                    
+                    if(item.getTrapOutcome() != null && item.getTrapOutcome().equals(outcome)){
+                        builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+                        builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    }
+                    
+                    return builder.build();
+                }
+        );
+        packListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
+        packListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
+        packListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
+//</editor-fold>
+    }
     
-    private static OutcomePack auxPack = null;
+    private OutcomePack auxPack = null;
     
     private static final int PACK_LIST_MENU_SIZE = 45;
     private static final int PREVIOUS_PAGE_SLOT = 51;
@@ -34,137 +59,107 @@ public class TrapMenu{
     private static final int NEXT_PAGE_SLOT = 53;
     private static GUIPagesAdapter<Outcome> packListAdapter;
     
-    private static boolean inventoriesRegistered = false;
+    @Override
+    protected void reset(){
+        this.auxPack = null;
+    }
     
-    public static void reset(){
-        if(!inventoriesRegistered){
-            //Register inventories
-            InventoryListener.registerInventory(CustomInventoryType.TRAP_MENU, TRAP_MENU_FUNCTION);
-            InventoryListener.registerInventory(CustomInventoryType.TRAP_TYPE_MENU, TRAP_TYPE_MENU_FUNCTION);
-            InventoryListener.registerInventory(CustomInventoryType.TRAP_PACKS_MENU, TRAP_PACKS_MENU_FUNCTION);
-            InventoryListener.registerInventory(CustomInventoryType.TRAP_OUTCOMES_MENU, TRAP_OUTCOMES_MENU_FUNCTION);
-            
-            packListAdapter = new GUIPagesAdapter<>(
-                    PACK_LIST_MENU_SIZE,
-                    (outcome, index) -> {
-                        ItemBuilder builder = ItemBuilder.fromItem(outcome.getItemToDisplay(), false);
-            
-                        if(reward.getTrapOutcome() != null && reward.getTrapOutcome().equals(outcome)){
-                            builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
-                            builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                        }
-                        
-                        return builder.build();
-                    }
-            );
-            packListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
-            packListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
-            packListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
-            
-            inventoriesRegistered = true;
-        }
-        
-        reward = null;
-        auxPack = null;
-        
-        packListAdapter.goToMainPage();
+    @Override
+    protected void newItem(Player player){
+        Outcome outcome = RewardListMenu.getCurrentOutcome();
+        item = new TrapReward(outcome);
+        openTrapMenu(player);
+    }
+    
+    @Override
+    protected void editItem(Player player){
+        openTrapMenu(player);
     }
     
     //Trap inventory
-    public static void openTrapMenu(Player p){
+    private void openTrapMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(reward == null){
-            reward = new TrapReward(RewardListMenu.getCurrentOutcome());
-        }
-        
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_MENU, 27, "&5&lTrap Reward");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.TRAP_MENU, 27, "&5&lTrap Reward");
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.PURPLE);
         
         ItemStack trapMaterialItem = ItemBuilder
-                .newItem(XMaterial.matchXMaterial(reward.getPressurePlateMaterial()))
-                .withDisplayName("&2Selected pressure plate material: &a" + reward.getPressurePlateMaterial().name())
+                .newItem(XMaterial.matchXMaterial(item.getPressurePlateMaterial()))
+                .withDisplayName("&2Selected pressure plate material: &a" + item.getPressurePlateMaterial().name())
                 .addLoreLine("&3Click to change")
                 .build();
         
         ItemBuilder builder = ItemBuilder.newItem(XMaterial.NAME_TAG);        
-        if(reward.getTrapName() == null){
+        if(item.getTrapName() == null){
             builder.withDisplayName("&2Trap name: &cnull");
         }else{
-            builder.withDisplayName("&2Trap name: &r" + reward.getTrapName());
+            builder.withDisplayName("&2Trap name: &r" + item.getTrapName());
         }        
         builder.addLoreLine("&3Click to change");
         ItemStack trapNameItem = builder.build();
         
-        Outcome outcome = reward.getTrapOutcome();
+        Outcome outcome = item.getTrapOutcome();
         if(outcome == null){
             builder = ItemBuilder.newItem(XMaterial.CHEST);
             builder.withDisplayName("&2Selected trap outcome: &cnull");
         }else{
             builder = ItemBuilder.newItem(XMaterial.matchXMaterial(outcome.getIcon()));
-            builder.withDisplayName("&2Selected trap outcome: &a" + reward.getTrapOutcome());
+            builder.withDisplayName("&2Selected trap outcome: &a" + item.getTrapOutcome());
         }
         builder.addLoreLine("&3Click to select");
         ItemStack trapOutcomeItem = builder.build();
         
         for(int i=0;i<=9;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         for(int i=17;i<27;i++){
-            inv.setItem(i, glass);
+            menu.setItem(i, glass);
         }
         
-        inv.setItem(10, GUIItem.getBackItem());
-        inv.setItem(16, GUIItem.getNextItem());
+        menu.setItem(10, GUIItem.getBackItem());
+        menu.setItem(16, GUIItem.getNextItem());
         
-        inv.setItem(12, trapMaterialItem);
-        inv.setItem(13, trapNameItem);
-        inv.setItem(14 ,trapOutcomeItem);
+        menu.setItem(12, trapMaterialItem);
+        menu.setItem(13, trapNameItem);
+        menu.setItem(14 ,trapOutcomeItem);
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction TRAP_MENU_FUNCTION = e -> {
+    private final InventoryFunction TRAP_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 10:
                     //Return to the previous menu
-                    if(RewardListMenu.editMode){
-                        RewardListMenu.openFinishInventory(p);
-                    }else{
-                        RewardTypesMenu.openRewardTypesMenu(p);
-                    }
+                    onBack.accept(player);
                     break;
                 case 16:
                     //Open next menu
-                    if(reward.getTrapName() != null && reward.getTrapOutcome() != null){
-                        RewardListMenu.addReward(reward);
-                        reset();
-                        RewardListMenu.openFinishInventory(p);
+                    if(item.getTrapName() != null && item.getTrapOutcome() != null){
+                        onNext.accept(player, item);
                     }
                     break;
                 case 12:
                     //Open trap type menu
-                    openTrapTypeMenu(p);
+                    openTrapTypeMenu(player);
                     break;
                 case 13:
                     //Close inventory
-                    ChatListener.registerPlayer(p, message -> {
-                        reward.setTrapName(message);
-                        openTrapMenu(p);
+                    ChatListener.registerPlayer(player, message -> {
+                        item.setTrapName(message);
+                        openTrapMenu(player);
                     });
-                    p.closeInventory();
-                    Logger.sendMessage("&3Enter the trap name in the chat and then press ENTER", p);
+                    player.closeInventory();
+                    Logger.sendMessage("&3Enter the trap name in the chat and then press ENTER", player);
                     break;
                 case 14:
                     //Open trap packs menu
-                    openTrapPacksMenu(p);
+                    openTrapPacksMenu(player);
                     break;
             }
         }
@@ -172,51 +167,50 @@ public class TrapMenu{
     };
     
     //Trap type inventory
-    private static void openTrapTypeMenu(Player p){
+    private void openTrapTypeMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_TYPE_MENU, 27, "&2&lTrap materials");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.TRAP_TYPE_MENU, 27, "&2&lTrap materials");
                 
-        inv.setItem(0, GUIItem.getBackItem());
+        menu.setItem(0, GUIItem.getBackItem());
         
         for(int i=0;i<TrapReward.getPressurePlateMaterials().size();i++){
             Material material = TrapReward.getPressurePlateMaterials().get(i);
             ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(material));
-            if(material == reward.getPressurePlateMaterial()){                
+            if(material == item.getPressurePlateMaterial()){                
                 builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
                 builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            inv.setItem(i+2, builder.build());
+            menu.setItem(i+2, builder.build());
         }
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction TRAP_TYPE_MENU_FUNCTION = e -> {
+    private final InventoryFunction TRAP_TYPE_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
             if(e.getSlot() == 0){
                 //Return to previous inventory
-                openTrapMenu(p);
+                openTrapMenu(player);
             }else if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 //Open trap inventory
-                reward.setPressurePlateMaterial(e.getCurrentItem().getType());
-                openTrapMenu(p);
+                item.setPressurePlateMaterial(e.getCurrentItem().getType());
+                openTrapMenu(player);
             }
         }
 //</editor-fold>
     };
     
     //Trap packs inventory
-    private static void openTrapPacksMenu(Player p){
+    private void openTrapPacksMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_PACKS_MENU, 54, "&3&lPack list");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.TRAP_PACKS_MENU, 54, "&3&lPack list");
         
-        inv.setItem(0, GUIItem.getBackItem());
+        menu.setItem(0, GUIItem.getBackItem());
         
         int i=0;
         for(OutcomePack pack : PackManager.getPacks()){
@@ -225,27 +219,26 @@ public class TrapMenu{
             }
             
             ItemBuilder builder = ItemBuilder.fromItem(pack.getItemToDisplay(), false);
-            if(reward.getTrapOutcome() != null && reward.getTrapOutcome().getPack().equals(pack)){
+            if(item.getTrapOutcome() != null && item.getTrapOutcome().getPack().equals(pack)){
                 builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
                 builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            inv.setItem(++i, builder.build());
+            menu.setItem(++i, builder.build());
         }
         
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction TRAP_PACKS_MENU_FUNCTION = e -> {
+    private final InventoryFunction TRAP_PACKS_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
             if(e.getSlot() == 0){
                 //Return to previous inventory
-                openTrapMenu(p);
+                openTrapMenu(player);
             }else if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 //Open select outcome menu
                 String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
@@ -255,53 +248,51 @@ public class TrapMenu{
                 
                 packListAdapter.setItemList(auxPack.getSortedOutcomes());
                 packListAdapter.goToMainPage();
-                openTrapOutcomesMenu(p);
+                openTrapOutcomesMenu(player);
             }
         }            
 //</editor-fold>
     };
     
     //Trap outcomes inventory
-    private static void openTrapOutcomesMenu(Player p){
+    private void openTrapOutcomesMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Inventory inv = GUIFactory.createInventory(CustomInventoryType.TRAP_OUTCOMES_MENU, 54, "&3&lOutcomes list");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.TRAP_OUTCOMES_MENU, 54, "&3&lOutcomes list");
         
-        inv.setItem(45, GUIItem.getBackItem());
+        menu.setItem(45, GUIItem.getBackItem());
         
-        packListAdapter.updateMenu(inv);
-        
-        GUIManager.setCurrentInventory(inv);
-        p.openInventory(inv);
+        packListAdapter.updateMenu(menu);        
+        menu.openToPlayer(player);
 //</editor-fold>
     }
     
-    private static final InventoryFunction TRAP_OUTCOMES_MENU_FUNCTION = e -> {
+    private final InventoryFunction TRAP_OUTCOMES_MENU_FUNCTION = e -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Player p = (Player) e.getWhoClicked();
+        Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
                 case 45:
                     // Return to previous inventory
-                    openTrapPacksMenu(p);
+                    openTrapPacksMenu(player);
                     break;
                 case 51:
                     // Go to previous page
                     if(packListAdapter.goToPreviousPage()){
-                        openTrapOutcomesMenu(p);
+                        openTrapOutcomesMenu(player);
                     }
                     break;
                 case 52:
                     // Go to main page
                     if(packListAdapter.goToMainPage()){
-                        openTrapOutcomesMenu(p);
+                        openTrapOutcomesMenu(player);
                     }
                     break;
                 case 53:
                     // Go to next page
                     if(packListAdapter.goToNextPage()){
-                        openTrapOutcomesMenu(p);
+                        openTrapOutcomesMenu(player);
                     }
                     break;
             default:
@@ -313,8 +304,8 @@ public class TrapMenu{
                     int outcomeID = Integer.parseInt(itemName.split(" ")[1]);
                     Outcome outcome = auxPack.getOutcome(outcomeID);
                     if(outcome != null){
-                        reward.setTrapOutcome(outcome);
-                        openTrapMenu(p);
+                        item.setTrapOutcome(outcome);
+                        openTrapMenu(player);
                         packListAdapter.goToMainPage();
                     }
                 }

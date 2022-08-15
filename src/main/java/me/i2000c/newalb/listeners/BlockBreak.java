@@ -2,8 +2,8 @@ package me.i2000c.newalb.listeners;
 
 import java.util.Random;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
-import me.i2000c.newalb.custom_outcomes.utils.Executable;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
+import me.i2000c.newalb.custom_outcomes.rewards.Executable;
+import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.logger.Logger;

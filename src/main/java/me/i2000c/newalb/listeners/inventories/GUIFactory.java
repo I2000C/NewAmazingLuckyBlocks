@@ -15,9 +15,9 @@ public final class GUIFactory implements InventoryHolder{
         this.inventoryType = inventoryType;
     }
     
-    public static Inventory createInventory(CustomInventoryType inventoryType, int size, String title){
+    public static Menu newMenu(CustomInventoryType inventoryType, int size, String title){
         GUIFactory factory = new GUIFactory(inventoryType, size, title);
-        return factory.getInventory();
+        return new Menu(factory.getInventory());
     }
 
     @Override

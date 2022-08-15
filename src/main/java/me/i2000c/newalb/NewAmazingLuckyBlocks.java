@@ -6,10 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
-import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
-import me.i2000c.newalb.custom_outcomes.utils.PackManager;
-import me.i2000c.newalb.custom_outcomes.utils.TypeManager;
-import me.i2000c.newalb.custom_outcomes.utils.rewards.TrapManager;
+import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
+import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapManager;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.listeners.BlockBreak;
 import me.i2000c.newalb.listeners.BlockPlace;
@@ -110,8 +109,6 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         pm.registerEvents(new BlockPlace(), this);
         pm.registerEvents(new BlockProtect(), this);
         pm.registerEvents(new ChunkEvent(), this);
-        
-        pm.registerEvents(new StructureMenu(), this);
         
         pm.registerEvents(new InventoryListener(), this);
         pm.registerEvents(new ChatListener(), this);
