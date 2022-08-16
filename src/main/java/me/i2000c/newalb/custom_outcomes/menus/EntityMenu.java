@@ -183,9 +183,6 @@ public class EntityMenu extends Editor<EntityReward>{
                         item.getEquipment().resetEquipment();
                     }
                     
-                    int entityID = item.getOutcome().getEntityRewardsNumber();
-                    item.setID(entityID);
-                    
                     onNext.accept(player, item);
                     break;
                 case 11:

@@ -208,6 +208,11 @@ public class RewardListMenu extends Editor<Outcome>{
                         player, 
                         p -> openRewardListMenu(p), 
                         (p, reward) -> {
+                            if(reward instanceof EntityReward){
+                                int entityID = item.getEntityRewardsNumber();
+                                ((EntityReward) reward).setID(entityID);
+                            }
+                            
                             item.addReward(reward);
                             openRewardListMenu(p);
                         });
