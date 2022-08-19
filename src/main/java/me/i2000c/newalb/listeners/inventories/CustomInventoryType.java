@@ -18,10 +18,6 @@ public enum CustomInventoryType{
     ITEM_MENU_2,
     ENCHATMENTS_MENU,
     ENCHANTMENT_NAME_MENU,
-    ITEM_COLOR_MENU,
-    POTION_EFFECTS_MENU,
-    POTION_EFFECTS_MENU_2,
-    POTION_MAIN_EFFECT_MENU,
     
     //CommandMenu menus
     COMMAND_MENU,
@@ -29,8 +25,6 @@ public enum CustomInventoryType{
     //EntityMenu menus
     ENTITY_MENU,
     ENTITY_TYPE_MENU,
-    ENTITY_EFFECTS_MENU,
-    ENTITY_EFFECTS_MENU_2,
     EQUIPMENT_MENU,
     
     //TowerEntity menus
