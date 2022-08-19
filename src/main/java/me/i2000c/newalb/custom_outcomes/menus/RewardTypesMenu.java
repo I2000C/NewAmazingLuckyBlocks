@@ -106,6 +106,10 @@ public class RewardTypesMenu extends Editor<Editor>{
                 .withDisplayName("&5Create trap rewards")
                 .build();
         
+        ItemStack stack17 = ItemBuilder.newItem(XMaterial.COMPASS)
+                .withDisplayName("&eCreate teleport rewards")
+                .build();
+        
         menu.setItem(0, stack);
         menu.setItem(1, stack2);
         menu.setItem(2, stack3);
@@ -122,6 +126,7 @@ public class RewardTypesMenu extends Editor<Editor>{
         menu.setItem(13, stack14);
         menu.setItem(14, stack15);
         menu.setItem(15, stack16);
+        menu.setItem(16, stack17);
         
         menu.setItem(18, GUIItem.getBackItem());
         
@@ -214,7 +219,11 @@ public class RewardTypesMenu extends Editor<Editor>{
                 case 15:
                     // trap reward editor
                     type = EditorType.TRAP_REWARD;
-                    break;                
+                    break;
+                case 16:
+                    // teleport reward editor
+                    type = EditorType.TELEPORT_REWARD;
+                    break;
             }
             
             if(type != null){

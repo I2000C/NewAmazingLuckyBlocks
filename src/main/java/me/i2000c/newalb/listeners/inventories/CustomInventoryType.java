@@ -72,6 +72,9 @@ public enum CustomInventoryType{
     TRAP_PACKS_MENU,
     TRAP_OUTCOMES_MENU,
     
+    //Teleport menus
+    TELEPORT_MENU,
+    
     ////////Other menus
     
     //Offset

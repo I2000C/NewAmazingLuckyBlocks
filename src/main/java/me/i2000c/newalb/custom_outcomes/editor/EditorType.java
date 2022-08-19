@@ -28,6 +28,7 @@ import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.menus.RewardTypesMenu;
 import me.i2000c.newalb.custom_outcomes.menus.SoundMenu;
 import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
+import me.i2000c.newalb.custom_outcomes.menus.TeleportMenu;
 import me.i2000c.newalb.custom_outcomes.menus.TrapMenu;
 import me.i2000c.newalb.utils2.FilePicker;
 
@@ -66,7 +67,7 @@ public enum EditorType{
     EXPLOSION_REWARD(new ExplosionMenu()),
     BLOCK_REPLACING_SPHERE_REWARD(new BlockReplacingSphereMenu()),
     TRAP_REWARD(new TrapMenu()),
-    
+    TELEPORT_REWARD(new TeleportMenu()),
     
     ;
     
