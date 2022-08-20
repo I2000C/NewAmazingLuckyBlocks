@@ -8,6 +8,7 @@ import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EffectReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ItemReward;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ItemReward.PotionSplashType;
 import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
@@ -40,6 +41,24 @@ public class ItemMenu extends Editor<ItemReward>{
         InventoryListener.registerInventory(CustomInventoryType.ITEM_MENU, ITEM_MENU_FUNCTION);
         InventoryListener.registerInventory(CustomInventoryType.ITEM_MENU_2, ITEM_MENU_2_FUNCTION);
     }
+    
+    private static final int BACK_SLOT = 9;
+    private static final int NEXT_SLOT = 17;
+    private static final int ITEM_SLOT = 11;
+    private static final int NAME_SLOT = 14;
+    private static final int LORE_SLOT = 15;
+    private static final int ENCHANTMENTS_SLOT = 16;
+    
+    private static final int RESET_NAME_SLOT = 23;
+    private static final int RESET_LORE_SLOT = 24;
+    private static final int RESET_ENCHANTMENTS_SLOT = 25;
+    
+    private static final int DURABILITY_SLOT = 31;
+    
+    private static final int REMOVE_SPECIAL_DATA_SLOT = 19;
+    private static final int POTION_TYPE_SLOT = 20;
+    private static final int SPECIAL_ITEM_SLOT = 21;
+    private static final int POTION_COLOR_SLOT = 18;
     
     private int amount;
     
@@ -153,49 +172,46 @@ public class ItemMenu extends Editor<ItemReward>{
     
     private void openItemMenu2(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Menu menu = GUIFactory.newMenu(CustomInventoryType.ITEM_MENU_2, 36, "&b&lItem Reward 2");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.ITEM_MENU_2, 54, "&b&lItem Reward 2");
                 
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
         ItemStack name = ItemBuilder.newItem(XMaterial.NAME_TAG)
-                .withDisplayName("&aSet custom name")
+                .withDisplayName("&aClick to set custom name")
                 .build();
         
         ItemStack lore = ItemBuilder.newItem(XMaterial.OAK_SIGN)
-                .withDisplayName("&6Add lore line")
+                .withDisplayName("&6Click to add lore line")
                 .build();
         
         ItemStack durability = ItemBuilder.newItem(XMaterial.IRON_PICKAXE)
-                .withDisplayName("&3Set durability")
+                .withDisplayName("&7Current durability: &a" + item.getItem().getDurability())
+                .addLoreLine("&3Click to reset")
                 .build();
         
         ItemStack enchantments = ItemBuilder.newItem(XMaterial.ENCHANTING_TABLE)
-                .withDisplayName("&dAdd enchantment")
+                .withDisplayName("&dClick to add enchantment")
                 .build();
         
         //Reset items
         
         ItemStack resetName = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReset custom name")
+                .withDisplayName("&cClick to reset custom name")
                 .build();
         
         ItemStack resetLore = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReset lore")
-                .build();
-        
-        ItemStack resetDurability = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReset durability")
+                .withDisplayName("&cClick to reset lore")
                 .build();
         
         ItemStack resetEnchantments = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReset enchantments")
+                .withDisplayName("&cClick to reset enchantments")
                 .build();
         
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);
         }
-        for(int i=27;i<36;i++){
+        for(int i=45;i<54;i++){
             menu.setItem(i, glass);
         }
         
@@ -254,27 +270,30 @@ public class ItemMenu extends Editor<ItemReward>{
                 break;
         }
         
-        menu.setItem(9, GUIItem.getBackItem());
-        menu.setItem(11, item.getItem());
-        menu.setItem(19, removeSpecialData);
-        menu.setItem(20, changePotionType);
-        menu.setItem(21, specialItem);
-        menu.setItem(13, name);
-        menu.setItem(14, lore);
-        menu.setItem(15, durability);
-        menu.setItem(16, enchantments);
-        menu.setItem(17, GUIItem.getNextItem());
+        menu.setItem(BACK_SLOT, GUIItem.getBackItem());
+        menu.setItem(NEXT_SLOT, GUIItem.getNextItem());
         
-        menu.setItem(6, GUIItem.getPlusLessItem(+1));
-        menu.setItem(24, GUIItem.getPlusLessItem(-1));
+        menu.setItem(ITEM_SLOT, item.getItem());
+        menu.setItem(REMOVE_SPECIAL_DATA_SLOT, removeSpecialData);
+        menu.setItem(POTION_TYPE_SLOT, changePotionType);
+        menu.setItem(SPECIAL_ITEM_SLOT, specialItem);
+        menu.setItem(NAME_SLOT, name);
+        menu.setItem(LORE_SLOT, lore);
+        menu.setItem(ENCHANTMENTS_SLOT, enchantments);
         
-        menu.setItem(31, resetName);
-        menu.setItem(32, resetLore);
-        menu.setItem(33, resetDurability);
-        menu.setItem(34, resetEnchantments);
+        menu.setItem(RESET_NAME_SLOT, resetName);
+        menu.setItem(RESET_LORE_SLOT, resetLore);
+        menu.setItem(RESET_ENCHANTMENTS_SLOT, resetEnchantments);
         
         if(setPotionColor != null){
-            menu.setItem(29, setPotionColor);
+            menu.setItem(POTION_COLOR_SLOT, setPotionColor);
+        }
+        
+        menu.setItem(DURABILITY_SLOT, durability);
+        
+        for(int i=1, multiplier=1; i<=4; i++, multiplier *= 10){
+            menu.setItem(DURABILITY_SLOT-i, GUIItem.getPlusLessItem(-1*multiplier));
+            menu.setItem(DURABILITY_SLOT+i, GUIItem.getPlusLessItem(+1*multiplier));
         }
         
         menu.openToPlayer(player);
@@ -287,11 +306,15 @@ public class ItemMenu extends Editor<ItemReward>{
         e.setCancelled(true);
         
         switch(e.getSlot()){
-            case 9:
+            case BACK_SLOT:
                 // Go to previous menu
                 openItemMenu(player);
                 break;
-            case 13:
+            case NEXT_SLOT:
+                // Go to next menu
+                onNext.accept(player, item);
+                break;
+            case NAME_SLOT:
                 //Set custom name
                 ChatListener.registerPlayer(player, message -> {
                     ItemBuilder.fromItem(item.getItem(), false)
@@ -300,7 +323,7 @@ public class ItemMenu extends Editor<ItemReward>{
                 });
                 player.closeInventory();
                 break;
-            case 14:
+            case LORE_SLOT:
                 //Add lore line
                 ChatListener.registerPlayer(player, message -> {
                     ItemBuilder.fromItem(item.getItem(), false)
@@ -309,43 +332,7 @@ public class ItemMenu extends Editor<ItemReward>{
                 });
                 player.closeInventory();
                 break;
-            case 15:
-                //Set durability
-                ChatListener.registerPlayer(player, message -> {
-                    try{
-                        short durability = Short.parseShort(message);
-                        if(durability < 0){
-                            throw new NumberFormatException();
-                        }
-                        
-                        item.getItem().setDurability(durability);
-                    }catch(NumberFormatException ex){
-                        Logger.sendMessage("&cInvalid durability value: &b" + message, player);
-                        Logger.sendMessage("&bIf you want to return, use &7/alb return", player);
-                    }
-                    openItemMenu2(player);
-                });
-                player.closeInventory();
-                break;
-            case 6:
-                //Increase durability
-                short durability = item.getItem().getDurability();
-                durability++;
-                
-                item.getItem().setDurability(durability);
-                openItemMenu2(player);
-                break;
-            case 24:
-                //Decrease durability
-                durability = item.getItem().getDurability();
-                
-                if(durability > 0){
-                    durability--;
-                    item.getItem().setDurability(durability);
-                    openItemMenu2(player);
-                }
-                break;
-            case 16:
+            case ENCHANTMENTS_SLOT:
                 //Open enchantments menu
                 Editor<EnchantmentWithLevel> editor = EditorType.ENCHANTMENT.getEditor();
                 editor.createNewItem(
@@ -356,35 +343,83 @@ public class ItemMenu extends Editor<ItemReward>{
                                     .addEnchantment(enchantmentWithLevel.enchantment, enchantmentWithLevel.level);
                             openItemMenu2(p);
                         });
-                break;
-            case 17:
-                // Go to next menu
-                onNext.accept(player, item);
-                break;
-            case 31:
+                break;            
+            case RESET_NAME_SLOT:
                 //Reset custom name
                 ItemBuilder.fromItem(item.getItem(), false)
                         .withDisplayName(null);
                 openItemMenu2(player);
                 break;
-            case 32:
+            case RESET_LORE_SLOT:
                 //Reset custom lore
                 ItemBuilder.fromItem(item.getItem(), false)
                         .withLore();
                 openItemMenu2(player);
                 break;
-            case 33:
-                //Reset durability
-                item.getItem().setDurability((short) 0);
-                openItemMenu2(player);
-                break;
-            case 34:
+            case RESET_ENCHANTMENTS_SLOT:
                 //Reset enchantments
                 ItemBuilder.fromItem(item.getItem(), false)
                         .clearEnchantments();
                 openItemMenu2(player);
                 break;
-            case 29:
+            case DURABILITY_SLOT:
+                //Reset durability
+                item.getItem().setDurability((short) 0);
+                openItemMenu2(player);
+                break;
+                //<editor-fold defaultstate="collapsed" desc="Decrease durability slots">
+            case DURABILITY_SLOT-1:
+                //Durability-1
+                ItemBuilder builder = ItemBuilder.fromItem(item.getItem(), false);
+                builder.withDurability(builder.getDurability() - 1);
+                openItemMenu2(player);
+                break;
+            case DURABILITY_SLOT-2:
+                //Durability-10
+                builder = ItemBuilder.fromItem(item.getItem(), false);
+                builder.withDurability(builder.getDurability() - 10);
+                openItemMenu2(player);
+                break;
+            case DURABILITY_SLOT-3:
+                //Durability-100
+                builder = ItemBuilder.fromItem(item.getItem(), false);
+                builder.withDurability(builder.getDurability() - 100);
+                openItemMenu2(player);
+                break;
+            case DURABILITY_SLOT-4:
+                //Durability-1000
+                builder = ItemBuilder.fromItem(item.getItem(), false);
+                builder.withDurability(builder.getDurability() - 1000);
+                openItemMenu2(player);
+                break;
+//</editor-fold>
+                //<editor-fold defaultstate="collapsed" desc="Increase durability slots">
+            case DURABILITY_SLOT+1:
+                //Durability+1
+                builder = ItemBuilder.fromItem(item.getItem(), false);
+                builder.withDurability(builder.getDurability() + 1);
+                openItemMenu2(player);
+                break;
+            case DURABILITY_SLOT+2:
+                //Durability+10
+                builder = ItemBuilder.fromItem(item.getItem(), false);
+                builder.withDurability(builder.getDurability() + 10);
+                openItemMenu2(player);
+                break;
+            case DURABILITY_SLOT+3:
+                //Durability+100
+                builder = ItemBuilder.fromItem(item.getItem(), false);
+                builder.withDurability(builder.getDurability() + 100);
+                openItemMenu2(player);
+                break;
+            case DURABILITY_SLOT+4:
+                //Durability+1000
+                builder = ItemBuilder.fromItem(item.getItem(), false);
+                builder.withDurability(builder.getDurability() + 1000);
+                openItemMenu2(player);
+                break;
+//</editor-fold>
+            case POTION_COLOR_SLOT:
                 //Open select potion color menu
                 if(e.getCurrentItem() != null){
                     if(e.getCurrentItem().getType() == Material.BLAZE_POWDER){
@@ -405,7 +440,7 @@ public class ItemMenu extends Editor<ItemReward>{
                     }
                 }
                 break;
-            case 21:
+            case SPECIAL_ITEM_SLOT:
                 //Special item menu
                 if(e.getCurrentItem() != null){
                     if(TextureManager.isSkull(e.getCurrentItem().getType())){
@@ -463,18 +498,18 @@ public class ItemMenu extends Editor<ItemReward>{
                     }
                 }
                 break;
-            case 20:
+            case POTION_TYPE_SLOT:
                 //Change potion type
                 if(e.getCurrentItem() != null){
-                    if(e.getCurrentItem().getType().name().equals("BREWING_STAND_ITEM")
-                            || e.getCurrentItem().getType().name().equals("BREWING_STAND")){
+                    XMaterial material = XMaterial.matchXMaterial(e.getCurrentItem());
+                    if(material == XMaterial.BREWING_STAND){
                         PotionSplashType type = PotionSplashType.getFromPotion(item.getItem());
                         type.getNextPotionSplashType().setToPotion(item.getItem());
                         openItemMenu2(player);
                     }
                 }
                 break;
-            case 19:
+            case REMOVE_SPECIAL_DATA_SLOT:
                 //Delete special item meta
                 if(e.getCurrentItem() != null){
                     if(TextureManager.isSkull(item.getItem().getType())){
@@ -515,81 +550,4 @@ public class ItemMenu extends Editor<ItemReward>{
         }
 //</editor-fold>
     };
-    
-    
-    public static enum PotionSplashType{
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        NORMAL,
-        SPLASH,
-        LINGERING;
-        
-        public static PotionSplashType getFromPotion(ItemStack stack){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
-                if(stack.getType() != Material.POTION){
-                    return null;
-                }
-                
-                Potion potion = Potion.fromItemStack(stack);
-                if(potion.isSplash()){
-                    return SPLASH;
-                }else{
-                    return NORMAL;
-                }
-            }else switch(stack.getType()){
-                case POTION:
-                    return NORMAL;
-                case SPLASH_POTION:
-                    return SPLASH;
-                case LINGERING_POTION:
-                    return LINGERING;
-                default:
-                    return null;
-            }
-        }
-        
-        public static void clearPotionSplashType(ItemStack stack){
-            NORMAL.setToPotion(stack);
-        }
-        
-        public void setToPotion(ItemStack stack){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
-                Potion potion = Potion.fromItemStack(stack);
-                potion.setSplash(this != NORMAL);
-                potion.apply(stack);
-            }else{
-                switch(this){
-                    case NORMAL:
-                        stack.setType(Material.POTION);
-                        break;
-                    case SPLASH:
-                        stack.setType(Material.SPLASH_POTION);
-                        break;
-                    case LINGERING:
-                        stack.setType(Material.LINGERING_POTION);
-                        break;
-                }
-            }
-        }
-        
-        public PotionSplashType getNextPotionSplashType(){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
-                return this == NORMAL ? SPLASH : NORMAL;
-            }else{
-                switch(this){
-                    case NORMAL:
-                        return SPLASH;
-                    case SPLASH:
-                        return LINGERING;
-                    default:
-                        return NORMAL;
-                }
-            }
-        }
-        
-        @Override
-        public String toString(){
-            return name().toLowerCase();
-        }
-//</editor-fold>
-    }
 }

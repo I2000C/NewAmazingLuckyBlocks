@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.menus.ItemMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
@@ -24,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -85,10 +85,10 @@ public class ItemReward extends Reward{
         }
         
         //Load potion meta
-        ItemMenu.PotionSplashType type = ItemMenu.PotionSplashType.getFromPotion(builder.build());
+        PotionSplashType type = PotionSplashType.getFromPotion(builder.build());
         if(type != null){
             if(config.contains(path + ".potionSplashType")){
-                type = ItemMenu.PotionSplashType.valueOf(config.getString(path + ".potionSplashType"));
+                type = PotionSplashType.valueOf(config.getString(path + ".potionSplashType"));
                 type.setToPotion(builder.build());
             }
             if(config.contains(path + ".potionEffects")){
@@ -173,7 +173,7 @@ public class ItemReward extends Reward{
                 config.set(path + ".armorColor", hexColor);
         }
 
-        ItemMenu.PotionSplashType type = ItemMenu.PotionSplashType.getFromPotion(this.item);
+        PotionSplashType type = PotionSplashType.getFromPotion(this.item);
         if(type != null){
             config.set(path + ".material" , "POTION");
             config.set(path + ".potionSplashType", type.name());   
@@ -239,5 +239,81 @@ public class ItemReward extends Reward{
         ItemReward copy = (ItemReward) super.clone();
         copy.item = this.item.clone();
         return copy;
+    }
+    
+    public static enum PotionSplashType{
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        NORMAL,
+        SPLASH,
+        LINGERING;
+        
+        public static PotionSplashType getFromPotion(ItemStack stack){
+            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+                if(stack.getType() != Material.POTION){
+                    return null;
+                }
+                
+                Potion potion = Potion.fromItemStack(stack);
+                if(potion.isSplash()){
+                    return SPLASH;
+                }else{
+                    return NORMAL;
+                }
+            }else switch(stack.getType()){
+                case POTION:
+                    return NORMAL;
+                case SPLASH_POTION:
+                    return SPLASH;
+                case LINGERING_POTION:
+                    return LINGERING;
+                default:
+                    return null;
+            }
+        }
+        
+        public static void clearPotionSplashType(ItemStack stack){
+            NORMAL.setToPotion(stack);
+        }
+        
+        public void setToPotion(ItemStack stack){
+            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+                Potion potion = Potion.fromItemStack(stack);
+                potion.setSplash(this != NORMAL);
+                potion.apply(stack);
+            }else{
+                switch(this){
+                    case NORMAL:
+                        stack.setType(Material.POTION);
+                        break;
+                    case SPLASH:
+                        stack.setType(Material.SPLASH_POTION);
+                        break;
+                    case LINGERING:
+                        stack.setType(Material.LINGERING_POTION);
+                        break;
+                }
+            }
+        }
+        
+        public PotionSplashType getNextPotionSplashType(){
+            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+                return this == NORMAL ? SPLASH : NORMAL;
+            }else{
+                switch(this){
+                    case NORMAL:
+                        return SPLASH;
+                    case SPLASH:
+                        return LINGERING;
+                    default:
+                        return NORMAL;
+                }
+            }
+        }
+        
+        @Override
+        public String toString(){
+            return name().toLowerCase();
+        }
+//</editor-fold>
     }
 }
