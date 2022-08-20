@@ -76,6 +76,7 @@ public class ItemMenu extends Editor<ItemReward>{
     
     @Override
     protected void editItem(Player player){
+        amount = item.getItem().getAmount();
         openItemMenu(player);
     }
     
