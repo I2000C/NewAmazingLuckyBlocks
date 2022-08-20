@@ -60,6 +60,9 @@ public class ItemMenu extends Editor<ItemReward>{
     private static final int SPECIAL_ITEM_SLOT = 21;
     private static final int POTION_COLOR_SLOT = 18;
     
+    private static final int SPAWN_MODE_SLOT = 44;
+    private static final int SPAWN_INV_SLOT_SLOT = 40;
+    
     private int amount;
     
     @Override
@@ -176,6 +179,12 @@ public class ItemMenu extends Editor<ItemReward>{
         Menu menu = GUIFactory.newMenu(CustomInventoryType.ITEM_MENU_2, 54, "&b&lItem Reward 2");
                 
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
+        for(int i=0;i<9;i++){
+            menu.setItem(i, glass);
+        }
+        for(int i=45;i<54;i++){
+            menu.setItem(i, glass);
+        }
         
         ItemStack name = ItemBuilder.newItem(XMaterial.NAME_TAG)
                 .withDisplayName("&aClick to set custom name")
@@ -194,8 +203,7 @@ public class ItemMenu extends Editor<ItemReward>{
                 .withDisplayName("&dClick to add enchantment")
                 .build();
         
-        //Reset items
-        
+        //Reset items        
         ItemStack resetName = ItemBuilder.newItem(XMaterial.BARRIER)
                 .withDisplayName("&cClick to reset custom name")
                 .build();
@@ -208,14 +216,7 @@ public class ItemMenu extends Editor<ItemReward>{
                 .withDisplayName("&cClick to reset enchantments")
                 .build();
         
-        
-        for(int i=0;i<9;i++){
-            menu.setItem(i, glass);
-        }
-        for(int i=45;i<54;i++){
-            menu.setItem(i, glass);
-        }
-        
+        //Special items
         ItemStack specialItem = null;
         ItemStack removeSpecialData = null;
         ItemStack changePotionType = null;
@@ -271,6 +272,101 @@ public class ItemMenu extends Editor<ItemReward>{
                 break;
         }
         
+        //Spawn mode items
+        ItemBuilder builder;
+        switch(item.getSpawnMode()){
+            case DEFAULT:
+                builder = ItemBuilder.newItem(XMaterial.GRASS_BLOCK);
+                builder.addLoreLine("&dIn this mode, the item will spawn");
+                builder.addLoreLine("&d  on the ground");
+                break;
+            case ADD_TO_INV:
+                builder = ItemBuilder.newItem(XMaterial.CRAFTING_TABLE);
+                builder.addLoreLine("&dIn this mode, the item will be");
+                builder.addLoreLine("&d  added to player's inventory");
+                builder.addLoreLine("&d  if there is some free space");
+                builder.addLoreLine("&dIn other case, the item will spawn");
+                builder.addLoreLine("&d  on the ground");
+                break;
+            case SET_TO_INV:
+                builder = ItemBuilder.newItem(XMaterial.CHEST);
+                builder.addLoreLine("&dIn this mode, the item will be");
+                builder.addLoreLine("&d  stored in a specific slot of");
+                builder.addLoreLine("&d  player's inventory");
+                builder.addLoreLine("&d  if that slot is empty");
+                builder.addLoreLine("&dIn other case, the item will spawn");
+                builder.addLoreLine("&d  on the ground");
+                break;
+            default: //FORCE_SET_TO_INV
+                builder = ItemBuilder.newItem(XMaterial.ENDER_CHEST);
+                builder.addLoreLine("&dIn this mode, the item will be");
+                builder.addLoreLine("&d  stored in a specific slot of");
+                builder.addLoreLine("&d  player's inventory");
+                builder.addLoreLine("&dIf the slot is not empty,");
+                builder.addLoreLine("&d  the item in the slot");
+                builder.addLoreLine("&d  will be dropped near the player");
+                break;
+        }
+        builder.addLoreLine("");
+        builder.addLoreLine("&3Click to change");
+        builder.withDisplayName("&bSpawn mode: &a" + item.getSpawnMode().name());
+        ItemStack spawnModeItem = builder.build();
+        
+        builder = ItemBuilder.newItem(XMaterial.CHAINMAIL_CHESTPLATE);
+        builder.withAmount(item.getSpawnInvSlot());
+        builder.withDisplayName("&6Current inv slot: &e" + item.getSpawnInvSlot() + " &6/ &e" + ItemReward.getMaxSlot());
+        builder.addLoreLine("&2This slot is only used when");
+        if(item.getSpawnMode() == ItemReward.ItemSpawnMode.SET_TO_INV){
+            builder.addLoreLine("&2  spawnMode is &5&lSET_TO_INV");
+        }else{
+            builder.addLoreLine("&2  spawnMode is &e&lSET_TO_INV");
+        }
+        if(item.getSpawnMode() == ItemReward.ItemSpawnMode.FORCE_SET_TO_INV){
+            builder.addLoreLine("&2  &2or &5&lFORCE_SET_TO_INV");
+        }else{
+            builder.addLoreLine("&2  &2or &e&lFORCE_SET_TO_INV");
+        }        
+        builder.addLoreLine("");
+        builder.addLoreLine("&2Slots from &b0 &2to &b8 &2are from hotbar");
+        builder.addLoreLine("&2Slots from &b9 &2to &b35 &2are from");
+        builder.addLoreLine("&2  survival inventory");
+        if(item.getSpawnInvSlot() == ItemReward.HELMET_SLOT){
+            builder.addLoreLine("&2Slot &b36 &2is &5&lHELMET");
+        }else{
+            builder.addLoreLine("&2Slot &b36 &2is &e&lHELMET");
+        }
+        if(item.getSpawnInvSlot() == ItemReward.CHESTPLATE_SLOT){
+            builder.addLoreLine("&2Slot &b37 &2is &5&lCHESTPLATE");
+        }else{
+            builder.addLoreLine("&2Slot &b37 &2is &e&lCHESTPLATE");
+        }
+        if(item.getSpawnInvSlot() == ItemReward.LEGGINGS_SLOT){
+            builder.addLoreLine("&2Slot &b38 &2is &5&lLEGGINGS");
+        }else{
+            builder.addLoreLine("&2Slot &b38 &2is &e&lLEGGINGS");
+        }
+        if(item.getSpawnInvSlot() == ItemReward.BOOTS_SLOT){
+            builder.addLoreLine("&2Slot &b39 &2is &5&lBOOTS");
+        }else{
+            builder.addLoreLine("&2Slot &b39 &2is &e&lBOOTS");
+        }
+        if(item.getSpawnInvSlot() == ItemReward.ITEM_IN_HAND_SLOT){
+            builder.addLoreLine("&2Slot &b40 &2is &5&lITEM IN HAND");
+        }else{
+            builder.addLoreLine("&2Slot &b40 &2is &e&lITEM IN HAND");
+        }
+        
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) >= 0){
+            if(item.getSpawnInvSlot() == ItemReward.ITEM_IN_HAND_SLOT){
+                builder.addLoreLine("&2Slot &b41 &2is &5&lITEM IN OFF-HAND");
+            }else{
+                builder.addLoreLine("&2Slot &b41 &2is &e&lITEM IN HAND");
+            }
+        }
+        builder.addLoreLine("");
+        builder.addLoreLine("&3Click to reset");
+        ItemStack spawnInvSlotItem = builder.build();
+        
         menu.setItem(BACK_SLOT, GUIItem.getBackItem());
         menu.setItem(NEXT_SLOT, GUIItem.getNextItem());
         
@@ -295,6 +391,14 @@ public class ItemMenu extends Editor<ItemReward>{
         for(int i=1, multiplier=1; i<=4; i++, multiplier *= 10){
             menu.setItem(DURABILITY_SLOT-i, GUIItem.getPlusLessItem(-1*multiplier));
             menu.setItem(DURABILITY_SLOT+i, GUIItem.getPlusLessItem(+1*multiplier));
+        }
+        
+        menu.setItem(SPAWN_MODE_SLOT, spawnModeItem);
+        menu.setItem(SPAWN_INV_SLOT_SLOT, spawnInvSlotItem);
+        
+        for(int i=1, multiplier=1; i<=2; i++, multiplier *= 10){
+            menu.setItem(SPAWN_INV_SLOT_SLOT-i, GUIItem.getPlusLessItem(-1*multiplier));
+            menu.setItem(SPAWN_INV_SLOT_SLOT+i, GUIItem.getPlusLessItem(+1*multiplier));
         }
         
         menu.openToPlayer(player);
@@ -505,7 +609,7 @@ public class ItemMenu extends Editor<ItemReward>{
                     XMaterial material = XMaterial.matchXMaterial(e.getCurrentItem());
                     if(material == XMaterial.BREWING_STAND){
                         PotionSplashType type = PotionSplashType.getFromPotion(item.getItem());
-                        type.getNextPotionSplashType().setToPotion(item.getItem());
+                        type.next().setToPotion(item.getItem());
                         openItemMenu2(player);
                     }
                 }
@@ -547,6 +651,46 @@ public class ItemMenu extends Editor<ItemReward>{
                             break;
                     }
                 }
+                break;
+            case SPAWN_MODE_SLOT:
+                item.setSpawnMode(item.getSpawnMode().next());
+                openItemMenu2(player);
+                break;
+            case SPAWN_INV_SLOT_SLOT:
+                item.setSpawnInvSlot(0);
+                openItemMenu2(player);
+                break;
+            case SPAWN_INV_SLOT_SLOT-1:
+                int spawnInvSlot = item.getSpawnInvSlot() - 1;
+                if(spawnInvSlot < 0){
+                    spawnInvSlot = ItemReward.getMaxSlot();
+                }
+                item.setSpawnInvSlot(spawnInvSlot);
+                openItemMenu2(player);
+                break;
+            case SPAWN_INV_SLOT_SLOT-2:
+                spawnInvSlot = item.getSpawnInvSlot() - 10;
+                if(spawnInvSlot < 0){
+                    spawnInvSlot = ItemReward.getMaxSlot();
+                }
+                item.setSpawnInvSlot(spawnInvSlot);
+                openItemMenu2(player);
+                break;
+            case SPAWN_INV_SLOT_SLOT+1:
+                spawnInvSlot = item.getSpawnInvSlot() + 1;
+                if(spawnInvSlot > ItemReward.getMaxSlot()){
+                    spawnInvSlot = 0;
+                }
+                item.setSpawnInvSlot(spawnInvSlot);
+                openItemMenu2(player);
+                break;
+            case SPAWN_INV_SLOT_SLOT+2:
+                spawnInvSlot = item.getSpawnInvSlot() + 10;
+                if(spawnInvSlot > ItemReward.getMaxSlot()){
+                    spawnInvSlot = 0;
+                }
+                item.setSpawnInvSlot(spawnInvSlot);
+                openItemMenu2(player);
                 break;
         }
 //</editor-fold>
