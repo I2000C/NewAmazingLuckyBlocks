@@ -177,8 +177,7 @@ public class EntityReward extends Reward{
                     if(equip.get(i) != null && equip.get(i).getType() != Material.AIR){
                         String fullFullPath = path + ".equipment." + EQUIP[i];
                         ItemBuilder builder = ItemBuilder.fromItem(equip.get(i), false);
-                        Material material = builder.getMaterial().parseMaterial();
-                        config.set(fullFullPath + ".material", material.name());
+                        config.set(fullFullPath + ".material", builder.toString());
                         config.set(fullFullPath + ".durability", builder.getDurability());
                         
                         if(builder.hasDisplayName()){
@@ -214,9 +213,9 @@ public class EntityReward extends Reward{
                 for(String equipItemName : EQUIP){
                     String fullPath = path + ".equipment." + equipItemName;
                     if(config.contains(fullPath)){
-                        Material material = Material.valueOf(config.getString(fullPath + ".material"));
+                        ItemBuilder builder = ItemBuilder.newItem(config.getString(fullPath + ".material"));
                         short durability = (short) config.getInt(fullPath + ".durability");
-                        ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(material));
+                        
                         builder.withAmount(1);
                         builder.withDurability(durability);
                         if(config.contains(fullPath + ".name")){
