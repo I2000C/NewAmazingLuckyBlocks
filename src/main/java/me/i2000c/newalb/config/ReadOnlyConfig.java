@@ -23,6 +23,7 @@ public abstract class ReadOnlyConfig{
     private final Plugin plugin;
     private final String resourceName;
     private final File configFile;
+    private final boolean saveComments;
     private YamlConfigurationUTF8 config;
         
     public ReadOnlyConfig(Plugin plugin, String resourceName, String filename, boolean saveComments){
@@ -30,10 +31,11 @@ public abstract class ReadOnlyConfig{
         this.resourceName = resourceName;
         this.configFile = new File(plugin.getDataFolder(), filename);
         if(saveComments){
-            config = new CommentedConfig();
+            this.config = new CommentedConfig();
         }else{
-            config = new YamlConfigurationUTF8();
+            this.config = new YamlConfigurationUTF8();
         }
+        this.saveComments = saveComments;
     }
     
     public ReadOnlyConfig(Plugin plugin, String resourceName, boolean saveComments){
@@ -68,6 +70,16 @@ public abstract class ReadOnlyConfig{
         }catch(Exception ex){
             Logger.log("An error occurred while saving configuration in file \"" + configFile.getAbsolutePath() + "\"", LogLevel.ERROR);
             Logger.log(ex, LogLevel.ERROR);
+        }
+//</editor-fold>
+    }
+    
+    public void clearConfig(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(saveComments){
+            config = new CommentedConfig();
+        }else{
+            config = new YamlConfigurationUTF8();
         }
 //</editor-fold>
     }
