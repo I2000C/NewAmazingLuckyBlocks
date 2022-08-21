@@ -2,7 +2,7 @@ package me.i2000c.newalb.listeners;
 
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.RandomBlocks;
-import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils.WorldConfig;
 
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.event.Listener;
@@ -14,7 +14,7 @@ public class ChunkEvent implements Listener{
     @EventHandler
     private void onChunkCreated(ChunkPopulateEvent e){
         if(ConfigManager.getConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.enable")){
-            if(WorldList.isRegistered(e.getWorld().getName())){
+            if(WorldConfig.isRegistered(e.getWorld().getName())){
                 int x = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.radx");
                 int y = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.rady");
                 int z = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");

@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.objects.MaterialChecker;
-import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
@@ -50,7 +50,7 @@ public class SpecialEventListener implements Listener{
                 return;
             }
             
-            if(!WorldList.isRegistered(player.getWorld().getName())){
+            if(!WorldConfig.isRegistered(player.getWorld().getName())){
                 return;
             }
             
@@ -82,7 +82,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Item item = e.getItem();
         
-        if(!WorldList.isRegistered(item.getWorld().getName())) {
+        if(!WorldConfig.isRegistered(item.getWorld().getName())) {
             return;
         }
         
@@ -100,7 +100,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity damager = e.getDamager();
         
-        if(!WorldList.isRegistered(damager.getWorld().getName())) {
+        if(!WorldConfig.isRegistered(damager.getWorld().getName())) {
             return;
         }
 
@@ -125,7 +125,7 @@ public class SpecialEventListener implements Listener{
         if(projectile instanceof Arrow){
             Arrow arrow = (Arrow) projectile;
             
-            if(!WorldList.isRegistered(arrow.getWorld().getName())) {
+            if(!WorldConfig.isRegistered(arrow.getWorld().getName())) {
                 return;
             }
             
@@ -158,7 +158,7 @@ public class SpecialEventListener implements Listener{
         
         Player player = (Player) e.getEntity();
         
-        if(!WorldList.isRegistered(player.getWorld().getName())){
+        if(!WorldConfig.isRegistered(player.getWorld().getName())){
             return;
         }
         
@@ -189,7 +189,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getRightClicked();
         
-        if(!WorldList.isRegistered(entity.getWorld().getName())) {
+        if(!WorldConfig.isRegistered(entity.getWorld().getName())) {
             return;
         }
         
@@ -207,7 +207,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getEntity();
         
-        if(!WorldList.isRegistered(entity.getWorld().getName())) {
+        if(!WorldConfig.isRegistered(entity.getWorld().getName())) {
             return;
         }
         

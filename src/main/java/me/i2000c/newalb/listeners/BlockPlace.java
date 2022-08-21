@@ -4,7 +4,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils.WorldConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +15,7 @@ public class BlockPlace implements Listener{
     @EventHandler
     public void onBlockPlaced(BlockPlaceEvent e){
         Player p = e.getPlayer();
-        if(!WorldList.isRegistered(p.getWorld().getName())){
+        if(!WorldConfig.isRegistered(p.getWorld().getName())){
             return;
         }
         

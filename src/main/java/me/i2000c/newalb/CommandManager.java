@@ -22,7 +22,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.RandomBlocks;
-import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils.WorldMenu;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
@@ -336,7 +336,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         ConfigManager.saveConfig();
         LangLoader.reloadMessages();
 
-        WorldList.reloadAll();
+        WorldConfig.reloadAll();
 
         SpecialItemManager.reloadSpecialItems();
 
@@ -455,7 +455,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 
             String world = player.getWorld().getName();
 
-            if(WorldList.isRegistered(world)){
+            if(WorldConfig.isRegistered(world)){
                 RandomBlocks rb = new RandomBlocks(radx,rady,radz,blocks,floating_blocks,forceMode,player,isPlayer,sender);
                 rb.generatePackets();
                 return true;
@@ -551,10 +551,10 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             case 2:
                 // /alb worlds list
                 if(args[1].equals("list")){
-                    WorldList.updateWorlds(false);
+                    WorldConfig.updateWorlds(false);
                     Logger.sendMessage(LangLoader.getMessages().getString("World-management1.line1"), sender);
                     Logger.sendMessage(LangLoader.getMessages().getString("World-management1.line2"), sender);
-                    WorldList.getWorlds().forEach((worldName, worldType) -> {
+                    WorldConfig.getWorlds().forEach((worldName, worldType) -> {
                         String message = LangLoader.getMessages().getString("World-management1.worldName").replace("%world%", worldName);
                         if(worldType){
                             message += LangLoader.getMessages().getString("World-management1.enabledWorld");
@@ -580,20 +580,20 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     
                     if(worldName.equals("*")){
                         String message = "&3Toggled all worlds";
-                        WorldList.toggleAllWorlds();
+                        WorldConfig.toggleAllWorlds();
                         Logger.sendMessage(message, sender);
                         return true;
                     }else{
                         String message = LangLoader.getMessages().getString("World-management2.line1").replace("%world%", worldName);
                         if(Bukkit.getWorld(worldName) != null){
-                            boolean enabled = !WorldList.getWorlds().get(worldName);
+                            boolean enabled = !WorldConfig.getWorlds().get(worldName);
 
                             if(enabled){
                                 message += LangLoader.getMessages().getString("World-management1.enabledWorld");
                             }else{
                                 message += LangLoader.getMessages().getString("World-management1.disabledWorld");
                             }
-                            WorldList.setWorldEnabled(worldName, enabled);
+                            WorldConfig.setWorldEnabled(worldName, enabled);
                             Logger.sendMessage(message, sender);
                             return true;
                         }else{
@@ -623,7 +623,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         }else{
                             message += LangLoader.getMessages().getString("World-management1.disabledWorld");
                         }
-                        WorldList.setAllWorldsEnabled(enabled);
+                        WorldConfig.setAllWorldsEnabled(enabled);
                         Logger.sendMessage(message, sender);
                         return true;
                     }else{
@@ -634,7 +634,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                             }else{
                                 message += LangLoader.getMessages().getString("World-management1.disabledWorld");
                             }
-                            WorldList.setWorldEnabled(worldName, enabled);
+                            WorldConfig.setWorldEnabled(worldName, enabled);
                             Logger.sendMessage(message, sender);
                             return true;
                         }else{
@@ -794,7 +794,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return true;
         }
         String world = args[1];
-        if(WorldList.isRegistered(world)){
+        if(WorldConfig.isRegistered(world)){
             LocationManager.removeLocations(Bukkit.getWorld(world));
             Logger.sendMessage("&aAll LuckyBlocks of the world &b" + world + " &awere removed", sender);
             return true;
@@ -922,7 +922,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     break;
                 case "clear":
                     List<String> aux = ls;
-                    WorldList.getWorlds().forEach((world, enabled) -> {if(enabled) aux.add(world);});
+                    WorldConfig.getWorlds().forEach((world, enabled) -> {if(enabled) aux.add(world);});
                     break;
                 default:
                     for(Player p : Bukkit.getOnlinePlayers()){

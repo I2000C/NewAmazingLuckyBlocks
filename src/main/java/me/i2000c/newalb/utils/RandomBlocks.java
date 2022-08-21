@@ -77,7 +77,7 @@ public class RandomBlocks {
             targetLocation = player.getLocation();
         }
         
-        if(!WorldList.isRegistered(targetLocation.getWorld().getName())){
+        if(!WorldConfig.isRegistered(targetLocation.getWorld().getName())){
             return;
         }
         
@@ -301,7 +301,7 @@ public class RandomBlocks {
     }
     
     private void placeBlock(Block block){
-        if(WorldList.isRegistered(block.getWorld().getName())){
+        if(WorldConfig.isRegistered(block.getWorld().getName())){
             TypeManager.getRandomLuckyBlockType().replaceBlock(block);
             blocks_placed++;
             LocationManager.registerLocation(block.getLocation());

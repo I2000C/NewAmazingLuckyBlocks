@@ -13,7 +13,7 @@ import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
 
-public class WorldList{    
+public class WorldConfig{    
     private static Map<String, Boolean> WORLDS = new LinkedHashMap<>();
     
     public static Map<String, Boolean> getWorlds(){

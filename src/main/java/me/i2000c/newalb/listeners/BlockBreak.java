@@ -16,7 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils.WorldConfig;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventPriority;
 
@@ -35,7 +35,7 @@ public class BlockBreak implements Listener{
             return;
         }
         
-        if(WorldList.isRegistered(w.getName())){
+        if(WorldConfig.isRegistered(w.getName())){
             TypeManager.Result result = TypeManager.canBreakBlock(p, loc);
             switch(result.resultCode){
                 case TypeManager.RESULT_NOT_LUCKYBLOCK:

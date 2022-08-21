@@ -22,7 +22,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils.Updater;
-import me.i2000c.newalb.utils.WorldList;
+import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.Task;
@@ -83,7 +83,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         getCommand("alb").setExecutor(new CommandManager(this));
         getCommand("nalb").setExecutor(new CommandManager(this));
         
-        WorldList.reloadAll();
+        WorldConfig.reloadAll();
         
         PackManager.loadPacks();
         TrapManager.loadTraps();

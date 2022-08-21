@@ -57,14 +57,14 @@ public class WorldMenu{
         
         adapter.goToMainPage();
         
-        worlds = new LinkedHashMap<>(WorldList.getWorlds());
+        worlds = new LinkedHashMap<>(WorldConfig.getWorlds());
         adapter.setItemList(new ArrayList<>(worlds.keySet()));
 //</editor-fold>
     }
     
     public static void openWorldsMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        WorldList.updateWorlds(false);
+        WorldConfig.updateWorlds(false);
         
         Menu menu = GUIFactory.newMenu(CustomInventoryType.WORLD_MENU, 54, "&3&lWorlds Menu");
         
@@ -163,8 +163,8 @@ public class WorldMenu{
                     break;
                 case 52:
                     //Save worlds to config
-                    WorldList.setWorlds(worlds);
-                    WorldList.saveWorlds();
+                    WorldConfig.setWorlds(worlds);
+                    WorldConfig.saveWorlds();
                     p.closeInventory();
                     Logger.sendMessage("&aWorlds list has been saved", p);
                     break;
