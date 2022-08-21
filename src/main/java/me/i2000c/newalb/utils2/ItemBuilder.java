@@ -46,7 +46,6 @@ public class ItemBuilder{
         
         try{
             materialID = Integer.parseInt(materialName);
-            Logger.log(materialNameAndDurability);
             Logger.log("Using material IDs is deprecated and not recommended (materialID: " + materialID + ")", LogLevel.WARN);
         }catch(Exception ex){}
         
