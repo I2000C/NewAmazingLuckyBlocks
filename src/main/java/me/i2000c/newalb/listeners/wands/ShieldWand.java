@@ -77,7 +77,7 @@ public class ShieldWand extends SpecialItem{
             }
         }
 
-        boolean withfloor = ConfigManager.getConfig().getBoolean("Wands.Shield.withfloor");
+        boolean withfloor = ConfigManager.getConfig().getBoolean("Wands.ShieldWand.withfloor");
         if(!withfloor){
             Set<Location> circleBlocks2 = new HashSet<>();
             circleBlocks2.addAll(circleBlocks);
