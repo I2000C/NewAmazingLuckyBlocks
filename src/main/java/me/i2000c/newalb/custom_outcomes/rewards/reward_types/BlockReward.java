@@ -9,7 +9,6 @@ import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -102,10 +101,7 @@ public class BlockReward extends Reward{
     public void saveRewardIntoConfig(FileConfiguration config, String path){
         config.set(path + ".usePlayerLoc", usePlayerLoc);
         config.set(path + ".isFallingBlock", isFallingBlock);
-        config.set(path + ".blockItem.material", blockItem.getType().name());
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-            config.set(path + ".blockItem.durability", blockItem.getDurability());
-        }
+        config.set(path + ".blockItem.material", ItemBuilder.fromItem(blockItem, false).build());
         offset.saveToConfig(config, path + ".offset");
     }
     
@@ -113,10 +109,7 @@ public class BlockReward extends Reward{
     public void loadRewardFromConfig(FileConfiguration config, String path){
         this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
         this.isFallingBlock = config.getBoolean(path + ".isFallingBlock");
-        this.blockItem = new ItemStack(Material.valueOf(config.getString(path + ".blockItem.material")));
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-            this.blockItem.setDurability((short) config.getInt(path + ".blockItem.durability", 0));
-        }
+        this.blockItem = ItemBuilder.newItem(config.getString(path + ".blockItem.material")).build();
         this.offset = new Offset(config, path + ".offset");
     }
     
