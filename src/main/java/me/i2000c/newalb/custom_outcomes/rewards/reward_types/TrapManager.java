@@ -1,17 +1,15 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.config.ReadWriteConfig;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,38 +26,33 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
-public class TrapManager implements Listener{
+public class TrapManager extends ReadWriteConfig implements Listener{
+    public TrapManager(Plugin plugin){
+        super(plugin, null, "data/traps.yml", false);
+    }
+    
+    private static TrapManager trapManager;
+    public static TrapManager getManager(){
+        return trapManager;
+    }
+    public static void initialize(Plugin plugin){
+        trapManager = new TrapManager(plugin);
+    }
+    
     private static class Trap{
         public Outcome trapOutcome;
         public ItemStack trapItemStack;
     }
     
-    private static final String TRAPS_FOLDER = "data";
-    private static final String TRAPS_FILE = "traps.yml";
-    
-    private static final Map<Location, Trap> traps;
-    
-    static{
-        traps = new HashMap<>();
-    }
+    private static final Map<Location, Trap> traps = new HashMap<>();
     
     public static void loadTraps(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         traps.clear();
-        File trapsFolder = new File(NewAmazingLuckyBlocks.getInstance().getDataFolder(), TRAPS_FOLDER);
-        trapsFolder.mkdirs();
         
-        File trapsFile = new File(trapsFolder, TRAPS_FILE);
-        if(!trapsFile.exists()){
-            try{
-                trapsFile.createNewFile();
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
-        }
-        
-        FileConfiguration config = YamlConfigurationUTF8.loadConfiguration(trapsFile);
+        FileConfiguration config = trapManager.getBukkitConfig();
         if(!config.isConfigurationSection("Traps")){
             return;
         }
@@ -109,7 +102,8 @@ public class TrapManager implements Listener{
     
     public static void saveTraps(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        FileConfiguration config = new YamlConfigurationUTF8();
+        trapManager.clearConfig();        
+        FileConfiguration config = trapManager.getBukkitConfig();
         
         int i = 0;
         for(Map.Entry<Location, Trap> entry : traps.entrySet()){
@@ -135,20 +129,13 @@ public class TrapManager implements Listener{
             i++;
         }
         
-        File trapsFolder = new File(NewAmazingLuckyBlocks.getInstance().getDataFolder(), TRAPS_FOLDER);
-        trapsFolder.mkdirs();
-        
-        File trapsFile = new File(trapsFolder, TRAPS_FILE);
-        try{
-            config.save(trapsFile);
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
+        trapManager.saveConfig();
 //</editor-fold>
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private static void onPressurePlateActivated(PlayerInteractEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(!WorldConfig.isRegistered(e.getPlayer().getWorld().getName())){
             return;
         }
@@ -162,13 +149,15 @@ public class TrapManager implements Listener{
                     traps.remove(loc);
                     saveTraps();
                     trap.trapOutcome.execute(e.getPlayer(), loc);
-                }, 1L);                    
+                }, 1L);
             }
         }
+//</editor-fold>
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private static void onPressurePlatePlaced(BlockPlaceEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack stack = e.getItemInHand();
         if(stack == null){
             return;
@@ -184,10 +173,12 @@ public class TrapManager implements Listener{
             traps.put(e.getBlock().getLocation(), trap);
             saveTraps();
         }
+//</editor-fold>
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private static void onPressurePlateBroken(BlockBreakEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         Location loc = e.getBlock().getLocation();
         Trap trap = traps.get(loc);
         if(trap != null){
@@ -202,10 +193,12 @@ public class TrapManager implements Listener{
             loc.getWorld().dropItemNaturally(loc, trap.trapItemStack.clone());
             saveTraps();
         }
+//</editor-fold>
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private static void onBlockExplode(BlockExplodeEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         boolean changedTraps = false;
         for(Iterator<Block> iterator = e.blockList().iterator(); iterator.hasNext();) {
             Block block = iterator.next();
@@ -222,10 +215,12 @@ public class TrapManager implements Listener{
         if(changedTraps){
             saveTraps();
         }
+//</editor-fold>
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private static void onEntityExplode(EntityExplodeEvent e){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         boolean changedTraps = false;
         for(Iterator<Block> iterator = e.blockList().iterator(); iterator.hasNext();) {
             Block block = iterator.next();
@@ -242,5 +237,6 @@ public class TrapManager implements Listener{
         if(changedTraps){
             saveTraps();
         }
+//</editor-fold>
     }
 }
