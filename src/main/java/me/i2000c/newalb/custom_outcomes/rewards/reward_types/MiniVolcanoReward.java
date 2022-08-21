@@ -7,7 +7,6 @@ import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,7 +24,8 @@ public class MiniVolcanoReward extends Reward{
     public MiniVolcanoReward(Outcome outcome){
         super(outcome);
         height = ConfigManager.getConfig().getInt("Objects.MiniVolcano.height");
-        baseMaterial = OtherUtils.parseMaterial(ConfigManager.getConfig().getString("Objects.MiniVolcano.base-material"));
+        String materialName = ConfigManager.getConfig().getString("Objects.MiniVolcano.base-material");
+        baseMaterial = ItemBuilder.newItem(materialName).build();
         lavaMaterial = Material.getMaterial(ConfigManager.getConfig().getString("Objects.MiniVolcano.lava-material"));
         ticks = ConfigManager.getConfig().getLong("Objects.MiniVolcano.time-between-one-block-and-the-next");
         squared = false;
@@ -81,7 +81,7 @@ public class MiniVolcanoReward extends Reward{
         return ItemBuilder.newItem(XMaterial.LAVA_BUCKET)
                 .withDisplayName("&cMiniVolcano")
                 .addLoreLine("&bHeight: &6" + this.height)
-                .addLoreLine("&bBase material: &6" + OtherUtils.parseItemStack(this.baseMaterial))
+                .addLoreLine("&bBase material: &6" + ItemBuilder.fromItem(this.baseMaterial, false).toString())
                 .addLoreLine("&bLava material: &6" + this.lavaMaterial)
                 .addLoreLine("&bTicks between blocks: &6" + this.ticks)
                 .addLoreLine("&bIs squared: &6" + this.squared)
@@ -92,7 +92,7 @@ public class MiniVolcanoReward extends Reward{
     @Override
     public void saveRewardIntoConfig(FileConfiguration config, String path){
         config.set(path + ".height", height);
-        config.set(path + ".baseMaterial", OtherUtils.parseItemStack(baseMaterial));
+        config.set(path + ".baseMaterial", ItemBuilder.fromItem(this.baseMaterial, false).toString());
         config.set(path + ".lavaMaterial", lavaMaterial.name());
         config.set(path + ".ticks_between_blocks", ticks);
         config.set(path + ".squared", squared);
@@ -102,7 +102,7 @@ public class MiniVolcanoReward extends Reward{
     @Override
     public void loadRewardFromConfig(FileConfiguration config, String path){
         height = config.getInt(path + ".height");
-        baseMaterial = OtherUtils.parseMaterial(config.getString(path + ".baseMaterial"));
+        baseMaterial = ItemBuilder.newItem(config.getString(path + ".baseMaterial")).build();
         lavaMaterial = Material.valueOf(config.getString(path + ".lavaMaterial"));
         ticks = config.getLong(path + ".ticks_between_blocks");
         squared = config.getBoolean(path + ".squared");

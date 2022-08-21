@@ -14,7 +14,6 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -69,11 +68,11 @@ public class MiniVolcanoMenu extends Editor<MiniVolcanoReward>{
                 .addLoreLine("&3Click to reset")
                 .build();
         
-        ItemStack baseMaterialStack = ItemBuilder.newItem(XMaterial.matchXMaterial(item.getBaseMaterial()))
-                .withDisplayName("&6Base material: &b" + OtherUtils.parseItemStack(item.getBaseMaterial()))
-                .addLoreLine("&3Click on a &3&lblock &3of your inventory")
-                .addLoreLine("&3to change it")
-                .build();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(item.getBaseMaterial()));
+        builder.withDisplayName("&6Base material: &b" + builder.toString());
+        builder.addLoreLine("&3Click on a &3&lblock &3of your inventory");
+        builder.addLoreLine("&3to change it");
+        ItemStack baseMaterialStack = builder.build();
         
         ItemStack lavaMaterialStack;
         switch(item.getLavaMaterial()){

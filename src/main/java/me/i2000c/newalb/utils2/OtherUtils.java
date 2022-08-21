@@ -10,7 +10,6 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,33 +38,6 @@ public class OtherUtils{
         }
         
         return false;
-    }
-    
-    public static ItemStack parseMaterial(String materialNameAndDurability){
-        ItemStack stack;
-        String[] splitted = materialNameAndDurability.split(":");
-        String materialName = splitted[0];
-        
-        try{
-            int materialID = Integer.parseInt(materialName);
-            stack = new ItemStack(materialID);
-        }catch(Exception ex){
-            stack = new ItemStack(Material.valueOf(materialName));
-        }        
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion() && splitted.length == 2){
-            short materialDurability = Short.parseShort(splitted[1]);
-            stack.setDurability(materialDurability);
-        }
-        
-        return stack;
-    }
-    public static String parseItemStack(ItemStack stack){
-        String materialNameAndDurability = stack.getType().name();
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion() && stack.getDurability() > 0){
-            materialNameAndDurability += ":" + stack.getDurability();
-        }
-        
-        return materialNameAndDurability;
     }
     
     public static int generateRandomInt(int min, int max){

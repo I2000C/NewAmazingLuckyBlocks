@@ -132,7 +132,9 @@ public class BlockReplacingSphereReward extends Reward{
         List<String> orderedMaterials = new ArrayList<>();
         this.materials.keySet().stream()
                 .sorted(COMPARATOR)
-                .forEachOrdered(item -> orderedMaterials.add("   &3" + OtherUtils.parseItemStack(item) + " x" + this.materials.get(item)));
+                .forEachOrdered(item -> orderedMaterials.add("   &3" + 
+                        ItemBuilder.fromItem(item, false).toString() + 
+                        " x" + this.materials.get(item)));
         return orderedMaterials;
     }
     
@@ -170,7 +172,7 @@ public class BlockReplacingSphereReward extends Reward{
         List<String> aux = new ArrayList<>();
         materials.keySet().stream()
                 .sorted(COMPARATOR)
-                .forEachOrdered((item) -> aux.add(OtherUtils.parseItemStack(item) + ";" + materials.get(item)));
+                .forEachOrdered(item -> aux.add(ItemBuilder.fromItem(item, false).toString() + ";" + materials.get(item)));
         config.set(path + ".materials", aux);
     }
     
@@ -190,7 +192,7 @@ public class BlockReplacingSphereReward extends Reward{
         }
         List<String> aux = config.getStringList(path + ".materials");
         aux.stream().map(materialData -> materialData.split(";")).forEach(splitted -> {
-            ItemStack item = OtherUtils.parseMaterial(splitted[0]);
+            ItemStack item = ItemBuilder.newItem(splitted[0]).build();
             int amount;
             try{
                 amount = Integer.parseInt(splitted[1]);

@@ -10,7 +10,6 @@ import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -67,7 +66,7 @@ public class TrapReward extends Reward{
         ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(pressurePlateMaterial));
         builder.withDisplayName("&5Trap");
         builder.addLoreLine("&3Name: &r" + trapName);
-        builder.addLoreLine("&3Pressure Plate Material: &b" + OtherUtils.parseItemStack(builder.build()));
+        builder.addLoreLine("&3Pressure Plate Material: &b" + builder.toString());
         builder.addLoreLine("&3Trap Outcome: &b" + this.trapOutcomePackName + "/" + this.trapOutcomeID);
         
         return builder.build();

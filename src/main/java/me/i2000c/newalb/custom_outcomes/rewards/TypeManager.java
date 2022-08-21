@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.config.YamlConfigurationUTF8;
+import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -34,6 +34,7 @@ public class TypeManager{
     public static final int RESULT_NOT_LUCKYBLOCK = 3;
     
     private static final NewAmazingLuckyBlocks PLUGIN = NewAmazingLuckyBlocks.getInstance();
+    private static final File LUCKY_BLOCK_TYPES_FOLDER = new File(PLUGIN.getDataFolder(), "luckyblock_types");
     private static final File LUCKY_BLOCK_TYPES_FILE = new File(PLUGIN.getDataFolder(), "luckyBlockTypes.yml");
     
     private static final List<LuckyBlockType> luckyBlockTypes;

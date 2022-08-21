@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Bukkit;
@@ -111,7 +112,8 @@ public class Timer implements Listener{
     public void executeMiniVolcano(Player player, Location location){
         int height = ConfigManager.getConfig().getInt("Objects.MiniVolcano.height");
         
-        ItemStack baseMaterial = OtherUtils.parseMaterial(ConfigManager.getConfig().getString("Objects.MiniVolcano.base-material"));
+        String materialName = ConfigManager.getConfig().getString("Objects.MiniVolcano.base-material");
+        ItemStack baseMaterial = ItemBuilder.newItem(materialName).build();
         Material lavaMaterial = Material.getMaterial(ConfigManager.getConfig().getString("Objects.MiniVolcano.lava-material"));
         
         long ticks = ConfigManager.getConfig().getLong("Objects.MiniVolcano.time-between-one-block-and-the-next");

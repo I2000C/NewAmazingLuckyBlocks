@@ -11,7 +11,6 @@ import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityTowerReward;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -208,7 +207,8 @@ public class Outcome implements Displayable, Executable, Cloneable{
         this.ID = ID;
         this.name = config.getString(path + ".outcome-name");
         this.probability = config.getInt(path + ".probability");
-        this.icon = OtherUtils.parseMaterial(config.getString(path + ".icon", getDefaultIcon().getType().name()));
+        String itemName = config.getString(path + ".icon", getDefaultIcon().getType().name());
+        this.icon = ItemBuilder.newItem(itemName).build();
         this.rewardList = new ArrayList<>();
         
         if(config.isConfigurationSection(path + ".rewards")){
@@ -256,7 +256,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
         
         config.set(path + ".outcome-name", this.name);
         config.set(path + ".probability", this.probability);
-        config.set(path + ".icon", OtherUtils.parseItemStack(this.icon));
+        config.set(path + ".icon", ItemBuilder.fromItem(this.icon, false).toString());
         
         List<String> delays = new ArrayList();
         int i=0;

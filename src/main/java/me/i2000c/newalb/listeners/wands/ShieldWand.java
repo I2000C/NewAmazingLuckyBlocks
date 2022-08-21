@@ -8,7 +8,6 @@ import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -94,7 +93,8 @@ public class ShieldWand extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         try{
-            shieldItemStack = OtherUtils.parseMaterial(ConfigManager.getConfig().getString("Wands.ShieldWand.ShieldWandBlock"));
+            String itemName = ConfigManager.getConfig().getString("Wands.ShieldWand.ShieldWandBlock");
+            shieldItemStack = ItemBuilder.newItem(itemName).build();
         }catch(Exception ex){
             Logger.log("&cInvalid block in config at Wands.ShieldWand.ShieldWandBlock");
         }

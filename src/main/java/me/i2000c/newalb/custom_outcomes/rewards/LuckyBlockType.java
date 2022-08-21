@@ -17,7 +17,6 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -98,17 +97,17 @@ public class LuckyBlockType implements Displayable{
         
         builder.addLoreLine("&5Crafting:");
         builder.addLoreLine(String.format("    &e%s %s %s", 
-                OtherUtils.parseItemStack(this.crafting.get(0)), 
-                OtherUtils.parseItemStack(this.crafting.get(1)), 
-                OtherUtils.parseItemStack(this.crafting.get(2))));
+                ItemBuilder.fromItem(this.crafting.get(0), false).toString(), 
+                ItemBuilder.fromItem(this.crafting.get(1), false).toString(), 
+                ItemBuilder.fromItem(this.crafting.get(2), false).toString()));
         builder.addLoreLine(String.format("    &e%s %s %s", 
-                OtherUtils.parseItemStack(this.crafting.get(3)), 
-                OtherUtils.parseItemStack(this.crafting.get(4)), 
-                OtherUtils.parseItemStack(this.crafting.get(5))));
+                ItemBuilder.fromItem(this.crafting.get(3), false).toString(), 
+                ItemBuilder.fromItem(this.crafting.get(4), false).toString(), 
+                ItemBuilder.fromItem(this.crafting.get(5), false).toString()));
         builder.addLoreLine(String.format("    &e%s %s %s", 
-                OtherUtils.parseItemStack(this.crafting.get(6)), 
-                OtherUtils.parseItemStack(this.crafting.get(7)), 
-                OtherUtils.parseItemStack(this.crafting.get(8))));
+                ItemBuilder.fromItem(this.crafting.get(6), false).toString(), 
+                ItemBuilder.fromItem(this.crafting.get(7), false).toString(), 
+                ItemBuilder.fromItem(this.crafting.get(8), false).toString()));
         
         builder.addLoreLine("&5Pack list:");
         this.packs.forEach((pack, probability) -> {
@@ -228,7 +227,7 @@ public class LuckyBlockType implements Displayable{
         String textureID = config.getString(path + ".textureID");
         
         if(textureID.isEmpty() && !materialName.isEmpty()){
-            type.luckyBlockItem = OtherUtils.parseMaterial(materialName);
+            type.luckyBlockItem = ItemBuilder.newItem(materialName).build();
             type.texture = null;
         }else if(!textureID.isEmpty() && materialName.isEmpty()){
             try{
@@ -282,7 +281,7 @@ public class LuckyBlockType implements Displayable{
         
         char ingredientChar = 'A';
         for(String materialAndData : materialNames){
-            ItemStack item = OtherUtils.parseMaterial(materialAndData);
+            ItemStack item = ItemBuilder.newItem(materialAndData).build();
             if(item.getType() != Material.AIR){
                 if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
                     type.recipe.setIngredient(ingredientChar, item.getType(), item.getDurability());
@@ -356,19 +355,19 @@ public class LuckyBlockType implements Displayable{
         
         config.set(path + ".name", name != null ? Logger.deColor(name) : "");
         config.set(path + ".lore", lore != null ? Logger.deColor(lore) : Collections.EMPTY_LIST);
-        config.set(path + ".material", texture == null ? OtherUtils.parseItemStack(luckyBlockItem) : "");
+        config.set(path + ".material", texture == null ? ItemBuilder.fromItem(luckyBlockItem, false).toString() : "");
         config.set(path + ".textureID", texture != null ? texture.toString() : "");
         
         // Save crafting recipe
-        String row0 = OtherUtils.parseItemStack(crafting.get(0)) + " " +
-                      OtherUtils.parseItemStack(crafting.get(1)) + " " +
-                      OtherUtils.parseItemStack(crafting.get(2));
-        String row1 = OtherUtils.parseItemStack(crafting.get(3)) + " " +
-                      OtherUtils.parseItemStack(crafting.get(4)) + " " +
-                      OtherUtils.parseItemStack(crafting.get(5));
-        String row2 = OtherUtils.parseItemStack(crafting.get(6)) + " " +
-                      OtherUtils.parseItemStack(crafting.get(7)) + " " +
-                      OtherUtils.parseItemStack(crafting.get(8));
+        String row0 = ItemBuilder.fromItem(crafting.get(0), false).toString() + " " +
+                      ItemBuilder.fromItem(crafting.get(1), false).toString() + " " +
+                      ItemBuilder.fromItem(crafting.get(2), false).toString();
+        String row1 = ItemBuilder.fromItem(crafting.get(3), false).toString() + " " +
+                      ItemBuilder.fromItem(crafting.get(4), false).toString() + " " +
+                      ItemBuilder.fromItem(crafting.get(5), false).toString();
+        String row2 = ItemBuilder.fromItem(crafting.get(6), false).toString() + " " +
+                      ItemBuilder.fromItem(crafting.get(7), false).toString() + " " +
+                      ItemBuilder.fromItem(crafting.get(8), false).toString();
         config.set(path + ".crafting", Arrays.asList(row0, row1, row2));
         
         // Save outcome packs
