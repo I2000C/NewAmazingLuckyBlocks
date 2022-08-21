@@ -1,117 +1,139 @@
 Pack-probability: 100
 Outcomes:
-    '0':       
-        outcome-name: Example 1
-        probability: 100
-        icon: STONE
-        rewards:
-            item:
-                '0':
-                    material: STONE
-                    amount: 5
-                    name: "&7The stone block"
-                    lore:
-                        - "&6It is a stone block"
-                        - "&6with enchantments"
-                    enchantments: 
-                        - DAMAGE_ALL;10
-                        - FIRE_ASPECT;5
-                '1':
-                    material: SAND
-                    amount: 3
-                    name: "&6Sand"
-    '1':
-        outcome-name: Example 2
-        probability: 100
-        icon: COBBLESTONE
-        rewards:
-            item:
-                '0':
-                    material: COBBLESTONE
-                    amount: 1
-                '1':
-                    material: DIRT
-                    amount: 2
-            command:
-                '0':
-                    sender: Player
-                    cmd: say I am on %x% %y% %z%
-    '2':
-        outcome-name: Example 3
-        probability: 100
-        icon: OAK_BOAT
-        rewards:
-            command:
-                '0':
-                    sender: Console
-                    cmd: give %player% oak_boat
-            entity:
-                '0':
-                    type: VILLAGER
-                    custom_name: '&6&lCustom Villager'
-                '1':
-                    type: ZOMBIE
-                    equipment:
-                        Helmet:
-                          material: DIAMOND_HELMET
-                          durability: 3
-                          enchantments: []
-                        Chestplate:
-                          material: DIAMOND_CHESTPLATE
-                          durability: 0
-                          enchantments:
-                          - THORNS;10
-                        Leggings:
-                          material: IRON_LEGGINGS
-                          durability: 0
-                          enchantments: []
-                        Boots:
-                          material: LEATHER_BOOTS
-                          durability: 0
-                          enchantments: []
-                        ItemInHand:
-                          material: DIAMOND_SWORD
-                          durability: 2
-                          enchantments:
-                          - KNOCKBACK;200
-    '3':
-        outcome-name: Example 4
-        probability: 100
-        icon: EMERALD
-        rewards:
-            item:
-                '0':
-                    material: EMERALD
-                    amount: 32
-            entity:
-                '0':
-                  type: VILLAGER
-                '1':
-                  type: VILLAGER
-                '2':
-                  type: VILLAGER
-                '3':
-                  type: VILLAGER
-                '4':
-                  type: VILLAGER
-                '5':
-                  type: VILLAGER
-            tower_entity:
-                '0': 0,1,2,3,4,5
-    '4':
-        outcome-name: Example 5
-        probability: 100
-        icon: FIREWORK_ROCKET
-        rewards:
-            firework:
-                '0':
-                    amount: 1
-                    power: 1
-                    trail: true
-                    flicker: true
-                    type: BALL_LARGE
-                    color:
-                    - FFFFFF
-                    - 663300
-                    fade:
-                    - 123456    
+  '0':
+    outcome-name: Example 1
+    probability: 100
+    icon: STONE
+    rewards:
+      item:
+        '0':
+          material: STONE
+          spawnMode: DEFAULT
+          spawnInvSlot: 0
+          amount: 5
+          durability: 0
+          name: '&7The stone block'
+          lore:
+          - '&6It is a stone block'
+          - '&6with enchantments'
+          enchantments:
+          - DAMAGE_ALL;10
+          - FIRE_ASPECT;5
+        '1':
+          material: SAND
+          spawnMode: DEFAULT
+          spawnInvSlot: 0
+          amount: 3
+          durability: 0
+          name: '&6Sand'
+    delayer: []
+  '1':
+    outcome-name: Example 2
+    probability: 100
+    icon: COBBLESTONE
+    rewards:
+      item:
+        '0':
+          material: COBBLESTONE
+          spawnMode: DEFAULT
+          spawnInvSlot: 0
+          amount: 1
+          durability: 0
+        '1':
+          material: DIRT
+          spawnMode: DEFAULT
+          spawnInvSlot: 0
+          amount: 2
+          durability: 0
+      command:
+        '0':
+          cmd: say I am on %x% %y% %z%
+          sender: Player
+    delayer: []
+  '2':
+    outcome-name: Example 3
+    probability: 100
+    icon: NAME_TAG
+    rewards:
+      command:
+        '0':
+          cmd: say I'm %player% [%x% %y% %z%]
+          sender: Player
+      entity:
+        '0':
+          type: VILLAGER
+          custom_name: '&6&lCustom Villager'
+          effects: []
+          offset:
+            offsetX: '0'
+            offsetY: '0'
+            offsetZ: '0'
+        '1':
+          type: ZOMBIE
+          effects: []
+          equipment:
+            Helmet:
+              material: DIAMOND_HELMET
+              durability: 3
+            Chestplate:
+              material: DIAMOND_CHESTPLATE
+              durability: 0
+              enchantments:
+              - THORNS;10
+            Leggings:
+              material: IRON_LEGGINGS
+              durability: 0
+            Boots:
+              material: LEATHER_BOOTS
+              durability: 0
+            ItemInHand:
+              material: DIAMOND_SWORD
+              durability: 2
+              enchantments:
+              - KNOCKBACK;200
+          offset:
+            offsetX: '0'
+            offsetY: '0'
+            offsetZ: '0'
+    delayer: []
+  '3':
+    outcome-name: Example 4
+    probability: 100
+    icon: EMERALD
+    rewards:
+      item:
+        '0':
+          material: EMERALD
+          spawnMode: DEFAULT
+          spawnInvSlot: 0
+          amount: 32
+          durability: 0
+      entity:
+        '0':
+          type: VILLAGER
+          effects: []
+          offset:
+            offsetX: '0'
+            offsetY: '0'
+            offsetZ: '0'
+      tower_entity:
+        '0': 0,0,0,0,0,0
+    delayer: []
+  '4':
+    outcome-name: Example 5
+    probability: 100
+    icon: FIREWORK_ROCKET
+    rewards:
+      firework:
+        '0':
+          amount: 1
+          power: 1
+          trail: true
+          flicker: true
+          type: BALL_LARGE
+          color:
+          - FFFFFF
+          - '663300'
+          fade:
+          - '123456'
+    delayer: []
