@@ -51,10 +51,14 @@ public class ItemBuilder{
         }catch(Exception ex){}
         
         Optional<XMaterial> optionalXMaterial;
-        if(materialID == -1 || splitted.length < 2){
+        if(materialID == -1){
             optionalXMaterial = XMaterial.matchXMaterial(materialNameAndDurability);
         }else{
-            optionalXMaterial = XMaterial.matchXMaterial(materialID, Byte.parseByte(splitted[1]));
+            if(splitted.length == 1){
+                optionalXMaterial = XMaterial.matchXMaterial(materialID, (byte) 0);
+            }else{
+                optionalXMaterial = XMaterial.matchXMaterial(materialID, Byte.parseByte(splitted[1]));
+            }
         }
         
         if(optionalXMaterial.isPresent()){
