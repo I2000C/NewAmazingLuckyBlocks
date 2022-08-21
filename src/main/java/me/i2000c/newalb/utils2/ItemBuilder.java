@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.logger.LogLevel;
@@ -36,6 +37,32 @@ public class ItemBuilder{
     
     public static ItemBuilder newItem(XMaterial material){
         return new ItemBuilder(material);
+    }
+    public static ItemBuilder newItem(String materialNameAndDurability){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        String[] splitted = materialNameAndDurability.split(":");
+        String materialName = splitted[0];
+        int materialID = -1;
+        
+        try{
+            materialID = Integer.parseInt(materialName);
+            Logger.log(materialNameAndDurability);
+            Logger.log("Using material IDs is deprecated and not recommended (materialID: " + materialID + ")", LogLevel.WARN);
+        }catch(Exception ex){}
+        
+        Optional<XMaterial> optionalXMaterial;
+        if(materialID == -1 || splitted.length < 2){
+            optionalXMaterial = XMaterial.matchXMaterial(materialNameAndDurability);
+        }else{
+            optionalXMaterial = XMaterial.matchXMaterial(materialID, Byte.parseByte(splitted[1]));
+        }
+        
+        if(optionalXMaterial.isPresent()){
+            return ItemBuilder.newItem(optionalXMaterial.get());
+        }else{
+            throw new IllegalArgumentException("Invalid ItemStack detected: " + materialNameAndDurability);
+        }
+//</editor-fold>
     }
     public static ItemBuilder fromItem(ItemStack item, boolean clone){
         return new ItemBuilder(clone ? item.clone() : item);
@@ -294,5 +321,10 @@ public class ItemBuilder{
     
     public ItemStack build(){
         return item;
+    }
+    
+    @Override
+    public String toString(){
+        return this.getMaterial().name();
     }
 }
