@@ -87,7 +87,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         PackManager.loadPacks();        
         TypeManager.loadTypes();
         
-        LocationManager.loadLocations(this);
+        LocationManager.initialize(this);
+        LocationManager.loadLocations();
         
         TrapManager.initialize(this);
         TrapManager.loadTraps();
