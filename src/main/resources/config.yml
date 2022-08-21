@@ -1,5 +1,3 @@
-#List of worlds where lucky blocks will be enabled.
-Worlds-list: []
 Wands:
   RegenWand:
     cooldown-time: 20

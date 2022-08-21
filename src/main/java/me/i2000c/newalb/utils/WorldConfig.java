@@ -8,12 +8,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.config.ReadWriteConfig;
 import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 
-public class WorldConfig{    
+public class WorldConfig extends ReadWriteConfig{
+    private static final String WORLD_LIST_KEY = "Worlds-list";
+    public WorldConfig(Plugin plugin){
+        super(plugin, null, "data/worlds.yml", false);
+    }
+    
+    public List<String> loadWorlds(){
+        return worldConfig.getBukkitConfig().getStringList(WORLD_LIST_KEY);
+    }
+    public void saveWorlds(List<String> worlds){
+        worldConfig.getBukkitConfig().set(WORLD_LIST_KEY, worlds);
+        saveConfig();
+    }
+    
+    
+    
+    
+    private static WorldConfig worldConfig;
+    public static void initialize(Plugin plugin){
+        worldConfig = new WorldConfig(plugin);
+    }
+    
     private static Map<String, Boolean> WORLDS = new LinkedHashMap<>();
     
     public static Map<String, Boolean> getWorlds(){
@@ -25,7 +48,8 @@ public class WorldConfig{
     }
     
     private static boolean needToUpdateWorlds(List<String> serverWorlds){
-        if(WORLDS.size() == serverWorlds.size()){            
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(WORLDS.size() == serverWorlds.size()){
             Iterator<String> worldsIterator = WORLDS.keySet().iterator();
             Iterator<String> serverWorldsIterator = serverWorlds.iterator();
             while(worldsIterator.hasNext()){
@@ -40,9 +64,11 @@ public class WorldConfig{
         }else{
             return true;
         }
+//</editor-fold>
     }
     
     public static void updateWorlds(boolean force){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         List<String> serverWorlds = Bukkit.getWorlds()
                 .stream()
                 .sorted((world1, world2) -> world1.getName().compareTo(world2.getName()))
@@ -55,8 +81,7 @@ public class WorldConfig{
         }
         
         WORLDS.clear();
-        ConfigManager.getConfig()
-                .getStringList("Worlds-list")
+        worldConfig.loadWorlds()
                 .forEach(worldName -> {
                     try{
                         String[] splitted = worldName.split(";");
@@ -69,7 +94,7 @@ public class WorldConfig{
                         Logger.log("Couldn't load world \"" + worldName + "\" (incorrect format)", LogLevel.WARN);
                     }
                 }
-            );        
+                );
         
         if(reloadWorlds){
             Map<String, Boolean> oldWorlds = WORLDS;
@@ -81,18 +106,18 @@ public class WorldConfig{
                 boolean state = oldWorlds.getOrDefault(worldName, true);
                 WORLDS.put(worldName, state);
             });
-
+            
             // Save worlds into config
             saveWorlds();
         }
+//</editor-fold>
     }
     
     static void saveWorlds(){
         List<String> savedWorlds = new ArrayList<>();
         WORLDS.forEach((worldName, enabled) -> savedWorlds.add(worldName + ";" + enabled));
         Collections.sort(savedWorlds);
-        ConfigManager.getConfig().set("Worlds-list", savedWorlds);
-        ConfigManager.saveConfig();
+        worldConfig.saveWorlds(savedWorlds);
     }
     
     public static void setWorldEnabled(String worldName, boolean enabled){
@@ -114,8 +139,9 @@ public class WorldConfig{
     }
    
     public static void reloadAll(){
-        String prefix = NewAmazingLuckyBlocks.getInstance().prefix;   
-
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        String prefix = NewAmazingLuckyBlocks.getInstance().prefix;
+        
         String line1 = LangLoader.getMessages().getString("World-loading.line1").replaceAll("%prefix%", "");
         String line2 = LangLoader.getMessages().getString("World-loading.line2").replaceAll("%prefix%", "");
         String line3 = LangLoader.getMessages().getString("World-loading.line3").replaceAll("%prefix%", "");
@@ -138,6 +164,7 @@ public class WorldConfig{
         }else{
             Logger.log(line7 + " &d" + WORLDS.size() + " " + line8 + "&r");
         }
+//</editor-fold>
     }
     
     public static boolean isRegistered(String worldName){

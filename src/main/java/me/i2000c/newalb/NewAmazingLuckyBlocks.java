@@ -83,6 +83,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         getCommand("alb").setExecutor(new CommandManager(this));
         getCommand("nalb").setExecutor(new CommandManager(this));
         
+        WorldConfig.initialize(this);
         WorldConfig.reloadAll();
         
         PackManager.loadPacks();
