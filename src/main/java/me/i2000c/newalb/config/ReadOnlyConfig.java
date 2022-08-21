@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.CommentedConfig;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
@@ -21,10 +20,10 @@ public abstract class ReadOnlyConfig{
     protected static final int INVALID_CONFIG_VERSION = -1;
     protected static final String VERSION_KEY = "ConfigVersion";
     
-    protected final Plugin plugin;
-    protected final String resourceName;
-    protected final File configFile;
-    protected YamlConfigurationUTF8 config;
+    private final Plugin plugin;
+    private final String resourceName;
+    private final File configFile;
+    private YamlConfigurationUTF8 config;
         
     public ReadOnlyConfig(Plugin plugin, String resourceName, String filename, boolean saveComments){
         this.plugin = plugin;
@@ -51,11 +50,13 @@ public abstract class ReadOnlyConfig{
     
     public final void loadConfig(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!configFile.exists()){
+        if(configFile.exists()){
+            config.load(configFile);
+        }else if(resourceName != null){
             copyResource();
+            config.load(configFile);
         }
         
-        config.load(configFile);
         updateConfig();
 //</editor-fold>
     }
@@ -75,6 +76,10 @@ public abstract class ReadOnlyConfig{
     
     private boolean updateConfig(){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(resourceName == null){
+            return false;
+        }
+        
         int currentVersion = getConfigVersion();
         if(currentVersion == INVALID_CONFIG_VERSION){
             return false;
@@ -97,7 +102,7 @@ public abstract class ReadOnlyConfig{
         }
         
         try{
-            config.load(NewAmazingLuckyBlocks.getInstance().getResource(resourceName));
+            config.load(plugin.getResource(resourceName));
             FileConfiguration oldConfig = new YamlConfigurationUTF8();
             oldConfig.load(bakFile);
             
