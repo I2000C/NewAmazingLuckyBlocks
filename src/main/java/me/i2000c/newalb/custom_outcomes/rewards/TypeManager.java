@@ -170,11 +170,7 @@ public class TypeManager{
         }
 
         if(!LUCKY_BLOCK_TYPES_FILE.exists()){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-                NewAmazingLuckyBlocks.getInstance().copyResource("luckyBlockTypes_legacy.yml", LUCKY_BLOCK_TYPES_FILE);
-            }else{
-                NewAmazingLuckyBlocks.getInstance().copyResource("luckyBlockTypes_no_legacy.yml", LUCKY_BLOCK_TYPES_FILE);
-            }
+            NewAmazingLuckyBlocks.getInstance().copyResource("luckyBlockTypes.yml", LUCKY_BLOCK_TYPES_FILE);
         }
 
         FileConfiguration luckyBlockTypesConfig = YamlConfigurationUTF8.loadConfiguration(LUCKY_BLOCK_TYPES_FILE);

@@ -126,19 +126,9 @@ public class PackManager{
     
     private static void copyDefaultPacks(){
         File examplePackFile = new File(OUTCOMES_FOLDER, "example_pack.yml");
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-            NewAmazingLuckyBlocks.getInstance().copyResource("example_pack_legacy.yml", examplePackFile);
-        }else{
-            NewAmazingLuckyBlocks.getInstance().copyResource("example_pack_no_legacy.yml", examplePackFile);
-        }
+        NewAmazingLuckyBlocks.getInstance().copyResource("example_pack.yml", examplePackFile);
         
         File defaultPackFile = new File(OUTCOMES_FOLDER, "default_pack.yml");
-        String filename;
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-            filename = "default_pack_legacy.yml";
-        }else{
-            filename = "default_pack_no_legacy.yml";
-        }
-        NewAmazingLuckyBlocks.getInstance().copyResource(filename, defaultPackFile);
+        NewAmazingLuckyBlocks.getInstance().copyResource("default_pack.yml", defaultPackFile);
     }
 }
