@@ -357,10 +357,10 @@ public class ItemMenu extends Editor<ItemReward>{
         }
         
         if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) >= 0){
-            if(item.getSpawnInvSlot() == ItemReward.ITEM_IN_HAND_SLOT){
+            if(item.getSpawnInvSlot() == ItemReward.ITEM_IN_OFF_HAND_SLOT){
                 builder.addLoreLine("&2Slot &b41 &2is &5&lITEM IN OFF-HAND");
             }else{
-                builder.addLoreLine("&2Slot &b41 &2is &e&lITEM IN HAND");
+                builder.addLoreLine("&2Slot &b41 &2is &e&lITEM IN OFF-HAND");
             }
         }
         builder.addLoreLine("");
