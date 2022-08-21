@@ -13,7 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 public class LocationManager extends ReadWriteConfig{
-    public LocationManager(Plugin plugin){
+    private LocationManager(Plugin plugin){
         super(plugin, null, "data/luckyblocks-locs.yml", false);
     }
     

@@ -17,7 +17,7 @@ import org.bukkit.plugin.Plugin;
 
 public class WorldConfig extends ReadWriteConfig{
     private static final String WORLD_LIST_KEY = "Worlds-list";
-    public WorldConfig(Plugin plugin){
+    private WorldConfig(Plugin plugin){
         super(plugin, null, "data/worlds.yml", false);
     }
     

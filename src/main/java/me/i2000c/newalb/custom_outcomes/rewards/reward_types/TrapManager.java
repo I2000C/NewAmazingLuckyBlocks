@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 public class TrapManager extends ReadWriteConfig implements Listener{
-    public TrapManager(Plugin plugin){
+    private TrapManager(Plugin plugin){
         super(plugin, null, "data/traps.yml", false);
     }
     
