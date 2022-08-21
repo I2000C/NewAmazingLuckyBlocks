@@ -1,10 +1,9 @@
 package me.i2000c.newalb.utils;
 
-import me.i2000c.newalb.listeners.interact.SpecialItemManager;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -68,9 +67,9 @@ public class BlockProtect implements Listener{
         if(sk0.getType() == Material.AIR || sk1.getType() == Material.AIR || sk2.getType() == Material.AIR){
             return;
         }
-        if(OtherUtils.checkItemStack(sk0, SpecialItemManager.getSpecialItem(SpecialItemName.auto_bow).getItem()) || 
-                OtherUtils.checkItemStack(sk0, SpecialItemManager.getSpecialItem(SpecialItemName.multi_bow).getItem())){
-            
+        
+        SpecialItemName specialItemName = SpecialItem.getSpecialItemName(sk0);
+        if(specialItemName == SpecialItemName.auto_bow || specialItemName == SpecialItemName.multi_bow){            
             String displayName = ItemBuilder.fromItem(sk0, false)
                     .getDisplayName();            
             ItemBuilder.fromItem(sk2, false)

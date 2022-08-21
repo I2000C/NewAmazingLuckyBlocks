@@ -24,6 +24,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
 public abstract class SpecialItem{
+    protected static final SpecialItemName[] SPECIAL_ITEM_NAMES = SpecialItemName.values();
     protected static final String CLASS_METADATA_TAG = "NewAmazingLuckyBlocks.ClassMetadata";
     protected static final String CUSTOM_METADATA_TAG = "NewAmazingLuckyBlocks.CustomMetadata";
     protected static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
@@ -204,6 +205,14 @@ public abstract class SpecialItem{
     }
     protected static boolean hasSpecialItemID(ItemStack stack){
         return NBTEditor.contains(stack, ITEM_TAG);
+    }
+    public static SpecialItemName getSpecialItemName(ItemStack stack){
+        int specialItemID = getSpecialItemID(stack);
+        if(specialItemID > 0 && specialItemID < SPECIAL_ITEM_NAMES.length){
+            return SPECIAL_ITEM_NAMES[specialItemID];
+        }else{
+            return null;
+        }
     }
     
     // Metadata methods

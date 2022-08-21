@@ -27,7 +27,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class SpecialEventListener implements Listener{
     private static final EnumMap<SpecialItemName, SpecialItem> EVENTS = new EnumMap<>(SpecialItemName.class);
-    protected static final SpecialItemName[] SPECIAL_ITEM_NAMES = SpecialItemName.values();
     
     public static void registerSpecialtem(SpecialItem specialItem){
         EVENTS.putIfAbsent(specialItem.getSpecialItemName(), specialItem);
@@ -54,24 +53,25 @@ public class SpecialEventListener implements Listener{
                 return;
             }
             
-            int specialItemID = SpecialItem.getSpecialItemID(stack);
-            if(specialItemID >= 0 && specialItemID < SPECIAL_ITEM_NAMES.length){
-                SpecialItemName specialItemName = SPECIAL_ITEM_NAMES[specialItemID];
-                SpecialItem specialItem = EVENTS.get(specialItemName);
-                if(specialItem != null){
-                    if(!specialItem.checkPermission(player)){
-                        e.setCancelled(true);
-                        return;
-                    }
-                    
-                    if(!specialItem.isCooldownExpired(player)){
-                        specialItem.sendRemainingSecondsMessage(player);
-                        e.setCancelled(true);
-                        return;
-                    }
-                    
-                    specialItem.onPlayerInteract(e);
+            SpecialItemName specialItemName = SpecialItem.getSpecialItemName(stack);
+            if(specialItemName == null){
+                return;
+            }
+            
+            SpecialItem specialItem = EVENTS.get(specialItemName);
+            if(specialItem != null){
+                if(!specialItem.checkPermission(player)){
+                    e.setCancelled(true);
+                    return;
                 }
+
+                if(!specialItem.isCooldownExpired(player)){
+                    specialItem.sendRemainingSecondsMessage(player);
+                    e.setCancelled(true);
+                    return;
+                }
+
+                specialItem.onPlayerInteract(e);
             }
         }
 //</editor-fold>
@@ -162,24 +162,25 @@ public class SpecialEventListener implements Listener{
             return;
         }
         
-        int specialItemID = SpecialItem.getSpecialItemID(e.getBow());
-        if(specialItemID >= 0 && specialItemID < SPECIAL_ITEM_NAMES.length){
-            SpecialItemName specialItemName = SPECIAL_ITEM_NAMES[specialItemID];
-            SpecialItem specialItem = EVENTS.get(specialItemName);
-            if(specialItem != null){
-                if(!specialItem.checkPermission(player)){
-                    e.setCancelled(true);
-                    return;
-                }
-                
-                if(!specialItem.isCooldownExpired(player)){
-                    specialItem.sendRemainingSecondsMessage(player);
-                    e.setCancelled(true);
-                    return;
-                }
-                
-                specialItem.onArrowShooted(e);
+        SpecialItemName specialItemName = SpecialItem.getSpecialItemName(e.getBow());
+        if(specialItemName == null){
+            return;
+        }
+        
+        SpecialItem specialItem = EVENTS.get(specialItemName);
+        if(specialItem != null){
+            if(!specialItem.checkPermission(player)){
+                e.setCancelled(true);
+                return;
             }
+
+            if(!specialItem.isCooldownExpired(player)){
+                specialItem.sendRemainingSecondsMessage(player);
+                e.setCancelled(true);
+                return;
+            }
+
+            specialItem.onArrowShooted(e);
         }
 //</editor-fold>
     }

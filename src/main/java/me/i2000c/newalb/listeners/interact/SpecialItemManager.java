@@ -24,7 +24,7 @@ public class SpecialItemManager{
         //<editor-fold defaultstate="collapsed" desc="Code">
         specialItems.clear();
         
-        for(SpecialItemName specialItemName : SpecialEventListener.SPECIAL_ITEM_NAMES){
+        for(SpecialItemName specialItemName : SpecialItem.SPECIAL_ITEM_NAMES){
             String[] splittedName = specialItemName.name().split("_");
             StringBuilder stringBuilder = new StringBuilder();
             for(String string : splittedName){
