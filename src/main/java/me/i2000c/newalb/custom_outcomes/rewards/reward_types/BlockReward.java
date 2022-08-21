@@ -101,7 +101,7 @@ public class BlockReward extends Reward{
     public void saveRewardIntoConfig(FileConfiguration config, String path){
         config.set(path + ".usePlayerLoc", usePlayerLoc);
         config.set(path + ".isFallingBlock", isFallingBlock);
-        config.set(path + ".blockItem.material", ItemBuilder.fromItem(blockItem, false).build());
+        config.set(path + ".material", ItemBuilder.fromItem(blockItem, false).toString());
         offset.saveToConfig(config, path + ".offset");
     }
     
@@ -109,7 +109,7 @@ public class BlockReward extends Reward{
     public void loadRewardFromConfig(FileConfiguration config, String path){
         this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
         this.isFallingBlock = config.getBoolean(path + ".isFallingBlock");
-        this.blockItem = ItemBuilder.newItem(config.getString(path + ".blockItem.material")).build();
+        this.blockItem = ItemBuilder.newItem(config.getString(path + ".material")).build();
         this.offset = new Offset(config, path + ".offset");
     }
     
