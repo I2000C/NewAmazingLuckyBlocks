@@ -1,6 +1,5 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.MinecraftVersion;
@@ -93,11 +92,11 @@ public class ItemReward extends Reward{
                 ItemSpawnMode.DEFAULT;
         spawnInvSlot = config.getInt(path + ".spawnInvSlot", 0);
         
-        Material material = Material.valueOf(config.getString(path + ".material"));
+        ItemBuilder builder = ItemBuilder.newItem(config.getString(path + ".material"));
+        
         int amount = config.getInt(path + ".amount", 1);
         short durability = (short) config.getInt(path + ".durability", 0);
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(material));
         builder.withAmount(amount);
         builder.withDurability(durability);
         
@@ -115,7 +114,7 @@ public class ItemReward extends Reward{
         }
         
         //Load armor color
-        switch(material){
+        switch(builder.getMaterial()){
             case LEATHER_HELMET:
             case LEATHER_CHESTPLATE:
             case LEATHER_LEGGINGS:
@@ -187,7 +186,7 @@ public class ItemReward extends Reward{
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemBuilder builder = ItemBuilder.fromItem(item, false);
         
-        config.set(path + ".material" , item.getType().name());
+        config.set(path + ".material" , builder.toString());
         
         config.set(path + ".spawnMode", spawnMode.name());
         config.set(path + ".spawnInvSlot", spawnInvSlot);
