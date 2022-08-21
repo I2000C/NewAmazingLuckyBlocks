@@ -31,7 +31,7 @@ public class ConfigManager{
                 Bukkit.getPluginManager().disablePlugin(plugin);
             }
         }else{
-            //checkConfig();
+            checkConfig();
         }
         config = plugin.getConfig();
         config.options().copyDefaults(true);
@@ -41,7 +41,7 @@ public class ConfigManager{
   
     public static void saveConfig(){
         try{
-            //config.save(cfile);
+            config.save(cfile);
         }catch (Exception ex){
             System.out.println(ChatColor.RED + "Amazing Lucky Blocks Error: Could not save config. Error:");
             ex.printStackTrace();
