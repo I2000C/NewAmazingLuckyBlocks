@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
+import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.Configuration;
@@ -59,7 +59,7 @@ public class CustomConfig<T extends Enum & CustomConfig.CustomConfigKey>{
     }
     
     private void updateConfigFile(){
-        config = YamlConfigurationUTF8.loadConfiguration(plugin.getResource(resourceName));
+        config = new YamlConfigurationUTF8();
         FileConfiguration oldConfig = YamlConfigurationUTF8.loadConfiguration(file);
         
         for(String key : config.getKeys(true)){

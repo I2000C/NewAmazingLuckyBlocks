@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
+import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class LangLoader{

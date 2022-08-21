@@ -2,15 +2,14 @@ package me.i2000c.newalb.utils;
 
 import java.io.File;
 import java.io.IOException;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-public class ConfigManager{
+public class ConfigManager{    
     private static File cfile;
     private static File dataFolder;
     private static File pluginFolder;
@@ -42,8 +41,8 @@ public class ConfigManager{
   
     public static void saveConfig(){
         try{
-            config.save(cfile);
-        }catch (IOException ex){
+            //config.save(cfile);
+        }catch (Exception ex){
             System.out.println(ChatColor.RED + "Amazing Lucky Blocks Error: Could not save config. Error:");
             ex.printStackTrace();
         }

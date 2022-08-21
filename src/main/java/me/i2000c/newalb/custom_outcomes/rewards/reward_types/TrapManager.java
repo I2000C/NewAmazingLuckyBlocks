@@ -11,7 +11,7 @@ import me.i2000c.newalb.utils.WorldList;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
+import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -11,7 +11,7 @@ import java.util.Random;
 import java.util.Set;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.utils2.YamlConfigurationUTF8;
+import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
