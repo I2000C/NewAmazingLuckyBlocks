@@ -63,6 +63,9 @@ public class YamlConfigurationUTF8 extends YamlConfiguration{
     public void save(File file){
         //<editor-fold defaultstate="collapsed" desc="Code">
         try{
+            // Create parent directories
+            file.getParentFile().mkdirs();
+            
             if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
                 try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))){
                     writer.append(decodeString(saveToString()));
