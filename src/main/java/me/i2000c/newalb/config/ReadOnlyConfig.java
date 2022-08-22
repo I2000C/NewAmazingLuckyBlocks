@@ -140,6 +140,9 @@ public abstract class ReadOnlyConfig{
                 config.set(key, object);
             }
             
+            // Update config version
+            config.set(VERSION_KEY, currentVersion);
+            
             saveConfig();
             return true;
         }catch(Exception ex){
