@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.i2000c.newalb.MinecraftVersion;
@@ -33,13 +34,13 @@ public class YamlConfigurationUTF8 extends YamlConfiguration{
         matcher.appendTail(decodedMessage);
         String returnString = decodedMessage.toString();
         returnString = returnString.replaceAll("\\\\\n *", "");
-        returnString = returnString.replaceAll("\\\\ ", " ");
+        //returnString = returnString.replaceAll("\\\\ ", " ");
         return returnString;
 //</editor-fold>
     }
     
     public void load(InputStream input) throws IOException, InvalidConfigurationException{
-        load(new InputStreamReader(input));
+        load(new InputStreamReader(input, Charset.forName("UTF-8")));
     }
     
     @Override
