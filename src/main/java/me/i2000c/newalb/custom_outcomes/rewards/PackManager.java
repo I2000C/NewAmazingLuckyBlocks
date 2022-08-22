@@ -126,9 +126,9 @@ public class PackManager{
     
     private static void copyDefaultPacks(){
         File examplePackFile = new File(OUTCOMES_FOLDER, "example_pack.yml");
-        NewAmazingLuckyBlocks.getInstance().copyResource("example_pack.yml", examplePackFile);
+        NewAmazingLuckyBlocks.getInstance().copyResource("outcome_packs/example_pack.yml", examplePackFile);
         
         File defaultPackFile = new File(OUTCOMES_FOLDER, "default_pack.yml");
-        NewAmazingLuckyBlocks.getInstance().copyResource("default_pack.yml", defaultPackFile);
+        NewAmazingLuckyBlocks.getInstance().copyResource("outcome_packs/default_pack.yml", defaultPackFile);
     }
 }
