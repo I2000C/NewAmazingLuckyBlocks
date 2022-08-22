@@ -202,13 +202,13 @@ public class Timer implements Listener{
         int numberOfBlocks = ConfigManager.getConfig().getInt("Objects.MiniVolcano.throwBlocks.number-of-blocks");
         double height = ConfigManager.getConfig().getDouble("Objects.MiniVolcano.throwBlocks.height");
         double radius = ConfigManager.getConfig().getDouble("Objects.MiniVolcano.throwBlocks.radius");
-        Material blockMaterial = Material.valueOf(ConfigManager.getConfig().getString("Objects.MiniVolcano.throwBlocks.material"));
-        byte data = (byte) ConfigManager.getConfig().getInt("Objects.MiniVolcano.throwBlocks.materialData");
+        String name = ConfigManager.getConfig().getString("Objects.MiniVolcano.throwBlocks.material");
+        ItemStack throwBlocksStack = ItemBuilder.newItem(name).build();
         long time = ConfigManager.getConfig().getLong("Objects.MiniVolcano.throwBlocks.time-between-blocks");
 
-        executeThrowBlocks(location, numberOfBlocks, height, radius, blockMaterial, data, time, lavaMaterial);
+        executeThrowBlocks(location, numberOfBlocks, height, radius, throwBlocksStack, time, lavaMaterial);
     }
-    public void executeThrowBlocks(Location location, int numberOfBlocks, double height, double radius, Material material, byte data, long time, Material lavaMaterial){
+    public void executeThrowBlocks(Location location, int numberOfBlocks, double height, double radius, ItemStack throwBlocksStack, long time, Material lavaMaterial){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Location loc1 = location;
         Random r = new Random();
@@ -226,7 +226,7 @@ public class Timer implements Listener{
                         .add(radius * Math.sin(angleRadians), height, radius * Math.cos(angleRadians));
                 
                 Vector v = loc2.toVector().subtract(loc1.toVector());
-                FallingBlock fb = loc2.getWorld().spawnFallingBlock(loc2, material, data);
+                FallingBlock fb = loc2.getWorld().spawnFallingBlock(loc2, throwBlocksStack.getData());
                 fb.setDropItem(false);
                 fb.setVelocity(v);
                 fb.setMetadata(TAG, new FixedMetadataValue(NewAmazingLuckyBlocks.getInstance(), lavaMaterial));
@@ -248,16 +248,17 @@ public class Timer implements Listener{
     
     public void executeFrostPathWand(Player player, int distance, Location endLoc){        
         int maxBlocks = ConfigManager.getConfig().getInt("Wands.FrostPathWand.maxBlocks");
-        Material frostMaterial = Material.valueOf(ConfigManager.getConfig().getString("Wands.FrostPathWand.frostMaterial"));
+        String name = ConfigManager.getConfig().getString("Wands.FrostPathWand.frostMaterial");
+        ItemStack frostStack = ItemBuilder.newItem(name).build();
         long before_ticks = ConfigManager.getConfig().getLong("Wands.FrostPathWand.time-before-frostpath");
         long ticks = ConfigManager.getConfig().getLong("Wands.FrostPathWand.time-between-one-block-and-the-next");
         int blocks = ConfigManager.getConfig().getInt("Wands.FrostPathWand.rows-of-blocks-each-time");
         int width = ConfigManager.getConfig().getInt("Wands.FrostPathWand.row-width");
         
-        executeFrostPathWand(player, frostMaterial, blocks, maxBlocks, width, distance, endLoc, before_ticks, ticks);
+        executeFrostPathWand(player, frostStack, blocks, maxBlocks, width, distance, endLoc, before_ticks, ticks);
     }
     
-    public void executeFrostPathWand(Player player, Material frostMaterial, int blocks, int maxBlocks,
+    public void executeFrostPathWand(Player player, ItemStack frostStack, int blocks, int maxBlocks,
             int width, int distance, Location endLoc, long before_ticks, long ticks){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(width <= 0){
@@ -279,7 +280,7 @@ public class Timer implements Listener{
         Location location = l.clone();
         Task task = new Task(){
             int i=1;
-            ItemStack item = new ItemStack(frostMaterial);
+            ItemStack item = new ItemStack(frostStack);
             
             @Override
             public void run(){
@@ -294,7 +295,10 @@ public class Timer implements Listener{
                             BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, item, player, true);
                             Bukkit.getPluginManager().callEvent(e2);
                             if(!e2.isCancelled()){                                
-                                b.setType(frostMaterial);
+                                b.setType(frostStack.getType());
+                                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                                    b.setData((byte) frostStack.getDurability());
+                                }
                                 //player.getWorld().playEffect(location.clone().add(0,1,0), Effect.SNOWBALL_BREAK, 0);
                                 player.getWorld().playSound(location, XSound.BLOCK_GLASS_BREAK.parseSound(), 2.0F, 1.0F);
                             }  
@@ -311,7 +315,10 @@ public class Timer implements Listener{
                                     BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, item, player, true);
                                     Bukkit.getPluginManager().callEvent(e2);
                                     if(!e2.isCancelled()){                                
-                                        b.setType(frostMaterial);
+                                        b.setType(frostStack.getType());
+                                        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                                            b.setData((byte) frostStack.getDurability());
+                                        }
                                     }
                                     
                                     //player.getWorld().playEffect(location.clone().add(0,k,k), Effect.SNOWBALL_BREAK, 0);
@@ -321,7 +328,10 @@ public class Timer implements Listener{
                                     BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, item, player, true);
                                     Bukkit.getPluginManager().callEvent(e2);
                                     if(!e2.isCancelled()){                                
-                                        b.setType(frostMaterial);
+                                        b.setType(frostStack.getType());
+                                        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                                            b.setData((byte) frostStack.getDurability());
+                                        }
                                     }
                                     
                                     //player.getWorld().playEffect(location.clone().add(0,k,-k), Effect.SNOWBALL_BREAK, 0);
@@ -334,7 +344,10 @@ public class Timer implements Listener{
                                     BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, item, player, true);
                                     Bukkit.getPluginManager().callEvent(e2);
                                     if(!e2.isCancelled()){                                
-                                        b.setType(frostMaterial);
+                                        b.setType(frostStack.getType());
+                                        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                                            b.setData((byte) frostStack.getDurability());
+                                        }
                                     }
                                     
                                     //player.getWorld().playEffect(location.clone().add(k,k,0), Effect.SNOWBALL_BREAK, 0);
@@ -344,7 +357,10 @@ public class Timer implements Listener{
                                     BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, item, player, true);
                                     Bukkit.getPluginManager().callEvent(e2);
                                     if(!e2.isCancelled()){                                
-                                        b.setType(frostMaterial);
+                                        b.setType(frostStack.getType());
+                                        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                                            b.setData((byte) frostStack.getDurability());
+                                        }
                                     }
                                     
                                     //player.getWorld().playEffect(location.clone().add(-k,k,0), Effect.SNOWBALL_BREAK, 0);
@@ -367,15 +383,16 @@ public class Timer implements Listener{
     }
     
     public void executeIceBow(Entity ent){
-        Material iceMaterial = Material.valueOf(ConfigManager.getConfig().getString("Objects.IceBow.freeze-material"));
+        String name = ConfigManager.getConfig().getString("Objects.IceBow.freeze-material");
+        ItemStack iceStack = ItemBuilder.newItem(name).build();
         boolean protect = ConfigManager.getConfig().getBoolean("Objects.IceBow.protect-structures");
         long before_ticks = ConfigManager.getConfig().getLong("Objects.IceBow.time-before-freezing");
         long ticks = ConfigManager.getConfig().getLong("Objects.IceBow.time-between-one-block-and-the-next");
         
-        executeIceBow(ent, iceMaterial, protect, before_ticks, ticks);
+        executeIceBow(ent, iceStack, protect, before_ticks, ticks);
     }
     
-    public void executeIceBow(Entity ent, Material iceMaterial, boolean protect, long before_ticks, long ticks){
+    public void executeIceBow(Entity ent, ItemStack iceStack, boolean protect, long before_ticks, long ticks){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Location l = ent.getLocation();
         
@@ -393,7 +410,10 @@ public class Timer implements Listener{
                     Block b = ent.getWorld().getBlockAt(x, y+i, z);
                     if(!protect || (protect && b.getType().equals(Material.AIR))){
                         ent.getWorld().playSound(l, XSound.BLOCK_GLASS_BREAK.parseSound(), 2.0F, 1.0F);
-                        b.setType(iceMaterial);
+                        b.setType(iceStack.getType());
+                        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                            b.setData((byte) iceStack.getDurability());
+                        }
                     }
                     cancel();
                     return;
@@ -409,7 +429,10 @@ public class Timer implements Listener{
                     for(Block b : blocks){
                         if(!protect || (protect && b.getType().equals(Material.AIR))){
                             ent.getWorld().playSound(l, XSound.BLOCK_GLASS_BREAK.parseSound(), 2.0F, 1.0F);
-                            b.setType(iceMaterial);
+                            b.setType(iceStack.getType());
+                            if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                                b.setData((byte) iceStack.getDurability());
+                            }
                         }
                     }
                 }
