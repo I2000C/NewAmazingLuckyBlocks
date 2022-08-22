@@ -43,36 +43,8 @@ Outcomes:
             offsetX: '0'
             offsetY: '0'
             offsetZ: '0'
-        '1':
-          type: VILLAGER
-          effects: []
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
-        '2':
-          type: VILLAGER
-          effects: []
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
-        '3':
-          type: VILLAGER
-          effects: []
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
-        '4':
-          type: VILLAGER
-          effects: []
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
       tower_entity:
-        '0': 0,1,2,3,4
+        '0': 0,0,0,0,0
     delayer: []
   '2':
     outcome-name: Stone pickaxe, axe and spade
