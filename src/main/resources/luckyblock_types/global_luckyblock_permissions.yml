@@ -1,0 +1,7 @@
+GlobalPermissions:
+  break:
+    enable: false
+    permission: amazinglb.lucky_block.global.break
+  place:
+    enable: false
+    permission: amazinglb.lucky_block.global.place

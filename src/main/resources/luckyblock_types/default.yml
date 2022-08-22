@@ -1,0 +1,19 @@
+permissions:
+  break:
+    enable: false
+    permission: amazinglb.lucky_block.default.break
+  place:
+    enable: false
+    permission: amazinglb.lucky_block.default.place
+name: '&6&lLuckyBlock'
+lore:
+- '&3This is a lucky block'
+- '&bEnjoy it'
+material: SPONGE
+textureID: ''
+crafting:
+- SPONGE SPONGE SPONGE
+- SPONGE AIR SPONGE
+- SPONGE SPONGE SPONGE
+outcome_packs:
+- default_pack;100

@@ -1,17 +1,16 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.config.YamlConfigurationUTF8;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.config.ReadWriteConfig;
+import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,7 +34,8 @@ public class TypeManager{
     
     private static final NewAmazingLuckyBlocks PLUGIN = NewAmazingLuckyBlocks.getInstance();
     private static final File LUCKY_BLOCK_TYPES_FOLDER = new File(PLUGIN.getDataFolder(), "luckyblock_types");
-    private static final File LUCKY_BLOCK_TYPES_FILE = new File(PLUGIN.getDataFolder(), "luckyBlockTypes.yml");
+    public static final String PERMISSIONS_FILENAME = "global_luckyblock_permissions.yml";
+    private static ReadWriteConfig permissionsConfig;
     
     private static final List<LuckyBlockType> luckyBlockTypes;
     private static final Map<TypeData, LuckyBlockType> luckyBlockTypesAux;
@@ -51,17 +51,51 @@ public class TypeManager{
         return ++currentRecipeID;
     }
     
+    //<editor-fold defaultstate="collapsed" desc="Global permissions methods">
+    private static void loadGlobalPermissions(){
+        if(permissionsConfig == null){
+            permissionsConfig = new ReadWriteConfig(
+                    PLUGIN, 
+                    new File(LUCKY_BLOCK_TYPES_FOLDER, PERMISSIONS_FILENAME));
+        }
+        
+        permissionsConfig.loadConfig();
+        
+        FileConfiguration config = permissionsConfig.getBukkitConfig();
+        requireBreakPermissionGlobal = config.getBoolean("GlobalPermissions.break.enable");
+        breakPermissionGlobal = config.getString("GlobalPermissions.break.permission");
+        requirePlacePermissionGlobal = config.getBoolean("GlobalPermissions.place.enable");
+        placePermissionGlobal = config.getString("GlobalPermissions.place.permission");
+    }
+    private static void saveGlobalPermissions(){
+        if(permissionsConfig == null){
+            permissionsConfig = new ReadWriteConfig(
+                    PLUGIN, 
+                    new File(LUCKY_BLOCK_TYPES_FOLDER, PERMISSIONS_FILENAME));
+        }
+        
+        FileConfiguration config = permissionsConfig.getBukkitConfig();
+        config.set("GlobalPermissions.break.enable", requireBreakPermissionGlobal);
+        config.set("GlobalPermissions.break.permission", breakPermissionGlobal);
+        config.set("GlobalPermissions.place.enable", requirePlacePermissionGlobal);
+        config.set("GlobalPermissions.place.permission", placePermissionGlobal);
+        
+        permissionsConfig.saveConfig();
+    }
+    
     public static String getGlobalBreakPermission(){
         return breakPermissionGlobal;
     }
     public static void setGlobalBreakPermission(String permission){
         breakPermissionGlobal = permission;
+        saveGlobalPermissions();
     }
     public static String getGlobalPlacePermission(){
         return placePermissionGlobal;
     }
     public static void setGlobalPlacePermission(String permission){
         placePermissionGlobal = permission;
+        saveGlobalPermissions();
     }
     
     public static boolean isGlobalBreakPermissionEnabled(){
@@ -69,12 +103,14 @@ public class TypeManager{
     }
     public static void setEnableGlobalBreakPermission(boolean enable){
         requireBreakPermissionGlobal = enable;
+        saveGlobalPermissions();
     }
     public static boolean isGlobalPlacePermissionEnabled(){
         return requirePlacePermissionGlobal;
     }
     public static void setEnableGlobalPlacePermission(boolean enable){
         requirePlacePermissionGlobal = enable;
+        saveGlobalPermissions();
     }
     
     private static boolean checkBreakPermissionGlobal(Player player){
@@ -83,6 +119,7 @@ public class TypeManager{
     private static boolean checkPlacePermissionGlobal(Player player){
         return !requirePlacePermissionGlobal || player.hasPermission(placePermissionGlobal);
     }
+//</editor-fold>
     
     public static ItemStack getMenuItemStack(){
         return new ItemStack(Material.SPONGE);
@@ -157,6 +194,7 @@ public class TypeManager{
 //</editor-fold>
     }
     
+    
     public static void loadTypes(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         currentRecipeID = -1;
@@ -169,51 +207,47 @@ public class TypeManager{
             iter.remove();
         }
 
-        if(!LUCKY_BLOCK_TYPES_FILE.exists()){
-            NewAmazingLuckyBlocks.getInstance().copyResource("luckyBlockTypes.yml", LUCKY_BLOCK_TYPES_FILE);
+        if(!LUCKY_BLOCK_TYPES_FOLDER.exists()){
+            LUCKY_BLOCK_TYPES_FOLDER.mkdirs();
+            copyDefaultTypes();
         }
-
-        FileConfiguration luckyBlockTypesConfig = YamlConfigurationUTF8.loadConfiguration(LUCKY_BLOCK_TYPES_FILE);
-
+        
         // Load global permissions
-        requireBreakPermissionGlobal = luckyBlockTypesConfig.getBoolean("GlobalPermissions.break.enable");
-        breakPermissionGlobal = luckyBlockTypesConfig.getString("GlobalPermissions.break.permission");
-        requirePlacePermissionGlobal = luckyBlockTypesConfig.getBoolean("GlobalPermissions.place.enable");
-        placePermissionGlobal = luckyBlockTypesConfig.getString("GlobalPermissions.place.permission");
+        loadGlobalPermissions();
 
         // Load LuckyBlock types
         luckyBlockTypes.clear();
         luckyBlockTypesAux.clear();
-        Set<String> keyList = luckyBlockTypesConfig.getConfigurationSection("LuckyBlockTypes").getKeys(false);
-        for(String key : keyList){
-            LuckyBlockType type = LuckyBlockType.loadFromConfig(luckyBlockTypesConfig, "LuckyBlockTypes", key);
-            if(type != null){
-                luckyBlockTypes.add(type);
-                luckyBlockTypesAux.put(type.getTypeData(), type);
-            }                
+        
+        for(File file : LUCKY_BLOCK_TYPES_FOLDER.listFiles()){
+            String name = file.getName();
+            if(!name.endsWith(".yml")){
+                continue;
+            }
+            
+            if(name.equals(PERMISSIONS_FILENAME)){
+                continue;
+            }
+            
+            ReadWriteConfig config = new ReadWriteConfig(PLUGIN, file);
+            config.loadConfig();
+            String typeName = OtherUtils.removeExtension(name);
+            LuckyBlockType type = LuckyBlockType.loadFromConfig(config.getBukkitConfig(), typeName);
+            
+            luckyBlockTypes.add(type);
+            luckyBlockTypesAux.put(type.getTypeData(), type);
         }
         //</editor-fold>
     }
     
     public static void saveTypes(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        FileConfiguration luckyBlockTypesConfig = new YamlConfigurationUTF8();
-        
-        // Save global permissions
-        luckyBlockTypesConfig.set("GlobalPermissions.break.enable", requireBreakPermissionGlobal);
-        luckyBlockTypesConfig.set("GlobalPermissions.break.permission", breakPermissionGlobal);
-        luckyBlockTypesConfig.set("GlobalPermissions.place.enable", requirePlacePermissionGlobal);
-        luckyBlockTypesConfig.set("GlobalPermissions.place.permission", placePermissionGlobal);
-        
-        // Save LuckyBlock types
-        
-        luckyBlockTypes.forEach(type -> type.saveToConfig(luckyBlockTypesConfig, "LuckyBlockTypes"));
-        try{
-            luckyBlockTypesConfig.save(LUCKY_BLOCK_TYPES_FILE);
-        }catch(IOException ex){
-            Logger.log("An error occurred while saving lucky block types config:");
-            ex.printStackTrace();
-        }
+        luckyBlockTypes.forEach(type -> {
+            File typeFile = new File(LUCKY_BLOCK_TYPES_FOLDER, type.getTypeName() + ".yml");
+            ReadWriteConfig config = new ReadWriteConfig(PLUGIN, typeFile);
+            type.saveToConfig(config.getBukkitConfig());
+            config.saveConfig();
+        });
 //</editor-fold>
     }
     
@@ -272,10 +306,16 @@ public class TypeManager{
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(typeID >= 0 && typeID < luckyBlockTypes.size()){
             LuckyBlockType type = luckyBlockTypes.remove(typeID);
-            luckyBlockTypesAux.remove(type.getTypeData());
-            removeRecipe(type.getRecipe());
-            saveTypes();
+            removeType(type);
         }
+//</editor-fold>
+    }
+    private static void removeType(LuckyBlockType type){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        luckyBlockTypesAux.remove(type.getTypeData());
+        removeRecipe(type.getRecipe());
+        File typeFile = new File(LUCKY_BLOCK_TYPES_FOLDER, type.getTypeName() + ".yml");
+        typeFile.delete();
 //</editor-fold>
     }
     
@@ -284,12 +324,40 @@ public class TypeManager{
         int typeID = luckyBlockTypes.indexOf(type);
         if(typeID != -1){
             removeRecipe(luckyBlockTypes.get(typeID).getRecipe());
-            luckyBlockTypes.set(typeID, type);
+            LuckyBlockType oldType = luckyBlockTypes.set(typeID, type);
+            removeType(oldType);
         }else{
             luckyBlockTypes.add(type);
         }
-        saveTypes();
+        
+        File typeFile = new File(LUCKY_BLOCK_TYPES_FOLDER, type.getTypeName() + ".yml");
+        ReadWriteConfig config = new ReadWriteConfig(PLUGIN, typeFile);
+        type.saveToConfig(config.getBukkitConfig());
+        config.saveConfig();
         loadTypes();
+//</editor-fold>
+    }
+    
+    public static void renameType(int typeID, String newName){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        LuckyBlockType type = luckyBlockTypes.get(typeID);
+        File oldTypeFile = new File(LUCKY_BLOCK_TYPES_FOLDER, type.getTypeName() + ".yml");
+        File newTypeFile = new File(LUCKY_BLOCK_TYPES_FOLDER, newName + ".yml");
+        ReadWriteConfig config = new ReadWriteConfig(PLUGIN, newTypeFile);
+        type.saveToConfig(config.getBukkitConfig());
+        config.saveConfig();
+        oldTypeFile.delete();
+        loadTypes();        
+//</editor-fold>
+    }
+    
+    
+    private static void copyDefaultTypes(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        for(String filename : Arrays.asList("default.yml", "default2.yml", "other.yml", PERMISSIONS_FILENAME)){
+            File file = new File(LUCKY_BLOCK_TYPES_FOLDER, filename);
+            NewAmazingLuckyBlocks.getInstance().copyResource("luckyblock_types/" + filename, file);
+        }
 //</editor-fold>
     }
 }

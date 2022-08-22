@@ -40,7 +40,15 @@ public abstract class ReadOnlyConfig{
     
     public ReadOnlyConfig(Plugin plugin, String resourceName, boolean saveComments){
         this(plugin, resourceName, resourceName, saveComments);
-    }    
+    }
+    
+    public ReadOnlyConfig(Plugin plugin, File file){
+        this.plugin = plugin;
+        this.resourceName = null;
+        this.configFile = file;
+        this.config = new YamlConfigurationUTF8();
+        this.saveComments = false;        
+    }
     
     public final File getConfigFile(){
         return this.configFile;

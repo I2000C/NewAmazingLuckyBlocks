@@ -182,9 +182,9 @@ public class LuckyBlockType implements Displayable, Executable{
         luckyBlockItem = new ItemStack(Material.SPONGE);
         
         requireBreakPermission = false;
-        breakPermission = "amazinglb.lucky_block." + typeName + ".break";
+        breakPermission = "amazinglb.lucky_block." + typeName + "break";
         requirePlacePermission = false;
-        placePermission = "amazinglb.lucky_block." + typeName + ".place";
+        placePermission = "amazinglb.lucky_block." + typeName + "place";
         
         texture = null;
         
@@ -205,26 +205,24 @@ public class LuckyBlockType implements Displayable, Executable{
     
     private LuckyBlockType(){}    
     
-    public static LuckyBlockType loadFromConfig(FileConfiguration config, String key, String typeName){
+    public static LuckyBlockType loadFromConfig(FileConfiguration config, String typeName){
         //<editor-fold defaultstate="collapsed" desc="Code">
         LuckyBlockType type = new LuckyBlockType();
         
         type.typeName = typeName;
         type.ID = TypeManager.getNextTypeID();
         
-        String path = key + "." + typeName;
-        
         // Load permissions
-        type.requireBreakPermission = config.getBoolean(path + ".permissions.break.enable");
-        type.breakPermission = config.getString(path + ".permissions.break.permission");
-        type.requirePlacePermission = config.getBoolean(path + ".permissions.place.enable");
-        type.placePermission = config.getString(path + ".permissions.place.permission");
+        type.requireBreakPermission = config.getBoolean("permissions.break.enable");
+        type.breakPermission = config.getString("permissions.break.permission");
+        type.requirePlacePermission = config.getBoolean("permissions.place.enable");
+        type.placePermission = config.getString("permissions.place.permission");
         
         // Load item
-        String name = config.getString(path + ".name");
-        List<String> lore = config.getStringList(path + ".lore");
-        String materialName = config.getString(path + ".material");
-        String textureID = config.getString(path + ".textureID");
+        String name = config.getString("name");
+        List<String> lore = config.getStringList("lore");
+        String materialName = config.getString("material");
+        String textureID = config.getString("textureID");
         
         if(textureID.isEmpty() && !materialName.isEmpty()){
             type.luckyBlockItem = ItemBuilder.newItem(materialName).build();
@@ -253,7 +251,7 @@ public class LuckyBlockType implements Displayable, Executable{
                 .withLore(lore);
         
         // Load crafting
-        List<String> recipeMaterialNames = config.getStringList(path + ".crafting");
+        List<String> recipeMaterialNames = config.getStringList("crafting");
         String[] materialNames = (recipeMaterialNames.get(0) + " " +
                                   recipeMaterialNames.get(1) + " " +
                                   recipeMaterialNames.get(2)).split(" ");
@@ -303,7 +301,7 @@ public class LuckyBlockType implements Displayable, Executable{
         // Load outcome packs
         type.packs = new HashMap<>();
         type.totalProbability = 0;
-        List<String> packsProbList = config.getStringList(path + ".outcome_packs");
+        List<String> packsProbList = config.getStringList("outcome_packs");
         for(String packProb : packsProbList){
             String[] splitted = packProb.split(";");
             String packName = splitted[0];
@@ -337,26 +335,24 @@ public class LuckyBlockType implements Displayable, Executable{
 //</editor-fold>
     }
     
-    public void saveToConfig(FileConfiguration config, String key){
+    public void saveToConfig(FileConfiguration config){
         //<editor-fold defaultstate="collapsed" desc="Code">
         
-        String path = key + "." + typeName;
-        
         // Save permissions
-        config.set(path + ".permissions.break.enable", requireBreakPermission);
-        config.set(path + ".permissions.break.permission", breakPermission);
-        config.set(path + ".permissions.place.enable", requirePlacePermission);
-        config.set(path + ".permissions.place.permission", placePermission);
+        config.set("permissions.break.enable", requireBreakPermission);
+        config.set("permissions.break.permission", breakPermission);
+        config.set("permissions.place.enable", requirePlacePermission);
+        config.set("permissions.place.permission", placePermission);
         
         // Save item
         ItemBuilder builder = ItemBuilder.fromItem(luckyBlockItem, false);
         String name = builder.getDisplayName();
         List<String> lore = builder.getLore();
         
-        config.set(path + ".name", name != null ? Logger.deColor(name) : "");
-        config.set(path + ".lore", lore != null ? Logger.deColor(lore) : Collections.EMPTY_LIST);
-        config.set(path + ".material", texture == null ? ItemBuilder.fromItem(luckyBlockItem, false).toString() : "");
-        config.set(path + ".textureID", texture != null ? texture.toString() : "");
+        config.set("name", name != null ? Logger.deColor(name) : "");
+        config.set("lore", lore != null ? Logger.deColor(lore) : Collections.EMPTY_LIST);
+        config.set("material", texture == null ? ItemBuilder.fromItem(luckyBlockItem, false).toString() : "");
+        config.set("textureID", texture != null ? texture.toString() : "");
         
         // Save crafting recipe
         String row0 = ItemBuilder.fromItem(crafting.get(0), false).toString() + " " +
@@ -368,12 +364,12 @@ public class LuckyBlockType implements Displayable, Executable{
         String row2 = ItemBuilder.fromItem(crafting.get(6), false).toString() + " " +
                       ItemBuilder.fromItem(crafting.get(7), false).toString() + " " +
                       ItemBuilder.fromItem(crafting.get(8), false).toString();
-        config.set(path + ".crafting", Arrays.asList(row0, row1, row2));
+        config.set("crafting", Arrays.asList(row0, row1, row2));
         
         // Save outcome packs
         List<String> packNames = new ArrayList<>();
         packs.forEach((pack, probability) -> packNames.add(pack.getPackname() + ";" + probability));
-        config.set(path + ".outcome_packs", packNames);
+        config.set("outcome_packs", packNames);
 //</editor-fold>       
     }
     

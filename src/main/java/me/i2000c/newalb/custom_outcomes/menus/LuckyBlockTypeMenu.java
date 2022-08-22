@@ -10,7 +10,6 @@ import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.OutcomePack;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
-import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
@@ -90,12 +89,6 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                 .withLore("&3Click with an item to change material/texture")
                 .build();
         
-        ItemStack typeName = ItemBuilder
-                .newItem(XMaterial.WRITABLE_BOOK)
-                .withDisplayName("&bCurrent identifier: &6" + item.getTypeName())
-                .addLoreLine("&3Click to change")
-                .build();
-        
         ItemBuilder builder = ItemBuilder.fromItem(item.getItem(), false);
         String displayName = builder.getDisplayName();
         List<String> lore = builder.getLore();
@@ -128,9 +121,9 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                 .withDisplayName("&bCurrent pack list:");
         item.getPacks().forEach((pack, probability) -> 
                 builder2.addLoreLine("  &2" + pack.getPackname() + ";" + probability));
-        builder.addLoreLine("");
-        builder.addLoreLine("&3Click to change");
-        ItemStack typePacks = builder.build();
+        builder2.addLoreLine("");
+        builder2.addLoreLine("&3Click to change");
+        ItemStack typePacks = builder2.build();
         
         
         ItemStack placePermissionItem = ItemBuilder
@@ -167,7 +160,6 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
         menu.setItem(46, crafting);
         
         menu.setItem(2, typeItem);
-        menu.setItem(3, typeName);
         menu.setItem(4, typeItemName);
         menu.setItem(5, typeItemLore);
         menu.setItem(6, removeItemLore);
@@ -238,30 +230,14 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                         }
                     }
                     break;
-                case 3:
-                    //Set type name
-                    saveCrafting(e.getClickedInventory());
-                    player.closeInventory();
-                    Logger.sendMessage("&3Enter the new identifier for this lucky block type.", player);
-                    Logger.sendMessage("  &3If you don't want to change it, use &a/alb return", player);
-                    ChatListener.registerPlayer(player, message -> {
-                        if(TypeManager.getType(message) != null){
-                            Logger.sendMessage("&cThat identifier already exists", player, false);
-                        }else{
-                            ChatListener.removePlayer(player);
-                            item.setTypeName(message);
-                            openEditMenu(player);
-                        }
-                    }, false);
-                    break;
                 case 4:
                     //Set type item name
                     saveCrafting(e.getClickedInventory());
                     player.closeInventory();
                     Logger.sendMessage("&3Enter the new item name for this lucky block type.", player);
-                    Logger.sendMessage("  &3You can use color codes.", player);
-                    Logger.sendMessage("  &3To remove the display name, type &cnull&3.", player);
-                    Logger.sendMessage("  &3If you don't want to change it, use &a/alb return", player);
+                    Logger.sendMessage("  &3You can use color codes.", player, false);
+                    Logger.sendMessage("  &3To remove the display name, type &cnull&3.", player, false);
+                    Logger.sendMessage("  &3If you don't want to change it, use &a/alb return", player, false);
                     ChatListener.registerPlayer(player, message -> {
                         item.setItem(ItemBuilder
                                 .fromItem(item.getItem())
@@ -275,8 +251,8 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                     saveCrafting(e.getClickedInventory());
                     player.closeInventory();
                     Logger.sendMessage("&3Enter the new lore line for this lucky block type.", player);
-                    Logger.sendMessage("  &3You can use color codes.", player);
-                    Logger.sendMessage("  &3If you don't want add it, use &a/alb return", player);
+                    Logger.sendMessage("  &3You can use color codes.", player, false);
+                    Logger.sendMessage("  &3If you don't want add it, use &a/alb return", player, false);
                     ChatListener.registerPlayer(player, message -> {
                         item.setItem(ItemBuilder
                                 .fromItem(item.getItem())
@@ -306,7 +282,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                     saveCrafting(e.getClickedInventory());
                     player.closeInventory();
                     Logger.sendMessage("&3Enter the new &dplace &3permission and then press ENTER", player);
-                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", player);
+                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", player, false);
                     ChatListener.registerPlayer(player, message -> {
                         item.setPlacePermission(message);
                         openEditMenu(player);
@@ -317,7 +293,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                     saveCrafting(e.getClickedInventory());
                     player.closeInventory();
                     Logger.sendMessage("&3Enter the new &dbreak &3permission and then press ENTER", player);
-                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", player);
+                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", player, false);
                     ChatListener.registerPlayer(player, message -> {
                         item.setBreakPermission(message);
                         openEditMenu(player);
@@ -494,14 +470,14 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                                                 try{
                                                     int probability = Integer.parseInt(message);
                                                     if(probability < 0){
-                                                        Logger.sendMessage("&cThe probability cannot be negative", player);
+                                                        Logger.sendMessage("&cThe probability cannot be negative", player, false);
                                                     }else{
                                                         ChatListener.removePlayer(player);
                                                         auxPacks.put(pack, probability);
                                                         openPackManageMenu(player);
                                                     }
                                                 }catch(NumberFormatException ex){
-                                                    Logger.sendMessage("&cThe probability must be a number not: &6" + message, player);
+                                                    Logger.sendMessage("&cThe probability must be a number not: &6" + message, player, false);
                                                 }
                                             }, false);
                                         }

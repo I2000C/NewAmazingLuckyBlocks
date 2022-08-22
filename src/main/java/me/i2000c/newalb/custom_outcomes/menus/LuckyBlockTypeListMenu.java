@@ -16,6 +16,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,10 +25,12 @@ public class LuckyBlockTypeListMenu extends Editor{
         InventoryListener.registerInventory(CustomInventoryType.LUCKY_BLOCK_TYPES_MENU, LUCKY_BLOCK_TYPES_MENU_FUNCTION);
     }
     
+    private boolean renameMode;
     private boolean deleteMode;
     
     @Override
     protected void reset(){
+        renameMode = false;
         deleteMode = false;
     }
     
@@ -66,12 +69,24 @@ public class LuckyBlockTypeListMenu extends Editor{
                 .withDisplayName("&aCreate new lucky block type")
                 .build();
         
+        ItemStack renameType = GUIItem.getEnabledDisabledItem(
+                renameMode, 
+                "&3Rename LuckyBlock types", 
+                "&6Rename mode", 
+                XMaterial.NAME_TAG, 
+                XMaterial.NAME_TAG);
+        
         ItemStack deleteType = GUIItem.getEnabledDisabledItem(
                 deleteMode, 
                 "&cDelete existing LuckyBlock type", 
                 "&6Delete mode", 
                 XMaterial.BARRIER, 
                 XMaterial.BARRIER);
+        ItemBuilder.fromItem(deleteType, false)
+                .addLoreLine("")
+                .addLoreLine("&4&lWARNING: &cIf this mode is enabled,")
+                .addLoreLine("&cwhen you click on a LuckyBlock type,")
+                .addLoreLine("&cit will be deleted permanently");
         
         ItemStack placePermissionItem = ItemBuilder
                 .newItem(XMaterial.STONE)
@@ -102,9 +117,16 @@ public class LuckyBlockTypeListMenu extends Editor{
                 XMaterial.GRAY_DYE);
         
         menu.setItem(45, GUIItem.getBackItem());
-        menu.setItem(47, deleteType);
         
         if(!deleteMode){
+            menu.setItem(47, renameType);
+        }
+        
+        if(!renameMode){
+            menu.setItem(48, deleteType);
+        }        
+        
+        if(!renameMode && !deleteMode){
             menu.setItem(41, placePermissionItem);
             menu.setItem(42, breakPermissionItem);
 
@@ -138,7 +160,10 @@ public class LuckyBlockTypeListMenu extends Editor{
                     Logger.sendMessage("&3Enter the new lucky block type identifier and press ENTER", player);
                     
                     ChatListener.registerPlayer(player, message -> {
-                        if(TypeManager.getType(message) != null){
+                        message = OtherUtils.removeExtension(message);
+                        if(TypeManager.PERMISSIONS_FILENAME.equals(message + ".yml")){
+                            Logger.sendMessage("&cInvalid LuckyBlock identifier", player, false);
+                        }else if(TypeManager.getType(message) != null){
                             Logger.sendMessage("&cThat identifier already exists", player, false);
                         }else{
                             ChatListener.removePlayer(player);
@@ -156,67 +181,94 @@ public class LuckyBlockTypeListMenu extends Editor{
                     }, false);
                     break;
                 case 47:
+                    //Toggle rename types mode
+                    if(deleteMode){
+                        break;
+                    }
+                    
+                    renameMode = !renameMode;
+                    openLuckyBlockTypeListMenu(player);
+                    break;
+                case 48:
                     //Toggle delete types mode
+                    if(renameMode){
+                        break;
+                    }
+                    
                     deleteMode = !deleteMode;
                     openLuckyBlockTypeListMenu(player);
                     break;
-                    
                 case 41:
                     //Change global place permission
-                    if(deleteMode){
+                    if(renameMode || deleteMode){
                         break;
                     }
                     
                     player.closeInventory();
                     Logger.sendMessage("&3Enter the new global &dplace &3permission and then press ENTER.", player);
-                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", player);
+                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", player, false);
                     ChatListener.registerPlayer(player, message -> {
                         TypeManager.setGlobalPlacePermission(message);
-                        TypeManager.saveTypes();
                         openLuckyBlockTypeListMenu(player);
                     });
                     break;
                 case 42:
                     //Change global break permission
-                    if(deleteMode){
+                    if(renameMode || deleteMode){
                         break;
                     }
                     
                     player.closeInventory();
                     Logger.sendMessage("&3Enter the new global &dbreak &3permission and then press ENTER.", player);
-                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", player);
+                    Logger.sendMessage("&bTo return without change the permission, type &a/alb return", player, false);
                     ChatListener.registerPlayer(player, message -> {
                         TypeManager.setGlobalBreakPermission(message);
-                        TypeManager.saveTypes();
                         openLuckyBlockTypeListMenu(player);
                     });
                     break;
                 case 50:
                     //Toggle global place permission
-                    if(deleteMode){
+                    if(renameMode || deleteMode){
                         break;
                     }
                     
                     boolean requirePermission = TypeManager.isGlobalPlacePermissionEnabled();
                     TypeManager.setEnableGlobalPlacePermission(!requirePermission);
-                    TypeManager.saveTypes();
                     openLuckyBlockTypeListMenu(player);
                     break;
                 case 51:
                     //Toggle global break permission
-                    if(deleteMode){
+                    if(renameMode || deleteMode){
                         break;
                     }
                     
                     requirePermission = TypeManager.isGlobalBreakPermissionEnabled();
                     TypeManager.setEnableGlobalBreakPermission(!requirePermission);
-                    TypeManager.saveTypes();
                     openLuckyBlockTypeListMenu(player);
                     break;
                 default:
-                    if(e.getSlot() < 16){
+                    if(e.getSlot() < 27){
                         if(e.getSlot() < TypeManager.getTypes().size()){
-                            if(deleteMode){
+                            if(renameMode){
+                                //Change type name of selected type
+                                renameMode = false;
+                                openLuckyBlockTypeListMenu(player);
+                                player.closeInventory();
+                                Logger.sendMessage("&3Enter the new identifier for this lucky block type.", player);
+                                Logger.sendMessage("  &3If you don't want to change it, use &a/alb return", player, false);
+                                ChatListener.registerPlayer(player, message -> {
+                                    message = OtherUtils.removeExtension(message);
+                                    if(TypeManager.PERMISSIONS_FILENAME.equals(message + ".yml")){
+                                        Logger.sendMessage("&cInvalid LuckyBlock identifier", player, false);
+                                    }else if(TypeManager.getType(message) != null){
+                                        Logger.sendMessage("&cThat identifier already exists", player, false);
+                                    }else{
+                                        ChatListener.removePlayer(player);
+                                        TypeManager.renameType(e.getSlot(), message);
+                                        openLuckyBlockTypeListMenu(player);
+                                    }
+                                }, false);
+                            }else if(deleteMode){
                                 //Delete selected type
                                 TypeManager.removeType(e.getSlot());
                                 openLuckyBlockTypeListMenu(player);
