@@ -127,7 +127,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                 .newItem(XMaterial.BOOKSHELF)
                 .withDisplayName("&bCurrent pack list:");
         item.getPacks().forEach((pack, probability) -> 
-                builder2.addLoreLine("  &2" + pack.getFilename() + ";" + probability));
+                builder2.addLoreLine("  &2" + pack.getPackname() + ";" + probability));
         builder.addLoreLine("");
         builder.addLoreLine("&3Click to change");
         ItemStack typePacks = builder.build();
@@ -489,7 +489,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                                             openPackManageMenu(player);
                                         }else{
                                             player.closeInventory();
-                                            Logger.sendMessage(String.format("&3Enter the new pack probability for the pack &e%s&r", pack.getFilename()), player);
+                                            Logger.sendMessage(String.format("&3Enter the new pack probability for the pack &e%s&r", pack.getPackname()), player);
                                             ChatListener.registerPlayer(player, message -> {
                                                 try{
                                                     int probability = Integer.parseInt(message);
@@ -522,7 +522,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Menu menu = GUIFactory.newMenu(CustomInventoryType.PACK_SELECT_MENU, 54, "&3&lPack menu");
         List<OutcomePack> packList = PackManager.getPacks();
-        packList.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getFilename().compareTo(pack2.getFilename()));
+        packList.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getPackname().compareTo(pack2.getPackname()));
         
         menu.setItem(45, GUIItem.getBackItem());
         

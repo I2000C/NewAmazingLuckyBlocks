@@ -57,7 +57,7 @@ public class TrapReward extends Reward{
     }
     public void setTrapOutcome(Outcome trapOutcome){
         this.trapOutcome = trapOutcome;
-        trapOutcomePackName = trapOutcome.getPack().getFilename();
+        trapOutcomePackName = trapOutcome.getPack().getPackname();
         trapOutcomeID = trapOutcome.getID();
     }
     

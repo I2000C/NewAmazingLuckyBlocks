@@ -111,7 +111,7 @@ public class LuckyBlockType implements Displayable, Executable{
         
         builder.addLoreLine("&5Pack list:");
         this.packs.forEach((pack, probability) -> {
-            builder.addLoreLine("    &2" + pack.getFilename() + ";" + probability);
+            builder.addLoreLine("    &2" + pack.getPackname() + ";" + probability);
         });
         
         return builder.build();
@@ -372,7 +372,7 @@ public class LuckyBlockType implements Displayable, Executable{
         
         // Save outcome packs
         List<String> packNames = new ArrayList<>();
-        packs.forEach((pack, probability) -> packNames.add(pack.getFilename() + ";" + probability));
+        packs.forEach((pack, probability) -> packNames.add(pack.getPackname() + ";" + probability));
         config.set(path + ".outcome_packs", packNames);
 //</editor-fold>       
     }

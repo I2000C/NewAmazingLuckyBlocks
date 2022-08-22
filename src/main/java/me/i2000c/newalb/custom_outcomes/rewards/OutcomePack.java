@@ -18,6 +18,7 @@ import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -73,6 +74,10 @@ public class OutcomePack implements Displayable, Executable{
     
     private void saveConfig() throws IOException{
         this.outcomeConfig.save(outcomeFile);
+    }
+    
+    public String getPackname(){
+        return OtherUtils.removeExtension(this.outcomeFile.getName());
     }
     
     public String getFilename(){
@@ -162,10 +167,8 @@ public class OutcomePack implements Displayable, Executable{
     }
     
     public void renamePack(String newName){
-        if(!newName.endsWith(".yml")){
-            newName += ".yml";
-        }
-        File newFile = new File(outcomeFile.getParentFile(), newName);
+        newName = OtherUtils.removeExtension(newName);
+        File newFile = new File(outcomeFile.getParentFile(), newName + ".yml");
         outcomeFile.renameTo(newFile);
         outcomeFile = newFile;
         TypeManager.saveTypes();
@@ -192,11 +195,9 @@ public class OutcomePack implements Displayable, Executable{
     }
     
     public OutcomePack clonePack(String filename){
-        if(!filename.endsWith(".yml")){
-            filename += ".yml";
-        }
+        filename = OtherUtils.removeExtension(filename);
         try{            
-            File newFile = new File(outcomeFile.getParentFile(), filename);
+            File newFile = new File(outcomeFile.getParentFile(), filename + ".yml");
             Files.copy(Paths.get(outcomeFile.getPath()), Paths.get(newFile.getPath()));
             OutcomePack newPack = new OutcomePack(newFile);
             return newPack;
@@ -210,7 +211,7 @@ public class OutcomePack implements Displayable, Executable{
     @Override
     public ItemStack getItemToDisplay(){
         return ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
-                .withDisplayName("&6" + getFilename())
+                .withDisplayName("&6" + getPackname())
                 .addLoreLine("&aOutcome number: &d" + getOutcomes().size())
                 .build();
     }

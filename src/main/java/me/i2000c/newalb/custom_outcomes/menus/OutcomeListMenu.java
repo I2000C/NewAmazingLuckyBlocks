@@ -140,7 +140,7 @@ public class OutcomeListMenu extends Editor<OutcomePack>{
                                         try{
                                             outcome.saveOutcome();
                                             Logger.logAndMessage("&aOutcome saved with ID &b" + outcome.getID(), p);
-                                            Logger.log("&6Reloading pack " + item.getFilename() + "...");
+                                            Logger.log("&6Reloading pack " + item.getPackname()+ "...");
                                             item.loadPack();
                                             Logger.log("&aPack reloaded");
                                             openOutcomeListMenu(p);
@@ -214,7 +214,7 @@ public class OutcomeListMenu extends Editor<OutcomePack>{
                                         try{
                                             _outcome.saveOutcome();
                                             Logger.logAndMessage("&aOutcome saved with ID &b" + _outcome.getID(), p);
-                                            Logger.log("&6Reloading pack " + item.getFilename() + "...");
+                                            Logger.log("&6Reloading pack " + item.getPackname()+ "...");
                                             item.loadPack();
                                             Logger.log("&aPack reloaded");
                                             openOutcomeListMenu(p);

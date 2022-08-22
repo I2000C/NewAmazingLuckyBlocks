@@ -227,7 +227,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
                         }
                         this.rewardList.add(reward);
                     }catch(Throwable ex){
-                        Logger.log("There has been an error while loading outcome: " + fullPath + " in pack " + pack.getFilename(), LogLevel.ERROR);
+                        Logger.log("There has been an error while loading outcome: " + fullPath + " in pack " + pack.getPackname(), LogLevel.ERROR);
                         ex.printStackTrace();
                     }
                 }
@@ -303,6 +303,6 @@ public class Outcome implements Displayable, Executable, Cloneable{
     
     @Override
     public String toString(){
-        return pack.getFilename() + "/" + ID;
+        return pack.getPackname() + "/" + ID;
     }
 }

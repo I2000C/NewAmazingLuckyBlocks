@@ -17,6 +17,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -101,7 +102,7 @@ public class PackListMenu extends Editor{
         //menu.setItem(53, GUIItem.getNextPageItem());
         
         List<OutcomePack> packList = PackManager.getPacks();
-        packList.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getFilename().compareTo(pack2.getFilename()));
+        packList.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getPackname().compareTo(pack2.getPackname()));
         
         int i = 0;
         for(OutcomePack pack : packList){
@@ -131,16 +132,20 @@ public class PackListMenu extends Editor{
                     //Create new pack
                     if(!renameMode && !cloneMode && !deleteMode){
                         ChatListener.registerPlayer(player, message -> {
-                            String filename = message;
-                            if(!filename.endsWith(".yml")){
-                                filename += ".yml";
+                            String packName = OtherUtils.removeExtension(message);
+                            File newFile = new File(PackManager.OUTCOMES_FOLDER, packName + ".yml");
+                            if(newFile.exists()){
+                                Logger.sendMessage("&cPack &6\"" + packName + "\" &calready exists", player);
+                                Logger.sendMessage("&cUse &b/alb return &cto return to the menu", player, false);
+                                return;
                             }
-                            File newFile = new File(PackManager.OUTCOMES_FOLDER, filename);
+                            
+                            ChatListener.removePlayer(player);
                             OutcomePack pack = new OutcomePack(newFile);
                             pack.saveOutcomes();
                             PackManager.addNewPack(pack, player);
                             openPackListMenu(player);
-                        });
+                        }, false);
                         player.closeInventory();
                         Logger.sendMessage("&3Write the new pack name in the chat", player);
                     }
@@ -179,11 +184,16 @@ public class PackListMenu extends Editor{
                         if(renameMode){
                             //Rename pack
                             ChatListener.registerPlayer(player, message -> {
-                                String filename = message;
-                                if(!filename.endsWith(".yml")){
-                                    filename += ".yml";
+                                String newPackName = OtherUtils.removeExtension(message);
+                                File newFile = new File(PackManager.OUTCOMES_FOLDER, newPackName + ".yml");
+                                if(newFile.exists()){
+                                    Logger.sendMessage("&cPack &6\"" + packName + "\" &calready exists", player);
+                                    Logger.sendMessage("&cUse &b/alb return &cto return to the menu", player, false);
+                                    return;
                                 }
-                                PackManager.renamePack(packName, filename, player);
+                                
+                                ChatListener.removePlayer(player);
+                                PackManager.renamePack(packName, newPackName, player);
                                 openPackListMenu(player);
                             });
                             player.closeInventory();
