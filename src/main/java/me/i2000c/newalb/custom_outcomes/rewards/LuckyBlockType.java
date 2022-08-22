@@ -27,7 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 
-public class LuckyBlockType implements Displayable{
+public class LuckyBlockType implements Displayable, Executable{
     private int ID;
     
     private String typeName;
@@ -410,7 +410,8 @@ public class LuckyBlockType implements Displayable{
 //</editor-fold>
     }
     
-    public void executeRandomPack(Player player, Location location){
+    @Override
+    public void execute(Player player, Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(totalProbability <= 0){
             Logger.log(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
@@ -423,7 +424,7 @@ public class LuckyBlockType implements Displayable{
                 Integer probability = entry.getValue();
                 randomNumber -= probability;
                 if(randomNumber < 0){
-                    pack.executeRandomOutcome(player, location);
+                    pack.execute(player, location);
                     break;
                 }
             }

@@ -54,7 +54,7 @@ public class BlockBreak implements Listener{
                         e.setCancelled(true);
                     }else{
                         b.setType(Material.AIR);
-                        result.resultType.executeRandomPack(p, loc);
+                        result.resultType.execute(p, loc);
                     }
                     break;
             }

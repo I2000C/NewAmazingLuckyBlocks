@@ -1,7 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.utils.logger.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,16 +14,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.config.YamlConfigurationUTF8;
+import me.i2000c.newalb.utils.logger.LogLevel;
+import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class OutcomePack implements Displayable{
-    private Map<Integer, Outcome> outcomes;
+public class OutcomePack implements Displayable, Executable{
+    private final Map<Integer, Outcome> outcomes;
     private FileConfiguration outcomeConfig;
     private File outcomeFile;
     
@@ -171,7 +171,8 @@ public class OutcomePack implements Displayable{
         TypeManager.saveTypes();
     }
     
-    public void executeRandomOutcome(Player player, Location location){
+    @Override
+    public void execute(Player player, Location location){
         Random r = new Random();
         int randomNumber = r.nextInt(totalProbability);
         for(int i=0;i<outcomes.size();i++){

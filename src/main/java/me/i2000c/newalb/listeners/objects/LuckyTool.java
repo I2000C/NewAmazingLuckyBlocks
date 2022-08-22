@@ -44,7 +44,7 @@ public class LuckyTool extends SpecialItem{
             //Break the Lucky Block
             Block target = e.getClickedBlock();
             target.setType(Material.AIR);
-            type.executeRandomPack(e.getPlayer(), target.getLocation().add(0.5, 0, 0.5));
+            type.execute(e.getPlayer(), target.getLocation().add(0.5, 0, 0.5));
             
             super.updatePlayerCooldown(player);
         }
