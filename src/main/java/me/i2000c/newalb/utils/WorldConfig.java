@@ -22,10 +22,11 @@ public class WorldConfig extends ReadWriteConfig{
     }
     
     public List<String> loadWorlds(){
-        return worldConfig.getBukkitConfig().getStringList(WORLD_LIST_KEY);
+        loadConfig();
+        return getBukkitConfig().getStringList(WORLD_LIST_KEY);
     }
     public void saveWorlds(List<String> worlds){
-        worldConfig.getBukkitConfig().set(WORLD_LIST_KEY, worlds);
+        getBukkitConfig().set(WORLD_LIST_KEY, worlds);
         saveConfig();
     }
     

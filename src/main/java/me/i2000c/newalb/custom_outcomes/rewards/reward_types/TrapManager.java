@@ -52,6 +52,7 @@ public class TrapManager extends ReadWriteConfig implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         traps.clear();
         
+        trapManager.loadConfig();
         FileConfiguration config = trapManager.getBukkitConfig();
         if(!config.isConfigurationSection("Traps")){
             return;

@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import me.i2000c.newalb.utils.CommentedConfig;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
@@ -30,11 +29,6 @@ public abstract class ReadOnlyConfig{
         this.plugin = plugin;
         this.resourceName = resourceName;
         this.configFile = new File(plugin.getDataFolder(), filename);
-        if(saveComments){
-            this.config = new CommentedConfig();
-        }else{
-            this.config = new YamlConfigurationUTF8();
-        }
         this.saveComments = saveComments;
     }
     
@@ -46,7 +40,7 @@ public abstract class ReadOnlyConfig{
         this.plugin = plugin;
         this.resourceName = null;
         this.configFile = file;
-        this.config = new YamlConfigurationUTF8();
+        this.config = null;
         this.saveComments = false;        
     }
     
@@ -60,6 +54,8 @@ public abstract class ReadOnlyConfig{
     
     public final void loadConfig(){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        clearConfig();
+        
         if(configFile.exists()){
             config.load(configFile);
         }else if(resourceName != null){
@@ -122,12 +118,17 @@ public abstract class ReadOnlyConfig{
         }
         
         try{
+            clearConfig();
             config.load(plugin.getResource(resourceName));
             FileConfiguration oldConfig = new YamlConfigurationUTF8();
             oldConfig.load(bakFile);
             
             for(String key : config.getKeys(true)){
                 if(config.isConfigurationSection(key)){
+                    continue;
+                }
+                
+                if(key.equals(VERSION_KEY)){
                     continue;
                 }
                 

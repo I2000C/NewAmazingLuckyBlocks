@@ -28,6 +28,8 @@ public class LocationManager extends ReadWriteConfig{
     public static void loadLocations(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         locations.clear();
+        
+        manager.loadConfig();
         FileConfiguration config = manager.getBukkitConfig();
 
         if(config.isConfigurationSection(LOCATIONS_KEY)){
