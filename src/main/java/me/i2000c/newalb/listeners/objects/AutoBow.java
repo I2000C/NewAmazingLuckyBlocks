@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.lang_utils.LangLoader;
+import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
@@ -200,7 +200,7 @@ public class AutoBow extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.BOW)
-                .withDisplayName(LangLoader.getMessages().getString("Objects.AutoBow.name"))
+                .withDisplayName(LangConfig.getMessages().getString("Objects.AutoBow.name"))
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
                 .build();
     }

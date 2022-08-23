@@ -9,7 +9,7 @@ import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapManager;
-import me.i2000c.newalb.lang_utils.LangLoader;
+import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.listeners.BlockBreak;
 import me.i2000c.newalb.listeners.BlockPlace;
 import me.i2000c.newalb.listeners.ChunkEvent;
@@ -64,7 +64,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         ConfigManager.initialize(this);
         ConfigManager.getManager().loadConfig();
         
-        prefix = Logger.color(LangLoader.getMessages().getString("InGamePrefix"));      
+        prefix = Logger.color(LangConfig.getMessages().getString("InGamePrefix"));      
         if(minecraftVersion == null){
             Logger.log("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version", LogLevel.INFO);
             Logger.log("&cNewAmazingLuckyBlocks is going to shut down");
@@ -72,9 +72,9 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
             return;
         }
         
-        Logger.log(LangLoader.getMessages().getString("Loading.line1"));
-        Logger.log(LangLoader.getMessages().getString("Loading.line2"));
-        Logger.log(LangLoader.getMessages().getString("Loading.line3"));
+        Logger.log(LangConfig.getMessages().getString("Loading.line1"));
+        Logger.log(LangConfig.getMessages().getString("Loading.line2"));
+        Logger.log(LangConfig.getMessages().getString("Loading.line3"));
         
         Task.initializeTaskManager(this);
         SpecialItemManager.loadSpecialItems();
@@ -98,8 +98,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         registerEvents();
         
-        Logger.log(LangLoader.getMessages().getString("Enable.line1").replace("%version%", version));
-        Logger.log(LangLoader.getMessages().getString("Enable.line2").replace("%prefix%", ""));
+        Logger.log(LangConfig.getMessages().getString("Enable.line1").replace("%version%", version));
+        Logger.log(LangConfig.getMessages().getString("Enable.line2").replace("%prefix%", ""));
     }
     
     private void registerEvents(){
@@ -129,7 +129,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
             RewardListMenu.testRewardsPlayerList.clear();
             LocationManager.saveLocations();
         }
-        Logger.log(LangLoader.getMessages().getString("Disable.line1").replace("%prefix%", ""));
+        Logger.log(LangConfig.getMessages().getString("Disable.line1").replace("%prefix%", ""));
     }
     
     public void copyResource(String filename, File file){

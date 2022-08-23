@@ -1,4 +1,4 @@
-package me.i2000c.newalb.lang_utils;
+package me.i2000c.newalb.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class LangLoader{
+public class LangConfig{
     private static FileConfiguration langCfg = null;
     private static File langFile = null;
     

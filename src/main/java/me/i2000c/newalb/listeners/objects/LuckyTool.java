@@ -3,7 +3,7 @@ package me.i2000c.newalb.listeners.objects;
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.lang_utils.LangLoader;
+import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
@@ -29,7 +29,7 @@ public class LuckyTool extends SpecialItem{
                     return;
                 case TypeManager.RESULT_NO_GLOBAL_PERMISSION:
                 case TypeManager.RESULT_NO_LOCAL_PERMISSION:
-                    Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), player);
+                    Logger.sendMessage(LangConfig.getMessages().getString("NoPermission"), player);
                     return;
                 default:
                     e.setCancelled(true);
@@ -37,7 +37,7 @@ public class LuckyTool extends SpecialItem{
             }
             
             if(!ConfigManager.getConfig().getBoolean("Objects.LuckyTool.enable")){
-                Logger.sendMessage(LangLoader.getMessages().getString("Objects.LuckyTool.disabled"), player);
+                Logger.sendMessage(LangConfig.getMessages().getString("Objects.LuckyTool.disabled"), player);
                 return;
             }
             

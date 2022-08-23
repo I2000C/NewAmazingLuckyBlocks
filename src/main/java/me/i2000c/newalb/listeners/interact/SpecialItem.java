@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.lang_utils.LangLoader;
+import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -74,7 +74,7 @@ public abstract class SpecialItem{
         String permission = ConfigManager.getConfig().getString(itemPathKey + ".permission");
         
         if(requiredPermission && !player.hasPermission(permission)){
-            Logger.sendMessage(LangLoader.getMessages().get("need-permission"), player, false);
+            Logger.sendMessage(LangConfig.getMessages().get("need-permission"), player, false);
             return false;
         }else{
             return true;
@@ -82,7 +82,7 @@ public abstract class SpecialItem{
     }
     
     public final String getDisplayName(){
-        return LangLoader.getMessages().getString(this.itemPathKey + ".name");
+        return LangConfig.getMessages().getString(this.itemPathKey + ".name");
     }
     
     protected abstract ItemStack buildItem();
@@ -130,7 +130,7 @@ public abstract class SpecialItem{
     }
     
     protected void sendRemainingSecondsMessage(Player player){
-        String message = LangLoader.getMessages().getString("Cooldown-message");
+        String message = LangConfig.getMessages().getString("Cooldown-message");
         message = message.replace("%time%", String.valueOf(getRemainingSeconds(player)));
         Logger.sendMessage(message, player, false);
     }

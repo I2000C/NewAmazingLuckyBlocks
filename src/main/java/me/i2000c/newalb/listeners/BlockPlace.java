@@ -1,7 +1,7 @@
 package me.i2000c.newalb.listeners;
 
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.lang_utils.LangLoader;
+import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.WorldConfig;
@@ -28,7 +28,7 @@ public class BlockPlace implements Listener{
                 break;
             case TypeManager.RESULT_NO_GLOBAL_PERMISSION:
             case TypeManager.RESULT_NO_LOCAL_PERMISSION:
-                Logger.sendMessage(LangLoader.getMessages().getString("NoPermission"), p);
+                Logger.sendMessage(LangConfig.getMessages().getString("NoPermission"), p);
                 e.setCancelled(true);
                 break;
         }

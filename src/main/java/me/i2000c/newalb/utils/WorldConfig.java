@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.config.ReadWriteConfig;
-import me.i2000c.newalb.lang_utils.LangLoader;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
@@ -143,14 +142,14 @@ public class WorldConfig extends ReadWriteConfig{
         //<editor-fold defaultstate="collapsed" desc="Code">
         String prefix = NewAmazingLuckyBlocks.getInstance().prefix;
         
-        String line1 = LangLoader.getMessages().getString("World-loading.line1").replaceAll("%prefix%", "");
-        String line2 = LangLoader.getMessages().getString("World-loading.line2").replaceAll("%prefix%", "");
-        String line3 = LangLoader.getMessages().getString("World-loading.line3").replaceAll("%prefix%", "");
-        String line4 = LangLoader.getMessages().getString("World-loading.line4").replaceAll("%prefix%", "");
-        String line5 = LangLoader.getMessages().getString("World-loading.line5").replaceAll("%prefix%", "");
-        String line6 = LangLoader.getMessages().getString("World-loading.line6").replaceAll("%prefix%", "");
-        String line7 = LangLoader.getMessages().getString("World-loading.line7").replaceAll("%prefix%", "");
-        String line8 = LangLoader.getMessages().getString("World-loading.line8").replaceAll("%prefix%", "");
+        String line1 = LangConfig.getMessages().getString("World-loading.line1").replaceAll("%prefix%", "");
+        String line2 = LangConfig.getMessages().getString("World-loading.line2").replaceAll("%prefix%", "");
+        String line3 = LangConfig.getMessages().getString("World-loading.line3").replaceAll("%prefix%", "");
+        String line4 = LangConfig.getMessages().getString("World-loading.line4").replaceAll("%prefix%", "");
+        String line5 = LangConfig.getMessages().getString("World-loading.line5").replaceAll("%prefix%", "");
+        String line6 = LangConfig.getMessages().getString("World-loading.line6").replaceAll("%prefix%", "");
+        String line7 = LangConfig.getMessages().getString("World-loading.line7").replaceAll("%prefix%", "");
+        String line8 = LangConfig.getMessages().getString("World-loading.line8").replaceAll("%prefix%", "");
         
         // Update and load worlds
         updateWorlds(true);
