@@ -332,8 +332,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         
         GUIManager.setCurrentMenu(null);
 
-        ConfigManager.reloadConfig();
-        ConfigManager.saveConfig();
+        ConfigManager.getManager().loadConfig();
         LangLoader.reloadMessages();
 
         WorldConfig.reloadAll();

@@ -61,7 +61,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
     public void onEnable(){
         minecraftVersion = MinecraftVersion.getCurrentVersion();
         
-        ConfigManager.setup(this);
+        ConfigManager.initialize(this);
+        ConfigManager.getManager().loadConfig();
         
         prefix = Logger.color(LangLoader.getMessages().getString("InGamePrefix"));      
         if(minecraftVersion == null){

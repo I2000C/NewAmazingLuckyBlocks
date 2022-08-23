@@ -137,6 +137,14 @@ public abstract class ReadOnlyConfig{
                     continue;
                 }
                 
+                if(oldConfig.isList(key) && (config instanceof CommentedConfig)){
+                    int oldListSize = config.getList(key).size();
+                    int newListSize = oldConfig.getList(key).size();
+                    if(oldListSize != newListSize){
+                        ((CommentedConfig) config).updateCommentLines(key, newListSize - oldListSize);
+                    }
+                }
+                
                 config.set(key, object);
             }
             

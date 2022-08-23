@@ -1,142 +1,181 @@
+#
+#  _   _                                              _             
+# | \ | |                   /\                       (_)            
+# |  \| | _____      __    /  \   _ __ ___   __ _ _____ _ __   __ _ 
+# | . ` |/ _ \ \ /\ / /   / /\ \ | '_ ` _ \ / _` |_  / | '_ \ / _` |
+# | |\  |  __/\ V  V /   / ____ \| | | | | | (_| |/ /| | | | | (_| |
+# |_| \_|\___| \_/\_/   /_/    \_\_| |_| |_|\__,_/___|_|_| |_|\__, |
+#                                                              __/ |
+#  _                _            ____  _            _         |___/ 
+# | |              | |          |  _ \| |          | |              
+# | |    _   _  ___| | ___   _  | |_) | | ___   ___| | _____        
+# | |   | | | |/ __| |/ / | | | |  _ <| |/ _ \ / __| |/ / __|       
+# | |___| |_| | (__|   <| |_| | | |_) | | (_) | (__|   <\__ \       
+# |______\__,_|\___|_|\_\\__, | |____/|_|\___/ \___|_|\_\___/       
+#                         __/ |                                     
+#                        |___/                                                
+
+
+# Version of the config. Don't modify it
+ConfigVersion: 0
+
+# Wands configuration
 Wands:
   RegenWand:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
-    #The time must be in seconds
+    # The time must be in seconds
     effect-time: 10
     required-permission: false
     permission: amazinglb.wands.regenwand
     limited-uses:
-        enable: false
-        uses: 5
+      enable: false
+      uses: 5
   FireWand:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
     fire-radius: 1.5
     required-permission: false
     permission: amazinglb.wands.firewand
     limited-uses:
-        enable: false
-        uses: 5
+      enable: false
+      uses: 5
   InvisibilityWand:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
-    #The time must be in seconds
+    # The time must be in seconds
     effect-time: 10
     required-permission: false
     permission: amazinglb.wands.invwand
     limited-uses:
-        enable: false
-        uses: 5
+      enable: false
+      uses: 5
   TntWand:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.tntwand
     limited-uses:
-        enable: false
-        uses: 5
+      enable: false
+      uses: 5
   SlimeWand:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.slimewand
     limited-uses:
-        enable: false
-        uses: 5
+      enable: false
+      uses: 5
   LightningWand:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.lightning
     limited-uses:
-        enable: false
-        uses: 5
+      enable: false
+      uses: 5
   ShieldWand:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
-    ShieldWandBlock: 'OAK_LEAVES'
+    ShieldWandBlock: OAK_LEAVES
     radius: 3.0
     withfloor: true
     protect-structures: true
     required-permission: false
     permission: amazinglb.wands.shield
     limited-uses:
-        enable: false
-        uses: 5
+      enable: false
+      uses: 5
   PotionWand:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
+    # Here you can find all the potion effects:
+    #   https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html
+    # The effects must follow the next syntax:
+    #   <effect-name>;<effect-time>;<effect-amplifier>;<effect-probability>
+    # Note: effect time must be in seconds
     effects:
-        - JUMP;10;30;100
-        - SPEED;15;20;100
+    - JUMP;10;30;100
+    - SPEED;15;20;100
     required-permission: false
     permission: amazinglb.wands.potion
     limited-uses:
-        enable: false
-        uses: 5
+      enable: false
+      uses: 5
   FrostPathWand:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
     frostMaterial: PACKED_ICE
     maxBlocks: 20
     minPitch: -45.0
     maxPitch: 45.0
-    #The time must be in ticks. 1 second = 20 ticks
+    # The time must be in ticks. 1 second = 20 ticks
     time-before-frostpath: 0
-    #The time must be in ticks. 1 second = 20 ticks
+    # The time must be in ticks. 1 second = 20 ticks
     time-between-one-block-and-the-next: 5
     rows-of-blocks-each-time: 1
     row-width: 3
     required-permission: false
     permission: amazinglb.wands.frost
     limited-uses:
-        enable: false
-        uses: 5
+      enable: false
+      uses: 5
+
+# Objects configuration
 Objects:
   DarkHole:
-    #Depth of the dark hole.
-    #If this value is negative, an infinite depth will be used
+    # Depth of the dark hole.
+    # If this value is negative, an infinite depth will be used
     depth: 5
     radius: 1.0
-    #The time must be in ticks. 1 second = 20 ticks
+    # The time must be in ticks. 1 second = 20 ticks
     time-before-darkhole: 20
-    #The time must be in ticks. 1 second = 20 ticks
+    # The time must be in ticks. 1 second = 20 ticks
     time-between-one-block-and-the-next: 5
     block-stop-mode:
-        enable: false
-        block: BEDROCK
+      enable: false
+      block: BEDROCK
     required-permission: false
     permission: amazinglb.objets.darkhole
   MiniVolcano:
-    #The time must be in ticks. 1 second = 20 ticks
+    # The time must be in ticks. 1 second = 20 ticks
     time-before-minivolcano: 20
-    #The time must be in ticks. 1 second = 20 ticks
+    # The time must be in ticks. 1 second = 20 ticks
     time-between-one-block-and-the-next: 20
     height: 3
     lava-material: LAVA
     base-material: OBSIDIAN
     throwBlocks:
-        enable: true
-        number-of-blocks: 5
-        height: 0.4
-        radius: 0.4
-        material: NETHERRACK
-        materialData: 0
-        #The time must be in ticks. 1 second = 20 ticks
-        time-between-blocks: 10
+      enable: true
+      number-of-blocks: 5
+      height: 0.4
+      radius: 0.4
+      material: NETHERRACK
+      # The time must be in ticks. 1 second = 20 ticks
+      time-between-blocks: 10
     required-permission: false
     permission: amazinglb.objets.minivolcano
   IceBow:
     freeze-material: ICE
     disableArrowKnockback: false
     protect-structures: true
-    #The time must be in ticks. 1 second = 20 ticks
+    # The time must be in ticks. 1 second = 20 ticks
     time-before-freezing: 0
-    #The time must be in ticks. 1 second = 20 ticks
+    # The time must be in ticks. 1 second = 20 ticks
     time-between-one-block-and-the-next: 5
     generateSnow: true
     snowRadius: 2.0
     required-permission: false
     permission: amazinglb.objects.icebow
   PlayerTracker:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 5
     radius: 1000
     detect-players-only: true
     required-permission: false
     permission: amazinglb.objects.playertracker
   EndermanSoup:
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 5
     speedMultiplier: 1.5
     required-permission: false
@@ -169,58 +208,80 @@ Objects:
     required-permission: false
     permission: amazinglb.objects.homingbow
   HookBow:
+    # cooldown-time must be in seconds (Use 0 to disable it)
+    cooldown-time: 10
     maxDistance: 25
     maxFlySeconds: 7
     heightGain: 5
     gravity: 0.155
     stopArrowOnLiquid: true
     leashPacketRadius: 50
-    leashTimeoutSeconds: 10
-    cooldown-time: 10
+    leashTimeoutSeconds: 10    
     required-permission: false
     permission: amazinglb.objects.hookbow
   LuckyTool:
-    enable: true
-    onlyCanBreakLuckyBlocksWithLuckyTool: false
+    # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 0
+    enable: true
+    onlyCanBreakLuckyBlocksWithLuckyTool: false    
     required-permission: false
     permission: 'amazinglb.lucky_tool'
+    
+# Command permissions
 Commands:
-    Worlds-permission: amazinglb.worlds
-    Update-message-permission: amazinglb.update
-    Reload-permission: amazinglb.reload
-    Give:
-        GiveMenu: amazinglb.givemenu
-        Wands: amazinglb.give.wands
-        Objects: amazinglb.give.objects
-        LuckyBlocks: amazinglb.give.luckyblock
-        LuckyTool: amazinglb.give.luckytool
-        OtherItems: amazinglb.give.otheritems
-    RandomBlocks-permission: amazinglb.randomblocks
-    Clear-permission: amazinglb.clear
-    Menu-permission: amazinglb.menu
-    GetSkull-permission: amazinglb.getskull
-    Tab-completer: amazinglb.tabcompleter
-    Schematic: amazinglb.schematic   
+  Worlds-permission: amazinglb.worlds
+  Update-message-permission: amazinglb.update
+  Reload-permission: amazinglb.reload
+  Give:
+    GiveMenu: amazinglb.givemenu
+    Wands: amazinglb.give.wands
+    Objects: amazinglb.give.objects
+    LuckyBlocks: amazinglb.give.luckyblock
+    LuckyTool: amazinglb.give.luckytool
+    OtherItems: amazinglb.give.otheritems
+  RandomBlocks-permission: amazinglb.randomblocks
+  Clear-permission: amazinglb.clear
+  Menu-permission: amazinglb.menu
+  GetSkull-permission: amazinglb.getskull
+  Tab-completer: amazinglb.tabcompleter
+  Schematic: amazinglb.schematic
+
+# Enable or disable the use of colors in the console logger
 ColoredLogger: true
+
+# Enable or disable the updater checker
 Update-checker: true
+
+# Enable or disable menu confirmation when using /alb menu
 Enable-openMenu-confirmation: true
+
+# Enable or disable percentaje when using /alb randomblocks
 Enable-randomBlocks-percentaje: true
+
+# Amount of random blocks that will be generated each tick
 RandomBlocks-PacketSize: 10
+
+# Enable this option to check if all textures are valid.
+# If you disable it, the plugin will load faster, but textures won't be checked
+CheckIfTexturesAreValid: false
+
+# General LuckyBlock configurations
 LuckyBlock:
-    DropOnBlockBreak:
-        #If enabled, when you break a block (not LuckyBlock), there is a probability that it dropped a LuckyBlock
-        enable: false
-        survivalOnly: true
-        probability: 50
-    #Enable this option to check if all textures are valid
-CheckIfTexturesAreValid: true
-GenerateRandomblocks-OnChunkCreated:
+  DropOnBlockBreak:
+    # If enabled, when you break a block (not LuckyBlock), 
+    #   there is a probability that it dropped a LuckyBlock
     enable: false
-    radx: 8
-    rady: 8
-    radz: 8
-    blocks: 5
-    floating-blocks: false
-    send-finish-message: false
-    maxTasks: 5
+    survivalOnly: true
+    probability: 50
+
+# Generate random LuckyBlocks when a chunk is populated (created)
+# This feature is experimental and can contain bugs
+GenerateRandomblocks-OnChunkCreated:
+  enable: false
+  radx: 8
+  rady: 8
+  radz: 8
+  blocks: 5
+  floating-blocks: false
+  send-finish-message: false
+  maxTasks: 5
