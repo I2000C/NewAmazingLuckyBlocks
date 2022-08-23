@@ -49,7 +49,7 @@ public class YamlConfigurationUTF8 extends YamlConfiguration{
         try{
             if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
                 InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
-                super.load(reader);
+                load(reader);
             }else{
                 super.load(file);
             }
