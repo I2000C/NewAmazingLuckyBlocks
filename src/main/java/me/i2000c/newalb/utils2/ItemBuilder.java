@@ -9,8 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
@@ -46,7 +45,7 @@ public class ItemBuilder{
         
         try{
             materialID = Integer.parseInt(materialName);
-            Logger.log("Using material IDs is deprecated and not recommended (materialID: " + materialID + ")", LogLevel.WARN);
+            Logger.warn("Using material IDs is deprecated and not recommended (materialID: " + materialID + ")");
         }catch(Exception ex){}
         
         Optional<XMaterial> optionalXMaterial;
@@ -237,8 +236,8 @@ public class ItemBuilder{
             Texture texture = new Texture(textureID);
             return withTexture(texture);
         }catch(TextureException ex){
-            Logger.log("An error occurred while setting texture of item:");
-            Logger.log(ex, LogLevel.ERROR);
+            Logger.err("An error occurred while setting texture of item:");
+            Logger.err(ex);
             return this;
         }
     }

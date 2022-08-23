@@ -3,8 +3,6 @@ package me.i2000c.newalb.utils;
 import java.io.File;
 import java.util.Arrays;
 import me.i2000c.newalb.config.ReadOnlyConfig;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -49,14 +47,14 @@ public class LangConfig{
         if(file.exists()){
             config.loadConfig();
         }else{
-            Logger.log("Lang file \"" + filename + "\" doesn't exist", LogLevel.WARN, false);
-            Logger.log("Using English language to avoid errors", LogLevel.WARN, false);
+            Logger.warn("Lang file \"" + filename + "\" doesn't exist", false);
+            Logger.warn("Using English language to avoid errors", false);
             config.clearConfig();
             try{
                 config.getBukkitConfig().load(plugin.getResource(Language.EN.getLangFileName()));
             }catch(Exception ex){
-                Logger.log("An error occurred while loading English language:", LogLevel.ERROR, false);
-                Logger.log(ex, LogLevel.ERROR);
+                Logger.err("An error occurred while loading English language:", false);
+                Logger.err(ex, false);
             }
         }
 //</editor-fold>

@@ -13,8 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -54,8 +53,8 @@ public class YamlConfigurationUTF8 extends YamlConfiguration{
                 super.load(file);
             }
         }catch(Exception ex){
-            Logger.log("An error occurred while loading config from file " + file.getName() + ":", LogLevel.ERROR);
-            Logger.log(ex, LogLevel.ERROR);
+            Logger.err("An error occurred while loading config from file " + file.getName() + ":");
+            Logger.err(ex);
         }
 //</editor-fold>
     }
@@ -75,8 +74,8 @@ public class YamlConfigurationUTF8 extends YamlConfiguration{
                 super.save(file);
             }
         }catch(Exception ex){
-            Logger.log("An error occurred while saving config to file " + file.getName() + ":", LogLevel.ERROR);
-            Logger.log(ex, LogLevel.ERROR);
+            Logger.err("An error occurred while saving config to file " + file.getName() + ":");
+            Logger.err(ex);
         }
 //</editor-fold>
     }

@@ -4,8 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Random;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -50,8 +49,8 @@ public class OtherUtils{
                 }
                 return (Integer) getMinHeightMethod.invoke(world);
             }catch(Exception ex){
-                Logger.log("An error occurred while getting min world height:", LogLevel.INFO);
-                Logger.log(ex, LogLevel.INFO);
+                Logger.err("An error occurred while getting min world height:");
+                Logger.err(ex);
                 return 0;
             }
         }else{

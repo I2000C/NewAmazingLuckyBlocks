@@ -6,8 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.command.CommandSender;
 
@@ -39,7 +38,7 @@ public class PackManager{
                 OutcomePack pack = new OutcomePack(file);
                 packList.put(pack.getPackname(), pack);
             }catch(Exception ex){
-                Logger.log("An error occurred while loading pack: \"" + file.getName() + "\"", LogLevel.INFO);
+                Logger.err("An error occurred while loading pack: \"" + file.getName() + "\"");
                 ex.printStackTrace();
             }
         }

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 
 public class SpecialItemManager{
     private static final Map<SpecialItemName, SpecialItem> specialItems;
@@ -47,8 +46,8 @@ public class SpecialItemManager{
                 specialItem.loadItem();
                 specialItems.put(specialItemName, specialItem);
             }catch(Exception ex){
-                Logger.log("An error occurred while loading special items:", LogLevel.ERROR);
-                Logger.log(ex, LogLevel.ERROR);
+                Logger.err("An error occurred while loading special items:");
+                Logger.err(ex);
                 return;
             }
         }

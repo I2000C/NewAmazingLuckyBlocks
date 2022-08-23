@@ -4,8 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Bukkit;
@@ -109,8 +108,8 @@ public class TeleportReward extends Reward{
                 }else{
                     world = Bukkit.getWorld(worldName);
                     if(world == null){
-                        Logger.log("Cannot execute teleport reward", LogLevel.WARN);
-                        Logger.log("World " + worldName + " doesn't exist", LogLevel.WARN);
+                        Logger.warn("Cannot execute teleport reward");
+                        Logger.warn("World " + worldName + " doesn't exist");
                         return;
                     }
                 }

@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ActionBarUtils;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;

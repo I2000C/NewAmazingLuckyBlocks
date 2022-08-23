@@ -15,8 +15,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import me.i2000c.newalb.config.YamlConfigurationUTF8;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
@@ -202,8 +201,8 @@ public class OutcomePack implements Displayable, Executable{
             OutcomePack newPack = new OutcomePack(newFile);
             return newPack;
         }catch(IOException ex){
-            Logger.log("Couln't create file \"" + filename + "\"", LogLevel.INFO);
-            Logger.log(ex, LogLevel.INFO);
+            Logger.err("Couln't create file \"" + filename + "\"");
+            Logger.err(ex);
             return null;
         }        
     }

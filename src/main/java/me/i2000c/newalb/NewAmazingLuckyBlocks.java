@@ -20,11 +20,10 @@ import me.i2000c.newalb.utils.BlockProtect;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.LocationManager;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils.Updater;
 import me.i2000c.newalb.utils.WorldConfig;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -66,9 +65,12 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         LangConfig.initialize(this);
         LangConfig.loadConfig();
         
-        prefix = Logger.color(LangConfig.getMessages().getString("InGamePrefix"));      
+        prefix = Logger.color(LangConfig.getMessages().getString("InGamePrefix"));
+        boolean coloredLogger = ConfigManager.getConfig().getBoolean("ColoredLogger");
+        Logger.initializeLogger(prefix, coloredLogger);
+        
         if(minecraftVersion == null){
-            Logger.log("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version", LogLevel.INFO);
+            Logger.log("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version");
             Logger.log("&cNewAmazingLuckyBlocks is going to shut down");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
@@ -141,8 +143,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
             output = new FileOutputStream(file);
             copy(input, output);
         }catch(IOException ex){
-            Logger.log("An error occurred while copying default file: " + '"' + filename + '"' + " to " + '"' + file.getName() + '"', LogLevel.INFO);
-            Logger.log(ex, LogLevel.INFO);
+            Logger.err("An error occurred while copying default file: " + '"' + filename + '"' + " to " + '"' + file.getName() + '"');
+            Logger.err(ex);
         }finally{
             try{
                 input.close();

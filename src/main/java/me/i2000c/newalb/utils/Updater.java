@@ -1,14 +1,12 @@
 package me.i2000c.newalb.utils;
 
-import me.i2000c.newalb.utils.logger.Logger;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import me.i2000c.newalb.utils.logger.LogLevel;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 
@@ -38,8 +36,9 @@ public class Updater implements Listener{
                     Logger.log("&aYou are using the latest version");
                     update = false;
                 }
-            }catch (Exception ex){
-                Logger.log("&cError while checking update", LogLevel.ERROR);
+            }catch(Exception ex){
+                Logger.err("&cAn error while checking update:");
+                Logger.err(ex);
             }
         }      
     }

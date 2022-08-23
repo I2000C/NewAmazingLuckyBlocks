@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityTowerReward;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
@@ -195,7 +194,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
                 }
             }
         }catch(Exception ex){
-            Logger.log("An error occurred while excuting outcome " + this.ID, LogLevel.ERROR);
+            Logger.err("An error occurred while excuting outcome " + this.ID);
             ex.printStackTrace();
         }
 //</editor-fold>
@@ -227,7 +226,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
                         }
                         this.rewardList.add(reward);
                     }catch(Throwable ex){
-                        Logger.log("There has been an error while loading outcome: " + fullPath + " in pack " + pack.getPackname(), LogLevel.ERROR);
+                        Logger.err("There has been an error while loading outcome: " + fullPath + " in pack " + pack.getPackname());
                         ex.printStackTrace();
                     }
                 }
@@ -242,7 +241,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
                 }
             }
         }else{
-            Logger.log("Outcome " + this.name + " doesn't have any rewards", LogLevel.INFO);
+            Logger.warn("Outcome " + this.name + " doesn't have any rewards");
         }
 //</editor-fold>
     }

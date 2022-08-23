@@ -3,7 +3,7 @@ package me.i2000c.newalb.listeners;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.LocationManager;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.WorldConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

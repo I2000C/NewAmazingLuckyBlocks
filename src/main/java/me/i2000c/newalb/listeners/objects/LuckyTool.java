@@ -6,7 +6,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

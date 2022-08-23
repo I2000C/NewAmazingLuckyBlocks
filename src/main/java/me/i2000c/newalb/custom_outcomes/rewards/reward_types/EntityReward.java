@@ -7,8 +7,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.Equipment;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
@@ -235,11 +234,10 @@ public class EntityReward extends Reward{
                                 Texture texture = new Texture(textureID);
                                 builder.withTexture(texture);
                             }catch(InvalidTextureException ex){
-                                Logger.log("Item at " + fullPath + " contains an invalid HeadTexture");
+                                Logger.err("Item at " + fullPath + " contains an invalid HeadTexture");
                             }catch(URLTextureException ex){
-                                Logger.log("Couldn't load texture of item at " + fullPath + ":",
-                                        LogLevel.ERROR);
-                                Logger.log(ex, LogLevel.ERROR);
+                                Logger.err("Couldn't load texture of item at " + fullPath + ":");
+                                Logger.err(ex);
                             }catch(TextureException ex){}
                         }
                         
@@ -266,7 +264,8 @@ public class EntityReward extends Reward{
         try{
             this.lastSpawnedEntity = target.getWorld().spawnEntity(target, this.type);
         }catch(Exception ex){
-            Logger.log("Entity " + this.type.name() + " couldn't be spawned", LogLevel.INFO);
+            Logger.err("Entity " + this.type.name() + " couldn't be spawned due to:");
+            Logger.err(ex);
             return;
         }
         

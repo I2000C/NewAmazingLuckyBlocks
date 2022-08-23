@@ -7,7 +7,7 @@ import java.util.Map;
 import me.i2000c.newalb.config.ReadWriteConfig;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.utils.WorldConfig;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Bukkit;

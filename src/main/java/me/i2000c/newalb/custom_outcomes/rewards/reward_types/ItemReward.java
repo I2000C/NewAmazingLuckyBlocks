@@ -9,8 +9,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItemManager;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
@@ -168,12 +167,10 @@ public class ItemReward extends Reward{
                 Texture texture = new Texture(textureID);
                 builder.withTexture(texture);
             }catch(InvalidTextureException ex){
-                Logger.log("ItemReward at \"" + path + "\" contains an invalid HeadTexture", 
-                            LogLevel.WARN);
+                Logger.err("ItemReward at \"" + path + "\" contains an invalid HeadTexture");
             }catch(URLTextureException ex){
-                Logger.log("An error occurred while loading texture for ItemReward at \"" + path + "\":",
-                            LogLevel.ERROR);
-                Logger.log(ex, LogLevel.ERROR);
+                Logger.err("An error occurred while loading texture for ItemReward at \"" + path + "\":");
+                Logger.err(ex);
             }catch(TextureException ex){}
         }
         
@@ -307,7 +304,7 @@ public class ItemReward extends Reward{
     private static ItemStack getItemFromPlayer(Player player, int slot){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(slot < 0){
-            Logger.log("Spawn slot (" + slot + ") cannot be negative in ItemReward", LogLevel.WARN);
+            Logger.warn("Spawn slot (" + slot + ") cannot be negative in ItemReward");
             return null;
         }
         
@@ -325,11 +322,11 @@ public class ItemReward extends Reward{
                     if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) >= 0){
                         return equipment.getItemInOffHand();
                     }else{
-                        Logger.log("Invalid slot (" + slot + "). There is no off-hand in Minecraft 1.8", LogLevel.WARN);
+                        Logger.warn("Invalid slot (" + slot + "). There is no off-hand in Minecraft 1.8");
                         return null;
                     }
                 default:
-                    Logger.log("Invalid slot (" + slot + "). It must be less than or equal to " + getMaxSlot(), LogLevel.WARN);
+                    Logger.warn("Invalid slot (" + slot + "). It must be less than or equal to " + getMaxSlot());
                     return null;
             }
         }
@@ -338,7 +335,7 @@ public class ItemReward extends Reward{
     private static void setItemToPlayer(Player player, ItemStack stack, int slot){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(slot < 0){
-            Logger.log("Spawn slot (" + slot + ") cannot be negative in ItemReward", LogLevel.WARN);
+            Logger.warn("Spawn slot (" + slot + ") cannot be negative in ItemReward");
             return;
         }
         
@@ -356,11 +353,11 @@ public class ItemReward extends Reward{
                     if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) >= 0){
                         equipment.setItemInOffHand(stack);
                     }else{
-                        Logger.log("Invalid slot (" + slot + "). There is no off-hand in Minecraft 1.8", LogLevel.WARN);
+                        Logger.log("Invalid slot (" + slot + "). There is no off-hand in Minecraft 1.8");
                     }
                     break;
                 default:
-                    Logger.log("Invalid slot (" + slot + "). It must be less than or equal to " + getMaxSlot(), LogLevel.WARN);
+                    Logger.log("Invalid slot (" + slot + "). It must be less than or equal to " + getMaxSlot());
             }
         }
 //</editor-fold>

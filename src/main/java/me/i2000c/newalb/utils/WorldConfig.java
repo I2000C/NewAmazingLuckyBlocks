@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.config.ReadWriteConfig;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -91,7 +89,7 @@ public class WorldConfig extends ReadWriteConfig{
                             WORLDS.put(splitted[0], false);
                         }
                     }catch(Exception ex){
-                        Logger.log("Couldn't load world \"" + worldName + "\" (incorrect format)", LogLevel.WARN);
+                        Logger.warn("Couldn't load world \"" + worldName + "\" (incorrect format)");
                     }
                 }
                 );
@@ -142,14 +140,14 @@ public class WorldConfig extends ReadWriteConfig{
         //<editor-fold defaultstate="collapsed" desc="Code">
         String prefix = NewAmazingLuckyBlocks.getInstance().prefix;
         
-        String line1 = LangConfig.getMessages().getString("World-loading.line1").replaceAll("%prefix%", "");
-        String line2 = LangConfig.getMessages().getString("World-loading.line2").replaceAll("%prefix%", "");
-        String line3 = LangConfig.getMessages().getString("World-loading.line3").replaceAll("%prefix%", "");
-        String line4 = LangConfig.getMessages().getString("World-loading.line4").replaceAll("%prefix%", "");
-        String line5 = LangConfig.getMessages().getString("World-loading.line5").replaceAll("%prefix%", "");
-        String line6 = LangConfig.getMessages().getString("World-loading.line6").replaceAll("%prefix%", "");
-        String line7 = LangConfig.getMessages().getString("World-loading.line7").replaceAll("%prefix%", "");
-        String line8 = LangConfig.getMessages().getString("World-loading.line8").replaceAll("%prefix%", "");
+        String line1 = LangConfig.getMessages().getString("World-loading.line1").replace("%prefix%", "");
+        String line2 = LangConfig.getMessages().getString("World-loading.line2").replace("%prefix%", "");
+        String line3 = LangConfig.getMessages().getString("World-loading.line3").replace("%prefix%", "");
+        String line4 = LangConfig.getMessages().getString("World-loading.line4").replace("%prefix%", "");
+        String line5 = LangConfig.getMessages().getString("World-loading.line5").replace("%prefix%", "");
+        String line6 = LangConfig.getMessages().getString("World-loading.line6").replace("%prefix%", "");
+        String line7 = LangConfig.getMessages().getString("World-loading.line7").replace("%prefix%", "");
+        String line8 = LangConfig.getMessages().getString("World-loading.line8").replace("%prefix%", "");
         
         // Update and load worlds
         updateWorlds(true);
@@ -159,7 +157,7 @@ public class WorldConfig extends ReadWriteConfig{
             Logger.log(line3);
             //Logger.log(line4);
             Logger.log(line5);
-            Logger.log("NewAmazingLuckyBlocks has loaded 0 worlds", LogLevel.WARN);
+            Logger.warn("NewAmazingLuckyBlocks has loaded 0 worlds");
             Logger.log(line6);
         }else{
             Logger.log(line7 + " &d" + WORLDS.size() + " " + line8 + "&r");

@@ -6,8 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -63,7 +62,7 @@ public class TextureManager{
             
             update = null;
         }catch(Exception ex){
-            Logger.log("An error ocurred while enabling TextureManager:", LogLevel.ERROR);
+            Logger.err("An error ocurred while enabling TextureManager:");
             ex.printStackTrace();
         }        
     }

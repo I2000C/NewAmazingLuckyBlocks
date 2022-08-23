@@ -17,8 +17,7 @@ import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -101,7 +100,7 @@ public class FilePicker extends Editor<File>{
                 openFileMenu(player, rootPath.getAbsolutePath(), currentPath.getAbsolutePath());
             }
         }catch(NullPointerException ex){
-            Logger.log("File: \"" + currentPath + "\" doesn't have parent (Maybe it is the root)", LogLevel.WARN);
+            Logger.warn("File: \"" + currentPath + "\" doesn't have parent (Maybe it is the root)");
         }
 //</editor-fold>
     }

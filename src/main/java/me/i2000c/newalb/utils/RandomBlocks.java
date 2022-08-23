@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils2.ActionBarUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

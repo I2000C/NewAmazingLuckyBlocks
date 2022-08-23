@@ -1,16 +1,23 @@
-package me.i2000c.newalb.utils.logger;
+package me.i2000c.newalb.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Logger{
+    private static String pluginPrefix;
+    private static boolean coloredLogger;
+    
+    public static void initializeLogger(String pluginPrefix, boolean coloredLogger){
+        Logger.pluginPrefix = pluginPrefix;
+        Logger.coloredLogger = coloredLogger;
+    }
+    
+    // String color and deColor
     public static String color(String str){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(str == null){
@@ -33,6 +40,7 @@ public class Logger{
         }
 //</editor-fold>
     }
+    // List color and deColor
     public static String deColor(String str){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(str == null){
@@ -56,6 +64,7 @@ public class Logger{
         }
 //</editor-fold>
     }
+    // String stripColor (Remove color codes)
     public static String stripColor(String str){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(str == null){
@@ -66,8 +75,7 @@ public class Logger{
 //</editor-fold>
     }
     
-    private static final NewAmazingLuckyBlocks PLUGIN = NewAmazingLuckyBlocks.getInstance();
-    
+    // Titles
     public static void sendTitle(Object titleObject, Object subtitleObject, Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
         String title = titleObject.toString();
@@ -89,11 +97,12 @@ public class Logger{
 //</editor-fold>
     }
     
+    // Log and messages
     public static void log(Object object, boolean withPrefix){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String prefix = withPrefix ? PLUGIN.prefix + " " : "";
+        String prefix = withPrefix ? pluginPrefix + " " : "";
         
-        if(ConfigManager.getConfig().getBoolean("ColoredLogger")){
+        if(coloredLogger){
             Bukkit.getConsoleSender().sendMessage(Logger.color(prefix + object));
         }else{
             Bukkit.getConsoleSender().sendMessage(ChatColor.stripColor(Logger.color(prefix + object)));
@@ -105,50 +114,44 @@ public class Logger{
         log(object, true);
 //</editor-fold>
     }
-    public static void log(Object object, LogLevel level, boolean withPrefix){
+    
+    public static void warn(Object object, boolean withPrefix){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String prefix = withPrefix ? PLUGIN.prefix + " " : "";
-        
-        switch(level){
-            case INFO:
-                log(object, withPrefix);
-                break;
-            case WARN:
-                Bukkit.getLogger().log(Level.WARNING, ChatColor.stripColor(Logger.color(prefix + object)));
-                break;
-            case ERROR:
-                Bukkit.getLogger().log(Level.SEVERE, ChatColor.stripColor(Logger.color(prefix + object)));
-                break;
-        }
+        String prefix = withPrefix ? pluginPrefix + " " : "";
+        Bukkit.getLogger().log(Level.WARNING, ChatColor.stripColor(Logger.color(prefix + object)));
 //</editor-fold>
     }
-    public static void log(Object object, LogLevel level){
+    public static void warn(Object object){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        log(object, level, true);
+        warn(object, true);
 //</editor-fold>
     }
     
+    public static void err(Object object, boolean withPrefix){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        String prefix = withPrefix ? pluginPrefix + " " : "";
+        Bukkit.getLogger().log(Level.SEVERE, ChatColor.stripColor(Logger.color(prefix + object)));
+//</editor-fold>
+    }
+    public static void err(Object object){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        err(object, true);
+//</editor-fold>
+    }
+        
     public static void sendMessage(Object object, CommandSender sender, boolean withPrefix){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(withPrefix){
-            sendMessage(object, sender);
+        String prefix = withPrefix ? pluginPrefix + " " : "";
+        if(coloredLogger || sender instanceof Player){
+            sender.sendMessage(Logger.color(prefix + object.toString()));
         }else{
-            if(ConfigManager.getConfig().getBoolean("ColoredLogger") || sender instanceof Player){
-                sender.sendMessage(Logger.color(object.toString()));
-            }else{
-                sender.sendMessage(ChatColor.stripColor(Logger.color(object.toString())));
-            }
+            sender.sendMessage(ChatColor.stripColor(Logger.color(prefix + object.toString())));
         }
 //</editor-fold>
-    }
-    
+    }    
     public static void sendMessage(Object object, CommandSender sender){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(ConfigManager.getConfig().getBoolean("ColoredLogger") || sender instanceof Player){
-            sender.sendMessage(Logger.color(PLUGIN.prefix + " " + object.toString()));
-        }else{
-            sender.sendMessage(ChatColor.stripColor(Logger.color(PLUGIN.prefix + " " + object.toString())));
-        }
+        sendMessage(object, sender, true);
 //</editor-fold>
     }
     
@@ -160,13 +163,20 @@ public class Logger{
         Logger.log(object);
 //</editor-fold>
     }
-    
-    public static void logAndMessage(Object object, CommandSender sender, LogLevel level){
+    public static void warnAndMessage(Object object, CommandSender sender){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(sender instanceof Player){
             Logger.sendMessage(object, sender);
         }
-        Logger.log(object, level);
+        Logger.warn(object);
+//</editor-fold>
+    }
+    public static void errAndMessage(Object object, CommandSender sender){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(sender instanceof Player){
+            Logger.sendMessage(object, sender);
+        }
+        Logger.err(object);
 //</editor-fold>
     }
 }

@@ -7,8 +7,7 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -69,7 +68,7 @@ public class PotionWand extends SpecialItem{
         if(weightSum == 0){
             r = 0;
         }else if(weightSum < 0){
-            Logger.log("&cTotal probability must be &a>0 in potionWandEffects", LogLevel.WARN);
+            Logger.warn("&cTotal probability must be &a>0 in potionWandEffects");
             return;
         }else{
             r = new Random().nextInt(weightSum);

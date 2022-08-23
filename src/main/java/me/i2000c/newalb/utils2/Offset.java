@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import me.i2000c.newalb.custom_outcomes.rewards.Displayable;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -92,24 +91,24 @@ public class Offset implements ConfigurationSerializable, Displayable, Cloneable
         try{
             offsetX = Range.fromString(map.get("offsetX").toString());
         }catch(IllegalArgumentException ex){
-            Logger.log("Invalid offset: " + map.get("offsetX").toString(), LogLevel.INFO);
-            Logger.log("It will be converted to '0'", LogLevel.INFO);
+            Logger.warn("Invalid offset: " + map.get("offsetX").toString());
+            Logger.warn("It will be converted to '0'");
             offsetX = new Range();
         }
         
         try{
             offsetY = Range.fromString(map.get("offsetY").toString());
         }catch(IllegalArgumentException ex){
-            Logger.log("Invalid offset: " + map.get("offsetY").toString(), LogLevel.INFO);
-            Logger.log("It will be converted to '0'", LogLevel.INFO);
+            Logger.err("Invalid offset: " + map.get("offsetY").toString());
+            Logger.err("It will be converted to '0'");
             offsetY = new Range();
         }
         
         try{
             offsetZ = Range.fromString(map.get("offsetZ").toString());
         }catch(IllegalArgumentException ex){
-            Logger.log("Invalid offset: " + map.get("offsetZ").toString(), LogLevel.INFO);
-            Logger.log("It will be converted to '0'", LogLevel.INFO);
+            Logger.err("Invalid offset: " + map.get("offsetZ").toString());
+            Logger.err("It will be converted to '0'");
             offsetZ = new Range();
         }
         

@@ -21,11 +21,10 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.LocationManager;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.RandomBlocks;
 import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils.WorldMenu;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
@@ -346,6 +345,10 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         LocationManager.saveLocations();
 
         RewardListMenu.testRewardsPlayerList.clear();
+        
+        plugin.prefix = LangConfig.getMessages().getString("InGamePrefix");
+        boolean coloredLogger = ConfigManager.getConfig().getBoolean("ColoredLogger");
+        Logger.initializeLogger(plugin.prefix, coloredLogger);
 
         String reload1 = LangConfig.getMessages().getString("Reload.line1");
         String reload2 = LangConfig.getMessages().getString("Reload.line2");
@@ -353,8 +356,6 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         Logger.sendMessage(reload1, sender);
         Logger.sendMessage(reload2, sender);
         Logger.sendMessage(reload3, sender);
-
-        plugin.prefix = LangConfig.getMessages().getString("InGamePrefix");
         return true;
 //</editor-fold>
     }
@@ -688,7 +689,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return true;
         }catch(Exception ex){
             Logger.sendMessage("&cAn error occurred. More info in the Console", sender);
-            Logger.log("An error occurred:", LogLevel.INFO);
+            Logger.err("An error occurred:");
             ex.printStackTrace();
             return false;
         }
@@ -741,7 +742,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 Logger.sendMessage("&cYour clipboard is empty", sender);
             }else{
                 Logger.sendMessage("&cAn error occurred. More info in the Console", sender);
-                Logger.log("An error occurred:", LogLevel.INFO);
+                Logger.err("An error occurred:");
                 ex.printStackTrace();
             }                
             return false;

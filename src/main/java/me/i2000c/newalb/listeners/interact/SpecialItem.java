@@ -9,7 +9,7 @@ import java.util.UUID;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

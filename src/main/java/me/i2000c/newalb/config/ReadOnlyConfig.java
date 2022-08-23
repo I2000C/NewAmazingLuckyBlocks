@@ -9,8 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -75,8 +74,8 @@ public abstract class ReadOnlyConfig{
         try{
             config.save(configFile);
         }catch(Exception ex){
-            Logger.log("An error occurred while saving configuration in file \"" + configFile.getAbsolutePath() + "\"", LogLevel.ERROR);
-            Logger.log(ex, LogLevel.ERROR);
+            Logger.err("An error occurred while saving configuration in file \"" + configFile.getAbsolutePath() + "\"");
+            Logger.err(ex);
         }
 //</editor-fold>
     }
@@ -116,7 +115,7 @@ public abstract class ReadOnlyConfig{
             Path bakFilePath = Paths.get(bakFile.getAbsolutePath());
             Files.move(configFilePath, bakFilePath, StandardCopyOption.REPLACE_EXISTING);
         }catch(IOException ex){
-            Logger.log("Couldn't create backup file of " + configFile.getName(), LogLevel.ERROR);
+            Logger.err("Couldn't create backup file of " + configFile.getName());
             return false;
         }
         
@@ -157,8 +156,8 @@ public abstract class ReadOnlyConfig{
             saveConfig();
             return true;
         }catch(Exception ex){
-            Logger.log("An error occurred while updating configuration in file \"" + configFile.getAbsolutePath() + "\"", LogLevel.ERROR);
-            Logger.log(ex, LogLevel.ERROR);
+            Logger.err("An error occurred while updating configuration in file \"" + configFile.getAbsolutePath() + "\"");
+            Logger.err(ex);
             return false;
         }
 //</editor-fold>
@@ -175,10 +174,10 @@ public abstract class ReadOnlyConfig{
                 output.write(buffer, 0, bytesReaded);
             }
         }catch(Exception ex){
-            Logger.log(String.format("An error occurred while copying resource %s to %s",
-                    resourceName, configFile.getAbsolutePath()), LogLevel.ERROR);
-            Logger.log(ex, LogLevel.ERROR);
-            Logger.log("Plugin is going to shutdown", LogLevel.WARN);
+            Logger.err(String.format("An error occurred while copying resource %s to %s",
+                    resourceName, configFile.getAbsolutePath()));
+            Logger.err(ex);
+            Logger.warn("Plugin is going to shutdown");
             Bukkit.getPluginManager().disablePlugin(plugin);
             throw new Error(ex);
         }

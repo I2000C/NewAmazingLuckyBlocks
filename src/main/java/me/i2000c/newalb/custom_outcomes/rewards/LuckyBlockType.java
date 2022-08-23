@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
@@ -233,13 +232,13 @@ public class LuckyBlockType implements Displayable, Executable{
                 type.luckyBlockItem = TextureManager.getItemSkullStack();
                 TextureManager.setTexture(type.luckyBlockItem, type.texture);
             }catch(InvalidTextureException ex){
-                Logger.log(String.format("Invalid texture for LuckyBlock type \"%s\"", 
-                        type.typeName), LogLevel.INFO);
+                Logger.err(String.format("Invalid texture for LuckyBlock type \"%s\"", 
+                        type.typeName));
                 return null;
             }catch(URLTextureException ex){
-                Logger.log(String.format("An error occured while loading texture for LuckyBlock type \"%s\":", 
-                        type.typeName), LogLevel.ERROR);
-                Logger.log(ex, LogLevel.ERROR);
+                Logger.err(String.format("An error occured while loading texture for LuckyBlock type \"%s\":", 
+                        type.typeName));
+                Logger.err(ex);
                 return null;
             }catch(TextureException ex){}
         }else{
@@ -322,11 +321,11 @@ public class LuckyBlockType implements Displayable, Executable{
             }            
         }
         if(type.packs.isEmpty()){
-            Logger.log(String.format("LuckyBlockType \"%s\" doesn't contain any valid outcome pack", 
-                    type.typeName), LogLevel.INFO);
+            Logger.warn(String.format("LuckyBlockType \"%s\" doesn't contain any valid outcome pack", 
+                    type.typeName));
         }else if(type.totalProbability <= 0){
-            Logger.log(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
-                    type.typeName), LogLevel.INFO);
+            Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
+                    type.typeName));
         }
         
         type.data = new TypeData(type.luckyBlockItem);
@@ -410,8 +409,8 @@ public class LuckyBlockType implements Displayable, Executable{
     public void execute(Player player, Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(totalProbability <= 0){
-            Logger.log(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
-                    typeName), LogLevel.INFO);
+            Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
+                    typeName));
         }else{
             Random r = new Random();
             int randomNumber = r.nextInt(totalProbability);

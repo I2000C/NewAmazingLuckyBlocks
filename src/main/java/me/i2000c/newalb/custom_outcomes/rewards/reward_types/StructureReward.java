@@ -6,8 +6,7 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils.logger.LogLevel;
-import me.i2000c.newalb.utils.logger.Logger;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Schematic;
 import org.bukkit.Location;
@@ -102,13 +101,13 @@ public class StructureReward extends Reward{
     @Override
     public void execute(Player player, Location location){
         if(NewAmazingLuckyBlocks.getWorldEditPlugin() == null){
-            Logger.log("You cannot execute Structure Rewards unless you have installed WorldEdit", LogLevel.INFO);
+            Logger.warn("You cannot execute Structure Rewards unless you have installed WorldEdit");
             return;
         }
         
         File schematicFile = new File(schematicsFolder, this.filename);
         if(!schematicFile.exists()){
-            Logger.log("Error: file \"" + this.filename + "\" doesn't exist", LogLevel.INFO);
+            Logger.err("Error: file \"" + this.filename + "\" doesn't exist");
             return;
         }
         try{
@@ -122,7 +121,7 @@ public class StructureReward extends Reward{
             }            
             schematic.pasteAt(location, replaceBlocks, placeAirBlocks);
         }catch(Exception ex){
-            Logger.log("An error occurred while executing structure reward " + this.filename + ":", LogLevel.INFO);
+            Logger.err("An error occurred while executing structure reward " + this.filename + ":");
             ex.printStackTrace();
         }
     }
