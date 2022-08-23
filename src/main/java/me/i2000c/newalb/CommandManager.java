@@ -13,13 +13,13 @@ import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapManager;
-import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItemManager;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
+import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.RandomBlocks;
 import me.i2000c.newalb.utils.WorldConfig;
@@ -333,7 +333,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         GUIManager.setCurrentMenu(null);
 
         ConfigManager.getManager().loadConfig();
-        LangConfig.reloadMessages();
+        LangConfig.loadConfig();
 
         WorldConfig.reloadAll();
 

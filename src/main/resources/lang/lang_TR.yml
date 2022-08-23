@@ -1,0 +1,147 @@
+# Version of the config. Don't modify it
+ConfigVersion: 0
+
+Wands:
+  RegenWand:
+    name: "&dRejenerasyon çubuğu &7- &6Sağ tıklayın"
+  FireWand:
+    name: "&cEjderha nefes değnek &7- &6Sağ tıklayın"
+  InvisibilityWand:
+    name: "&8Görünmezlik değnek &7- &6Sağ tıklayın"
+  TntWand:
+    name: "&4TNT değnek &7- &6Sağ tıklayın"
+  SlimeWand:
+    name: "&2Balçık değnek &7- &6Sağ tıklayın"
+  LightningWand:
+    name: "&eŞimşek değnek &7- &6Sağ tıklayın"
+  ShieldWand:
+    name: "&3Kalkan değnek &7- &6Sağ tıklayın"
+  PotionWand:
+    name: "&1İksir değnek &7- &6Sağ tıklayın"
+  FrostPathWand:
+    name: "&bDon yolu değnek &7- &6Sağ tıklayın"
+
+Objects:
+  DarkHole:
+    name: "&8Kara delik &7- &6Sağ tıklayın"
+  MiniVolcano:
+    name: "&cKüçük volkan &7- &6Sağ tıklayın"
+  IceBow:
+    name: "&bBuz yayı &7- &6Sağ tıklayın"
+  AutoBow:
+    name: "&aOtomatik Yay &7- &6Sağ tıklayın"
+  MultiBow:
+    name: "&dÇoklu Yay &7- &6Sağ tıklayın"
+  ExplosiveBow:
+    name: "&4Patlayıcı Yay &7- &6Sağ tıklayın"
+  HomingBow:
+    name: "&3Hedef Yay &7- &6Sağ tıklayın"
+  HookBow:
+    name: '&5Hook Bow &7- &6Right Click'
+  PlayerTracker:
+    name: "&eOyuncu İzleyici &7- &6Sağ tıklayın"
+    message1: "&aOyuncu &6%player% &adÄ±r-dir &b%distance% &asenden bloklar"
+    message2: "&aVarlık &e%entity% &adir-dir &b%distance% &asenden bloklar"
+    message3: "&cSana yakın herhangi bir varlık yok"
+  EndermanSoup:
+    name: "&dEnderman Çorbası &7- &6Sağ tıklayın"
+  HotPotato:
+    name: '&cHot Potato &7- &6Right Click'
+  LuckyTool:
+    name: '&6LuckyTool &7- &3Right Click on a &eLuckyBlock'
+    need: '&cYou need the &6LuckyTool &cin order to break that &eLuckyBlock'
+    disabled: '&cLuckyTool is disabled'
+
+Cooldown-message: "&cBu değnek/nesneyi %time% saniye boyunca kullanamazsınız"
+need-permission: "&cBu değnek/nesneyi kullanma izniniz yok"
+cannot-rename: "&cŞanslı blokları yeniden adlandıramazsınız"
+
+Helpmenu:
+  line1: '%prefix%'
+  line2: ''
+  line3: "&c/alb randomblock <radx> <rady> <radz> <blocks> <floating_blocks: true/false/force> [player] &7- Rastgele şanslı bloklar yerleştirir"
+  line4: "&c/alb reload &7- Yapılandırma ve lang dosyalarını yeniden yükleyin"
+  line5: "&c/alb help <page> &7- Yardım sayfasını açın"
+  line6: "&c/alb &7- Eklenti adını ve sürümünü göster"
+  line7: '&7--------&cNewAmazingHelp <sayfa 1>&7--------'
+Helpmenu2:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb give <wands/objects/luckyblocks> [amount] [player]'
+  line4: "&7     - EkSana tüm değnekleri verir (miktar gerekli değil)"
+  line5: "&7     - Size tüm nesneleri verir (miktar isteğe bağlıdır)"
+  line6: "&7     - Size şanslı bloklar verir (miktar isteğe bağlıdır)"
+  line7: "&c/alb menu &7- Özel sonuçlar menüsünü aç"
+  line8: "&c/alb return &7- Bir önceki menüye dön"
+  line9: '&7--------&cNewAmazingHelp <sayfa 2>&7--------'
+Helpmenu3:
+  line1: '%prefix%'
+  line2: ''
+  line3: "&c/alb clear &7- Tüm LuckyBlocks'ları tüm dünyalardan kaldır"
+  line4: "&c/alb clear <world> &7- Bir dünyadan tüm LuckyBlocks'ları kaldırın"
+  line5: "&c/alb randomblock stop &7-Rastgele şanslı bloklar yerleştirmeyi bırakın"
+  line6: '&7--------&cNewAmazingHelp <sayfa 3>&7--------'
+Helpmenu4:
+  line1: '%prefix%'
+  line2: ''
+  line3: "&c/alb worlds &7- Dünya menüsünü açar"
+  line4: "&c/alb worlds list &7- Dünyalar listesini gösterir"
+  line5: '&c/alb worlds set <world> <type>'
+  line6: "   &7- Dünyayı 'dünya' türünü 'tür' olarak ayarlar"
+  line7: '   &7- Valid types are: &e[enabled, disabled]'
+  line8: '&7--------&cNewAmazingHelp <sayfa 4>&7--------'
+Helpmenu5:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb loadSchematic <schematic_name> &7- WorldEdit panonuza bir'
+  line4: "&7şematik dosya yükler"
+  line5: "&c/alb saveSchematic <schematic_name> &7- WorldEdit panonuzu şematik"
+  line6: '&bir dosyaya kaydeder7'
+  line7: "&c/alb removeSchematic <schematic_name> &7- Bir şematik dosyayı kaldırır"
+  line8: '&7--------&cNewAmazingHelp <sayfa 5>&7--------'
+
+World-loading:
+  line1: "&cYapılandırmada geçersiz dünya:"
+  line2: '******************************'
+  line3: "&cYapılandırmadaki dünyalar listesi boş"
+  line4: "&cHataları önlemek için, yapılandırmaya dünya 'dünya' eklendi"
+  line5: "&3Yapılandırmadaki Dünyalar listesine bazı dünyalar ekleyin ve ardından /alb reload kullanın"
+  line6: '******************************'
+  line7: "&eNewAmazingLuckyBlocks yüklendi:"
+  line8: "&bdünya(lar)"
+World-management1:
+  line1: "&b=== &6dünyalar listesi &b==="
+  line2: ''
+  worldName: '&3%world%'
+  enabledWorld: '  &aENABLED WORLD'
+  disabledWorld: '  &cDISABLED WORLD'
+World-management2:
+  line1: "&6Dünya &3%world%&6 olarak belirlendi:"
+  line2: "&cGeçersiz dünya türü: &b%type%"
+  line3: "&3Geçerli dünya türleri: &a[enabled, disabled]"
+  line4: "&cWorld &b%world%&c mevcut değil"
+MenuConfirmation:
+  line1: "&cBir önceki menü zaten açılmıştı"
+  line2: "&cBu menüyü açmak istiyorsanız, '&b/alb return' kullanın"
+  line3: "Yeni bir menü açmak istiyorsanız tekrar &b/alb menu&c yi kullanın"
+NoPermission: '&cYeterince izniniz yok'
+LoadingWands: "&aYükleme çubukları..."
+LoadingObjects: "&bNesneler yükleniyor..."
+LoadingBlocks: "&6Şanslı bloklar yükleniyor..."
+PlacingBlocks: "&dRastgele şanslı bloklar yerleştirme..."
+LoadingLuckyTool: '&eLoading LuckyTool...'
+Loading:
+  line1: "&aYükleniyor &6NewAmazingLuckyBlocks&a..."
+  line2: "&aYÃ¼kleme dili..."
+  line3: "&aYükleme çubukları..."
+Enable:
+  line1: "&a[&6NewAmazingLuckyBlocks &b%version%&a] şimdi etkin"
+Disable:
+  line1: "&cşimdi devre dışı"
+Reload:
+  line1: "&aYeniden yükleme dili..."
+  line2: "&aYapılandırma yeniden yükleniyor..."
+  line3: "&cYeniden yükleme tamamlandı"
+HelpMessage: "&cYardım için &7/alb help&c yazın"
+UnknownCommand: "&cBilinmeyen komut. Eklenti bilgisi için &7/alb&c yazın"
+InGamePrefix: '&r[&6NewAmazingLuckyBlocks&r]'

@@ -89,28 +89,42 @@ public class Logger{
 //</editor-fold>
     }
     
+    public static void log(Object object, boolean withPrefix){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        String prefix = withPrefix ? PLUGIN.prefix + " " : "";
+        
+        if(ConfigManager.getConfig().getBoolean("ColoredLogger")){
+            Bukkit.getConsoleSender().sendMessage(Logger.color(prefix + object));
+        }else{
+            Bukkit.getConsoleSender().sendMessage(ChatColor.stripColor(Logger.color(prefix + object)));
+        }
+//</editor-fold>
+    }
     public static void log(Object object){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(ConfigManager.getConfig().getBoolean("ColoredLogger")){
-            Bukkit.getConsoleSender().sendMessage(Logger.color(PLUGIN.prefix + " " + object));
-        }else{
-            Bukkit.getConsoleSender().sendMessage(ChatColor.stripColor(Logger.color(PLUGIN.prefix + " " + object)));
+        log(object, true);
+//</editor-fold>
+    }
+    public static void log(Object object, LogLevel level, boolean withPrefix){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        String prefix = withPrefix ? PLUGIN.prefix + " " : "";
+        
+        switch(level){
+            case INFO:
+                log(object, withPrefix);
+                break;
+            case WARN:
+                Bukkit.getLogger().log(Level.WARNING, ChatColor.stripColor(Logger.color(prefix + object)));
+                break;
+            case ERROR:
+                Bukkit.getLogger().log(Level.SEVERE, ChatColor.stripColor(Logger.color(prefix + object)));
+                break;
         }
 //</editor-fold>
     }
     public static void log(Object object, LogLevel level){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        switch(level){
-            case INFO:
-                log(object);
-                break;
-            case WARN:
-                Bukkit.getLogger().log(Level.WARNING, ChatColor.stripColor(Logger.color(PLUGIN.prefix + " " + object)));
-                break;
-            case ERROR:
-                Bukkit.getLogger().log(Level.SEVERE, ChatColor.stripColor(Logger.color(PLUGIN.prefix + " " + object)));
-                break;
-        }
+        log(object, level, true);
 //</editor-fold>
     }
     

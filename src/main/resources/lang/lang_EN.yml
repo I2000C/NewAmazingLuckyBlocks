@@ -1,0 +1,149 @@
+# Version of the config. Don't modify it
+ConfigVersion: 0
+
+Wands:
+  RegenWand:
+    name: '&dRegen wand &7- &6Right Click'
+  FireWand:
+    name: '&cFire wand &7- &6Right Click'
+  InvisibilityWand:
+    name: '&8Invisibility wand &7- &6Right Click'
+  TntWand:
+    name: '&4TNT wand &7- &6Right Click'
+  SlimeWand:
+    name: '&2Slime wand &7- &6Right Click'
+  LightningWand:
+    name: '&eLightning wand &7- &6Right Click'
+  ShieldWand:
+    name: '&3Shield wand &7- &6Right Click'
+  PotionWand:
+    name: '&1Potion wand &7- &6Right Click'
+  FrostPathWand:
+    name: '&bFrost Path Wand &7- &6Right Click'
+
+Objects:
+  DarkHole: 
+    name: '&8Dark Hole &7- &6Right Click'
+  MiniVolcano:
+    name: '&cMini Volcano &7- &6Right Click'
+  IceBow:
+    name: '&bIce Bow &7- &6Right Click'
+  AutoBow:
+    name: '&aAuto Bow &7- &6Right Click'
+  MultiBow:
+    name: '&dMulti Bow &7- &6Right Click'
+  ExplosiveBow:
+    name: '&4Explosive Bow &7- &6Right Click'
+  HomingBow:
+    name: '&3Homing Bow &7- &6Right Click'
+  HookBow:
+    name: '&5Hook Bow &7- &6Right Click'
+  PlayerTracker:
+    name: '&ePlayer Tracker &7- &6Right Click'
+    message1: '&aThe player &6%player% &ais &b%distance% &ablocks of you'
+    message2: '&aThe entity &e%entity% &ais &b%distance% &ablocks of you'
+    message3: '&cThere aren''t any entities near to you'
+  EndermanSoup:
+    name: '&dEnderman Soup &7- &6Right Click'
+  HotPotato:
+    name: '&cHot Potato &7- &6Right Click'
+  LuckyTool:
+    name: '&6LuckyTool &7- &3Right Click on a &eLuckyBlock'
+    need: '&cYou need the &6LuckyTool &cin order to break that &eLuckyBlock'
+    disabled: '&cLuckyTool is disabled'
+
+Cooldown-message: '&cYou cannot use this wand/object for %time% seconds'
+need-permission: '&cYou not have permission for using this wand/object'
+cannot-rename: '&cYou cannot rename luckyblocks'
+
+Helpmenu:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb randomblock <radx> <rady> <radz> <blocks> <floating_blocks: true/false/force>
+    [player] &7- Places random lucky blocks'
+  line4: '&c/alb reload &7- Reload config and lang files'
+  line5: '&c/alb help <page> &7- Open the help page'
+  line6: '&c/alb &7- Show plugin name and version'
+  line7: '&7--------&cNewAmazingHelp <page 1>&7--------'
+Helpmenu2:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb give <wands/objects/luckyblocks> [amount] [player]'
+  line4: '&7     - Gives you all the wands (amount not needed)'
+  line5: '&7     - Gives you all the objects (amount is opcional)'
+  line6: '&7     - Gives you luckyblocks (amount is opcional)'
+  line7: '&c/alb menu &7- Open custom outcomes menu'
+  line8: '&c/alb return &7- Return to the previous menu'
+  line9: '&7--------&cNewAmazingHelp <page 2>&7--------'
+Helpmenu3:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb clear &7- Removes all LuckyBlocks of all worlds'
+  line4: '&c/alb clear <world> &7- Removes all LuckyBlocks of the world &7world'
+  line5: '&c/alb randomblock stop &7-Stop placing random lucky blocks'
+  line6: '&7--------&cNewAmazingHelp <page 3>&7--------'
+Helpmenu4:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb worlds &7- Opens the world menu'
+  line4: '&c/alb worlds list &7- Shows the worlds list'
+  line5: '&c/alb worlds set <world> <type>'
+  line6: '   &7- Sets the world "world" to the type "type"'
+  line7: '   &7- Valid types are: &e[enabled, disabled]'
+  line8: '&7--------&cNewAmazingHelp <page 4>&7--------'
+Helpmenu5:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb loadSchematic <schematic_name> &7- Loads a schematic file'
+  line4: '&7into your WorldEdit clipboard'
+  line5: '&c/alb saveSchematic <schematic_name> &7- Saves your WorldEdit clipboard'
+  line6: '&7into a schematic file'
+  line7: '&c/alb removeSchematic <schematic_name> &7- Removes a schematic file'
+  line8: '&7--------&cNewAmazingHelp <page 5>&7--------'
+
+World-loading:
+  line1: '&cInvalid world in config:'
+  line2: '******************************'
+  line3: '&cWorlds-list in config is empty'
+  line4: "&cTo avoid errors, the world 'world' has been added to the config"
+  line5: '&3Add some worlds to the Worlds-list in config and then use &2/alb reload'
+  line6: '******************************'
+  line7: '&eNewAmazingLuckyBlocks has loaded:'
+  line8: '&bworld(s)'
+World-management1:
+  line1: '&b=== &6Worlds-list &b==='
+  line2: ''
+  worldName: '&3%world%'
+  enabledWorld: '  &aENABLED WORLD'
+  disabledWorld: '  &cDISABLED WORLD'
+World-management2:
+  line1: '&6Setted world &3%world% &6to:'
+  line2: '&cInvalid world type: &b%type%'
+  line3: '&3Valid world types are: &a[enabled, disabled]'
+  line4: "&cWorld &b%world% &cdoesn't exist"
+MenuConfirmation:
+  line1: '&cA previous menu was already opened'
+  line2: '&cIf you want to open that menu, use &b/alb return'
+  line3: '&cIf you want to open a new menu, use &b/alb menu &cagain'
+NoPermission: "&cYou don't have permissions enough"
+LoadingWands: '&aLoading wands...'
+LoadingObjects: '&bLoading objects...'
+LoadingBlocks: '&6Loading luckyblocks...'
+PlacingBlocks: '&dPlacing random lucky blocks...'
+LoadingLuckyTool: '&eLoading LuckyTool...'
+LoadingSpecialItem: '&5Loading special item...'
+Loading:
+  line1: "&aLoading &6NewAmazingLuckyBlocks&a..."
+  line2: "&aLoading lang..."
+  line3: "&aLoading wands..."
+Enable:
+  line1: "&a[&6NewAmazingLuckyBlocks &b%version%&a] is now enabled"
+Disable:
+  line1: "&cis now disabled"
+Reload:
+  line1: '&aReloading lang...'
+  line2: '&aReloading config...'
+  line3: '&cReload finished'
+HelpMessage: '&cType &7/alb help &cfor help'
+UnknownCommand: '&cUnknown command. Type &7/alb &cfor plugin info'
+InGamePrefix: '&r[&6NewAmazingLuckyBlocks&r]'

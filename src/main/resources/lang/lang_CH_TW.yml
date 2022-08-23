@@ -1,0 +1,149 @@
+# Version of the config. Don't modify it
+ConfigVersion: 0
+
+Wands:
+  RegenWand:
+    name: '&d再生魔仗 &7- &6拿在手上右鍵使用'
+  FireWand:
+    name: '&c火魔杖 &7- &6拿在手上右鍵使用'
+  InvisibilityWand:
+    name: '&8隱形魔杖 &7- &6拿在手上右鍵使用'
+  TntWand:
+    name: '&4炸彈魔杖 &7- &6拿在手上右鍵使用'
+  SlimeWand:
+    name: '&2史萊姆魔杖 &7- &6拿在手上右鍵使用'
+  LightningWand:
+    name: '&e閃電魔杖 &7- &6拿在手上右鍵使用'
+  ShieldWand:
+    name: '&3盾牌魔杖 &7- &6拿在手上右鍵使用'
+  PotionWand:
+    name: '&1藥水魔杖 &7- &6拿在手上右鍵使用'
+  FrostPathWand:
+    name: '&b冰魔杖 &7- &6拿在手上右鍵使用'
+
+Objects:
+  DarkHole:
+    name: '&8無視萬物 &7- &6拿在手上右鍵使用'
+  MiniVolcano:
+    name: '&c奇怪的東西 &7- &6拿在手上右鍵使用'
+  IceBow:
+    name: '&b冰霜弓 &7- &6地上會留下雪地'
+  AutoBow:
+    name: '&a自動弓 &7- &6按住右鍵會一直射'
+  MultiBow:
+    name: '&d散射弓 &7'
+  ExplosiveBow:
+    name: '&4爆炸弓 &7'
+  HomingBow:
+    name: '&3歸巢弓 &7- &6作用是啥還在找'
+  HookBow:
+    name: '&5Hook Bow &7- &6Right Click'
+  PlayerTracker:
+    name: '&e玩家指南針 &7- &6拿在手上右鍵使用'
+    message1: '&a玩家 &6%player% &a距離你 &b%distance% &a格方塊'
+    message2: '&aThe entity &e%entity% &ais &b%distance% &ablocks of you'
+    message3: '&cThere aren''t any entities near to you'
+  EndermanSoup:
+    name: '&d順移湯 &7- &6拿在手上右鍵使用可往前一小段距離'
+  HotPotato:
+    name: '&cHot Potato &7- &6Right Click'
+  LuckyTool:
+    name: '&6LuckyTool &7- &3拿在手上右鍵使用 on a &eLuckyBlock'
+    need: '&cYou need the &6LuckyTool &cin order to break that &eLuckyBlock'
+    disabled: '&cLuckyTool is disabled'
+
+Cooldown-message: '&c魔杖冷卻%time% 秒'
+need-permission: '&cYou not have permission for using this 魔杖/object'
+cannot-rename: '&cYou cannot rename luckyblocks'
+
+Helpmenu:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb randomblock <radx> <rady> <radz> <blocks> <floating_blocks: true/false/force>
+    [player] &7- Places random lucky blocks'
+  line4: '&c/alb reload &7- 重新加載配置和 lang 文件'
+  line5: '&c/alb help <page> &7- 打開幫助頁面'
+  line6: '&c/alb &7- 顯示插件名稱和版本'
+  line7: '&7--------&c幸運方塊幫助選單第1/5頁&7--------'
+Helpmenu2:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb give <wands/objects/luckyblock> [amount] [player]'
+  line4: '&7     - 給你所有的魔杖（不需要輸入數量）'
+  line5: '&7     - 給你所有的特殊物品（不需要輸入數量）'
+  line6: '&7     - 給你所有的幸運方塊（不需要輸入數量）'
+  line7: '&c/alb menu &7- 打開幸運方塊選單'
+  line8: '&c/alb return &7- 返回上一個選單'
+  line9: '&7--------&c幸運方塊幫助選單第2/5頁&7--------'
+Helpmenu3:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb clear &7- 从所有世界中移除所有的幸运块'
+  line4: '&c/alb clear <world> &7- 移除<世界名子>全部的幸運方塊'
+  line5: '&c/alb randomblock stop &7-停止放置隨機幸運方塊'
+  line6: '&7--------&c幸運方塊幫助選單第3/5頁&7--------'
+Helpmenu4:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb worlds &7- 打開世界選單'
+  line4: '&c/alb worlds list &7- 顯示世界列表'
+  line5: '&c/alb worlds set <world> <type>'
+  line6: '   &7- 設定世界 "world" 的類型 "type"'
+  line7: '   &7- 有效的類型為: &e[enabled, disabled]'
+  line8: '&7--------&c幸運方塊幫助選單第4/5頁&7--------'
+Helpmenu5:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb loadSchematic <schematic_name> &7- 加載一個原理圖文件'
+  line4: '&7進入你的 WorldEdit 剪貼板'
+  line5: '&c/alb saveSchematic <schematic_name> &7- 保存你的 WorldEdit 剪貼板'
+  line6: '&7into a schematic file'
+  line7: '&c/alb removeSchematic <schematic_name> &7- 刪除一個原理圖文件'
+  line8: '&7--------&c幸運方塊幫助選單第5/5頁&7--------'
+
+World-loading:
+  line1: '&c配置的世界無效:'
+  line2: '******************************'
+  line3: '&cWorlds-list 在配置中是空的'
+  line4: '&c為了避免錯誤，世界 ''world''已添加到配置中'
+  line5: '&3在配置中的 Worlds-list 中添加一些世界，然後使用 &2/alb reload'
+  line6: '******************************'
+  line7: '&e幸運方塊以加載:'
+  line8: '&bworld(s)'
+World-management1:
+  line1: '&b=== &6Worlds-list &b==='
+  line2: ''
+  worldName: '&3%world%'
+  enabledWorld: '  &a起用世界'
+  disabledWorld: '  &c禁用世界'
+World-management2:
+  line1: '&6設置世界 &3%world% &6to:'
+  line2: '&c無效的世界類型: &b%type%'
+  line3: '&3有效的世界類型是: &a[enabled, disabled] enable是啟用另一個是禁用'
+  line4: '&cWorld &b%world% &cdoesn''t exist'
+MenuConfirmation:
+  line1: '&c上一個菜單已經打開'
+  line2: '&c如果你想打開那個選單,請使用 &b/alb return'
+  line3: '&c如果你想打開一個新選單,請只用 &b/alb menu &cagain'
+NoPermission: '&c你沒有''足夠的權限請洽管理員'
+LoadingWands: '&a加載魔杖中...'
+LoadingObjects: '&b加載特殊物品中...'
+LoadingBlocks: '&6加載幸運方塊中...'
+PlacingBlocks: '&d放置隨機的幸運方塊中...'
+LoadingLuckyTool: '&e加載幸運方塊工具...'
+Loading:
+  line1: '&a加載 &6幸運方塊&a...'
+  line2: '&a加載語言中...'
+  line3: '&a加載魔杖...'
+Enable:
+  line1: '&a[&6幸運方塊 &b%版本%&a] 現已啟用'
+Disable:
+  line1: '&cis 現在被禁用'
+Reload:
+  line1: '&a正在重新加載語言...'
+  line2: '&a正在重新加載配置...'
+  line3: '&c重新加載完成'
+  line4: '&c插件由台灣人SmailDot所翻譯'
+HelpMessage: '&c輸入 &7/alb help &c尋求幫助'
+UnknownCommand: '&c未知的指令. 輸入 &7/alb &c獲取插件的訊息'
+InGamePrefix: '&r[&6幸運方塊&r]'

@@ -21,7 +21,7 @@ public abstract class ReadOnlyConfig{
     
     private final Plugin plugin;
     private final String resourceName;
-    private final File configFile;
+    private File configFile;
     private final boolean saveComments;
     private YamlConfigurationUTF8 config;
         
@@ -44,11 +44,14 @@ public abstract class ReadOnlyConfig{
         this.saveComments = false;        
     }
     
+    public final void setConfigFile(String filename){
+        this.configFile = new File(plugin.getDataFolder(), filename);
+    }
     public final File getConfigFile(){
         return this.configFile;
     }
     
-    public final FileConfiguration getBukkitConfig(){
+    public final YamlConfigurationUTF8 getBukkitConfig(){
         return this.config;
     }
     
@@ -163,6 +166,7 @@ public abstract class ReadOnlyConfig{
     
     private void copyResource(){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        configFile.getParentFile().mkdirs();
         try(InputStream input = plugin.getResource(resourceName);
                 OutputStream output = new FileOutputStream(configFile)){
             byte[] buffer = new byte[1024];

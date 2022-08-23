@@ -1,0 +1,149 @@
+# Version of the config. Don't modify it
+ConfigVersion: 0
+
+Wands:
+  RegenWand:
+    name: "&dVara de regeración &7- &6Click derecho"
+  FireWand:
+    name: '&cVara de fuego &7- &6Click derecho'
+  InvisibilityWand:
+    name: '&8Vara de invisibilidad &7- &6Click derecho'
+  TntWand:
+    name: '&4Vara TNT &7- &6Click derecho'
+  SlimeWand:
+    name: '&2Vara Slime &7- &6Click derecho'
+  LightningWand:
+    name: '&eVara del rayo &7- &6Click derecho'
+  ShieldWand:
+    name: "&3Vara de protección &7- &6Click derecho"
+  PotionWand:
+    name: "&1Vara poción &7- &6Click derecho"
+  FrostWand:
+    name: '&bVara del camino de hielo &7- &6Click derecho'
+
+Objects:
+  DarkHole:
+    name: '&8Agujero negro &7- &6Click derecho'
+  MiniVolcano:
+    name: "&cMini Volcán &7- &6Click derecho"
+  IceBow:
+    name: '&bArco de hielo &7- &6Click derecho'
+  AutoBow:
+    name: "&aArco automático &7- &6Click derecho"
+  MultiBow:
+    name: '&dMultiarco &7- &6Click derecho'
+  ExplosiveBow:
+    name: '&4Arco explosivo &7- &6Click derecho'
+  HomingBow:
+    name: '&3Arco teledirigido &7- &6Click derecho'
+  HookBow:
+    name: '&5Arco gancho &7- &6Click derecho'
+  PlayerTracker:
+    name: '&eRadar de jugadores &7- &6Click derecho'
+    message1: "&aEl jugador &6%player% &aestá a &b%distance% &abloques de ti"
+    message2: "&aLa entidad &e%entity% &aestá a &b%distance% &abloques de ti"
+    message3: '&cNo hay ninguna entidad cerca de ti'
+  EndermanSoup:
+    name: '&dSopa del Enderman &7- &6Click derecho'
+  HotPotato:
+    name: '&cPatata caliente &7- &6Click derecho'
+  LuckyTool:
+    name: '&6LuckyTool &7- &3Click derecho en un &eLuckyBlock'
+    need: '&cNecesitas la &6LuckyTool &cpara romper ese &eLuckyBlock'
+    disabled: "&cLa LuckyTool no está activada"
+
+Cooldown-message: '&cNo puedes usar esta vara/objeto por %time% segundos'
+need-permission: '&cNo tienes permiso para usar esta vara/objeto'
+cannot-rename: '&cNo puedes renombrar luckyblocks'
+
+Helpmenu:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb randomblock <radx> <rady> <radz> <blocks> <floating_blocks: true/false/force>
+    [player] &7- Coloca LuckyBlocks aleatorios'
+  line4: "&c/alb reload  &7-  Recarga los archivos de idioma y configuración"
+  line5: "&c/alb help <page> &7- Abre la página de ayuda"
+  line6: "&c/alb  &7-  Muestra el nombre del plugin y la versión"
+  line7: "&7--------&cNewAmazingHelp <página 1>&7--------"
+Helpmenu2:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb give <wands/objects/luckyblocks> [amount]'
+  line4: "&7     - Te proporciona todas las varas (el parámetro amount no es necesario)"
+  line5: "&7     - Te proporciona todos los objetos (el parámetro amount es opcional)"
+  line6: "&7     - Te proporciona bloques lucky (el parámetro amount es opcional)"
+  line7: "&c/alb menu &7- Abre el menú de los outcomes personalizados"
+  line8: "&c/alb return &7- Regresa al menú anterior"
+  line9: "&7--------&cNewAmazingHelp <página 2>&7--------"
+Helpmenu3:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb clear &7- Elimina todos los LuckyBlocks de todos los mundos'
+  line4: '&c/alb clear <world> &7- Elimina todos los LuckyBlocks del mundo &7world'
+  line5: "&c/alb randomblock stop &7-Detiene la generación de LuckyBlocks aleatorios"
+  line6: "&7--------&cNewAmazingHelp <página 3>&7--------"
+Helpmenu4:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb worlds &7- Abre el menu de mundos'
+  line4: '&c/alb worlds list &7- Muestra la lista de mundos'
+  line5: '&c/alb worlds set <world> <type>'
+  line6: '   &7- Configura el mundo "world" con el tipo "type"'
+  line7: "   &7- Tipos válidos: &e[enabled, disabled]"
+  line8: "&7--------&cNewAmazingHelp <página 4>&7--------"
+Helpmenu5:
+  line1: '%prefix%'
+  line2: ''
+  line3: '&c/alb loadSchematic <schematic_name> &7- Carga un archivo schematic'
+  line4: '&7en tu portapapeles de WorldEdit'
+  line5: '&c/alb saveSchematic <schematic_name> &7- Guarda tu portapapeles de WorldEdit'
+  line6: '&7en un archivo schematic'
+  line7: '&c/alb removeSchematic <schematic_name> &7- Elimina un archivo schematic'
+  line8: "&7--------&cNewAmazingHelp <página 5>&7--------"
+
+World-loading:
+  line1: "&cMundo inválido en la configuración:"
+  line2: '******************************'
+  line3: "&cLa lista de mundos en la configuracion esta vacía"
+  line4: "&cPara evitar errores, el mundo 'world' ha sido añadido"
+  line5: "&3Añade algunos mundos a la lista de mundos y después usa &2/alb reload"
+  line6: '******************************'
+  line7: '&eNewAmazingLuckyBlocks ha cargado:'
+  line8: '&bmundo(s)'
+World-management1:
+  line1: '&b=== &6Lista de mundos &b==='
+  line2: ''
+  worldName: '&3%world%'
+  enabledWorld: '  &aMUNDO HABILITADO'
+  disabledWorld: '  &cMUNDO DESHABILITADO'
+World-management2:
+  line1: '&6Se ha configurado el mundo &3%world% &6como:'
+  line2: "&cTipo de mundo inválido: &b%type%"
+  line3: "&3Los tipos válidos de mundo son: &a[enabled, disabled]"
+  line4: '&cEl mundo &b%world% &cno existe'
+MenuConfirmation:
+  line1: "&cYa se ha abierto un menú anterior"
+  line2: '&cSi quieres abrirlo, usa &b/alb return'
+  line3: "&cSi quieres abrir un nuevo menú, usa &b/alb menu &cde nuevo"
+NoPermission: '&cNo tienes suficientes permisos'
+LoadingWands: '&aCargando varas...'
+LoadingObjects: '&bCargando objetos...'
+LoadingBlocks: '&6Cargando luckyblocks...'
+PlacingBlocks: '&dColocando lucky blocks aleatoriamente...'
+LoadingLuckyTool: '&eCargando LuckyTool...'
+LoadingSpecialItem: '&5Loading special item...'
+Loading:
+  line1: '&aLoading &6NewAmazingLuckyBlocks&a...'
+  line2: '&aLoading lang...'
+  line3: '&aLoading wands...'
+Enable:
+  line1: '&a[&6NewAmazingLuckyBlocks &b%version%&a] ha sido activado'
+Disable:
+  line1: '&cha sido desactivado'
+Reload:
+  line1: '&aRecargando archivos de idioma...'
+  line2: "&aRecargando configuración..."
+  line3: '&cRecarga completada'
+HelpMessage: '&cUsa &7/alb help &cpara ayuda'
+UnknownCommand: "&cComando desconocido. Usa &7/alb &cpara información del plugin"
+InGamePrefix: '&r[&6NewAmazingLuckyBlocks&r]'

@@ -19,6 +19,9 @@
 # Version of the config. Don't modify it
 ConfigVersion: 0
 
+# Lang file to use. It must be inside the lang folder
+LangFile: lang_EN.yml
+
 # Wands configuration
 Wands:
   RegenWand:

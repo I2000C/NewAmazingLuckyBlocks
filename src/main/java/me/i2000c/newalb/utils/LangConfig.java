@@ -1,58 +1,68 @@
 package me.i2000c.newalb.utils;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import java.util.Arrays;
+import me.i2000c.newalb.config.ReadOnlyConfig;
 import me.i2000c.newalb.utils.logger.LogLevel;
 import me.i2000c.newalb.utils.logger.Logger;
-import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
 public class LangConfig{
-    private static FileConfiguration langCfg = null;
-    private static File langFile = null;
+    private static Plugin plugin;
+    private static final String LANG_FILE_KEY = "LangFile";
+    private static final int LANG_VERSION = 1;
     
-    public static FileConfiguration getMessages(){
-        if(langCfg == null){
-            reloadMessages();
-        }
-        return langCfg;
+    private static ReadOnlyConfig config;
+    public static void initialize(Plugin plugin){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        // Update all lang files
+        Arrays.stream(Language.getValues()).forEach(language -> {
+            ReadOnlyConfig langConfig = new ReadOnlyConfig(plugin, language.getLangFileName(), true) {
+                @Override
+                public int getConfigVersion(){
+                    return LANG_VERSION;
+                }
+            };
+            langConfig.loadConfig();
+        });
+        
+        config = new ReadOnlyConfig(plugin, null, "null", true){
+            @Override
+            public int getConfigVersion(){
+                return LANG_VERSION;
+            }
+        };
+        
+        LangConfig.plugin = plugin;
+//</editor-fold>
     }
     
-    public static void reloadMessages(){
-        langFile = new File(NewAmazingLuckyBlocks.getInstance().getDataFolder(), "lang.yml");
-        if(langFile.exists()){
-            langCfg = YamlConfigurationUTF8.loadConfiguration(langFile);
+    public static void loadConfig(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        // Load lang file specified in config.yml
+        String filename = ConfigManager.getConfig().getString(LANG_FILE_KEY);
+        String langFileName = Language.LANG_FOLDER_NAME + '/' + filename;
+        config.setConfigFile(langFileName);
+
+        File file = config.getConfigFile();
+        if(file.exists()){
+            config.loadConfig();
         }else{
-            langCfg = new YamlConfigurationUTF8();
+            Logger.log("Lang file \"" + filename + "\" doesn't exist", LogLevel.WARN, false);
+            Logger.log("Using English language to avoid errors", LogLevel.WARN, false);
+            config.clearConfig();
             try{
-                langFile.createNewFile();
-            }catch(IOException ex){
-                Logger.log("An error occurred:", LogLevel.INFO);
-                ex.printStackTrace();
+                config.getBukkitConfig().load(plugin.getResource(Language.EN.getLangFileName()));
+            }catch(Exception ex){
+                Logger.log("An error occurred while loading English language:", LogLevel.ERROR, false);
+                Logger.log(ex, LogLevel.ERROR);
             }
         }
-        Reader defConfigStream;
-        try{
-            defConfigStream = new InputStreamReader(NewAmazingLuckyBlocks.getInstance().getResource("lang.yml"), "UTF8");
-            langCfg.setDefaults(YamlConfigurationUTF8.loadConfiguration(defConfigStream));
-        }catch(UnsupportedEncodingException ex){
-            Logger.log("An error occurred:", LogLevel.INFO);
-            ex.printStackTrace();
-        }
-        langCfg.options().copyDefaults(true);
-        saveMessages();
+//</editor-fold>
     }
     
-    private static void saveMessages(){
-        try{
-            langCfg.save(langFile);
-        }catch(IOException ex){
-            Logger.log("An error occurred", LogLevel.INFO);
-            ex.printStackTrace();
-        }
+    public static FileConfiguration getMessages(){
+        return config.getBukkitConfig();
     }
 }

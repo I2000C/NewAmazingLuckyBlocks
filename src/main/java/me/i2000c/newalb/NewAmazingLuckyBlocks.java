@@ -9,7 +9,6 @@ import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapManager;
-import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.listeners.BlockBreak;
 import me.i2000c.newalb.listeners.BlockPlace;
 import me.i2000c.newalb.listeners.ChunkEvent;
@@ -19,6 +18,7 @@ import me.i2000c.newalb.listeners.interact.SpecialItemManager;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.BlockProtect;
 import me.i2000c.newalb.utils.ConfigManager;
+import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils.Updater;
@@ -63,6 +63,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         ConfigManager.initialize(this);
         ConfigManager.getManager().loadConfig();
+        LangConfig.initialize(this);
+        LangConfig.loadConfig();
         
         prefix = Logger.color(LangConfig.getMessages().getString("InGamePrefix"));      
         if(minecraftVersion == null){
@@ -99,7 +101,6 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         registerEvents();
         
         Logger.log(LangConfig.getMessages().getString("Enable.line1").replace("%version%", version));
-        Logger.log(LangConfig.getMessages().getString("Enable.line2").replace("%prefix%", ""));
     }
     
     private void registerEvents(){
