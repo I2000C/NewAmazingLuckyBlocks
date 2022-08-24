@@ -976,7 +976,7 @@ Outcomes:
   '50':
     outcome-name: DarkHoleEvent
     probability: 100
-    icon: CHEST
+    icon: BUCKET
     rewards:
       dark_hole:
         '0':
@@ -988,7 +988,7 @@ Outcomes:
   '51':
     outcome-name: MiniVolcanoEvent
     probability: 100
-    icon: CHEST
+    icon: LAVA_BUCKET
     rewards:
       mini_volcano:
         '0':
