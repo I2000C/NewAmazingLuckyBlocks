@@ -10,6 +10,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.Equipment;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EffectReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward.Age;
 import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
@@ -43,6 +44,11 @@ public class EntityMenu extends Editor<EntityReward>{
                         builder.addLoreLine("&6Is living entity: &atrue");
                     }else{
                         builder.addLoreLine("&6Is living entity: &7false");
+                    }
+                    if(Age.isAgeable(entityType)){
+                        builder.addLoreLine("&6Is ageable entity: &atrue");
+                    }else{
+                        builder.addLoreLine("&6Is ageable entity: &7false");
                     }
                     return builder.build();
                 }
@@ -96,10 +102,21 @@ public class EntityMenu extends Editor<EntityReward>{
         
         XMaterial material = EntityReward.getXMaterialFromEntityType(item.getType());
         ItemBuilder builder = ItemBuilder.newItem(material);
-        if(item.getType() == null){
+        EntityType entityType = item.getType();
+        if(entityType == null){
             builder.withDisplayName("&6Select entityType");
         }else{
             builder.withDisplayName("&6entityType: &r" + item.getType());
+            if(entityType.isAlive()){
+                builder.addLoreLine("&3Is living entity: &atrue");
+            }else{
+                builder.addLoreLine("&3Is living entity: &7false");
+            }
+            if(Age.isAgeable(entityType)){
+                builder.addLoreLine("&3Is ageable entity: &atrue");
+            }else{
+                builder.addLoreLine("&3Is ageable entity: &7false");
+            }
         }
         ItemStack ent_type = builder.build();
         
@@ -136,6 +153,24 @@ public class EntityMenu extends Editor<EntityReward>{
                 .withDisplayName("&cReset equipment")
                 .build();
         
+        switch(item.getAge()){
+            case BABY:
+                builder = ItemBuilder.newItem(XMaterial.LEATHER_HELMET);
+                break;
+            case ADULT:
+                builder = ItemBuilder.newItem(XMaterial.IRON_HELMET);
+                break;
+            default: //case RANDOM
+                builder = ItemBuilder.newItem(XMaterial.GOLDEN_HELMET);
+                break;
+        }
+        builder.withDisplayName("&dCurrent age: &e" + item.getAge().name());
+        builder.addLoreLine("&3Click to toggle");
+        builder.addLoreLine("");
+        builder.addLoreLine("&6Note that this is only used");
+        builder.addLoreLine("&6  if the entity is ageable");
+        ItemStack ageStack = builder.build();
+        
         menu.setItem(10, GUIItem.getBackItem());
         menu.setItem(11, ent_type);
         menu.setItem(12, ent_name);
@@ -152,6 +187,8 @@ public class EntityMenu extends Editor<EntityReward>{
         }
         menu.setItem(9, glass);
         menu.setItem(17, glass);
+        
+        menu.setItem(20, ageStack);
         
         menu.setItem(21, resetName);
         menu.setItem(22, resetEffects);
@@ -236,6 +273,10 @@ public class EntityMenu extends Editor<EntityReward>{
                                 item.setOffset(offset);
                                 openEntityMenu(p);
                             });
+                    break;
+                case 20:
+                    item.setAge(item.getAge().next());
+                    openEntityMenu(player);
                     break;
                 case 21:
                     item.setCustom_name(null);

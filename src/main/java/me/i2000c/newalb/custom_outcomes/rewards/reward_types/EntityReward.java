@@ -3,6 +3,7 @@ package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import me.i2000c.newalb.custom_outcomes.rewards.Equipment;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
@@ -17,10 +18,13 @@ import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -35,6 +39,8 @@ public class EntityReward extends Reward{
     private String custom_name;
     private List<String> effects;
     
+    private Age age;
+    
     private Equipment equipment;
     
     protected Entity lastSpawnedEntity = null;
@@ -42,6 +48,7 @@ public class EntityReward extends Reward{
     public EntityReward(Outcome outcome){
         super(outcome);
         this.entityID = -1;
+        this.age = Age.ADULT;
         this.type = null;
         this.custom_name = null;
         this.effects = new ArrayList<>();        
@@ -81,6 +88,12 @@ public class EntityReward extends Reward{
     public void setEffects(List<String> effects){
         this.effects = new ArrayList(effects);
     }
+    public Age getAge(){
+        return this.age;
+    }
+    public void setAge(Age age){
+        this.age = age;
+    }
     public Equipment getEquipment(){
         return equipment;
     }
@@ -118,6 +131,8 @@ public class EntityReward extends Reward{
                 builder.addLoreLine("   " + str);
             });
         }
+        
+        builder.addLoreLine("&bage: &e" + age.name());
         
         if(equipment.isEmpty()){
             builder.addLoreLine("&bequipment: &cnull");
@@ -169,6 +184,7 @@ public class EntityReward extends Reward{
         config.set(path + ".type", this.type.name());
         config.set(path + ".custom_name", this.custom_name);
         if(this.type.isAlive()){
+            config.set(path + ".age", this.age.name());
             config.set(path + ".effects", this.effects);
             if(!equipment.isEmpty()){
                 List<ItemStack> equip = equipment.asArrayList();
@@ -206,6 +222,7 @@ public class EntityReward extends Reward{
         this.type = EntityType.valueOf(config.getString(path + ".type"));
         this.custom_name = config.getString(path + ".custom_name");
         if(this.type.isAlive()){
+            this.age = Age.valueOf(config.getString(path + ".age", Age.ADULT.name()));
             this.effects = config.getStringList(path + ".effects");
             List<ItemStack> equipmentList = new ArrayList();
             if(config.contains(path + ".equipment")){
@@ -278,6 +295,8 @@ public class EntityReward extends Reward{
         if(this.lastSpawnedEntity instanceof LivingEntity){
             LivingEntity le = (LivingEntity) this.lastSpawnedEntity;
             
+            this.age.setAge(le);
+            
             for(String effect : this.effects){
                 String[] effectData = effect.split(";");
                 PotionEffectType effectType = PotionEffectType.getByName(effectData[0]);
@@ -322,5 +341,51 @@ public class EntityReward extends Reward{
         copy.equipment = this.equipment.clone();
         copy.offset = this.offset.clone();
         return copy;
+    }
+    
+    public static enum Age{
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        BABY,
+        ADULT,
+        RANDOM;
+        
+        private static final Age[] vals = values();
+        
+        public void setAge(Entity entity){
+            switch(this){
+                case BABY:
+                    if(entity instanceof Ageable){
+                        ((Ageable) entity).setBaby();
+                    }else if(entity instanceof Zombie){
+                        ((Zombie) entity).setBaby(true);
+                    }
+                    break;
+                case ADULT:
+                    if(entity instanceof Ageable){
+                        ((Ageable) entity).setAdult();
+                    }else if(entity instanceof Zombie){
+                        ((Zombie) entity).setBaby(false);
+                    }
+                    break;
+                case RANDOM:
+                    Random random = new Random();
+                    if(random.nextBoolean()){
+                        BABY.setAge(entity);
+                    }else{
+                        ADULT.setAge(entity);
+                    }
+                    break;
+            }
+        }
+        
+        public Age next(){
+            return vals[(this.ordinal() + 1) % vals.length];
+        }
+        
+        public static boolean isAgeable(EntityType entityType){
+            return Ageable.class.isAssignableFrom(entityType.getEntityClass())
+                    || entityType == EntityType.ZOMBIE;
+        }
+//</editor-fold>
     }
 }
