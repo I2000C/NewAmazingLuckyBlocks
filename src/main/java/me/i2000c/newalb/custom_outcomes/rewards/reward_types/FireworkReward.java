@@ -8,6 +8,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils2.CustomColor;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -26,6 +27,7 @@ public class FireworkReward extends Reward{
     private FireworkEffect.Type type;
     private List<String> colorHEX;
     private List<String> fadeHEX;
+    private Offset offset;
     
     public FireworkReward(Outcome outcome){
         super(outcome);
@@ -36,6 +38,7 @@ public class FireworkReward extends Reward{
         this.type = FireworkEffect.Type.BALL;
         this.colorHEX = new ArrayList<>();
         this.fadeHEX = new ArrayList<>();
+        this.offset = new Offset();
     }
     
     public int getAmount(){
@@ -80,6 +83,12 @@ public class FireworkReward extends Reward{
     public void setHEXFadeColors(List<String> fadeHEX){
         this.fadeHEX = new ArrayList<>(fadeHEX);
     }
+    public Offset getOffset(){
+        return this.offset;
+    }
+    public void setOffset(Offset offset){
+        this.offset = offset;
+    }
 
     @Override
     public ItemStack getItemToDisplay(){
@@ -102,6 +111,11 @@ public class FireworkReward extends Reward{
             builder.addLoreLine("  &r" + str);
         });
         
+        builder.addLoreLine("&bOffset:");
+        builder.addLoreLine("   &5X: &3" + offset.getOffsetX());
+        builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
+        builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
+        
         return builder.build();
     }
 
@@ -114,6 +128,7 @@ public class FireworkReward extends Reward{
         config.set(path + ".type", this.type.name());
         config.set(path + ".color", this.colorHEX);
         config.set(path + ".fade", this.fadeHEX);
+        offset.saveToConfig(config, path + ".offset");
     }    
     
     @Override
@@ -125,6 +140,9 @@ public class FireworkReward extends Reward{
         this.type = FireworkEffect.Type.valueOf(config.getString(path + ".type"));
         this.colorHEX = config.getStringList(path + ".color");
         this.fadeHEX = config.getStringList(path + ".fade");
+        if(config.isConfigurationSection(path + ".offset")){
+            this.offset = new Offset(config, path + ".offset");
+        }        
     }
     
     @Override
@@ -141,7 +159,8 @@ public class FireworkReward extends Reward{
         }
             
         for(int i=0;i<amount;i++){
-            Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+            Location loc = offset.addToLocation(location.clone());
+            Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
             FireworkMeta fwm = fw.getFireworkMeta();
             fwm.setPower(power);
             FireworkEffect fireworkEffect = FireworkEffect.builder()
@@ -166,6 +185,7 @@ public class FireworkReward extends Reward{
         FireworkReward copy = (FireworkReward) super.clone();
         copy.colorHEX = new ArrayList<>(this.colorHEX);
         copy.fadeHEX = new ArrayList<>(this.fadeHEX);
+        copy.offset = this.offset.clone();
         return copy;
     }
 }

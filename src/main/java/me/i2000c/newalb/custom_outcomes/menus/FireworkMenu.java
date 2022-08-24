@@ -14,6 +14,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.CustomColor;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.FireworkEffect;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -78,6 +79,8 @@ public class FireworkMenu extends Editor<FireworkReward>{
                 XMaterial.TNT, 
                 XMaterial.TNT);
         
+        ItemStack offsetStack = item.getOffset().getItemToDisplay();
+        
         ItemStack fireworkType = ItemBuilder.newItem(TYPE_MATERIALS[selectedType])
                 .withDisplayName("&aFirework type: &b" + FIREWORK_EFFECTS[selectedType])
                 .build();
@@ -125,6 +128,7 @@ public class FireworkMenu extends Editor<FireworkReward>{
         
         menu.setItem(12, withTrail);
         menu.setItem(13, withFlicker);
+        menu.setItem(4, offsetStack);
         
         menu.setItem(14, fireworkType);
         
@@ -198,6 +202,17 @@ public class FireworkMenu extends Editor<FireworkReward>{
                 case 13:
                     item.setWithFlicker(!item.withFlicker());
                     openFireworkMenu(player);
+                    break;
+                case 4:
+                    Editor<Offset> offsetEditor = EditorType.OFFSET.getEditor();
+                    offsetEditor.editExistingItem(
+                            item.getOffset().clone(), 
+                            player, 
+                            p -> openFireworkMenu(p), 
+                            (p, offset) -> {
+                                item.setOffset(offset);
+                                openFireworkMenu(p);
+                            });
                     break;
                 case 14:
                     if(selectedType == 4){
