@@ -39,6 +39,7 @@ public class FireworkMenu extends Editor<FireworkReward>{
     
     @Override
     protected void editItem(Player player){
+        selectedType = item.getType().ordinal();
         openFireworkMenu(player);
     }
     
