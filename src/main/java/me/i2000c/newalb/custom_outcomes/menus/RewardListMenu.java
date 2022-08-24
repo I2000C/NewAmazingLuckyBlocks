@@ -35,7 +35,7 @@ public class RewardListMenu extends Editor<Outcome>{
                             .fromItem(reward.getItemToDisplay(), false);
                     if(delayMode){
                         builder.addLoreLine("");
-                        builder.addLoreLine("&6Reward Delay: &a" + reward.getDelay());
+                        builder.addLoreLine("&6Reward Delay: &a" + reward.getDelay() + " &dticks");
                     }
                     return NBTEditor.set(builder.build(), index, REWARD_ID_TAG);
                 }
