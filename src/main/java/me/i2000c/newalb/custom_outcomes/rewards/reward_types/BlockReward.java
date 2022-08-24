@@ -109,7 +109,14 @@ public class BlockReward extends Reward{
     public void loadRewardFromConfig(FileConfiguration config, String path){
         this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
         this.isFallingBlock = config.getBoolean(path + ".isFallingBlock");
-        this.blockItem = ItemBuilder.newItem(config.getString(path + ".material")).build();
+        String materialName = config.getString(path + ".material");
+        if(materialName == null){
+            // Support for old system
+            materialName = config.getString(path + ".blockItem.material");
+            int durability = config.getInt(path + ".blockItem.durability");
+            materialName += ":" + durability;
+        }
+        this.blockItem = ItemBuilder.newItem(materialName).build();
         this.offset = new Offset(config, path + ".offset");
     }
     
