@@ -27,6 +27,7 @@ import me.i2000c.newalb.custom_outcomes.menus.PackListMenu;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.menus.RewardTypesMenu;
 import me.i2000c.newalb.custom_outcomes.menus.SoundMenu;
+import me.i2000c.newalb.custom_outcomes.menus.SquidExplosionMenu;
 import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
 import me.i2000c.newalb.custom_outcomes.menus.TeleportMenu;
 import me.i2000c.newalb.custom_outcomes.menus.TrapMenu;
@@ -68,7 +69,7 @@ public enum EditorType{
     BLOCK_REPLACING_SPHERE_REWARD(new BlockReplacingSphereMenu()),
     TRAP_REWARD(new TrapMenu()),
     TELEPORT_REWARD(new TeleportMenu()),
-    
+    SQUID_EXPLOSION_REWARD(new SquidExplosionMenu()),
     ;
     
     private final Editor editor;

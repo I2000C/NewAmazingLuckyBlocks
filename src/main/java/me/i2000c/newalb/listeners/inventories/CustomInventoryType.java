@@ -75,6 +75,9 @@ public enum CustomInventoryType{
     //Teleport menus
     TELEPORT_MENU,
     
+    //Squid explosion menus
+    SQUID_EXPLOSION_MENU,
+    
     ////////Other menus
     
     //Offset

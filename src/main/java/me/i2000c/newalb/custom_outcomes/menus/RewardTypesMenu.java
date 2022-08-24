@@ -110,6 +110,10 @@ public class RewardTypesMenu extends Editor<Editor>{
                 .withDisplayName("&eCreate teleport rewards")
                 .build();
         
+        ItemStack stack18 = ItemBuilder.newItem(XMaterial.INK_SAC)
+                .withDisplayName("&7Create squid explosion rewards")
+                .build();
+        
         menu.setItem(0, stack);
         menu.setItem(1, stack2);
         menu.setItem(2, stack3);
@@ -127,6 +131,7 @@ public class RewardTypesMenu extends Editor<Editor>{
         menu.setItem(14, stack15);
         menu.setItem(15, stack16);
         menu.setItem(16, stack17);
+        menu.setItem(17, stack18);
         
         menu.setItem(18, GUIItem.getBackItem());
         
@@ -223,6 +228,10 @@ public class RewardTypesMenu extends Editor<Editor>{
                 case 16:
                     // teleport reward editor
                     type = EditorType.TELEPORT_REWARD;
+                    break;
+                case 17:
+                    // squid explosion reward editor
+                    type = EditorType.SQUID_EXPLOSION_REWARD;
                     break;
             }
             

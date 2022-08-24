@@ -17,6 +17,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.reward_types.MessageReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.MiniVolcanoReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ParticleReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.SoundReward;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.SquidExplosionReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.StructureReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TeleportReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapReward;
@@ -39,6 +40,7 @@ public enum RewardType{
     block_replacing_sphere(BlockReplacingSphereReward.class, EditorType.BLOCK_REPLACING_SPHERE_REWARD),
     trap(TrapReward.class, EditorType.TRAP_REWARD),
     teleport(TeleportReward.class, EditorType.TELEPORT_REWARD),
+    squid_explosion(SquidExplosionReward.class, EditorType.SQUID_EXPLOSION_REWARD),
     
     particle(ParticleReward.class, null);
     
