@@ -101,7 +101,7 @@ public class EntityMenu extends Editor<EntityReward>{
     //Entity inventory
     private void openEntityMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Menu menu = GUIFactory.newMenu(CustomInventoryType.ENTITY_MENU, 27, "&2&lEntity Reward");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.ENTITY_MENU, 54, "&2&lEntity Reward");
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
         
@@ -209,15 +209,30 @@ public class EntityMenu extends Editor<EntityReward>{
         builder.addLoreLine("&6  if the entity is ageable");
         ItemStack ageStack = builder.build();
         
+        builder = ItemBuilder.newItem(XMaterial.APPLE);
+        if(item.getHealth() >= 0){
+            builder.withDisplayName("&bCurrent health: &d" + item.getHealth());
+        }else{
+            builder.withDisplayName("&bCurrent health: &d&lDEFAULT");
+        }
+        builder.addLoreLine("&3Click to reset");
+        ItemStack healthItem = builder.build();
+        
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);
         }
-        for(int i=18;i<27;i++){
+        for(int i=45;i<54;i++){
             menu.setItem(i, glass);
         }
         menu.setItem(9, glass);
-        menu.setItem(17, glass);        
+        menu.setItem(18, glass);
+        menu.setItem(27, glass);
+        menu.setItem(36, glass);
+        menu.setItem(17, glass);
+        menu.setItem(26, glass);
+        menu.setItem(35, glass);
+        menu.setItem(44, glass);
         
         menu.setItem(10, GUIItem.getBackItem());
         menu.setItem(11, ent_type);
@@ -235,6 +250,15 @@ public class EntityMenu extends Editor<EntityReward>{
         }
         if(EntityReward.isTameable(entityType)){
             menu.setItem(2, isTamedStack);
+        }
+        if(item.getType() != null && item.getType().isAlive()){
+            menu.setItem(34, GUIItem.getPlusLessItem(+100));
+            menu.setItem(33, GUIItem.getPlusLessItem(+10));
+            menu.setItem(32, GUIItem.getPlusLessItem(+1));
+            menu.setItem(31, healthItem);
+            menu.setItem(30, GUIItem.getPlusLessItem(-1));
+            menu.setItem(29, GUIItem.getPlusLessItem(-10));
+            menu.setItem(28, GUIItem.getPlusLessItem(-100));
         }
         
         menu.setItem(21, resetName);
@@ -366,6 +390,86 @@ public class EntityMenu extends Editor<EntityReward>{
                     item.getEquipment().resetEquipment();
                     openEntityMenu(player);
                     break;
+                    //<editor-fold defaultstate="collapsed" desc="Health">
+                case 34:
+                    // Health + 100
+                    if(item.getType() == null || !item.getType().isAlive()){
+                        break;
+                    }
+                    
+                    int health = item.getHealth() + 100;
+                    item.setHealth(health);
+                    openEntityMenu(player);
+                    break;
+                case 33:
+                    // Health + 10
+                    if(item.getType() == null || !item.getType().isAlive()){
+                        break;
+                    }
+                    
+                    health = item.getHealth() + 10;
+                    item.setHealth(health);
+                    openEntityMenu(player);
+                    break;
+                case 32:
+                    // Health + 1
+                    if(item.getType() == null || !item.getType().isAlive()){
+                        break;
+                    }
+                    
+                    health = item.getHealth() + 1;
+                    item.setHealth(health);
+                    openEntityMenu(player);
+                    break;
+                case 31:
+                    // Reset health
+                    if(item.getType() == null || !item.getType().isAlive()){
+                        break;
+                    }
+                    
+                    item.setHealth(-1);
+                    openEntityMenu(player);
+                    break;
+                case 30:
+                    // Health - 1
+                    if(item.getType() == null || !item.getType().isAlive()){
+                        break;
+                    }
+                    
+                    health = item.getHealth() - 1;
+                    if(health < 0){
+                        health = -1;
+                    }
+                    item.setHealth(health);
+                    openEntityMenu(player);
+                    break;
+                case 29:
+                    // Health - 10
+                    if(item.getType() == null || !item.getType().isAlive()){
+                        break;
+                    }
+                    
+                    health = item.getHealth() - 10;
+                    if(health < 0){
+                        health = -1;
+                    }
+                    item.setHealth(health);
+                    openEntityMenu(player);
+                    break;
+                case 28:
+                    // Health - 100
+                    if(item.getType() == null || !item.getType().isAlive()){
+                        break;
+                    }
+                    
+                    health = item.getHealth() - 100;
+                    if(health < 0){
+                        health = -1;
+                    }
+                    item.setHealth(health);
+                    openEntityMenu(player);
+                    break;
+//</editor-fold>
             }
         }
 //</editor-fold>

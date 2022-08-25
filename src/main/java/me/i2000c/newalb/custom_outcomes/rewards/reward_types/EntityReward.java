@@ -43,6 +43,7 @@ public class EntityReward extends Reward{
     private boolean customNameVisible;
     private List<String> effects;
     
+    private int health;
     private Age age;
     private boolean isTamed;
     
@@ -53,6 +54,7 @@ public class EntityReward extends Reward{
     public EntityReward(Outcome outcome){
         super(outcome);
         this.entityID = -1;
+        this.health = -1;
         this.age = Age.ADULT;
         this.isTamed = false;
         this.type = null;
@@ -100,6 +102,12 @@ public class EntityReward extends Reward{
     }
     public void setEffects(List<String> effects){
         this.effects = new ArrayList(effects);
+    }
+    public int getHealth(){
+        return this.health;
+    }
+    public void setHealth(int health){
+        this.health = health;
     }
     public Age getAge(){
         return this.age;
@@ -156,6 +164,12 @@ public class EntityReward extends Reward{
         }
         
         if(type.isAlive()){
+            if(health >= 0){
+                builder.addLoreLine("&bHealth: &d" + health);
+            }else{
+                builder.addLoreLine("&bHealth: &dDEFAULT");
+            }            
+            
             if(effects.isEmpty()){
                 builder.addLoreLine("&bEffects: &cnull");
             }else{
@@ -217,6 +231,7 @@ public class EntityReward extends Reward{
         config.set(path + ".custom_name", this.customName);
         config.set(path + ".custom_name_visible", this.customNameVisible);
         if(this.type.isAlive()){
+            config.set(path + ".health", this.health);
             config.set(path + ".age", this.age.name());
             config.set(path + ".isTamed", this.isTamed);
             config.set(path + ".effects", this.effects);
@@ -257,6 +272,7 @@ public class EntityReward extends Reward{
         this.customName = config.getString(path + ".custom_name");
         this.customNameVisible = config.getBoolean(path + ".custom_name_visible");
         if(this.type.isAlive()){
+            this.health = config.getInt(path + ".health", -1);
             this.age = Age.valueOf(config.getString(path + ".age", Age.ADULT.name()));
             this.isTamed = config.getBoolean(path + ".isTamed");
             this.effects = config.getStringList(path + ".effects");
@@ -329,6 +345,15 @@ public class EntityReward extends Reward{
         if(this.lastSpawnedEntity instanceof LivingEntity){
             LivingEntity le = (LivingEntity) this.lastSpawnedEntity;
             
+            if(health >= 0){                
+                if(health == 0){
+                    le.damage(le.getMaxHealth());
+                }else{
+                    le.setMaxHealth(health);
+                    le.setHealth(health);
+                }
+            }
+                
             this.age.setAge(le);
             
             if(this.isTamed && this.lastSpawnedEntity instanceof Tameable){
