@@ -9,6 +9,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Schematic;
+import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -111,20 +112,30 @@ public class StructureReward extends Reward{
             return;
         }
         try{
+            final Location targetLocation;
             if(fromPlayer){
                 Location playerLocation = player.getLocation();
                 Location playerBlockLocation = playerLocation.getBlock().getLocation();
                 playerBlockLocation.setPitch(playerLocation.getPitch());
                 playerBlockLocation.setYaw(playerLocation.getYaw());
                 player.teleport(playerBlockLocation.clone().add(0.5, 0, 0.5));
-                location = playerBlockLocation;
+                targetLocation = playerBlockLocation;
+            }else{
+                targetLocation = location;
             }
             if(schematic == null || schematicFile.lastModified() != lastModified){
                 lastModified = schematicFile.lastModified();
                 schematic = new Schematic();
-                schematic.loadFromFile(schematicFile, location.getWorld());
-            }            
-            schematic.pasteAt(location, replaceBlocks, placeAirBlocks);
+                schematic.loadFromFile(schematicFile, targetLocation.getWorld());
+            }
+            Task.runTask(() -> {
+                try{
+                    schematic.pasteAt(targetLocation, replaceBlocks, placeAirBlocks);
+                }catch(Exception ex){
+                    Logger.err("An error occurred while executing structure reward " + this.filename + ":");
+                    ex.printStackTrace();
+                }                
+            }, 1L);            
         }catch(Exception ex){
             Logger.err("An error occurred while executing structure reward " + this.filename + ":");
             ex.printStackTrace();
