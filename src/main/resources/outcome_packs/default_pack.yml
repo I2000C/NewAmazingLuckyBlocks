@@ -22,6 +22,10 @@ Outcomes:
           - FF0000
           fade:
           - FF0000
+          offset:
+            offsetX: '0'
+            offsetY: '0'
+            offsetZ: '0'
     delayer: []
   '1':
     outcome-name: Emerald x32 + villager tower
@@ -38,6 +42,8 @@ Outcomes:
       entity:
         '0':
           type: VILLAGER
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '0'
@@ -190,6 +196,8 @@ Outcomes:
       entity:
         '0':
           type: BLAZE
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '0'
@@ -204,6 +212,8 @@ Outcomes:
       entity:
         '0':
           type: CHICKEN
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '0'
@@ -211,6 +221,8 @@ Outcomes:
             offsetZ: '0'
         '1':
           type: CHICKEN
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '1'
@@ -218,6 +230,8 @@ Outcomes:
             offsetZ: '0'
         '2':
           type: CHICKEN
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '0'
@@ -225,6 +239,8 @@ Outcomes:
             offsetZ: '1'
         '3':
           type: CHICKEN
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '-1'
@@ -232,6 +248,8 @@ Outcomes:
             offsetZ: '0'
         '4':
           type: CHICKEN
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '0'
@@ -239,6 +257,8 @@ Outcomes:
             offsetZ: '-1'
         '5':
           type: CHICKEN
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '1'
@@ -246,6 +266,8 @@ Outcomes:
             offsetZ: '1'
         '6':
           type: CHICKEN
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '-1'
@@ -253,6 +275,8 @@ Outcomes:
             offsetZ: '-1'
         '7':
           type: CHICKEN
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '1'
@@ -260,6 +284,8 @@ Outcomes:
             offsetZ: '-1'
         '8':
           type: CHICKEN
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '-1'
@@ -384,6 +410,8 @@ Outcomes:
       entity:
         '0':
           type: ZOMBIE
+          age: ADULT
+          isTamed: false
           effects: []
           equipment:
             Chestplate:
@@ -436,6 +464,8 @@ Outcomes:
       entity:
         '0':
           type: ZOMBIE
+          age: ADULT
+          isTamed: false
           effects: []
           equipment:
             Helmet:
@@ -485,6 +515,8 @@ Outcomes:
       entity:
         '0':
           type: ZOMBIE
+          age: ADULT
+          isTamed: false
           effects: []
           equipment:
             Chestplate:
@@ -503,6 +535,8 @@ Outcomes:
       entity:
         '0':
           type: ZOMBIE
+          age: ADULT
+          isTamed: false
           effects: []
           equipment:
             Chestplate:

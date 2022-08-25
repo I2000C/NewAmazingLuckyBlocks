@@ -62,6 +62,8 @@ Outcomes:
         '0':
           type: VILLAGER
           custom_name: '&6&lCustom Villager'
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '0'
@@ -69,6 +71,8 @@ Outcomes:
             offsetZ: '0'
         '1':
           type: ZOMBIE
+          age: ADULT
+          isTamed: false
           effects: []
           equipment:
             Helmet:
@@ -110,6 +114,8 @@ Outcomes:
       entity:
         '0':
           type: VILLAGER
+          age: ADULT
+          isTamed: false
           effects: []
           offset:
             offsetX: '0'
@@ -135,4 +141,8 @@ Outcomes:
           - '663300'
           fade:
           - '123456'
+          offset:
+            offsetX: '0'
+            offsetY: '0'
+            offsetZ: '0'
     delayer: []
