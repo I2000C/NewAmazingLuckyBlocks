@@ -15,15 +15,18 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
+import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -40,6 +43,7 @@ public class EntityReward extends Reward{
     private List<String> effects;
     
     private Age age;
+    private boolean isTamed;
     
     private Equipment equipment;
     
@@ -49,6 +53,7 @@ public class EntityReward extends Reward{
         super(outcome);
         this.entityID = -1;
         this.age = Age.ADULT;
+        this.isTamed = false;
         this.type = null;
         this.custom_name = null;
         this.effects = new ArrayList<>();        
@@ -94,6 +99,12 @@ public class EntityReward extends Reward{
     public void setAge(Age age){
         this.age = age;
     }
+    public boolean isTamed(){
+        return this.isTamed;
+    }
+    public void setIsTamed(boolean isTamed){
+        this.isTamed = isTamed;
+    }
     public Equipment getEquipment(){
         return equipment;
     }
@@ -133,6 +144,7 @@ public class EntityReward extends Reward{
         }
         
         builder.addLoreLine("&bage: &e" + age.name());
+        builder.addLoreLine("&bisTamed: &e" + isTamed);
         
         if(equipment.isEmpty()){
             builder.addLoreLine("&bequipment: &cnull");
@@ -185,6 +197,7 @@ public class EntityReward extends Reward{
         config.set(path + ".custom_name", this.custom_name);
         if(this.type.isAlive()){
             config.set(path + ".age", this.age.name());
+            config.set(path + ".isTamed", this.isTamed);
             config.set(path + ".effects", this.effects);
             if(!equipment.isEmpty()){
                 List<ItemStack> equip = equipment.asArrayList();
@@ -223,6 +236,7 @@ public class EntityReward extends Reward{
         this.custom_name = config.getString(path + ".custom_name");
         if(this.type.isAlive()){
             this.age = Age.valueOf(config.getString(path + ".age", Age.ADULT.name()));
+            this.isTamed = config.getBoolean(path + ".isTamed");
             this.effects = config.getStringList(path + ".effects");
             List<ItemStack> equipmentList = new ArrayList();
             if(config.contains(path + ".equipment")){
@@ -296,6 +310,20 @@ public class EntityReward extends Reward{
             LivingEntity le = (LivingEntity) this.lastSpawnedEntity;
             
             this.age.setAge(le);
+            
+            if(this.isTamed && this.lastSpawnedEntity instanceof Tameable){
+                ((Tameable) this.lastSpawnedEntity).setTamed(true);
+                ((Tameable) this.lastSpawnedEntity).setOwner(player);
+                if(this.lastSpawnedEntity instanceof Horse){
+                    ((Horse) this.lastSpawnedEntity)
+                            .getInventory()
+                            .addItem(new ItemStack[]{new ItemStack(XMaterial.SADDLE.parseItem())});
+                }else if(this.lastSpawnedEntity instanceof Ocelot){
+                    int randomType = OtherUtils.generateRandomInt(1, 3);
+                    Ocelot.Type catType = Ocelot.Type.getType(randomType);
+                    ((Ocelot) this.lastSpawnedEntity).setCatType(catType);
+                }
+            }
             
             for(String effect : this.effects){
                 String[] effectData = effect.split(";");

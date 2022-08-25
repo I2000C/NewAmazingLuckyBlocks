@@ -26,6 +26,7 @@ import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityMenu extends Editor<EntityReward>{
@@ -49,6 +50,11 @@ public class EntityMenu extends Editor<EntityReward>{
                         builder.addLoreLine("&6Is ageable entity: &atrue");
                     }else{
                         builder.addLoreLine("&6Is ageable entity: &7false");
+                    }
+                    if(isTameable(entityType)){
+                        builder.addLoreLine("&6Is tameable entity: &atrue");
+                    }else{
+                        builder.addLoreLine("&6Is tameable entity: &7false");
                     }
                     return builder.build();
                 }
@@ -104,9 +110,9 @@ public class EntityMenu extends Editor<EntityReward>{
         ItemBuilder builder = ItemBuilder.newItem(material);
         EntityType entityType = item.getType();
         if(entityType == null){
-            builder.withDisplayName("&6Select entityType");
+            builder.withDisplayName("&6Select entity type");
         }else{
-            builder.withDisplayName("&6entityType: &r" + item.getType());
+            builder.withDisplayName("&6Entity type: &r" + item.getType());
             if(entityType.isAlive()){
                 builder.addLoreLine("&3Is living entity: &atrue");
             }else{
@@ -117,26 +123,31 @@ public class EntityMenu extends Editor<EntityReward>{
             }else{
                 builder.addLoreLine("&3Is ageable entity: &7false");
             }
+            if(isTameable(entityType)){
+                builder.addLoreLine("&3Is tameable entity: &atrue");
+            }else{
+                builder.addLoreLine("&3Is tameable entity: &7false");
+            }
         }
         ItemStack ent_type = builder.build();
         
         builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
         if(item.getCustom_name() == null){
-            builder.withDisplayName("&aSelect entityCustomName (optional)");
+            builder.withDisplayName("&aSelect entity custom name (optional)");
         }else{
-            builder.withDisplayName("&aentityCustomName: &r" + item.getCustom_name());
+            builder.withDisplayName("&aEntity custom name: &r" + item.getCustom_name());
         }
         ItemStack ent_name = builder.build();
         
         builder = ItemBuilder.newItem(XMaterial.POTION);
-        builder.withDisplayName("&3Select entityEffects (optional)");
+        builder.withDisplayName("&3Select entity effects (optional)");
         if(!item.getEffects().isEmpty()){
             builder.withLore(item.getEffects());
         }
         ItemStack ent_effects = builder.build();
         
         ItemStack ent_equipment = ItemBuilder.newItem(XMaterial.DIAMOND_CHESTPLATE)
-                .withDisplayName("&eSelect entityEquipment (optional)")
+                .withDisplayName("&eSelect entity equipment (optional)")
                 .build();
         
         ItemStack offsetStack = item.getOffset().getItemToDisplay();
@@ -152,6 +163,19 @@ public class EntityMenu extends Editor<EntityReward>{
         ItemStack resetEquipment = ItemBuilder.newItem(XMaterial.BARRIER)
                 .withDisplayName("&cReset equipment")
                 .build();
+        
+        if(item.isTamed()){
+            builder = ItemBuilder.newItem(XMaterial.LEAD);
+            builder.withDisplayName("&eIs tamed: &atrue");
+        }else{
+            builder = ItemBuilder.newItem(XMaterial.ZOMBIE_HEAD);
+            builder.withDisplayName("&eIs tamed: &cfalse");
+        }
+        builder.addLoreLine("&3Click to toggle");
+        builder.addLoreLine("");
+        builder.addLoreLine("&6Note that this is only used");
+        builder.addLoreLine("&6  if the entity is tameable");
+        ItemStack isTamedStack = builder.build();
         
         switch(item.getAge()){
             case BABY:
@@ -188,6 +212,7 @@ public class EntityMenu extends Editor<EntityReward>{
         menu.setItem(9, glass);
         menu.setItem(17, glass);
         
+        menu.setItem(2, isTamedStack);
         menu.setItem(20, ageStack);
         
         menu.setItem(21, resetName);
@@ -274,6 +299,10 @@ public class EntityMenu extends Editor<EntityReward>{
                                 openEntityMenu(p);
                             });
                     break;
+                case 2:
+                    item.setIsTamed(!item.isTamed());
+                    openEntityMenu(player);
+                    break;
                 case 20:
                     item.setAge(item.getAge().next());
                     openEntityMenu(player);
@@ -353,5 +382,11 @@ public class EntityMenu extends Editor<EntityReward>{
             }
         }
 //</editor-fold>
-    };    
+    };
+    
+    private static boolean isTameable(EntityType entityType){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        return Tameable.class.isAssignableFrom(entityType.getEntityClass());
+//</editor-fold>
+    }
 }
