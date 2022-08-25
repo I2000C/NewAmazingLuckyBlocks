@@ -22,10 +22,6 @@ Outcomes:
           - FF0000
           fade:
           - FF0000
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '1':
     outcome-name: Emerald x32 + villager tower
@@ -45,10 +41,6 @@ Outcomes:
           age: ADULT
           isTamed: false
           effects: []
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
       tower_entity:
         '0': 0,0,0,0,0
     delayer: []
@@ -101,10 +93,6 @@ Outcomes:
           usePlayerLoc: false
           isFallingBlock: false
           material: SPONGE
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '5':
     outcome-name: InvisibilityWand
@@ -155,10 +143,6 @@ Outcomes:
           usePlayerLoc: false
           isFallingBlock: false
           material: WATER
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '8':
     outcome-name: It generates a lava block
@@ -170,10 +154,6 @@ Outcomes:
           usePlayerLoc: false
           isFallingBlock: false
           material: LAVA
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '9':
     outcome-name: Carrot x2
@@ -199,10 +179,6 @@ Outcomes:
           age: ADULT
           isTamed: false
           effects: []
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '11':
     outcome-name: 9 chicken around the location of the lucky-block
@@ -215,10 +191,6 @@ Outcomes:
           age: ADULT
           isTamed: false
           effects: []
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
         '1':
           type: CHICKEN
           age: ADULT
@@ -423,10 +395,6 @@ Outcomes:
             Boots:
               material: CHAINMAIL_BOOTS
               durability: 0
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '21':
     outcome-name: TNTWand
@@ -474,10 +442,6 @@ Outcomes:
             Chestplate:
               material: IRON_CHESTPLATE
               durability: 1
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '24':
     outcome-name: FireWand
@@ -522,10 +486,6 @@ Outcomes:
             Chestplate:
               material: CHAINMAIL_CHESTPLATE
               durability: 0
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '27':
     outcome-name: Zombie with iron leggins and chainmail helmet
@@ -545,10 +505,6 @@ Outcomes:
             Leggings:
               material: IRON_LEGGINGS
               durability: 0
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '28':
     outcome-name: It generates an iron block and suddenly it strikes a lightning in its location
@@ -568,10 +524,6 @@ Outcomes:
         '0':
           usePlayerLoc: false
           causeDamage: true
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '29':
     outcome-name: Sandstone block x32
@@ -637,10 +589,6 @@ Outcomes:
           usePlayerLoc: false
           isFallingBlock: false
           material: DIAMOND_ORE
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '34':
     outcome-name: ShieldWand

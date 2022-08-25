@@ -65,10 +65,6 @@ Outcomes:
           age: ADULT
           isTamed: false
           effects: []
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
         '1':
           type: ZOMBIE
           age: ADULT
@@ -94,10 +90,6 @@ Outcomes:
               durability: 2
               enchantments:
               - KNOCKBACK;200
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
   '3':
     outcome-name: Example 4
@@ -117,10 +109,6 @@ Outcomes:
           age: ADULT
           isTamed: false
           effects: []
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
       tower_entity:
         '0': 0,0,0,0,0,0
     delayer: []
@@ -141,8 +129,4 @@ Outcomes:
           - '663300'
           fade:
           - '123456'
-          offset:
-            offsetX: '0'
-            offsetY: '0'
-            offsetZ: '0'
     delayer: []
