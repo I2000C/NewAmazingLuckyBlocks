@@ -112,7 +112,12 @@ public class StructureReward extends Reward{
         }
         try{
             if(fromPlayer){
-                location = player.getLocation().clone();
+                Location playerLocation = player.getLocation();
+                Location playerBlockLocation = playerLocation.getBlock().getLocation();
+                playerBlockLocation.setPitch(playerLocation.getPitch());
+                playerBlockLocation.setYaw(playerLocation.getYaw());
+                player.teleport(playerBlockLocation.clone().add(0.5, 0, 0.5));
+                location = playerBlockLocation;
             }
             if(schematic == null || schematicFile.lastModified() != lastModified){
                 lastModified = schematicFile.lastModified();
