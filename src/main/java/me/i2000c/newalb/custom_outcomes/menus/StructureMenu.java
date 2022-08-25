@@ -155,11 +155,14 @@ public class StructureMenu extends Editor<StructureReward>{
                         File file = new File(StructureReward.schematicsFolder, message);
                         if(!file.exists()){
                             Logger.sendMessage("&cFile &6\"" + message + "\" &cdoesn't exist", player);
+                            Logger.sendMessage("&cUse &b/alb return &cif you want to return to the menu", player, false);
                             return;
                         }
+                        
+                        ChatListener.removePlayer(player);
                         item.setSchematicName(message);
                         openStructureMenu(player);
-                    });
+                    }, false);
                     player.closeInventory();
                     break;
                 case 10:
