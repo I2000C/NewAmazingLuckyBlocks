@@ -18,7 +18,7 @@ Wands:
     name: "&3Vara de protección &7- &6Click derecho"
   PotionWand:
     name: "&1Vara poción &7- &6Click derecho"
-  FrostWand:
+  FrostPathWand:
     name: '&bVara del camino de hielo &7- &6Click derecho'
 
 Objects:
