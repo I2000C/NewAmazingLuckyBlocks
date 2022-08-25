@@ -39,7 +39,7 @@ public class EntityReward extends Reward{
     
     private int entityID;
     private EntityType type;
-    private String custom_name;
+    private String customName;
     private List<String> effects;
     
     private Age age;
@@ -55,7 +55,7 @@ public class EntityReward extends Reward{
         this.age = Age.ADULT;
         this.isTamed = false;
         this.type = null;
-        this.custom_name = null;
+        this.customName = null;
         this.effects = new ArrayList<>();        
         this.equipment = new Equipment();        
         this.offset = new Offset();
@@ -81,11 +81,11 @@ public class EntityReward extends Reward{
     public void setType(EntityType type){
         this.type = type;
     }
-    public String getCustom_name(){
-        return custom_name;
+    public String getCustomName(){
+        return customName;
     }
-    public void setCustom_name(String custom_name) {
-        this.custom_name = custom_name;
+    public void setCustomName(String customName) {
+        this.customName = customName;
     }
     public List<String> getEffects(){
         return effects;
@@ -129,55 +129,62 @@ public class EntityReward extends Reward{
         builder.withDisplayName("&2Entity");
         builder.addLoreLine("&bID: &r" + entityID);
         builder.addLoreLine("&btype: &e" + Logger.stripColor(type.name()));
-        if(custom_name == null){
+        if(customName == null){
             builder.addLoreLine("&bcustom-name: &cnull");
         }else{
-            builder.addLoreLine("&bcustom-name: &r" + custom_name);
-        }
-        if(effects.isEmpty()){
-            builder.addLoreLine("&beffects: &cnull");
-        }else{
-            builder.addLoreLine("&beffects: &r");
-            effects.forEach((str) -> {
-                builder.addLoreLine("   " + str);
-            });
+            builder.addLoreLine("&bcustom-name: &r" + customName);
         }
         
-        builder.addLoreLine("&bage: &e" + age.name());
-        builder.addLoreLine("&bisTamed: &e" + isTamed);
+        if(Age.isAgeable(type)){
+            builder.addLoreLine("&bage: &e" + age.name());
+        }
+        if(isTameable(type)){
+            builder.addLoreLine("&bisTamed: &e" + isTamed);
+        }
         
-        if(equipment.isEmpty()){
-            builder.addLoreLine("&bequipment: &cnull");
-        }else{
-            builder.addLoreLine("&bequipment:");
-            if(equipment.helmet == null){
-                builder.addLoreLine("    &6Helmet: &cnull");
+        if(type.isAlive()){
+            if(effects.isEmpty()){
+                builder.addLoreLine("&beffects: &cnull");
             }else{
-                builder.addLoreLine("    &6Helmet: &d" + this.equipment.helmet.getType().name());
+                builder.addLoreLine("&beffects: &r");
+                effects.forEach((str) -> {
+                    builder.addLoreLine("   " + str);
+                });
             }
-            
-            if(equipment.chestplate == null){
-                builder.addLoreLine("    &6Chestplate: &cnull");
+
+            if(equipment.isEmpty()){
+                builder.addLoreLine("&bequipment: &cnull");
             }else{
-                builder.addLoreLine("    &6Chestplate: &d" + this.equipment.chestplate.getType().name());
-            }
-            
-            if(equipment.leggings == null){
-                builder.addLoreLine("    &6Leggings: &cnull");
-            }else{
-                builder.addLoreLine("    &6Leggings: &d" + this.equipment.leggings.getType().name());
-            }
-            
-            if(equipment.boots == null){
-                builder.addLoreLine("    &6Boots: &cnull");
-            }else{
-                builder.addLoreLine("    &6Boots: &d" + this.equipment.boots.getType().name());
-            }
-            
-            if(equipment.itemInHand == null){
-                builder.addLoreLine("    &6Item in hand: &cnull");
-            }else{
-                builder.addLoreLine("    &6Item in hand: &d" + this.equipment.itemInHand.getType().name());
+                builder.addLoreLine("&bequipment:");
+                if(equipment.helmet == null){
+                    builder.addLoreLine("    &6Helmet: &cnull");
+                }else{
+                    builder.addLoreLine("    &6Helmet: &d" + this.equipment.helmet.getType().name());
+                }
+
+                if(equipment.chestplate == null){
+                    builder.addLoreLine("    &6Chestplate: &cnull");
+                }else{
+                    builder.addLoreLine("    &6Chestplate: &d" + this.equipment.chestplate.getType().name());
+                }
+
+                if(equipment.leggings == null){
+                    builder.addLoreLine("    &6Leggings: &cnull");
+                }else{
+                    builder.addLoreLine("    &6Leggings: &d" + this.equipment.leggings.getType().name());
+                }
+
+                if(equipment.boots == null){
+                    builder.addLoreLine("    &6Boots: &cnull");
+                }else{
+                    builder.addLoreLine("    &6Boots: &d" + this.equipment.boots.getType().name());
+                }
+
+                if(equipment.itemInHand == null){
+                    builder.addLoreLine("    &6Item in hand: &cnull");
+                }else{
+                    builder.addLoreLine("    &6Item in hand: &d" + this.equipment.itemInHand.getType().name());
+                }
             }
         }
         
@@ -194,7 +201,7 @@ public class EntityReward extends Reward{
     public void saveRewardIntoConfig(FileConfiguration config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
         config.set(path + ".type", this.type.name());
-        config.set(path + ".custom_name", this.custom_name);
+        config.set(path + ".custom_name", this.customName);
         if(this.type.isAlive()){
             config.set(path + ".age", this.age.name());
             config.set(path + ".isTamed", this.isTamed);
@@ -233,7 +240,7 @@ public class EntityReward extends Reward{
     public void loadRewardFromConfig(FileConfiguration config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.type = EntityType.valueOf(config.getString(path + ".type"));
-        this.custom_name = config.getString(path + ".custom_name");
+        this.customName = config.getString(path + ".custom_name");
         if(this.type.isAlive()){
             this.age = Age.valueOf(config.getString(path + ".age", Age.ADULT.name()));
             this.isTamed = config.getBoolean(path + ".isTamed");
@@ -299,8 +306,8 @@ public class EntityReward extends Reward{
         }
         
         
-        if(this.custom_name != null){
-            this.lastSpawnedEntity.setCustomName(this.custom_name);
+        if(this.customName != null){
+            this.lastSpawnedEntity.setCustomName(this.customName);
             this.lastSpawnedEntity.setCustomNameVisible(true);
         }
         
@@ -409,9 +416,17 @@ public class EntityReward extends Reward{
         }
         
         public static boolean isAgeable(EntityType entityType){
-            return Ageable.class.isAssignableFrom(entityType.getEntityClass())
-                    || entityType == EntityType.ZOMBIE;
+            return entityType != null &&
+                    (Ageable.class.isAssignableFrom(entityType.getEntityClass())
+                    || entityType == EntityType.ZOMBIE);
         }
+//</editor-fold>
+    }
+    
+    public static boolean isTameable(EntityType entityType){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        return entityType != null
+                && Tameable.class.isAssignableFrom(entityType.getEntityClass());
 //</editor-fold>
     }
 }

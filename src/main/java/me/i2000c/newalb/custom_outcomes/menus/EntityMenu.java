@@ -26,7 +26,6 @@ import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
 import org.bukkit.inventory.ItemStack;
 
 public class EntityMenu extends Editor<EntityReward>{
@@ -51,7 +50,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     }else{
                         builder.addLoreLine("&6Is ageable entity: &7false");
                     }
-                    if(isTameable(entityType)){
+                    if(EntityReward.isTameable(entityType)){
                         builder.addLoreLine("&6Is tameable entity: &atrue");
                     }else{
                         builder.addLoreLine("&6Is tameable entity: &7false");
@@ -123,7 +122,7 @@ public class EntityMenu extends Editor<EntityReward>{
             }else{
                 builder.addLoreLine("&3Is ageable entity: &7false");
             }
-            if(isTameable(entityType)){
+            if(EntityReward.isTameable(entityType)){
                 builder.addLoreLine("&3Is tameable entity: &atrue");
             }else{
                 builder.addLoreLine("&3Is tameable entity: &7false");
@@ -132,23 +131,32 @@ public class EntityMenu extends Editor<EntityReward>{
         ItemStack ent_type = builder.build();
         
         builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
-        if(item.getCustom_name() == null){
+        if(item.getCustomName() == null){
             builder.withDisplayName("&aSelect entity custom name (optional)");
         }else{
-            builder.withDisplayName("&aEntity custom name: &r" + item.getCustom_name());
+            builder.withDisplayName("&aEntity custom name: &r" + item.getCustomName());
         }
         ItemStack ent_name = builder.build();
         
         builder = ItemBuilder.newItem(XMaterial.POTION);
         builder.withDisplayName("&3Select entity effects (optional)");
-        if(!item.getEffects().isEmpty()){
+        if(item.getType() == null){
+            builder.addLoreLine("&cYou must select an entity first");
+        }else if(!item.getType().isAlive()){
+            builder.addLoreLine("&cYou cannot add effects to a non-living entity");
+        }else{
             builder.withLore(item.getEffects());
         }
         ItemStack ent_effects = builder.build();
         
-        ItemStack ent_equipment = ItemBuilder.newItem(XMaterial.DIAMOND_CHESTPLATE)
-                .withDisplayName("&eSelect entity equipment (optional)")
-                .build();
+        builder = ItemBuilder.newItem(XMaterial.DIAMOND_CHESTPLATE);
+        builder.withDisplayName("&eSelect entity equipment (optional)");
+        if(item.getType() == null){
+            builder.addLoreLine("&cYou must select an entity first");
+        }else if(!item.getType().isAlive()){
+            builder.addLoreLine("&cYou cannot add effects to a non-living entity");
+        }
+        ItemStack ent_equipment = builder.build();
         
         ItemStack offsetStack = item.getOffset().getItemToDisplay();
         
@@ -212,8 +220,12 @@ public class EntityMenu extends Editor<EntityReward>{
         menu.setItem(9, glass);
         menu.setItem(17, glass);
         
-        menu.setItem(2, isTamedStack);
-        menu.setItem(20, ageStack);
+        if(Age.isAgeable(entityType)){
+            menu.setItem(20, ageStack);
+        }
+        if(EntityReward.isTameable(entityType)){
+            menu.setItem(2, isTamedStack);
+        }
         
         menu.setItem(21, resetName);
         menu.setItem(22, resetEffects);
@@ -254,13 +266,17 @@ public class EntityMenu extends Editor<EntityReward>{
                 case 12:
                     //EntityCustomName
                     ChatListener.registerPlayer(player, message -> {
-                        item.setCustom_name(message);
+                        item.setCustomName(message);
                         openEntityMenu(player);
                     });
                     player.closeInventory();
                     break;
                 case 13:
                     //EntityEffects
+                    if(item.getType() == null || !item.getType().isAlive()){
+                        break;
+                    }
+                    
                     Editor<EffectReward> editor = EditorType.EFFECT_REWARD.getEditor();
                     EffectMenu.setShowClearEffectsItem(false);
                     editor.createNewItem(
@@ -277,6 +293,10 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 case 14:
                     //EntityEquipment
+                    if(item.getType() == null || !item.getType().isAlive()){
+                        break;
+                    }
+                    
                     Editor<Equipment> editor2 = EditorType.EQUIPMENT.getEditor();
                     editor2.editExistingItem(
                             item.getEquipment().clone(), 
@@ -300,15 +320,23 @@ public class EntityMenu extends Editor<EntityReward>{
                             });
                     break;
                 case 2:
+                    if(!EntityReward.isTameable(item.getType())){
+                        break;
+                    }
+                    
                     item.setIsTamed(!item.isTamed());
                     openEntityMenu(player);
                     break;
                 case 20:
+                    if(!Age.isAgeable(item.getType())){
+                        break;
+                    }
+                    
                     item.setAge(item.getAge().next());
                     openEntityMenu(player);
                     break;
                 case 21:
-                    item.setCustom_name(null);
+                    item.setCustomName(null);
                     openEntityMenu(player);
                     break;
                 case 22:
@@ -383,10 +411,4 @@ public class EntityMenu extends Editor<EntityReward>{
         }
 //</editor-fold>
     };
-    
-    private static boolean isTameable(EntityType entityType){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        return Tameable.class.isAssignableFrom(entityType.getEntityClass());
-//</editor-fold>
-    }
 }
