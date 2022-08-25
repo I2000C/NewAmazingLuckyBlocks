@@ -98,12 +98,13 @@ public class EntityTowerReward extends Reward{
     
     @Override
     public void execute(Player player, Location location){
+        List<EntityReward> entityRewardList = this.getOutcome().getEntityRewards();
         List<Entity> entities = new ArrayList<>(this.entityList.size());
         for(int entityID : this.entityList){
             if(entityID == PLAYER_ENTITY_ID){
                 entities.add(player);
             }else{
-                EntityReward entityReward = this.getOutcome().getEntityReward(entityID);
+                EntityReward entityReward = entityRewardList.get(entityID);
                 entityReward.execute(player, location);
                 entities.add(entityReward.lastSpawnedEntity);
             }

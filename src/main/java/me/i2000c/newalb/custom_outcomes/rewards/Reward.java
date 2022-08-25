@@ -11,7 +11,7 @@ public abstract class Reward implements Displayable, Executable, Cloneable{
     public abstract void loadRewardFromConfig(FileConfiguration config, String path);
     public abstract void saveRewardIntoConfig(FileConfiguration config, String path);
 
-    private final Outcome outcome;
+    private Outcome outcome;
     private int delay;
 
     public Reward(Outcome outcome){
@@ -20,6 +20,9 @@ public abstract class Reward implements Displayable, Executable, Cloneable{
     }
     public final Outcome getOutcome(){
         return this.outcome;
+    }
+    final void setOutcome(Outcome outcome){
+        this.outcome = outcome;
     }
 
     public final int getDelay(){

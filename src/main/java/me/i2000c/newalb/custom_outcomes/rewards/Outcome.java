@@ -292,7 +292,9 @@ public class Outcome implements Displayable, Executable, Cloneable{
             Outcome copy = (Outcome) super.clone();
             copy.rewardList = new ArrayList<>();            
             this.rewardList.forEach(reward -> {
-                copy.rewardList.add(reward.clone());
+                Reward rewardCopy = reward.clone();
+                rewardCopy.setOutcome(copy);
+                copy.rewardList.add(rewardCopy);
             });
             return copy;
         }catch(CloneNotSupportedException ex){
