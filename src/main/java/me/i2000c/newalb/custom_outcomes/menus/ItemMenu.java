@@ -63,13 +63,6 @@ public class ItemMenu extends Editor<ItemReward>{
     private static final int SPAWN_MODE_SLOT = 44;
     private static final int SPAWN_INV_SLOT_SLOT = 40;
     
-    private int amount;
-    
-    @Override
-    protected void reset(){
-        this.amount = 1;
-    }
-    
     @Override
     protected void newItem(Player player){
         Outcome outcome = RewardListMenu.getCurrentOutcome();
@@ -79,7 +72,6 @@ public class ItemMenu extends Editor<ItemReward>{
     
     @Override
     protected void editItem(Player player){
-        amount = item.getItem().getAmount();
         openItemMenu(player);
     }
     
@@ -93,10 +85,13 @@ public class ItemMenu extends Editor<ItemReward>{
                 .withDisplayName("&7Select an item from your inventory")
                 .build();
         
-        ItemStack amount_item = ItemBuilder.newItem(XMaterial.BLACK_STAINED_GLASS_PANE)
-                .withAmount(amount)
-                .withDisplayName("&bAmount: &r" + amount)
-                .build();
+        ItemBuilder builder = ItemBuilder.newItem(XMaterial.BLACK_STAINED_GLASS_PANE);
+        if(item.getItem() == null){
+            builder.withDisplayName("&bAmount: &r?");
+        }else{
+            builder.withDisplayName("&bAmount: &r" + item.getItem().getAmount());
+        }
+        ItemStack amount_item = builder.build();
         
         ItemStack creative = ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
                 .withDisplayName("&3Close menu to pick items from creative mode")
@@ -112,11 +107,10 @@ public class ItemMenu extends Editor<ItemReward>{
         menu.setItem(17, glass);
         
         menu.setItem(11, select_from_inventory_item);
-        if(item.getItem() != null){
-            item.getItem().setAmount(amount);
-            menu.setItem(14, item.getItem());
-        }else{
+        if(item.getItem() == null){
             menu.setItem(14, amount_item);
+        }else{
+            menu.setItem(14, item.getItem());
         }
         menu.setItem(15, GUIItem.getPlusLessItem(+1));
         menu.setItem(13, GUIItem.getPlusLessItem(-1));
@@ -145,17 +139,27 @@ public class ItemMenu extends Editor<ItemReward>{
                     }
                     break;
                 case 15:
-                    amount++;
+                    if(item.getItem() == null){
+                        break;
+                    }
+                    
+                    int amount = item.getItem().getAmount() + 1;
                     if(amount > 64){
                         amount = 1;
                     }
+                    item.getItem().setAmount(amount);
                     openItemMenu(player);
                     break;
                 case 13:
-                    amount--;
-                    if(amount <= 0){
+                    if(item.getItem() == null){
+                        break;
+                    }
+                    
+                    amount = item.getItem().getAmount() - 1;
+                    if(amount < 1){
                         amount = 64;
                     }
+                    item.getItem().setAmount(amount);
                     openItemMenu(player);
                     break;                
                 case 12:
@@ -167,7 +171,6 @@ public class ItemMenu extends Editor<ItemReward>{
         }else if(e.getLocation() == InventoryLocation.BOTTOM && e.getClickedInventory().getType() == InventoryType.PLAYER){
             if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 item.setItem(e.getCurrentItem().clone());
-                amount = item.getItem().getAmount();
                 openItemMenu(player);
             }
         }
