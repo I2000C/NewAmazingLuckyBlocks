@@ -40,6 +40,7 @@ public class EntityReward extends Reward{
     private int entityID;
     private EntityType type;
     private String customName;
+    private boolean customNameVisible;
     private List<String> effects;
     
     private Age age;
@@ -56,6 +57,7 @@ public class EntityReward extends Reward{
         this.isTamed = false;
         this.type = null;
         this.customName = null;
+        this.customNameVisible = true;
         this.effects = new ArrayList<>();        
         this.equipment = new Equipment();        
         this.offset = new Offset();
@@ -86,6 +88,12 @@ public class EntityReward extends Reward{
     }
     public void setCustomName(String customName) {
         this.customName = customName;
+    }
+    public boolean isCustomNameVisible(){
+        return this.customNameVisible;
+    }
+    public void setCustomNameVisible(boolean customNameVisible){
+        this.customNameVisible = customNameVisible;
     }
     public List<String> getEffects(){
         return effects;
@@ -130,32 +138,37 @@ public class EntityReward extends Reward{
         builder.addLoreLine("&bID: &r" + entityID);
         builder.addLoreLine("&btype: &e" + Logger.stripColor(type.name()));
         if(customName == null){
-            builder.addLoreLine("&bcustom-name: &cnull");
+            builder.addLoreLine("&bCustom name: &cnull");
         }else{
-            builder.addLoreLine("&bcustom-name: &r" + customName);
+            builder.addLoreLine("&bCustom name: &r" + customName);
+            if(customNameVisible){
+                builder.addLoreLine("&bCustom name visible: &atrue");
+            }else{
+                builder.addLoreLine("&bCustom name visible: &cfalse");
+            }
         }
         
         if(Age.isAgeable(type)){
-            builder.addLoreLine("&bage: &e" + age.name());
+            builder.addLoreLine("&bAge: &e" + age.name());
         }
         if(isTameable(type)){
-            builder.addLoreLine("&bisTamed: &e" + isTamed);
+            builder.addLoreLine("&bIs tamed: &e" + isTamed);
         }
         
         if(type.isAlive()){
             if(effects.isEmpty()){
-                builder.addLoreLine("&beffects: &cnull");
+                builder.addLoreLine("&bEffects: &cnull");
             }else{
-                builder.addLoreLine("&beffects: &r");
+                builder.addLoreLine("&bEffects: &r");
                 effects.forEach((str) -> {
                     builder.addLoreLine("   " + str);
                 });
             }
 
             if(equipment.isEmpty()){
-                builder.addLoreLine("&bequipment: &cnull");
+                builder.addLoreLine("&bEquipment: &cnull");
             }else{
-                builder.addLoreLine("&bequipment:");
+                builder.addLoreLine("&bEquipment:");
                 if(equipment.helmet == null){
                     builder.addLoreLine("    &6Helmet: &cnull");
                 }else{
@@ -202,6 +215,7 @@ public class EntityReward extends Reward{
         //<editor-fold defaultstate="collapsed" desc="Code">
         config.set(path + ".type", this.type.name());
         config.set(path + ".custom_name", this.customName);
+        config.set(path + ".custom_name_visible", this.customNameVisible);
         if(this.type.isAlive()){
             config.set(path + ".age", this.age.name());
             config.set(path + ".isTamed", this.isTamed);
@@ -241,6 +255,7 @@ public class EntityReward extends Reward{
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.type = EntityType.valueOf(config.getString(path + ".type"));
         this.customName = config.getString(path + ".custom_name");
+        this.customNameVisible = config.getBoolean(path + ".custom_name_visible");
         if(this.type.isAlive()){
             this.age = Age.valueOf(config.getString(path + ".age", Age.ADULT.name()));
             this.isTamed = config.getBoolean(path + ".isTamed");
@@ -308,7 +323,7 @@ public class EntityReward extends Reward{
         
         if(this.customName != null){
             this.lastSpawnedEntity.setCustomName(this.customName);
-            this.lastSpawnedEntity.setCustomNameVisible(true);
+            this.lastSpawnedEntity.setCustomNameVisible(this.customNameVisible);
         }
         
         if(this.lastSpawnedEntity instanceof LivingEntity){

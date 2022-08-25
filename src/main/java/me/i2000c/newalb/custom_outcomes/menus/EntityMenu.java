@@ -138,6 +138,12 @@ public class EntityMenu extends Editor<EntityReward>{
         }
         ItemStack ent_name = builder.build();
         
+        ItemStack ent_name_visible = GUIItem.getBooleanItem(
+                item.isCustomNameVisible(), 
+                "&9Custom name visible", 
+                XMaterial.CYAN_STAINED_GLASS_PANE, 
+                XMaterial.GLASS_PANE);
+        
         builder = ItemBuilder.newItem(XMaterial.POTION);
         builder.withDisplayName("&3Select entity effects (optional)");
         if(item.getType() == null){
@@ -203,13 +209,6 @@ public class EntityMenu extends Editor<EntityReward>{
         builder.addLoreLine("&6  if the entity is ageable");
         ItemStack ageStack = builder.build();
         
-        menu.setItem(10, GUIItem.getBackItem());
-        menu.setItem(11, ent_type);
-        menu.setItem(12, ent_name);
-        menu.setItem(13, ent_effects);
-        menu.setItem(14, ent_equipment);
-        menu.setItem(15, offsetStack);
-        menu.setItem(16, GUIItem.getNextItem());
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);
@@ -218,7 +217,18 @@ public class EntityMenu extends Editor<EntityReward>{
             menu.setItem(i, glass);
         }
         menu.setItem(9, glass);
-        menu.setItem(17, glass);
+        menu.setItem(17, glass);        
+        
+        menu.setItem(10, GUIItem.getBackItem());
+        menu.setItem(11, ent_type);
+        menu.setItem(12, ent_name);
+        if(item.getCustomName() != null){
+            menu.setItem(3, ent_name_visible);
+        }
+        menu.setItem(13, ent_effects);
+        menu.setItem(14, ent_equipment);
+        menu.setItem(15, offsetStack);
+        menu.setItem(16, GUIItem.getNextItem());
         
         if(Age.isAgeable(entityType)){
             menu.setItem(20, ageStack);
@@ -270,6 +280,15 @@ public class EntityMenu extends Editor<EntityReward>{
                         openEntityMenu(player);
                     });
                     player.closeInventory();
+                    break;
+                case 3:
+                    //EntityCustomNameVisible
+                    if(item.getCustomName() == null){
+                        break;
+                    }
+                    
+                    item.setCustomNameVisible(!item.isCustomNameVisible());
+                    openEntityMenu(player);
                     break;
                 case 13:
                     //EntityEffects
