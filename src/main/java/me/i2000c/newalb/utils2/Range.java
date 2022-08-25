@@ -58,6 +58,10 @@ public class Range implements Cloneable{
         }
     }
     
+    public boolean isZero(){
+        return min == max && min == 0;
+    }
+    
     /**
      *
      * @param precision is 1, 10, 100, etc

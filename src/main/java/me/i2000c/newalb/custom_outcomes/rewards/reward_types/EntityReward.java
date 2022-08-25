@@ -282,16 +282,14 @@ public class EntityReward extends Reward{
         }else{
             this.equipment = new Equipment();
         }
-        if(config.contains(path + ".offset")){
-            this.offset = new Offset(config, path + ".offset");
-        }
+        this.offset = new Offset(config, path + ".offset");
 //</editor-fold>
     }
 
     @Override
     public void execute(Player player, Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Location target = this.offset.addToLocation(location.clone());
+        Location target = this.offset.applyToLocation(location.clone());
         try{
             this.lastSpawnedEntity = target.getWorld().spawnEntity(target, this.type);
         }catch(Exception ex){

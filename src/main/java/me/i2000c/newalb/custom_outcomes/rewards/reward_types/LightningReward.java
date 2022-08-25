@@ -89,7 +89,7 @@ public class LightningReward extends Reward{
             loc = location.clone().subtract(0.5, 0, 0.5);
         }
         
-        offset.addToLocation(loc);
+        offset.applyToLocation(loc);
         if(causeDamage){
             loc.getWorld().strikeLightning(loc);
         }else{

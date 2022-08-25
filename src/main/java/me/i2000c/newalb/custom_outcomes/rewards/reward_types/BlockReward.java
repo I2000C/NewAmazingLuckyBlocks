@@ -123,7 +123,7 @@ public class BlockReward extends Reward{
     @Override
     public void execute(Player player, Location location){
         Location loc = usePlayerLoc ? player.getLocation().clone() : location.clone();
-        offset.addToLocation(loc);
+        offset.applyToLocation(loc);
         if(isFallingBlock){
             MaterialData md;
             if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){

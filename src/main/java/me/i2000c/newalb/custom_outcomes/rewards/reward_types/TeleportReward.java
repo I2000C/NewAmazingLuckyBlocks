@@ -96,10 +96,10 @@ public class TeleportReward extends Reward{
         Location teleportLocation;
         switch(source){
             case RELATIVE_TO_PLAYER:
-                teleportLocation = offset.addToLocation(playerLocation);
+                teleportLocation = offset.applyToLocation(playerLocation);
                 break;
             case RELATIVE_TO_LUCKY_BLOCK:
-                teleportLocation = offset.addToLocation(location.clone());
+                teleportLocation = offset.applyToLocation(location.clone());
                 break;
             default:
                 World world;
@@ -113,7 +113,7 @@ public class TeleportReward extends Reward{
                         return;
                     }
                 }
-                teleportLocation = offset.addToLocation(new Location(world, 0, 0, 0));
+                teleportLocation = offset.applyToLocation(new Location(world, 0, 0, 0));
         }
         
         teleportLocation.setPitch(pitch);

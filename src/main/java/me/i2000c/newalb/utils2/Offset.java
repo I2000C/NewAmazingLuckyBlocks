@@ -1,122 +1,110 @@
 package me.i2000c.newalb.utils2;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import me.i2000c.newalb.custom_outcomes.rewards.Displayable;
-import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 
-@SerializableAs("Offset")
-public class Offset implements ConfigurationSerializable, Displayable, Cloneable{
+public class Offset implements Displayable, Cloneable{
     private Range offsetX;
     private Range offsetY;
     private Range offsetZ;
     
     public Offset(FileConfiguration config, String path){
-        Range rangeX = Range.fromString(config.getString(path + ".offsetX"));
-        Range rangeY = Range.fromString(config.getString(path + ".offsetY"));
-        Range rangeZ = Range.fromString(config.getString(path + ".offsetZ"));
-        
-        this.offsetX = rangeX;
-        this.offsetY = rangeY;
-        this.offsetZ = rangeZ;
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(config.isConfigurationSection(path)){
+            Range rangeX = Range.fromString(config.getString(path + ".offsetX"));
+            Range rangeY = Range.fromString(config.getString(path + ".offsetY"));
+            Range rangeZ = Range.fromString(config.getString(path + ".offsetZ"));
+            
+            this.offsetX = rangeX;
+            this.offsetY = rangeY;
+            this.offsetZ = rangeZ;
+        }else{
+            this.offsetX = new Range();
+            this.offsetY = new Range();
+            this.offsetZ = new Range();
+        }
+//</editor-fold>
     }
     public void saveToConfig(FileConfiguration config, String path){
-        config.set(path + ".offsetX", this.offsetX.toString());
-        config.set(path + ".offsetY", this.offsetY.toString());
-        config.set(path + ".offsetZ", this.offsetZ.toString());
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(this.offsetX.isZero() && this.offsetY.isZero() && this.offsetZ.isZero()){
+            config.set(path, null);
+        }else{
+            config.set(path + ".offsetX", this.offsetX.toString());
+            config.set(path + ".offsetY", this.offsetY.toString());
+            config.set(path + ".offsetZ", this.offsetZ.toString());
+        }
+//</editor-fold>
     }
     
     public Offset(String offsetX, String offsetY, String offsetZ){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         this.offsetX = Range.fromString(offsetX);
         this.offsetY = Range.fromString(offsetY);
         this.offsetZ = Range.fromString(offsetZ);
+//</editor-fold>
     }
     
     public Offset(Range offsetX, Range offsetY, Range offsetZ){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetZ = offsetZ;
+//</editor-fold>
     }
     
     public Offset(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         this(new Range(), new Range(), new Range());
+//</editor-fold>
     }
     
     public void setOffsetX(Range offsetX){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         this.offsetX = offsetX;
+//</editor-fold>
     }
     public Range getOffsetX(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         return this.offsetX;
+//</editor-fold>
     }
     
     public void setOffsetY(Range offsetY){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         this.offsetY = offsetY;
+//</editor-fold>
     }
     public Range getOffsetY(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         return this.offsetY;
+//</editor-fold>
     }
     
     public void setOffsetZ(Range offsetZ){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         this.offsetZ = offsetZ;
+//</editor-fold>
     }
     public Range getOffsetZ(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         return this.offsetZ;
+//</editor-fold>
     }
     
-    public Location addToLocation(Location loc){
+    public Location applyToLocation(Location loc){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         return loc.add(offsetX.getRandomInt(), offsetY.getRandomInt(), offsetZ.getRandomInt());
-    }
-
-    @Override
-    public Map<String, Object> serialize(){
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("offsetX", offsetX.toString());
-        map.put("offsetY", offsetY.toString());
-        map.put("offsetZ", offsetZ.toString());
-        
-        return map;
-    }
-    
-    public static Offset deserialize(Map<String, Object> map){
-        Range offsetX;
-        Range offsetY;
-        Range offsetZ;
-        try{
-            offsetX = Range.fromString(map.get("offsetX").toString());
-        }catch(IllegalArgumentException ex){
-            Logger.warn("Invalid offset: " + map.get("offsetX").toString());
-            Logger.warn("It will be converted to '0'");
-            offsetX = new Range();
-        }
-        
-        try{
-            offsetY = Range.fromString(map.get("offsetY").toString());
-        }catch(IllegalArgumentException ex){
-            Logger.err("Invalid offset: " + map.get("offsetY").toString());
-            Logger.err("It will be converted to '0'");
-            offsetY = new Range();
-        }
-        
-        try{
-            offsetZ = Range.fromString(map.get("offsetZ").toString());
-        }catch(IllegalArgumentException ex){
-            Logger.err("Invalid offset: " + map.get("offsetZ").toString());
-            Logger.err("It will be converted to '0'");
-            offsetZ = new Range();
-        }
-        
-        return new Offset(offsetX, offsetY, offsetZ);
+//</editor-fold>
     }
     
     @Override
     public ItemStack getItemToDisplay(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         return ItemBuilder.newItem(XMaterial.PISTON)
                 .withDisplayName("&3Configure offset")
                 .addLoreLine("&dCurrent offset:")
@@ -124,10 +112,12 @@ public class Offset implements ConfigurationSerializable, Displayable, Cloneable
                 .addLoreLine("   &5Y: &3" + offsetY)
                 .addLoreLine("   &5Z: &3" + offsetZ)
                 .build();
+//</editor-fold>
     }
     
     @Override
     public Offset clone(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         try{
             Offset copy = (Offset) super.clone();
             copy.offsetX = this.offsetX.clone();
@@ -136,25 +126,30 @@ public class Offset implements ConfigurationSerializable, Displayable, Cloneable
             return copy;
         }catch(CloneNotSupportedException ex){
             return null;
-        }            
+        }
+//</editor-fold>
     }
     
     @Override
     public int hashCode() {
+        //<editor-fold defaultstate="collapsed" desc="Code">
         int hash = 3;
         hash = 67 * hash + Objects.hashCode(this.offsetX);
         hash = 67 * hash + Objects.hashCode(this.offsetY);
         hash = 67 * hash + Objects.hashCode(this.offsetZ);
         return hash;
+//</editor-fold>
     }
     
     @Override
     public boolean equals(Object object){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(object == null || !(object instanceof Offset)){
             return false;
         }else{
             Offset offset = (Offset) object;
             return this.offsetX.equals(offset.offsetX) && this.offsetY.equals(offset.offsetY) && this.offsetZ.equals(offset.offsetZ);
         }
+//</editor-fold>
     }
 }

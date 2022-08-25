@@ -140,9 +140,7 @@ public class FireworkReward extends Reward{
         this.type = FireworkEffect.Type.valueOf(config.getString(path + ".type"));
         this.colorHEX = config.getStringList(path + ".color");
         this.fadeHEX = config.getStringList(path + ".fade");
-        if(config.isConfigurationSection(path + ".offset")){
-            this.offset = new Offset(config, path + ".offset");
-        }        
+        this.offset = new Offset(config, path + ".offset");
     }
     
     @Override
@@ -159,7 +157,7 @@ public class FireworkReward extends Reward{
         }
             
         for(int i=0;i<amount;i++){
-            Location loc = offset.addToLocation(location.clone());
+            Location loc = offset.applyToLocation(location.clone());
             Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
             FireworkMeta fwm = fw.getFireworkMeta();
             fwm.setPower(power);
