@@ -82,7 +82,13 @@ public class LightningReward extends Reward{
     
     @Override
     public void execute(Player player, Location location){
-        Location loc = usePlayerLoc ? player.getLocation().clone() : location.clone();
+        Location loc;
+        if(usePlayerLoc){
+            loc = player.getLocation().clone();
+        }else{
+            loc = location.clone().subtract(0.5, 0, 0.5);
+        }
+        
         offset.addToLocation(loc);
         if(causeDamage){
             loc.getWorld().strikeLightning(loc);
