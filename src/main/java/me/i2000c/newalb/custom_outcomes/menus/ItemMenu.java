@@ -25,6 +25,7 @@ import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.CustomColor;
 import me.i2000c.newalb.utils2.EnchantmentWithLevel;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -62,6 +63,8 @@ public class ItemMenu extends Editor<ItemReward>{
     
     private static final int SPAWN_MODE_SLOT = 44;
     private static final int SPAWN_INV_SLOT_SLOT = 40;
+    
+    private static final int OFFSET_SLOT = 36;
     
     @Override
     protected void newItem(Player player){
@@ -328,7 +331,7 @@ public class ItemMenu extends Editor<ItemReward>{
             builder.addLoreLine("&2  &2or &5&lFORCE_SET_TO_INV");
         }else{
             builder.addLoreLine("&2  &2or &e&lFORCE_SET_TO_INV");
-        }        
+        }
         builder.addLoreLine("");
         builder.addLoreLine("&2Slots from &b0 &2to &b8 &2are from hotbar");
         builder.addLoreLine("&2Slots from &b9 &2to &b35 &2are from");
@@ -368,7 +371,27 @@ public class ItemMenu extends Editor<ItemReward>{
         }
         builder.addLoreLine("");
         builder.addLoreLine("&3Click to reset");
-        ItemStack spawnInvSlotItem = builder.build();
+        ItemStack spawnInvSlotItem = builder.build();        
+        
+        ItemStack offsetStack = item.getOffset().getItemToDisplay();
+        builder = ItemBuilder.fromItem(offsetStack, false);
+        builder.addLoreLine("");
+        builder.addLoreLine("&2Offset is only used if");
+        if(item.getSpawnMode() == ItemReward.ItemSpawnMode.DEFAULT){
+            builder.addLoreLine("&2  spawnMode is &5&lDEFAULT");
+        }else{
+            builder.addLoreLine("&2  spawnMode is &e&lDEFAULT");
+        }
+        if(item.getSpawnMode() == ItemReward.ItemSpawnMode.ADD_TO_INV){
+            builder.addLoreLine("&2  or &5&lADD_TO_INV");
+        }else{
+            builder.addLoreLine("&2  or &e&lADD_TO_INV");
+        }
+        if(item.getSpawnMode() == ItemReward.ItemSpawnMode.SET_TO_INV){
+            builder.addLoreLine("&2  or &5&lSET_TO_INV");
+        }else{
+            builder.addLoreLine("&2  or &e&lSET_TO_INV");
+        }
         
         menu.setItem(BACK_SLOT, GUIItem.getBackItem());
         menu.setItem(NEXT_SLOT, GUIItem.getNextItem());
@@ -403,6 +426,8 @@ public class ItemMenu extends Editor<ItemReward>{
             menu.setItem(SPAWN_INV_SLOT_SLOT-i, GUIItem.getPlusLessItem(-1*multiplier));
             menu.setItem(SPAWN_INV_SLOT_SLOT+i, GUIItem.getPlusLessItem(+1*multiplier));
         }
+        
+        menu.setItem(OFFSET_SLOT, offsetStack);
         
         menu.openToPlayer(player);
 //</editor-fold>
@@ -694,6 +719,17 @@ public class ItemMenu extends Editor<ItemReward>{
                 }
                 item.setSpawnInvSlot(spawnInvSlot);
                 openItemMenu2(player);
+                break;
+            case OFFSET_SLOT:
+                Editor<Offset> offsetEditor = EditorType.OFFSET.getEditor();
+                    offsetEditor.editExistingItem(
+                            item.getOffset().clone(), 
+                            player, 
+                            p -> openItemMenu2(p), 
+                            (p, offset) -> {
+                                item.setOffset(offset);
+                                openItemMenu2(p);
+                            });
                 break;
         }
 //</editor-fold>

@@ -16,6 +16,7 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.CustomColor;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -48,12 +49,14 @@ public class ItemReward extends Reward{
     private ItemStack item;
     private ItemSpawnMode spawnMode;
     private int spawnInvSlot;
+    private Offset offset;
     
     public ItemReward(Outcome outcome){
         super(outcome);
         item = null;
         spawnMode = ItemSpawnMode.DEFAULT;
         spawnInvSlot = 1;
+        offset = new Offset();
     }
     
     public ItemStack getItem(){
@@ -77,9 +80,28 @@ public class ItemReward extends Reward{
         this.spawnInvSlot = spawnInvSlot;
     }
     
+    public Offset getOffset(){
+        return this.offset;
+    }
+    public void setOffset(Offset offset){
+        this.offset = offset;
+    }
+    
     @Override
     public ItemStack getItemToDisplay(){
-        return getItem().clone();
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        ItemBuilder builder = ItemBuilder.fromItem(item);
+        
+        builder.addLoreLine("");
+        builder.addLoreLine("&bSpawn mode: &a" + spawnMode.name());
+        builder.addLoreLine("&bSpawn inv slot: &a" + spawnInvSlot);
+        builder.addLoreLine("&bOffset:");
+        builder.addLoreLine("   &5X: &3" + offset.getOffsetX());
+        builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
+        builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
+        
+        return builder.build();
+//</editor-fold>
     }
     
     @Override
@@ -90,6 +112,7 @@ public class ItemReward extends Reward{
                 ItemSpawnMode.valueOf(spawnModeString) : 
                 ItemSpawnMode.DEFAULT;
         spawnInvSlot = config.getInt(path + ".spawnInvSlot", 0);
+        offset = new Offset(config, path + ".offset");
         
         ItemBuilder builder = ItemBuilder.newItem(config.getString(path + ".material"));
         
@@ -245,6 +268,8 @@ public class ItemReward extends Reward{
 
             config.set(path + ".potionEffects", effectList);
         }
+        
+        offset.saveToConfig(config, path + ".offset");
 //</editor-fold>
     }
     
@@ -271,6 +296,7 @@ public class ItemReward extends Reward{
             stack.addUnsafeEnchantments(item.getEnchantments());
         }
         
+        offset.applyToLocation(location);
         Inventory inv = player.getInventory();
         switch(spawnMode){
             case DEFAULT:
@@ -372,6 +398,7 @@ public class ItemReward extends Reward{
     public Reward clone(){
         ItemReward copy = (ItemReward) super.clone();
         copy.item = this.item.clone();
+        copy.offset = this.offset.clone();
         return copy;
     }
     
