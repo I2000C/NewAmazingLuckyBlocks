@@ -1,6 +1,5 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -278,7 +277,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
     
     @Override
     public ItemStack getItemToDisplay(){
-        return ItemBuilder.newItem(XMaterial.matchXMaterial(icon))
+        return ItemBuilder.fromItem(icon)
                 .withDisplayName("&3Outcome " + ID)
                 .addLoreLine("&aName: &d" + this.name)
                 .addLoreLine("&6Probability: &b" + this.probability)
