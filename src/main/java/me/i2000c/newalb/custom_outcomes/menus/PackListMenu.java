@@ -27,13 +27,17 @@ public class PackListMenu extends Editor{
         InventoryListener.registerInventory(CustomInventoryType.GUI_PACK_MANAGER_MENU, GUI_PACK_MANAGER_MENU_FUNCTION);
     }
     
+    private int lastClickedSlot;
     private boolean renameMode;
+    private boolean changeIconMode;
     private boolean cloneMode;
     private boolean deleteMode;
     
     @Override
     protected void reset(){
+        lastClickedSlot = -1;
         renameMode = false;
+        changeIconMode = false;
         cloneMode = false;
         deleteMode = false;
     }
@@ -82,18 +86,34 @@ public class PackListMenu extends Editor{
                 .addLoreLine("&cwhen you click on a pack,")
                 .addLoreLine("&cit will be deleted permanently");
         
+        ItemStack changeIcon = GUIItem.getEnabledDisabledItem(
+                changeIconMode, 
+                "&9Change icon", 
+                "&6Change icon mode", 
+                XMaterial.CHEST, 
+                XMaterial.CHEST);
+        ItemBuilder.fromItem(changeIcon, false)
+                .addLoreLine("")
+                .addLoreLine("&bIf this mode is enabled,")
+                .addLoreLine("&byou can click on an item of")
+                .addLoreLine("&byour inventory and then click")
+                .addLoreLine("&bon a pack to change its icon");
+        
         menu.setItem(45, GUIItem.getBackItem());
-        if(!renameMode && !cloneMode && !deleteMode){
+        if(!renameMode && !changeIconMode && !cloneMode && !deleteMode){
             menu.setItem(46, createPack);
         }
-        if(!cloneMode && !deleteMode){
+        if(!changeIconMode && !cloneMode && !deleteMode){
             menu.setItem(47, renamePack);
         }
-        if(!renameMode && !deleteMode){
-            menu.setItem(48, clonePack);
+        if(!renameMode && !cloneMode && !deleteMode){
+            menu.setItem(48, changeIcon);
         }
-        if(!renameMode && !cloneMode){
-            menu.setItem(49, deletePack);
+        if(!renameMode && !changeIconMode && !deleteMode){
+            menu.setItem(49, clonePack);
+        }
+        if(!renameMode && !changeIconMode && !cloneMode){
+            menu.setItem(50, deletePack);
         }        
         
         //Not required for the moment
@@ -130,7 +150,7 @@ public class PackListMenu extends Editor{
                     break;
                 case 46:
                     //Create new pack
-                    if(!renameMode && !cloneMode && !deleteMode){
+                    if(!renameMode && !changeIconMode && !cloneMode && !deleteMode){
                         ChatListener.registerPlayer(player, message -> {
                             String packName = OtherUtils.removeExtension(message);
                             File newFile = new File(PackManager.OUTCOMES_FOLDER, packName + ".yml");
@@ -152,21 +172,28 @@ public class PackListMenu extends Editor{
                     break;
                 case 47:
                     //Toggle rename mode
-                    if(!cloneMode && !deleteMode){
+                    if(!cloneMode && !changeIconMode && !deleteMode){
                         renameMode = !renameMode;
                         openPackListMenu(player);
                     }
                     break;
                 case 48:
-                    //Toggle clone mode
-                    if(!renameMode && !deleteMode){
-                        cloneMode = !cloneMode;
+                    //Toggle changeIcon mode
+                    if(!renameMode && !cloneMode && !deleteMode){
+                        changeIconMode = !changeIconMode;
                         openPackListMenu(player);
                     }
                     break;
                 case 49:
+                    //Toggle clone mode
+                    if(!renameMode && !changeIconMode && !deleteMode){
+                        cloneMode = !cloneMode;
+                        openPackListMenu(player);
+                    }
+                    break;
+                case 50:
                     //Toggle delete mode
-                    if(!renameMode && !cloneMode){
+                    if(!renameMode && !changeIconMode && !cloneMode){
                         deleteMode = !deleteMode;
                         openPackListMenu(player);
                     }
@@ -198,6 +225,17 @@ public class PackListMenu extends Editor{
                             });
                             player.closeInventory();
                             Logger.sendMessage(("&3Write the new pack name in the chat"), player);
+                        }else if(changeIconMode){
+                            //Change pack icon
+                            ItemStack stack = e.getCursor();
+                            if(stack == null || stack.getType() == Material.AIR){
+                                return;
+                            }
+                            
+                            e.setCursor(null);
+                            e.getView().getBottomInventory().setItem(lastClickedSlot, stack);
+                            PackManager.changePackIcon(packName, stack, player);
+                            openPackListMenu(player);
                         }else if(cloneMode){
                             //Clone pack
                             PackManager.clonePack(packName, player);
@@ -216,6 +254,11 @@ public class PackListMenu extends Editor{
                                     null);
                         }
                     }
+            }
+        }else if(e.getLocation() == InventoryLocation.BOTTOM){
+            if(changeIconMode){
+                e.setCancelled(false);
+                lastClickedSlot = e.getSlot();
             }
         }
 //</editor-fold>

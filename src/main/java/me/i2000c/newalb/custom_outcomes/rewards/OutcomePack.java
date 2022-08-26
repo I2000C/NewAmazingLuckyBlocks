@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -27,26 +28,35 @@ public class OutcomePack implements Displayable, Executable{
     private final Map<Integer, Outcome> outcomes;
     private FileConfiguration outcomeConfig;
     private File outcomeFile;
+    private ItemStack icon;
     
     private int totalProbability;
     
     private final Set<LuckyBlockType> luckyBlockTypesToNotify;
     
     void addLuckyBlockTypeToNotify(LuckyBlockType type){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypesToNotify.add(type);
+//</editor-fold>
     }
     void removeLuckyBlockTypeFromNotify(LuckyBlockType type){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypesToNotify.remove(type);
+//</editor-fold>
     }
     
     public OutcomePack(File file){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypesToNotify = new HashSet<>();
         outcomeFile = file;
         outcomes = new HashMap<>();
+        icon = XMaterial.CRAFTING_TABLE.parseItem();
         loadPack();
+//</editor-fold>
     }
     
     public final void loadPack(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         totalProbability = 0;
         luckyBlockTypesToNotify.clear();
         
@@ -69,35 +79,66 @@ public class OutcomePack implements Displayable, Executable{
                 outcomes.put(outcome.getID(), outcome);
             }
         }
+        
+        String materialName = outcomeConfig.getString("Icon");
+        if(materialName != null){
+            icon = ItemBuilder.newItem(materialName).build();
+        }
+//</editor-fold>
     }
     
     private void saveConfig() throws IOException{
+        //<editor-fold defaultstate="collapsed" desc="Code">
         this.outcomeConfig.save(outcomeFile);
+//</editor-fold>
     }
     
     public String getPackname(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         return OtherUtils.removeExtension(this.outcomeFile.getName());
+//</editor-fold>
     }
     
     public String getFilename(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         return this.outcomeFile.getName();
+//</editor-fold>
+    }
+    
+    public void setIcon(ItemStack icon){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        this.icon = new ItemStack(icon.getType());
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+            this.icon.setDurability(icon.getDurability());
+        }
+//</editor-fold>
+    }
+    public ItemStack getIcon(){
+        return this.icon;
     }
     
     public Map<Integer, Outcome> getOutcomes(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         return this.outcomes;
+//</editor-fold>
     }
     
     public List<Outcome> getSortedOutcomes(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         List<Outcome> list = new ArrayList<>(this.outcomes.values());
         list.sort((outcome1, outcome2) -> outcome1.getID() - outcome2.getID());
         return list;
+//</editor-fold>
     }
     
     public Outcome getOutcome(int i){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         return outcomes.get(i);
+//</editor-fold>
     }
     
     private static final Comparator<String> COMPARATOR = (String s1, String s2) -> {
+        //<editor-fold defaultstate="collapsed" desc="Code">
         try{
             int value1 = Integer.parseInt(s1);
             int value2 = Integer.parseInt(s2);
@@ -106,17 +147,21 @@ public class OutcomePack implements Displayable, Executable{
         }catch(NumberFormatException ex){
             return 1;
         }
+//</editor-fold>
     };
     
     public void addOutcome(Outcome outcome, boolean isNewOutcome){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(isNewOutcome || outcome.getID() == -1){
             outcome.setID(outcomes.size());
         }
         outcomes.put(outcome.getID(), outcome);
         saveOutcomes();
+//</editor-fold>
     }
     
     public void removeOutcome(Outcome outcome){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(!outcomes.containsKey(outcome.getID())){
             return;
         }
@@ -147,34 +192,43 @@ public class OutcomePack implements Displayable, Executable{
                 nextCorrectID++;
             }
         }
+//</editor-fold>
     }
     public void removeOutcome(int outcomeID){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         outcomes.remove(outcomeID);
+//</editor-fold>
     }
     
     public void saveOutcomes(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        outcomeConfig.set("Icon", ItemBuilder.fromItem(icon, false).toString());
         outcomeConfig.set("Outcomes", null);
         outcomes.values().stream()
                 .sorted((outcome1, outcome2) -> outcome1.getID() - outcome2.getID())
                 .forEachOrdered((outcome) -> outcome.saveOutcome(outcomeConfig, "Outcomes." + outcome.getID())
-        );
+                );
         try{
             saveConfig();
         }catch(IOException ex){
             ex.printStackTrace();
         }
+//</editor-fold>
     }
     
     public void renamePack(String newName){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         newName = OtherUtils.removeExtension(newName);
         File newFile = new File(outcomeFile.getParentFile(), newName + ".yml");
         outcomeFile.renameTo(newFile);
         outcomeFile = newFile;
         TypeManager.saveTypes();
+//</editor-fold>
     }
     
     @Override
     public void execute(Player player, Location location){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         Random r = new Random();
         int randomNumber = r.nextInt(totalProbability);
         for(int i=0;i<outcomes.size();i++){
@@ -185,17 +239,21 @@ public class OutcomePack implements Displayable, Executable{
                 break;
             }
         }
+//</editor-fold>
     }
     
     public void delete(){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypesToNotify.forEach(type -> type.removePack(this));
         TypeManager.saveTypes();
         outcomeFile.delete();
+//</editor-fold>
     }
     
     public OutcomePack clonePack(String filename){
+        //<editor-fold defaultstate="collapsed" desc="Code">
         filename = OtherUtils.removeExtension(filename);
-        try{            
+        try{
             File newFile = new File(outcomeFile.getParentFile(), filename + ".yml");
             Files.copy(Paths.get(outcomeFile.getPath()), Paths.get(newFile.getPath()));
             OutcomePack newPack = new OutcomePack(newFile);
@@ -204,14 +262,17 @@ public class OutcomePack implements Displayable, Executable{
             Logger.err("Couln't create file \"" + filename + "\"");
             Logger.err(ex);
             return null;
-        }        
+        }
+//</editor-fold>
     }
     
     @Override
     public ItemStack getItemToDisplay(){
-        return ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        return ItemBuilder.fromItem(icon)
                 .withDisplayName("&6" + getPackname())
                 .addLoreLine("&aOutcome number: &d" + getOutcomes().size())
                 .build();
+//</editor-fold>
     }
 }

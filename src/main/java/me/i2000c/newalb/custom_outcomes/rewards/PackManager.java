@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
 
 public class PackManager{
     private PackManager(){
@@ -97,7 +99,16 @@ public class PackManager{
             Logger.sendMessage("&aPack &6\"" + oldName + "\" &ahas been renamed to &b\"" + newName + "\"", sender);
         }
 //</editor-fold>
-    }    
+    }
+    public static void changePackIcon(String name, ItemStack icon, CommandSender sender){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        OutcomePack pack = getPack(OtherUtils.removeExtension(name));
+        pack.setIcon(icon);
+        String iconString = ItemBuilder.fromItem(icon, false).toString();
+        pack.saveOutcomes();
+        Logger.sendMessage("&aIcon of pack &6\"" + name + "\" &ahas been changed to &b" + iconString, sender);
+//</editor-fold>
+    }
     public static void removePack(String name, CommandSender sender){
         //<editor-fold defaultstate="collapsed" desc="Code">
         name = OtherUtils.removeExtension(name);
