@@ -4,6 +4,8 @@ import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.rewards.Equipment;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
@@ -380,7 +382,15 @@ public class EntityReward extends Reward{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Location target = this.offset.applyToLocation(location.clone());
         try{
-            this.lastSpawnedEntity = target.getWorld().spawnEntity(target, this.type);
+            EntityType targetType = this.type;
+            if(this.type == EntityType.OCELOT && this.isTamed){
+                // Since Minecraft 1.14 tamed Ocelots are cats
+                if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_14) >= 0){
+                    targetType = EntityType.valueOf("CAT");
+                }
+            }
+            
+            this.lastSpawnedEntity = target.getWorld().spawnEntity(target, targetType);
         }catch(Exception ex){
             Logger.err("Entity " + this.type.name() + " couldn't be spawned due to:");
             Logger.err(ex);
@@ -419,9 +429,11 @@ public class EntityReward extends Reward{
                             .getInventory()
                             .addItem(new ItemStack[]{new ItemStack(XMaterial.SADDLE.parseItem())});
                 }else if(this.lastSpawnedEntity instanceof Ocelot){
-                    int randomType = OtherUtils.generateRandomInt(1, 3);
-                    Ocelot.Type catType = Ocelot.Type.getType(randomType);
-                    ((Ocelot) this.lastSpawnedEntity).setCatType(catType);
+                    if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_13) < 0){
+                        int randomType = OtherUtils.generateRandomInt(1, 3);
+                        Ocelot.Type catType = Ocelot.Type.getType(randomType);
+                        ((Ocelot) this.lastSpawnedEntity).setCatType(catType);
+                    }                    
                 }
             }
             
