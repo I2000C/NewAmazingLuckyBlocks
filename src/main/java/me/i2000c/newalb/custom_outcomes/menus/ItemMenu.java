@@ -606,7 +606,7 @@ public class ItemMenu extends Editor<ItemReward>{
                                     (p, effectReward) -> {
                                         PotionEffect potionEffect = new PotionEffect(
                                                 effectReward.getPotionEffect(), 
-                                                effectReward.getDuration(), 
+                                                effectReward.getDuration()*20, 
                                                 effectReward.getAmplifier());
                                         ItemBuilder.fromItem(item.getItem(), false)
                                                 .addPotionEffect(potionEffect);
