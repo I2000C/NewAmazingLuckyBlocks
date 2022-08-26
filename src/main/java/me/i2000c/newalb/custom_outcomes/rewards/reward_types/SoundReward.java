@@ -22,7 +22,7 @@ public class SoundReward extends Reward{
     public SoundReward(Outcome outcome){
         super(outcome);
         type = null;
-        volume = 20.0;
+        volume = 10.0;
         pitch = 1.0;
     }
 
