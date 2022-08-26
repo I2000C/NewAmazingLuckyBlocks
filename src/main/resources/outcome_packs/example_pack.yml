@@ -1,3 +1,4 @@
+Icon: CRAFTING_TABLE
 Outcomes:
   '0':
     outcome-name: Example 1
@@ -62,11 +63,15 @@ Outcomes:
         '0':
           type: VILLAGER
           custom_name: '&6&lCustom Villager'
+          custom_name_visible: false
+          health: -1
           age: ADULT
           isTamed: false
           effects: []
         '1':
           type: ZOMBIE
+          custom_name_visible: false
+          health: -1
           age: ADULT
           isTamed: false
           effects: []
@@ -106,6 +111,8 @@ Outcomes:
       entity:
         '0':
           type: VILLAGER
+          custom_name_visible: false
+          health: -1
           age: ADULT
           isTamed: false
           effects: []
