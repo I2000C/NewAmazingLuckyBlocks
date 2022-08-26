@@ -1,6 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
@@ -59,7 +60,8 @@ public class SoundReward extends Reward{
     
     @Override
     public void saveRewardIntoConfig(FileConfiguration config, String path){
-        config.set(path + ".type", this.type.name());
+        XSound xsound = XSound.matchXSound(this.type);
+        config.set(path + ".type", xsound.name());
         double truncated = BigDecimal.valueOf(this.volume).setScale(3, RoundingMode.HALF_UP).doubleValue();
         config.set(path + ".volume", truncated);
         truncated = BigDecimal.valueOf(this.pitch).setScale(3, RoundingMode.HALF_UP).doubleValue();
@@ -68,7 +70,12 @@ public class SoundReward extends Reward{
     
     @Override
     public void loadRewardFromConfig(FileConfiguration config, String path){
-        this.type = Sound.valueOf(config.getString(path + ".type"));
+        try{
+            XSound xsound = XSound.valueOf(config.getString(path + ".type"));
+            this.type = xsound.parseSound();
+        }catch(IllegalArgumentException ex){
+            this.type = Sound.valueOf(config.getString(path + ".type"));
+        }            
         this.volume = config.getDouble(path + ".volume");
         this.pitch = config.getDouble(path + ".pitch");
     }
