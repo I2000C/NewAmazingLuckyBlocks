@@ -138,12 +138,42 @@ public class EntityReward extends Reward{
     }
     
     public static XMaterial getXMaterialFromEntityType(EntityType type){        
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(type == null){
+            return XMaterial.GHAST_SPAWN_EGG;
+        }
+        
         try{
             String materialName = type.name() + "_SPAWN_EGG";
             return XMaterial.valueOf(materialName);
         }catch(Exception ex){
-            return XMaterial.GHAST_SPAWN_EGG;
+            switch(type){
+                case PRIMED_TNT: return XMaterial.TNT;
+                case THROWN_EXP_BOTTLE: return XMaterial.EXPERIENCE_BOTTLE;
+                case WITHER_SKULL: return XMaterial.WITHER_SKELETON_SKULL;
+                case ARROW: return XMaterial.ARROW;
+                case BOAT: return XMaterial.OAK_BOAT;
+                case ENDER_PEARL: return XMaterial.ENDER_PEARL;
+                case ENDER_SIGNAL: return XMaterial.ENDER_EYE;
+                
+                case SMALL_FIREBALL:
+                case FIREBALL: return XMaterial.FIRE_CHARGE;
+                case SNOWBALL: return XMaterial.SNOWBALL;
+                
+                case GIANT: return XMaterial.ZOMBIE_SPAWN_EGG;
+                case MUSHROOM_COW: return XMaterial.MOOSHROOM_SPAWN_EGG;
+                
+                case MINECART: return XMaterial.MINECART;
+                case MINECART_CHEST: return XMaterial.CHEST_MINECART;
+                case MINECART_COMMAND: return XMaterial.COMMAND_BLOCK_MINECART;
+                case MINECART_FURNACE: return XMaterial.FURNACE_MINECART;
+                case MINECART_HOPPER: return XMaterial.HOPPER_MINECART;
+                case MINECART_TNT: return XMaterial.TNT_MINECART;
+                
+                default: return XMaterial.GHAST_SPAWN_EGG;
+            }
         }
+//</editor-fold>
     }
     
     @Override
