@@ -245,6 +245,7 @@ public class TypeManager{
         luckyBlockTypes.forEach(type -> {
             File typeFile = new File(LUCKY_BLOCK_TYPES_FOLDER, type.getTypeName() + ".yml");
             ReadWriteConfig config = new ReadWriteConfig(PLUGIN, typeFile);
+            config.clearConfig();
             type.saveToConfig(config.getBukkitConfig());
             config.saveConfig();
         });

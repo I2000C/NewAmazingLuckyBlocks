@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -51,7 +52,9 @@ public abstract class ReadOnlyConfig{
     }
     
     public final YamlConfigurationUTF8 getBukkitConfig(){
-        return this.config;
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        return Objects.requireNonNull(config, "Use of not initialized config");
+//</editor-fold>
     }
     
     public final void loadConfig(){
