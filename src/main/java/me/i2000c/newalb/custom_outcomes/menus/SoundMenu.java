@@ -21,6 +21,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -244,7 +245,7 @@ public class SoundMenu extends Editor<SoundReward>{
                     }
                     break;
                 default:
-                    if(e.getCurrentItem() != null){
+                    if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                         String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
                                 .getDisplayName();
                         if(displayName != null){
