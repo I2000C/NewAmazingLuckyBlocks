@@ -32,7 +32,7 @@ public class FireworkReward extends Reward{
     public FireworkReward(Outcome outcome){
         super(outcome);
         this.amount = 1;
-        this.power = 0;
+        this.power = 1;
         this.trail = false;
         this.flicker = false;
         this.type = FireworkEffect.Type.BALL;
