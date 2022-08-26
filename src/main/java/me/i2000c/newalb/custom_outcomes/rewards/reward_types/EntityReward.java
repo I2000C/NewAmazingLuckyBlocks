@@ -26,6 +26,7 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
@@ -46,6 +47,7 @@ public class EntityReward extends Reward{
     private int health;
     private Age age;
     private boolean isTamed;
+    private int slimeSize;
     
     private Equipment equipment;
     
@@ -55,6 +57,7 @@ public class EntityReward extends Reward{
         super(outcome);
         this.entityID = -1;
         this.health = -1;
+        this.slimeSize = -1;
         this.age = Age.ADULT;
         this.isTamed = false;
         this.type = null;
@@ -127,6 +130,12 @@ public class EntityReward extends Reward{
     public void setEquipment(Equipment equipment){
         this.equipment = equipment;
     }
+    public int getSlimeSize(){
+        return this.slimeSize;
+    }
+    public void setSlimeSize(int slimeSize){
+        this.slimeSize = slimeSize;
+    }
     
     public static XMaterial getXMaterialFromEntityType(EntityType type){        
         try{
@@ -168,7 +177,15 @@ public class EntityReward extends Reward{
                 builder.addLoreLine("&bHealth: &d" + health);
             }else{
                 builder.addLoreLine("&bHealth: &dDEFAULT");
-            }            
+            }
+            
+            if(type == EntityType.SLIME){
+                if(slimeSize >= 0){
+                    builder.addLoreLine("&bSlime size: &d" + slimeSize);
+                }else{
+                    builder.addLoreLine("&bSlime size: &dDEFAULT");
+                }
+            }
             
             if(effects.isEmpty()){
                 builder.addLoreLine("&bEffects: &cnull");
@@ -234,6 +251,9 @@ public class EntityReward extends Reward{
             config.set(path + ".health", this.health);
             config.set(path + ".age", this.age.name());
             config.set(path + ".isTamed", this.isTamed);
+            if(type == EntityType.SLIME){
+                config.set(path + ".slimeSize", this.slimeSize);
+            }
             config.set(path + ".effects", this.effects);
             if(!equipment.isEmpty()){
                 List<ItemStack> equip = equipment.asArrayList();
@@ -275,6 +295,7 @@ public class EntityReward extends Reward{
             this.health = config.getInt(path + ".health", -1);
             this.age = Age.valueOf(config.getString(path + ".age", Age.ADULT.name()));
             this.isTamed = config.getBoolean(path + ".isTamed");
+            this.slimeSize = config.getInt(path + ".slimeSize", -1);
             this.effects = config.getStringList(path + ".effects");
             List<ItemStack> equipmentList = new ArrayList();
             if(config.contains(path + ".equipment")){
@@ -344,6 +365,10 @@ public class EntityReward extends Reward{
         
         if(this.lastSpawnedEntity instanceof LivingEntity){
             LivingEntity le = (LivingEntity) this.lastSpawnedEntity;
+            
+            if(le instanceof Slime && slimeSize >= 0){
+                ((Slime) le).setSize(slimeSize);
+            }
             
             if(health >= 0){                
                 if(health == 0){

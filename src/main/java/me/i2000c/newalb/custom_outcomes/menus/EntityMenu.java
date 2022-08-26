@@ -218,6 +218,18 @@ public class EntityMenu extends Editor<EntityReward>{
         builder.addLoreLine("&3Click to reset");
         ItemStack healthItem = builder.build();
         
+        builder = ItemBuilder.newItem(XMaterial.SLIME_BLOCK);
+        if(item.getSlimeSize() >= 0){
+            builder.withDisplayName("&aCurrent slime size: &d" + item.getSlimeSize());
+        }else{
+            builder.withDisplayName("&aCurrent slime size: &d&lDEFAULT");
+        }
+        builder.addLoreLine("&3Click to reset");
+        builder.addLoreLine("");
+        builder.addLoreLine("&cIf slime size is greater than 15,");
+        builder.addLoreLine("&c  the generated slime will be so big");
+        ItemStack slimeSizeItem = builder.build();
+        
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);
@@ -259,6 +271,13 @@ public class EntityMenu extends Editor<EntityReward>{
             menu.setItem(30, GUIItem.getPlusLessItem(-1));
             menu.setItem(29, GUIItem.getPlusLessItem(-10));
             menu.setItem(28, GUIItem.getPlusLessItem(-100));
+        }
+        if(item.getType() == EntityType.SLIME){
+            menu.setItem(42, GUIItem.getPlusLessItem(+10));
+            menu.setItem(41, GUIItem.getPlusLessItem(+1));
+            menu.setItem(40, slimeSizeItem);
+            menu.setItem(39, GUIItem.getPlusLessItem(-1));
+            menu.setItem(38, GUIItem.getPlusLessItem(-10));
         }
         
         menu.setItem(21, resetName);
@@ -467,6 +486,63 @@ public class EntityMenu extends Editor<EntityReward>{
                         health = -1;
                     }
                     item.setHealth(health);
+                    openEntityMenu(player);
+                    break;
+//</editor-fold>
+                    //<editor-fold defaultstate="collapsed" desc="SlimeSize">
+                case 42:
+                    // SlimeSize + 10
+                    if(item.getType() != EntityType.SLIME){
+                        break;
+                    }
+                    
+                    int slimeSize = item.getSlimeSize() + 10;
+                    item.setSlimeSize(slimeSize);
+                    openEntityMenu(player);
+                    break;
+                case 41:
+                    // SlimeSize + 1
+                    if(item.getType() != EntityType.SLIME){
+                        break;
+                    }
+                    
+                    slimeSize = item.getSlimeSize() + 1;
+                    item.setSlimeSize(slimeSize);
+                    openEntityMenu(player);
+                    break;
+                case 40:
+                    // Reset slime size
+                    if(item.getType() != EntityType.SLIME){
+                        break;
+                    }
+                    
+                    item.setSlimeSize(-1);
+                    openEntityMenu(player);
+                    break;
+                case 39:
+                    // SlimeSize - 1
+                    if(item.getType() != EntityType.SLIME){
+                        break;
+                    }
+                    
+                    slimeSize = item.getSlimeSize() - 1;
+                    if(slimeSize < 0){
+                        slimeSize = -1;
+                    }
+                    item.setSlimeSize(slimeSize);
+                    openEntityMenu(player);
+                    break;
+                case 38:
+                    // SlimeSize - 10
+                    if(item.getType() != EntityType.SLIME){
+                        break;
+                    }
+                    
+                    slimeSize = item.getSlimeSize() - 10;
+                    if(slimeSize < 0){
+                        slimeSize = -1;
+                    }
+                    item.setSlimeSize(slimeSize);
                     openEntityMenu(player);
                     break;
 //</editor-fold>
