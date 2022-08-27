@@ -272,7 +272,7 @@ public class EntityMenu extends Editor<EntityReward>{
             menu.setItem(29, GUIItem.getPlusLessItem(-10));
             menu.setItem(28, GUIItem.getPlusLessItem(-100));
         }
-        if(item.getType() == EntityType.SLIME){
+        if(item.getType() == EntityType.SLIME || item.getType() == EntityType.MAGMA_CUBE){
             menu.setItem(42, GUIItem.getPlusLessItem(+10));
             menu.setItem(41, GUIItem.getPlusLessItem(+1));
             menu.setItem(40, slimeSizeItem);
@@ -492,7 +492,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     //<editor-fold defaultstate="collapsed" desc="SlimeSize">
                 case 42:
                     // SlimeSize + 10
-                    if(item.getType() != EntityType.SLIME){
+                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
                         break;
                     }
                     
@@ -502,7 +502,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 case 41:
                     // SlimeSize + 1
-                    if(item.getType() != EntityType.SLIME){
+                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
                         break;
                     }
                     
@@ -512,7 +512,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 case 40:
                     // Reset slime size
-                    if(item.getType() != EntityType.SLIME){
+                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
                         break;
                     }
                     
@@ -521,7 +521,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 case 39:
                     // SlimeSize - 1
-                    if(item.getType() != EntityType.SLIME){
+                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
                         break;
                     }
                     
@@ -534,7 +534,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 case 38:
                     // SlimeSize - 10
-                    if(item.getType() != EntityType.SLIME){
+                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
                         break;
                     }
                     

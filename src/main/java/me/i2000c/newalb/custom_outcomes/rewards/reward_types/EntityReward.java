@@ -211,7 +211,7 @@ public class EntityReward extends Reward{
                 builder.addLoreLine("&bHealth: &dDEFAULT");
             }
             
-            if(type == EntityType.SLIME){
+            if(type == EntityType.SLIME || type == EntityType.MAGMA_CUBE){
                 if(slimeSize >= 0){
                     builder.addLoreLine("&bSlime size: &d" + slimeSize);
                 }else{
@@ -283,7 +283,7 @@ public class EntityReward extends Reward{
             config.set(path + ".health", this.health);
             config.set(path + ".age", this.age.name());
             config.set(path + ".isTamed", this.isTamed);
-            if(type == EntityType.SLIME){
+            if(type == EntityType.SLIME || type == EntityType.MAGMA_CUBE){
                 config.set(path + ".slimeSize", this.slimeSize);
             }
             config.set(path + ".effects", this.effects);
