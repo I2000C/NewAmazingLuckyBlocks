@@ -24,6 +24,7 @@ import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -596,7 +597,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 default:
                     ItemStack stack = e.getCurrentItem();
-                    if(stack != null){
+                    if(stack != null && stack.getType() != Material.AIR){
                         String displayName = ItemBuilder.fromItem(stack, false)
                                 .getDisplayName();
                         if(displayName != null){
