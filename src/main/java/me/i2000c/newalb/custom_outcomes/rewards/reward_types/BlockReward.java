@@ -13,7 +13,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 public class BlockReward extends Reward{
     private boolean usePlayerLoc;
@@ -125,20 +124,13 @@ public class BlockReward extends Reward{
         Location loc = usePlayerLoc ? player.getLocation().clone() : location.clone();
         offset.applyToLocation(loc);
         if(isFallingBlock){
-            MaterialData md;
+            byte data;
             if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-                md = blockItem.getData();
+                data = (byte) blockItem.getDurability();
             }else{
-                md = new MaterialData(blockItem.getType());
+                data = 0;
             }
-            
-            FallingBlock fb;
-            try{
-                fb = loc.getWorld().spawnFallingBlock(loc, md);
-            }catch(NoSuchMethodError ex){
-                fb = loc.getWorld().spawnFallingBlock(loc, blockItem.getType(), md.getData());
-            }
-            
+            FallingBlock fb = loc.getWorld().spawnFallingBlock(loc, blockItem.getType(), data);
             fb.setDropItem(false);
         }else{
             Task.runTask(() -> {
