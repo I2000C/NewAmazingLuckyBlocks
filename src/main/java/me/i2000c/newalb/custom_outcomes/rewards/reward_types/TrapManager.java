@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 import me.i2000c.newalb.config.ReadWriteConfig;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
-import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Bukkit;
@@ -135,29 +135,38 @@ public class TrapManager extends ReadWriteConfig implements Listener{
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    private static void onPressurePlateActivated(PlayerInteractEvent e){
+    private static void onTrapActivated(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(!WorldConfig.isRegistered(e.getPlayer().getWorld().getName())){
             return;
         }
         
-        if(e.getAction() == Action.PHYSICAL){
-            Location loc = e.getClickedBlock().getLocation();
-            Trap trap = traps.get(loc);
-            if(trap != null){
-                Task.runTask(() -> {
-                    e.getClickedBlock().setType(Material.AIR);
-                    traps.remove(loc);
-                    saveTraps();
-                    trap.trapOutcome.execute(e.getPlayer(), loc);
-                }, 1L);
-            }
+        if(e.getAction() != Action.PHYSICAL && e.getAction() != Action.RIGHT_CLICK_BLOCK){
+            return;
         }
+        
+        Location loc = e.getClickedBlock().getLocation();
+        Trap trap = traps.get(loc);
+        if(trap == null){
+            return;
+        }
+        
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK
+                && !trap.trapItemStack.getType().name().contains("CHEST")){
+            return;
+        }
+        
+        Task.runTask(() -> {
+            e.getClickedBlock().setType(Material.AIR);
+            traps.remove(loc);
+            saveTraps();
+            trap.trapOutcome.execute(e.getPlayer(), loc);
+        }, 1L);
 //</editor-fold>
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    private static void onPressurePlatePlaced(BlockPlaceEvent e){
+    private static void onTrapPlaced(BlockPlaceEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack stack = e.getItemInHand();
         if(stack == null){
@@ -189,10 +198,13 @@ public class TrapManager extends ReadWriteConfig implements Listener{
             loc.getWorld().dropItemNaturally(loc, trap.trapItemStack.clone());
             saveTraps();
         }else if((trap = traps.get(loc.add(0, 1, 0))) != null){
-            loc.getBlock().setType(Material.AIR);
-            traps.remove(loc);
-            loc.getWorld().dropItemNaturally(loc, trap.trapItemStack.clone());
-            saveTraps();
+            Material material = trap.trapItemStack.getType();
+            if(!material.name().contains("CHEST")){
+                loc.getBlock().setType(Material.AIR);
+                traps.remove(loc);
+                loc.getWorld().dropItemNaturally(loc, trap.trapItemStack.clone());
+                saveTraps();
+            }
         }
 //</editor-fold>
     }

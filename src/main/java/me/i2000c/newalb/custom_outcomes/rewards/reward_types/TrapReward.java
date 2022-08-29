@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 public class TrapReward extends Reward{
     public static final String HIDDEN_TAG = "NewAmazingLuckyBlocks.TrapReward";
     
-    private Material pressurePlateMaterial;
+    private XMaterial trapMaterial;
     private String trapName;
     
     private Outcome trapOutcome;
@@ -28,7 +28,7 @@ public class TrapReward extends Reward{
     
     public TrapReward(Outcome outcome){
         super(outcome);
-        pressurePlateMaterial = XMaterial.OAK_PRESSURE_PLATE.parseMaterial();
+        trapMaterial = XMaterial.OAK_PRESSURE_PLATE;
         trapName = null;
         
         trapOutcomePackName = null;
@@ -36,11 +36,11 @@ public class TrapReward extends Reward{
         trapOutcome = null;
     }
     
-    public Material getPressurePlateMaterial(){
-        return this.pressurePlateMaterial;
+    public XMaterial getTrapMaterial(){
+        return this.trapMaterial;
     }
-    public void setPressurePlateMaterial(Material material){
-        this.pressurePlateMaterial = material;
+    public void setTrapMaterial(XMaterial xmaterial){
+        this.trapMaterial = xmaterial;
     }
     public String getTrapName(){
         return this.trapName;
@@ -63,7 +63,7 @@ public class TrapReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(pressurePlateMaterial));
+        ItemBuilder builder = ItemBuilder.newItem(trapMaterial);
         builder.withDisplayName("&5Trap");
         builder.addLoreLine("&3Name: &r" + trapName);
         builder.addLoreLine("&3Pressure Plate Material: &b" + builder.toString());
@@ -72,29 +72,36 @@ public class TrapReward extends Reward{
         return builder.build();
     }
     
-    private static List<Material> PRESSURE_PLATE_MATERIALS;
-    public static List<Material> getPressurePlateMaterials(){
-        if(PRESSURE_PLATE_MATERIALS == null){
-            PRESSURE_PLATE_MATERIALS = new ArrayList<>();
+    private static List<XMaterial> TRAP_MATERIALS;
+    public static List<XMaterial> getPressurePlateMaterials(){
+        if(TRAP_MATERIALS == null){
+            TRAP_MATERIALS = new ArrayList<>();
             for(Material material : Material.values()){
                 if(material.isBlock() && material.name().contains("PLATE")){
-                    PRESSURE_PLATE_MATERIALS.add(material);
+                    TRAP_MATERIALS.add(XMaterial.matchXMaterial(material));
                 }
             }
+            TRAP_MATERIALS.add(XMaterial.CHEST);
+            TRAP_MATERIALS.add(XMaterial.TRAPPED_CHEST);
         }
-        return PRESSURE_PLATE_MATERIALS;
+        return TRAP_MATERIALS;
     }
     
     @Override
     public void saveRewardIntoConfig(FileConfiguration config, String path){
-        config.set(path + ".pressurePlateMaterial", this.pressurePlateMaterial.name());
+        config.set(path + ".pressurePlateMaterial", trapMaterial.name());
         config.set(path + ".trapName", this.trapName);
         config.set(path + ".trapOutcome", this.trapOutcomePackName + "/" + this.trapOutcomeID);
     }
     
     @Override
     public void loadRewardFromConfig(FileConfiguration config, String path){
-        this.pressurePlateMaterial = Material.valueOf(config.getString(path + ".pressurePlateMaterial"));
+        String trapMaterialName = config.getString(path + ".trapMaterial");
+        if(trapMaterialName == null){
+            trapMaterialName = config.getString(path + ".pressurePlateMaterial");
+        }
+        this.trapMaterial = ItemBuilder.newItem(trapMaterialName).getMaterial();
+        
         this.trapName = config.getString(path + ".trapName");
         String[] aux = config.getString(path + ".trapOutcome").split("\\/");
         this.trapOutcomePackName = aux[0];
@@ -104,7 +111,7 @@ public class TrapReward extends Reward{
     
     private ItemStack getItemToDrop(){
         ItemStack stack = ItemBuilder
-                .newItem(XMaterial.matchXMaterial(pressurePlateMaterial))
+                .newItem(trapMaterial)
                 .withDisplayName(trapName)
                 .build();
         

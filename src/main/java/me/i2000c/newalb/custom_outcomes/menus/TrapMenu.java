@@ -84,8 +84,8 @@ public class TrapMenu extends Editor<TrapReward>{
         ItemStack glass = GUIItem.getGlassItem(GlassColor.PURPLE);
         
         ItemStack trapMaterialItem = ItemBuilder
-                .newItem(XMaterial.matchXMaterial(item.getPressurePlateMaterial()))
-                .withDisplayName("&2Selected pressure plate material: &a" + item.getPressurePlateMaterial().name())
+                .newItem(item.getTrapMaterial())
+                .withDisplayName("&2Selected pressure plate material: &a" + item.getTrapMaterial().name())
                 .addLoreLine("&3Click to change")
                 .build();
         
@@ -174,9 +174,9 @@ public class TrapMenu extends Editor<TrapReward>{
         menu.setItem(0, GUIItem.getBackItem());
         
         for(int i=0;i<TrapReward.getPressurePlateMaterials().size();i++){
-            Material material = TrapReward.getPressurePlateMaterials().get(i);
-            ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(material));
-            if(material == item.getPressurePlateMaterial()){                
+            XMaterial xmaterial = TrapReward.getPressurePlateMaterials().get(i);
+            ItemBuilder builder = ItemBuilder.newItem(xmaterial);
+            if(xmaterial == item.getTrapMaterial()){                
                 builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
                 builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
@@ -198,7 +198,7 @@ public class TrapMenu extends Editor<TrapReward>{
                 openTrapMenu(player);
             }else if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 //Open trap inventory
-                item.setPressurePlateMaterial(e.getCurrentItem().getType());
+                item.setTrapMaterial(ItemBuilder.fromItem(e.getCurrentItem(), false).getMaterial());
                 openTrapMenu(player);
             }
         }
