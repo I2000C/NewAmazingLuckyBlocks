@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import me.i2000c.newalb.utils.Logger;
@@ -70,6 +71,22 @@ public class OutcomePack implements Displayable, Executable{
         
         outcomeConfig = YamlConfigurationUTF8.loadConfiguration(outcomeFile);
         outcomes.clear();
+        
+        MinecraftVersion currentVersion = NewAmazingLuckyBlocks.getMinecraftVersion();
+        double packVersionDouble = outcomeConfig.getDouble("MinMinecraftVersion");
+        MinecraftVersion packVersion;
+        if(packVersionDouble != 0){
+            packVersion = MinecraftVersion.fromDouble(packVersionDouble);
+        }else{
+            packVersion = currentVersion;
+        }
+        if(currentVersion.compareTo(packVersion) < 0){
+            Logger.warn("Pack \"" + getPackname() + "\" requires at least Minecraft " + packVersion);
+            Logger.warn("However, you are using Minecraft " + currentVersion);
+            Logger.warn("In order to avoid errors, the outcomes of this pack won't be loaded");
+            return;
+        }
+        
         if(outcomeConfig.isConfigurationSection("Outcomes")){
             List<String> keys = new ArrayList(outcomeConfig.getConfigurationSection("Outcomes").getKeys(false));
             Collections.sort(keys, COMPARATOR);
@@ -202,8 +219,10 @@ public class OutcomePack implements Displayable, Executable{
     
     public void saveOutcomes(){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        outcomeConfig = new YamlConfigurationUTF8();
+        
+        outcomeConfig.set("MinMinecraftVersion", NewAmazingLuckyBlocks.getMinecraftVersion().toDouble());
         outcomeConfig.set("Icon", ItemBuilder.fromItem(icon, false).toString());
-        outcomeConfig.set("Outcomes", null);
         outcomes.values().stream()
                 .sorted((outcome1, outcome2) -> outcome1.getID() - outcome2.getID())
                 .forEachOrdered((outcome) -> outcome.saveOutcome(outcomeConfig, "Outcomes." + outcome.getID())

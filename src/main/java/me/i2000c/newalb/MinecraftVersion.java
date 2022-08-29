@@ -20,12 +20,7 @@ public enum MinecraftVersion{
         String version = Bukkit.getServer().getClass().getPackage().getName();
         version = version.substring(version.lastIndexOf('.') + 1);
         version = version.substring(0, version.lastIndexOf('_'));
-        for(MinecraftVersion mv : values()){
-            if(mv.name().equals(version)){
-                return mv;
-            }
-        }
-        return null;
+        return valueOf(version);
     }
     
     private MinecraftVersion(boolean isLegacyVersion, boolean isNewNMS){
@@ -41,6 +36,20 @@ public enum MinecraftVersion{
     }    
     public boolean isNewNMS(){
         return isNewNMS;
+    }
+    
+    public static MinecraftVersion fromDouble(double version){
+        String versionName = String.valueOf(version);
+        versionName = versionName.replace('.', '_');
+        try{
+            return valueOf("v" + versionName);
+        }catch(IllegalArgumentException ex){
+            throw new IllegalArgumentException("MinecraftVersion " + version + " doesn't exist");
+        }        
+    }
+    
+    public double toDouble(){
+        return Double.parseDouble(this.name().replace("v", "").replace('_', '.'));
     }
     
     @Override
