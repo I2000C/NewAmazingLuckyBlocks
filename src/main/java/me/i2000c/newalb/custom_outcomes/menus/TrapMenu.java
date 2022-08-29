@@ -213,7 +213,7 @@ public class TrapMenu extends Editor<TrapReward>{
         menu.setItem(0, GUIItem.getBackItem());
         
         int i=0;
-        for(OutcomePack pack : PackManager.getPacks()){
+        for(OutcomePack pack : PackManager.getSortedPacks()){
             if(i >= 54){
                 break;
             }

@@ -53,6 +53,11 @@ public class PackManager{
     public static List<OutcomePack> getPacks(){
         return new ArrayList(packList.values());
     }
+    public static List<OutcomePack> getSortedPacks(){
+        List<OutcomePack> list = PackManager.getPacks();
+        list.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getPackname().compareTo(pack2.getPackname()));
+        return list;
+    }
     
     public static void addNewPack(OutcomePack pack, CommandSender sender){
         //<editor-fold defaultstate="collapsed" desc="Code">

@@ -2,7 +2,6 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.io.File;
-import java.util.List;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.OutcomePack;
@@ -121,11 +120,8 @@ public class PackListMenu extends Editor{
         //menu.setItem(52, GUIItem.getCurrentPageItem(0, 0));
         //menu.setItem(53, GUIItem.getNextPageItem());
         
-        List<OutcomePack> packList = PackManager.getPacks();
-        packList.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getPackname().compareTo(pack2.getPackname()));
-        
         int i = 0;
-        for(OutcomePack pack : packList){
+        for(OutcomePack pack : PackManager.getSortedPacks()){
             if(i >= 45){
                 break;
             }
