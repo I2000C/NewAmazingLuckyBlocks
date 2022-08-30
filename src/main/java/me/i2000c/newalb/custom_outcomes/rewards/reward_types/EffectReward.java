@@ -30,7 +30,7 @@ public class EffectReward extends Reward{
         super(outcome);
         potionEffect = null;
         duration = 30;
-        amplifier = 1;
+        amplifier = 0;
         ambient = true;
         showParticles = true;
         clearEffects = false;
