@@ -6,6 +6,7 @@ import java.util.List;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
+import me.i2000c.newalb.utils2.ExtendedEntityType;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -44,7 +45,7 @@ public class EntityTowerReward extends Reward{
             }
         };
         playerEntityReward.setID(PLAYER_ENTITY_ID);
-        playerEntityReward.setType(EntityType.PLAYER);
+        playerEntityReward.setType(new ExtendedEntityType(EntityType.PLAYER));
         
         return playerEntityReward;
     }

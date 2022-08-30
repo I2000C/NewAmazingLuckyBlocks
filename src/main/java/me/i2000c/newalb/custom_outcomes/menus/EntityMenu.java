@@ -2,15 +2,12 @@ package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.Equipment;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EffectReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward;
-import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward.Age;
 import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
@@ -22,10 +19,10 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ExtendedEntityType;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,21 +34,21 @@ public class EntityMenu extends Editor<EntityReward>{
         
         entityListAdapter = new GUIPagesAdapter<>(
                 ENTITY_LIST_MENU_SIZE,
-                (entityType, index) -> {
-                    XMaterial material = EntityReward.getXMaterialFromEntityType(entityType);
+                (extendedEntityType, index) -> {
+                    XMaterial material = extendedEntityType.getMaterial();
                     ItemBuilder builder = ItemBuilder.newItem(material);
-                    builder.withDisplayName("&3" + entityType.name());
-                    if(entityType.isAlive()){
+                    builder.withDisplayName("&3" + extendedEntityType.name());
+                    if(extendedEntityType.isAlive()){
                         builder.addLoreLine("&6Is living entity: &atrue");
                     }else{
                         builder.addLoreLine("&6Is living entity: &7false");
                     }
-                    if(Age.isAgeable(entityType)){
+                    if(extendedEntityType.isAgeable()){
                         builder.addLoreLine("&6Is ageable entity: &atrue");
                     }else{
                         builder.addLoreLine("&6Is ageable entity: &7false");
                     }
-                    if(EntityReward.isTameable(entityType)){
+                    if(extendedEntityType.isTameable()){
                         builder.addLoreLine("&6Is tameable entity: &atrue");
                     }else{
                         builder.addLoreLine("&6Is tameable entity: &7false");
@@ -63,16 +60,7 @@ public class EntityMenu extends Editor<EntityReward>{
         entityListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
         entityListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
         
-        List<EntityType> entityTypes = new ArrayList<>(Arrays.asList(EntityType.values()));
-        entityTypes.removeIf(entityType ->
-                entityType == EntityType.PLAYER || !entityType.isSpawnable());
-        entityTypes.sort((entityType1, entityType2) -> {
-            String name1 = entityType1.name();
-            String name2 = entityType2.name();
-            return name1.compareTo(name2);
-        });
-        
-        entityListAdapter.setItemList(entityTypes);
+        entityListAdapter.setItemList(ExtendedEntityType.values());
 //</editor-fold>
     }
     
@@ -80,7 +68,7 @@ public class EntityMenu extends Editor<EntityReward>{
     private static final int PREVIOUS_PAGE_SLOT = 51;
     private static final int CURRENT_PAGE_SLOT = 52;
     private static final int NEXT_PAGE_SLOT = 53;
-    private static GUIPagesAdapter<EntityType> entityListAdapter;
+    private static GUIPagesAdapter<ExtendedEntityType> entityListAdapter;
     
     @Override
     protected void reset(){
@@ -106,9 +94,14 @@ public class EntityMenu extends Editor<EntityReward>{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
         
-        XMaterial material = EntityReward.getXMaterialFromEntityType(item.getType());
-        ItemBuilder builder = ItemBuilder.newItem(material);
-        EntityType entityType = item.getType();
+        ExtendedEntityType entityType = item.getType();
+        XMaterial material;
+        if(entityType != null){
+            material = item.getType().getMaterial();
+        }else{
+            material = XMaterial.GHAST_SPAWN_EGG;
+        }        
+        ItemBuilder builder = ItemBuilder.newItem(material);        
         if(entityType == null){
             builder.withDisplayName("&6Select entity type");
         }else{
@@ -118,12 +111,12 @@ public class EntityMenu extends Editor<EntityReward>{
             }else{
                 builder.addLoreLine("&3Is living entity: &7false");
             }
-            if(Age.isAgeable(entityType)){
+            if(entityType.isAgeable()){
                 builder.addLoreLine("&3Is ageable entity: &atrue");
             }else{
                 builder.addLoreLine("&3Is ageable entity: &7false");
             }
-            if(EntityReward.isTameable(entityType)){
+            if(entityType.isTameable()){
                 builder.addLoreLine("&3Is tameable entity: &atrue");
             }else{
                 builder.addLoreLine("&3Is tameable entity: &7false");
@@ -258,13 +251,13 @@ public class EntityMenu extends Editor<EntityReward>{
         menu.setItem(15, offsetStack);
         menu.setItem(16, GUIItem.getNextItem());
         
-        if(Age.isAgeable(entityType)){
+        if(entityType != null && entityType.isAgeable()){
             menu.setItem(20, ageStack);
         }
-        if(EntityReward.isTameable(entityType)){
+        if(entityType != null && entityType.isTameable()){
             menu.setItem(2, isTamedStack);
         }
-        if(item.getType() != null && item.getType().isAlive()){
+        if(entityType != null && entityType.isAlive()){
             menu.setItem(34, GUIItem.getPlusLessItem(+100));
             menu.setItem(33, GUIItem.getPlusLessItem(+10));
             menu.setItem(32, GUIItem.getPlusLessItem(+1));
@@ -273,7 +266,7 @@ public class EntityMenu extends Editor<EntityReward>{
             menu.setItem(29, GUIItem.getPlusLessItem(-10));
             menu.setItem(28, GUIItem.getPlusLessItem(-100));
         }
-        if(item.getType() == EntityType.SLIME || item.getType() == EntityType.MAGMA_CUBE){
+        if(entityType != null && entityType.isSlime()){
             menu.setItem(42, GUIItem.getPlusLessItem(+10));
             menu.setItem(41, GUIItem.getPlusLessItem(+1));
             menu.setItem(40, slimeSizeItem);
@@ -383,7 +376,7 @@ public class EntityMenu extends Editor<EntityReward>{
                             });
                     break;
                 case 2:
-                    if(!EntityReward.isTameable(item.getType())){
+                    if(item.getType() == null || !item.getType().isTameable()){
                         break;
                     }
                     
@@ -391,7 +384,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     openEntityMenu(player);
                     break;
                 case 20:
-                    if(!Age.isAgeable(item.getType())){
+                    if(item.getType() == null || !item.getType().isAgeable()){
                         break;
                     }
                     
@@ -493,7 +486,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     //<editor-fold defaultstate="collapsed" desc="SlimeSize">
                 case 42:
                     // SlimeSize + 10
-                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
+                    if(item.getType() == null || !item.getType().isSlime()){
                         break;
                     }
                     
@@ -503,7 +496,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 case 41:
                     // SlimeSize + 1
-                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
+                    if(item.getType() == null || !item.getType().isSlime()){
                         break;
                     }
                     
@@ -513,7 +506,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 case 40:
                     // Reset slime size
-                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
+                    if(item.getType() == null || !item.getType().isSlime()){
                         break;
                     }
                     
@@ -522,7 +515,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 case 39:
                     // SlimeSize - 1
-                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
+                    if(item.getType() == null || !item.getType().isSlime()){
                         break;
                     }
                     
@@ -535,7 +528,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     break;
                 case 38:
                     // SlimeSize - 10
-                    if(item.getType() != EntityType.SLIME && item.getType() != EntityType.MAGMA_CUBE){
+                    if(item.getType() == null || !item.getType().isSlime()){
                         break;
                     }
                     
@@ -602,7 +595,7 @@ public class EntityMenu extends Editor<EntityReward>{
                                 .getDisplayName();
                         if(displayName != null){
                             String typeName = Logger.stripColor(displayName);
-                            item.setType(EntityType.valueOf(typeName));
+                            item.setType(ExtendedEntityType.valueOf(typeName));
                             entityListAdapter.goToMainPage();
                             openEntityMenu(player);
                         }                            
@@ -611,4 +604,8 @@ public class EntityMenu extends Editor<EntityReward>{
         }
 //</editor-fold>
     };
+    
+    private static enum e{
+        
+    }
 }

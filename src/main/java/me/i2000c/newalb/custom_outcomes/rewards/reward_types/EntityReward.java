@@ -3,7 +3,6 @@ package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.rewards.Equipment;
@@ -15,22 +14,21 @@ import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.URLTextureException;
+import me.i2000c.newalb.utils2.ExtendedEntityType;
+import me.i2000c.newalb.utils2.ExtendedEntityType.Age;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Tameable;
-import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -41,7 +39,7 @@ public class EntityReward extends Reward{
     private Offset offset;
     
     private int entityID;
-    private EntityType type;
+    private ExtendedEntityType type;
     private String customName;
     private boolean customNameVisible;
     private List<String> effects;
@@ -84,10 +82,10 @@ public class EntityReward extends Reward{
         return this.offset;
     }
     
-    public EntityType getType(){
+    public ExtendedEntityType getType(){
         return this.type;
     }
-    public void setType(EntityType type){
+    public void setType(ExtendedEntityType type){
         this.type = type;
     }
     public String getCustomName(){
@@ -139,53 +137,14 @@ public class EntityReward extends Reward{
         this.slimeSize = slimeSize;
     }
     
-    public static XMaterial getXMaterialFromEntityType(EntityType type){        
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        if(type == null){
-            return XMaterial.GHAST_SPAWN_EGG;
-        }
-        
-        try{
-            String materialName = type.name() + "_SPAWN_EGG";
-            return XMaterial.valueOf(materialName);
-        }catch(Exception ex){
-            switch(type){
-                case PRIMED_TNT: return XMaterial.TNT;
-                case THROWN_EXP_BOTTLE: return XMaterial.EXPERIENCE_BOTTLE;
-                case WITHER_SKULL: return XMaterial.WITHER_SKELETON_SKULL;
-                case ARROW: return XMaterial.ARROW;
-                case BOAT: return XMaterial.OAK_BOAT;
-                case ENDER_PEARL: return XMaterial.ENDER_PEARL;
-                case ENDER_SIGNAL: return XMaterial.ENDER_EYE;
-                
-                case SMALL_FIREBALL:
-                case FIREBALL: return XMaterial.FIRE_CHARGE;
-                case SNOWBALL: return XMaterial.SNOWBALL;
-                
-                case GIANT: return XMaterial.ZOMBIE_SPAWN_EGG;
-                case MUSHROOM_COW: return XMaterial.MOOSHROOM_SPAWN_EGG;
-                
-                case MINECART: return XMaterial.MINECART;
-                case MINECART_CHEST: return XMaterial.CHEST_MINECART;
-                case MINECART_COMMAND: return XMaterial.COMMAND_BLOCK_MINECART;
-                case MINECART_FURNACE: return XMaterial.FURNACE_MINECART;
-                case MINECART_HOPPER: return XMaterial.HOPPER_MINECART;
-                case MINECART_TNT: return XMaterial.TNT_MINECART;
-                
-                default: return XMaterial.GHAST_SPAWN_EGG;
-            }
-        }
-//</editor-fold>
-    }
-    
     @Override
     public ItemStack getItemToDisplay(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        XMaterial material = getXMaterialFromEntityType(type);
+        XMaterial material = type.getMaterial();
         ItemBuilder builder = ItemBuilder.newItem(material);
         builder.withDisplayName("&2Entity");
         builder.addLoreLine("&bID: &r" + entityID);
-        builder.addLoreLine("&btype: &e" + Logger.stripColor(type.name()));
+        builder.addLoreLine("&btype: &e" + type.name());
         if(customName == null){
             builder.addLoreLine("&bCustom name: &cnull");
         }else{
@@ -197,10 +156,10 @@ public class EntityReward extends Reward{
             }
         }
         
-        if(Age.isAgeable(type)){
+        if(type.isAgeable()){
             builder.addLoreLine("&bAge: &e" + age.name());
         }
-        if(isTameable(type)){
+        if(type.isTameable()){
             builder.addLoreLine("&bIs tamed: &e" + isTamed);
         }
         
@@ -211,7 +170,7 @@ public class EntityReward extends Reward{
                 builder.addLoreLine("&bHealth: &dDEFAULT");
             }
             
-            if(type == EntityType.SLIME || type == EntityType.MAGMA_CUBE){
+            if(type.isSlime()){
                 if(slimeSize >= 0){
                     builder.addLoreLine("&bSlime size: &d" + slimeSize);
                 }else{
@@ -283,7 +242,7 @@ public class EntityReward extends Reward{
             config.set(path + ".health", this.health);
             config.set(path + ".age", this.age.name());
             config.set(path + ".isTamed", this.isTamed);
-            if(type == EntityType.SLIME || type == EntityType.MAGMA_CUBE){
+            if(type.isSlime()){
                 config.set(path + ".slimeSize", this.slimeSize);
             }
             config.set(path + ".effects", this.effects);
@@ -320,7 +279,7 @@ public class EntityReward extends Reward{
     @Override
     public void loadRewardFromConfig(FileConfiguration config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        this.type = EntityType.valueOf(config.getString(path + ".type"));
+        this.type = ExtendedEntityType.valueOf(config.getString(path + ".type"));
         this.customName = config.getString(path + ".custom_name");
         this.customNameVisible = config.getBoolean(path + ".custom_name_visible");
         if(this.type.isAlive()){
@@ -380,17 +339,17 @@ public class EntityReward extends Reward{
     @Override
     public void execute(Player player, Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Location target = this.offset.applyToLocation(location.clone());
+        Location targetLocation = this.offset.applyToLocation(location.clone());
         try{
-            EntityType targetType = this.type;
-            if(this.type == EntityType.OCELOT && this.isTamed){
+            ExtendedEntityType targetType = this.type;
+            if(this.type.isOcelot() && this.isTamed){
                 // Since Minecraft 1.14 tamed Ocelots are cats
                 if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_14) >= 0){
-                    targetType = EntityType.valueOf("CAT");
+                    targetType = ExtendedEntityType.valueOf("CAT");
                 }
             }
             
-            this.lastSpawnedEntity = target.getWorld().spawnEntity(target, targetType);
+            this.lastSpawnedEntity = targetType.spawnEntity(targetLocation);
         }catch(Exception ex){
             Logger.err("Entity " + this.type.name() + " couldn't be spawned due to:");
             Logger.err(ex);
@@ -481,59 +440,5 @@ public class EntityReward extends Reward{
         copy.equipment = this.equipment.clone();
         copy.offset = this.offset.clone();
         return copy;
-    }
-    
-    public static enum Age{
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        BABY,
-        ADULT,
-        RANDOM;
-        
-        private static final Age[] vals = values();
-        
-        public void setAge(Entity entity){
-            switch(this){
-                case BABY:
-                    if(entity instanceof Ageable){
-                        ((Ageable) entity).setBaby();
-                    }else if(entity instanceof Zombie){
-                        ((Zombie) entity).setBaby(true);
-                    }
-                    break;
-                case ADULT:
-                    if(entity instanceof Ageable){
-                        ((Ageable) entity).setAdult();
-                    }else if(entity instanceof Zombie){
-                        ((Zombie) entity).setBaby(false);
-                    }
-                    break;
-                case RANDOM:
-                    Random random = new Random();
-                    if(random.nextBoolean()){
-                        BABY.setAge(entity);
-                    }else{
-                        ADULT.setAge(entity);
-                    }
-                    break;
-            }
-        }
-        
-        public Age next(){
-            return vals[(this.ordinal() + 1) % vals.length];
-        }
-        
-        public static boolean isAgeable(EntityType entityType){
-            return entityType != null &&
-                    (Ageable.class.isAssignableFrom(entityType.getEntityClass())
-                    || entityType == EntityType.ZOMBIE);
-        }
-//</editor-fold>
-    }
-    
-    public static boolean isTameable(EntityType entityType){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        return entityType != null
-                && Tameable.class.isAssignableFrom(entityType.getEntityClass());
-//</editor-fold>
     }
 }
