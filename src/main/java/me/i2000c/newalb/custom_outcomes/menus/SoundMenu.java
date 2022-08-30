@@ -113,12 +113,14 @@ public class SoundMenu extends Editor<SoundReward>{
                 .doubleValue();
         ItemStack volume = ItemBuilder.newItem(XMaterial.EMERALD)
                 .withDisplayName("&aSound volume: &5" + value)
+                .addLoreLine("&3Click to reset")
                 .build();
         
         
         value = BigDecimal.valueOf(item.getPitch()).setScale(3, RoundingMode.HALF_UP).doubleValue();
         ItemStack pitch = ItemBuilder.newItem(XMaterial.GOLD_NUGGET)
                 .withDisplayName("&eSound pitch: &5" + value)
+                .addLoreLine("&3Click to reset")
                 .build();
         
         menu.setItem(10, GUIItem.getBackItem());
@@ -156,6 +158,10 @@ public class SoundMenu extends Editor<SoundReward>{
                     }
                     openSoundMenu(player);
                     break;
+                case 13:
+                    item.setVolume(10.0);
+                    openSoundMenu(player);
+                    break;
                 case 4:
                     item.setVolume(item.getVolume() + 1.0);
                     if(item.getVolume() > 20.0){
@@ -168,6 +174,10 @@ public class SoundMenu extends Editor<SoundReward>{
                     if(item.getPitch() < 0.0){
                         item.setPitch(2.0);
                     }
+                    openSoundMenu(player);
+                    break;
+                case 14:
+                    item.setPitch(1.0);
                     openSoundMenu(player);
                     break;
                 case 5:
