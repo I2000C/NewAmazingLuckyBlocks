@@ -31,8 +31,14 @@ public class Outcome implements Displayable, Executable, Cloneable{
         return this.icon;
     }
     public void setIcon(ItemStack icon){
-        this.icon = new ItemStack(icon.getType());
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        Material material = icon.getType();
+        if(material.name().contains("POTION")){
+            material = Material.POTION;
+        }
+        
+        this.icon = new ItemStack(material);
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()
+                && material != Material.POTION){
             this.icon.setDurability(icon.getDurability());
         }
     }

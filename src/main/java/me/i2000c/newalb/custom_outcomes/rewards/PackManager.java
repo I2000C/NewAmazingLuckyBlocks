@@ -9,6 +9,7 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
@@ -107,9 +108,20 @@ public class PackManager{
     }
     public static void changePackIcon(String name, ItemStack icon, CommandSender sender){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        Material material = icon.getType();
+        if(material.name().contains("POTION")){
+            material = Material.POTION;
+        }
+        
+        ItemStack newIcon = new ItemStack(material);
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()
+                && material != Material.POTION){
+            newIcon.setDurability(icon.getDurability());
+        }
+        
         OutcomePack pack = getPack(OtherUtils.removeExtension(name));
-        pack.setIcon(icon);
-        String iconString = ItemBuilder.fromItem(icon, false).toString();
+        pack.setIcon(newIcon);
+        String iconString = ItemBuilder.fromItem(newIcon, false).toString();
         pack.saveOutcomes();
         Logger.sendMessage("&aIcon of pack &6\"" + name + "\" &ahas been changed to &b" + iconString, sender);
 //</editor-fold>

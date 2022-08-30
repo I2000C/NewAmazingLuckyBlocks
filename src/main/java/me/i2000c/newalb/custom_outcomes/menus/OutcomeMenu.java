@@ -1,7 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
@@ -153,11 +152,7 @@ public class OutcomeMenu extends Editor<Outcome>{
         }else{
             ItemStack stack = e.getCurrentItem();
             if(stack != null && stack.getType() != Material.AIR){
-                item.setIcon(new ItemStack(stack.getType()));
-                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-                    item.getIcon().setDurability(stack.getDurability());
-                }
-                
+                item.setIcon(stack);                
                 openOutcomeMenu(player);
             }
         }
