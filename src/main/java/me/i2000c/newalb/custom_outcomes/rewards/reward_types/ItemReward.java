@@ -296,7 +296,7 @@ public class ItemReward extends Reward{
             stack.addUnsafeEnchantments(item.getEnchantments());
         }
         
-        offset.applyToLocation(location);
+        location = offset.applyToLocation(location.clone());
         Inventory inv = player.getInventory();
         switch(spawnMode){
             case DEFAULT:
