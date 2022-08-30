@@ -17,3 +17,4 @@ crafting:
 - SPONGE SPONGE SPONGE
 outcome_packs:
 - default_pack;100
+- example_pack;100
