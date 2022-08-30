@@ -73,7 +73,7 @@ public class ColorMenu extends Editor<CustomColor>{
         XMaterial.RED_DYE,
         XMaterial.GREEN_DYE,
         XMaterial.COCOA_BEANS,
-        XMaterial.LAPIS_LAZULI,
+        XMaterial.BLUE_DYE,
         XMaterial.PURPLE_DYE,
         XMaterial.CYAN_DYE,
         XMaterial.LIGHT_GRAY_DYE,
