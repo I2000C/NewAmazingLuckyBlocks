@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.ConfigManager;
+import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Entity;
@@ -208,7 +208,7 @@ public abstract class SpecialItem{
     }
     public static SpecialItemName getSpecialItemName(ItemStack stack){
         int specialItemID = getSpecialItemID(stack);
-        if(specialItemID > 0 && specialItemID < SPECIAL_ITEM_NAMES.length){
+        if(specialItemID >= 0 && specialItemID < SPECIAL_ITEM_NAMES.length){
             return SPECIAL_ITEM_NAMES[specialItemID];
         }else{
             return null;
