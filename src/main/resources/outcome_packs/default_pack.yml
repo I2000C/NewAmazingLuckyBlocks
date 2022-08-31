@@ -415,12 +415,18 @@ Outcomes:
             Chestplate:
               material: CHAINMAIL_CHESTPLATE
               durability: 0
+              amount: 1
+              dropChance: 50
             Leggings:
               material: DIAMOND_LEGGINGS
               durability: 0
+              amount: 1
+              dropChance: 50
             Boots:
               material: CHAINMAIL_BOOTS
               durability: 0
+              amount: 1
+              dropChance: 50
     delayer: []
   '21':
     outcome-name: TNTWand
@@ -467,9 +473,13 @@ Outcomes:
             Helmet:
               material: IRON_HELMET
               durability: 1
+              amount: 1
+              dropChance: 50
             Chestplate:
               material: IRON_CHESTPLATE
               durability: 1
+              amount: 1
+              dropChance: 50
     delayer: []
   '24':
     outcome-name: FireWand
@@ -516,6 +526,8 @@ Outcomes:
             Chestplate:
               material: CHAINMAIL_CHESTPLATE
               durability: 0
+              amount: 1
+              dropChance: 50
     delayer: []
   '27':
     outcome-name: Zombie with iron leggins and chainmail helmet
@@ -534,9 +546,13 @@ Outcomes:
             Chestplate:
               material: CHAINMAIL_CHESTPLATE
               durability: 0
+              amount: 1
+              dropChance: 50
             Leggings:
               material: IRON_LEGGINGS
               durability: 0
+              amount: 1
+              dropChance: 50
     delayer: []
   '28':
     outcome-name: It generates an iron block and suddenly it strikes a lightning in its location

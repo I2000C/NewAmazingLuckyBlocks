@@ -80,22 +80,32 @@ Outcomes:
             Helmet:
               material: DIAMOND_HELMET
               durability: 3
+              amount: 1
+              dropChance: 50
             Chestplate:
               material: DIAMOND_CHESTPLATE
               durability: 0
+              amount: 1
               enchantments:
               - THORNS;10
+              dropChance: 50
             Leggings:
               material: IRON_LEGGINGS
               durability: 0
+              amount: 1
+              dropChance: 50
             Boots:
               material: LEATHER_BOOTS
               durability: 0
+              amount: 1
+              dropChance: 50
             ItemInHand:
               material: DIAMOND_SWORD
               durability: 2
+              amount: 1
               enchantments:
               - KNOCKBACK;200
+              dropChance: 50
     delayer: []
   '3':
     outcome-name: Example 4
