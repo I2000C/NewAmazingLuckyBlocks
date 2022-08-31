@@ -49,6 +49,8 @@ Objects:
     name: '&cPatata caliente &7- &6Click derecho'
   LuckyTool:
     name: '&6LuckyTool &7- &3Click derecho en un &eLuckyBlock'
+    lore:
+    - '&cClick izquierdo en un &eLuckyBlock &cpara eliminarlo'
     need: '&cNecesitas la &6LuckyTool &cpara romper ese &eLuckyBlock'
     disabled: "&cLa LuckyTool no está activada"
 

@@ -49,6 +49,8 @@ Objects:
     name: '&cHot Potato &7- &6Right Click'
   LuckyTool:
     name: '&6LuckyTool &7- &3Right Click on a &eLuckyBlock'
+    lore:
+    - '&cLeft Click on a &eLuckyBlock &cto remove it'
     need: '&cYou need the &6LuckyTool &cin order to break that &eLuckyBlock'
     disabled: '&cLuckyTool is disabled'
 

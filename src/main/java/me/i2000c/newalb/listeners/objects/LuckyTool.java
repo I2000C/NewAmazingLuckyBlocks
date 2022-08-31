@@ -58,6 +58,7 @@ public class LuckyTool extends SpecialItem{
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.STICK)
                 .withDisplayName(getDisplayName())
+                .withLore(LangConfig.getMessages().getStringList("Objects.LuckyTool.lore"))
                 .build();
     }
 }
