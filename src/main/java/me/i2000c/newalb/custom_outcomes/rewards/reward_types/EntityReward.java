@@ -5,22 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.rewards.Equipment;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.InvalidTextureException;
-import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.URLTextureException;
+import me.i2000c.newalb.utils2.Equipment;
 import me.i2000c.newalb.utils2.ExtendedEntityType;
 import me.i2000c.newalb.utils2.ExtendedEntityType.Age;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
@@ -33,9 +28,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class EntityReward extends Reward{    
-    private static final String[] EQUIP = {"Helmet", "Chestplate", "Leggings", "Boots", "ItemInHand"};
-    
+public class EntityReward extends Reward{
     private Offset offset;
     
     private int entityID;
@@ -63,8 +56,8 @@ public class EntityReward extends Reward{
         this.type = null;
         this.customName = null;
         this.customNameVisible = true;
-        this.effects = new ArrayList<>();        
-        this.equipment = new Equipment();        
+        this.effects = new ArrayList<>();
+        this.equipment = new Equipment();
         this.offset = new Offset();
     }
     
@@ -191,34 +184,56 @@ public class EntityReward extends Reward{
                 builder.addLoreLine("&bEquipment: &cnull");
             }else{
                 builder.addLoreLine("&bEquipment:");
-                if(equipment.helmet == null){
+                
+                ItemStack helmet = equipment.getEquipmentItem(Equipment.HELMET_ID);
+                ItemStack chestplate = equipment.getEquipmentItem(Equipment.CHESTPLATE_ID);
+                ItemStack leggings = equipment.getEquipmentItem(Equipment.LEGGINGS_ID);
+                ItemStack boots = equipment.getEquipmentItem(Equipment.BOOTS_ID);
+                ItemStack itemInHand = equipment.getEquipmentItem(Equipment.ITEM_IN_HAND_ID);
+                
+                if(helmet == null){
                     builder.addLoreLine("    &6Helmet: &cnull");
                 }else{
-                    builder.addLoreLine("    &6Helmet: &d" + this.equipment.helmet.getType().name());
+                    ItemBuilder builder2 = ItemBuilder.fromItem(helmet, false);
+                    String name = builder2.toString();
+                    int amount = builder2.getAmount();
+                    builder.addLoreLine("    &6Helmet: &d" + name + " x" + amount);
                 }
 
-                if(equipment.chestplate == null){
+                if(chestplate == null){
                     builder.addLoreLine("    &6Chestplate: &cnull");
                 }else{
-                    builder.addLoreLine("    &6Chestplate: &d" + this.equipment.chestplate.getType().name());
+                    ItemBuilder builder2 = ItemBuilder.fromItem(chestplate, false);
+                    String name = builder2.toString();
+                    int amount = builder2.getAmount();
+                    builder.addLoreLine("    &6Chestplate: &d" + name + " x" + amount);
                 }
 
-                if(equipment.leggings == null){
+                if(leggings == null){
                     builder.addLoreLine("    &6Leggings: &cnull");
                 }else{
-                    builder.addLoreLine("    &6Leggings: &d" + this.equipment.leggings.getType().name());
+                    ItemBuilder builder2 = ItemBuilder.fromItem(leggings, false);
+                    String name = builder2.toString();
+                    int amount = builder2.getAmount();
+                    builder.addLoreLine("    &6Leggings: &d" + name + " x" + amount);
                 }
 
-                if(equipment.boots == null){
+                if(boots == null){
                     builder.addLoreLine("    &6Boots: &cnull");
                 }else{
-                    builder.addLoreLine("    &6Boots: &d" + this.equipment.boots.getType().name());
+                    ItemBuilder builder2 = ItemBuilder.fromItem(boots, false);
+                    String name = builder2.toString();
+                    int amount = builder2.getAmount();
+                    builder.addLoreLine("    &6Boots: &d" + name + " x" + amount);
                 }
 
-                if(equipment.itemInHand == null){
+                if(itemInHand == null){
                     builder.addLoreLine("    &6Item in hand: &cnull");
                 }else{
-                    builder.addLoreLine("    &6Item in hand: &d" + this.equipment.itemInHand.getType().name());
+                    ItemBuilder builder2 = ItemBuilder.fromItem(itemInHand, false);
+                    String name = builder2.toString();
+                    int amount = builder2.getAmount();
+                    builder.addLoreLine("    &6Item in hand: &d" + name + " x" + amount);
                 }
             }
         }
@@ -246,31 +261,7 @@ public class EntityReward extends Reward{
                 config.set(path + ".slimeSize", this.slimeSize);
             }
             config.set(path + ".effects", this.effects);
-            if(!equipment.isEmpty()){
-                List<ItemStack> equip = equipment.asArrayList();
-                for(int i=0;i<EQUIP.length;i++){
-                    if(equip.get(i) != null && equip.get(i).getType() != Material.AIR){
-                        String fullFullPath = path + ".equipment." + EQUIP[i];
-                        ItemBuilder builder = ItemBuilder.fromItem(equip.get(i), false);
-                        config.set(fullFullPath + ".material", builder.toString());
-                        config.set(fullFullPath + ".durability", builder.getDurability());
-                        
-                        if(builder.hasDisplayName()){
-                            config.set(fullFullPath + ".name", Logger.deColor(builder.getDisplayName()));
-                        }
-                        if(builder.hasLore()){
-                            config.set(fullFullPath + ".lore", Logger.deColor(builder.getLore()));
-                        }
-                        if(builder.hasEnchantments()){
-                            config.set(fullFullPath + ".enchantments", builder.getEnchantmentsIntoStringList());
-                        }
-                        Texture texture = builder.getTexture();
-                        if(texture != null){
-                            config.set(fullFullPath + ".textureID", texture.getID());
-                        }
-                    }
-                }
-            }
+            equipment.saveToConfig(config, path + ".equipment");
         }
         offset.saveToConfig(config, path + ".offset");
 //</editor-fold>
@@ -288,47 +279,7 @@ public class EntityReward extends Reward{
             this.isTamed = config.getBoolean(path + ".isTamed");
             this.slimeSize = config.getInt(path + ".slimeSize", -1);
             this.effects = config.getStringList(path + ".effects");
-            List<ItemStack> equipmentList = new ArrayList();
-            if(config.contains(path + ".equipment")){
-                for(String equipItemName : EQUIP){
-                    String fullPath = path + ".equipment." + equipItemName;
-                    if(config.contains(fullPath)){
-                        ItemBuilder builder = ItemBuilder.newItem(config.getString(fullPath + ".material"));
-                        short durability = (short) config.getInt(fullPath + ".durability");
-                        
-                        builder.withAmount(1);
-                        builder.withDurability(durability);
-                        if(config.contains(fullPath + ".name")){
-                            builder.withDisplayName(config.getString(fullPath + ".name"));
-                        }
-                        if(config.contains(fullPath + ".lore")){
-                            builder.withLore(config.getStringList(fullPath + ".lore"));
-                        }
-                        if(config.contains(fullPath + ".enchantments")){
-                            List<String> enchantments = config.getStringList(fullPath + ".enchantments");
-                            builder.withEnchantments(enchantments);
-                        }
-                        
-                        if(config.contains(fullPath + ".textureID")){
-                            String textureID = config.getString(fullPath + ".textureID");
-                            try{
-                                Texture texture = new Texture(textureID);
-                                builder.withTexture(texture);
-                            }catch(InvalidTextureException ex){
-                                Logger.err("Item at " + fullPath + " contains an invalid HeadTexture");
-                            }catch(URLTextureException ex){
-                                Logger.err("Couldn't load texture of item at " + fullPath + ":");
-                                Logger.err(ex);
-                            }catch(TextureException ex){}
-                        }
-                        
-                        equipmentList.add(builder.build());
-                    }else{
-                        equipmentList.add(null);
-                    }
-                }
-                this.equipment = new Equipment(equipmentList);
-            }
+            this.equipment = new Equipment(config, path + ".equipment");
         }else{
             this.equipment = new Equipment();
         }
@@ -407,23 +358,7 @@ public class EntityReward extends Reward{
                 le.addPotionEffect(new PotionEffect(effectType, time, amplifier), true);
             }
             
-            if(!this.equipment.isEmpty()){
-                if(this.equipment.helmet != null){
-                    le.getEquipment().setHelmet(this.equipment.helmet.clone());
-                }
-                if(this.equipment.chestplate != null){
-                    le.getEquipment().setChestplate(this.equipment.chestplate.clone());
-                }
-                if(this.equipment.leggings != null){
-                    le.getEquipment().setLeggings(this.equipment.leggings.clone());
-                }
-                if(this.equipment.boots != null){
-                    le.getEquipment().setBoots(this.equipment.boots.clone());
-                }
-                if(this.equipment.itemInHand != null){
-                    le.getEquipment().setItemInHand(this.equipment.itemInHand.clone());
-                }
-            }
+            this.equipment.applyToEntity(le);
         }
 //</editor-fold>
     }

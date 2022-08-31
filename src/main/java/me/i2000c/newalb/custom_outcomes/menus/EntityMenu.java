@@ -4,7 +4,6 @@ import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
-import me.i2000c.newalb.custom_outcomes.rewards.Equipment;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EffectReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward;
@@ -19,6 +18,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.Equipment;
 import me.i2000c.newalb.utils2.ExtendedEntityType;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
@@ -145,7 +145,9 @@ public class EntityMenu extends Editor<EntityReward>{
         }else if(!item.getType().isAlive()){
             builder.addLoreLine("&cYou cannot add effects to a non-living entity");
         }else{
-            builder.withLore(item.getEffects());
+            for(String effect : item.getEffects()){
+                builder.addLoreLine("  &d" + effect);
+            }
         }
         ItemStack ent_effects = builder.build();
         
@@ -155,6 +157,59 @@ public class EntityMenu extends Editor<EntityReward>{
             builder.addLoreLine("&cYou must select an entity first");
         }else if(!item.getType().isAlive()){
             builder.addLoreLine("&cYou cannot add effects to a non-living entity");
+        }else if(!item.getEquipment().isEmpty()){
+            Equipment equipment = item.getEquipment();
+            
+            ItemStack helmet = equipment.getEquipmentItem(Equipment.HELMET_ID);
+            ItemStack chestplate = equipment.getEquipmentItem(Equipment.CHESTPLATE_ID);
+            ItemStack leggings = equipment.getEquipmentItem(Equipment.LEGGINGS_ID);
+            ItemStack boots = equipment.getEquipmentItem(Equipment.BOOTS_ID);
+            ItemStack itemInHand = equipment.getEquipmentItem(Equipment.ITEM_IN_HAND_ID);
+
+            if(helmet == null){
+                builder.addLoreLine("    &6Helmet: &cnull");
+            }else{
+                ItemBuilder builder2 = ItemBuilder.fromItem(helmet, false);
+                String name = builder2.toString();
+                int amount = builder2.getAmount();
+                builder.addLoreLine("    &6Helmet: &d" + name + " x" + amount);
+            }
+
+            if(chestplate == null){
+                builder.addLoreLine("    &6Chestplate: &cnull");
+            }else{
+                ItemBuilder builder2 = ItemBuilder.fromItem(chestplate, false);
+                String name = builder2.toString();
+                int amount = builder2.getAmount();
+                builder.addLoreLine("    &6Chestplate: &d" + name + " x" + amount);
+            }
+
+            if(leggings == null){
+                builder.addLoreLine("    &6Leggings: &cnull");
+            }else{
+                ItemBuilder builder2 = ItemBuilder.fromItem(leggings, false);
+                String name = builder2.toString();
+                int amount = builder2.getAmount();
+                builder.addLoreLine("    &6Leggings: &d" + name + " x" + amount);
+            }
+
+            if(boots == null){
+                builder.addLoreLine("    &6Boots: &cnull");
+            }else{
+                ItemBuilder builder2 = ItemBuilder.fromItem(boots, false);
+                String name = builder2.toString();
+                int amount = builder2.getAmount();
+                builder.addLoreLine("    &6Boots: &d" + name + " x" + amount);
+            }
+
+            if(itemInHand == null){
+                builder.addLoreLine("    &6Item in hand: &cnull");
+            }else{
+                ItemBuilder builder2 = ItemBuilder.fromItem(itemInHand, false);
+                String name = builder2.toString();
+                int amount = builder2.getAmount();
+                builder.addLoreLine("    &6Item in hand: &d" + name + " x" + amount);
+            }
         }
         ItemStack ent_equipment = builder.build();
         
@@ -301,7 +356,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     
                     if(!item.getType().isAlive()){
                         item.setEffects(new ArrayList());
-                        item.getEquipment().resetEquipment();
+                        item.getEquipment().reset();
                     }
                     
                     onNext.accept(player, item);
@@ -400,7 +455,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     openEntityMenu(player);
                     break;
                 case 23:
-                    item.getEquipment().resetEquipment();
+                    item.getEquipment().reset();
                     openEntityMenu(player);
                     break;
                     //<editor-fold defaultstate="collapsed" desc="Health">

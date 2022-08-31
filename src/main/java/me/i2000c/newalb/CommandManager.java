@@ -30,6 +30,7 @@ import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils.textures.URLTextureException;
+import me.i2000c.newalb.utils2.Equipment;
 import me.i2000c.newalb.utils2.Schematic;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -134,8 +135,29 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private boolean executeDebug(CommandSender sender, String[] args){
         Player p = getOnlinePlayer(sender, "I2000C");
+        String formatA = args[1];
+        String formatB = "";
         if(p != null){
-            Logger.sendMessage(p.getItemInHand().getType(), p);
+            for(int i=0; i<Equipment.EQUIPMENT_KEYS.length; i++){
+                int b;
+                switch(i){
+                    case 0: b = 0; break;
+                    case 1: b = 25; break;
+                    case 2: b = 50; break;
+                    case 3: b = 75; break;
+                    case 4: b = 100; break;
+                    default: b = 0; break;
+                }
+                
+                String a = String.format("%" + formatA + "s|%%", 
+                        Equipment.EQUIPMENT_KEYS[i] + ":", 
+                        b);
+                Logger.log(a.length());
+                Logger.sendMessage(a, sender);
+            }
+                
+            
+            //Logger.sendMessage(p.getItemInHand().getType(), p);
         }
         
         /*OffsetMenu.reset();
