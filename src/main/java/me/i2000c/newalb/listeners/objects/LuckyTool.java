@@ -20,8 +20,9 @@ public class LuckyTool extends SpecialItem{
     @Override
     public void onPlayerInteract(PlayerInteractEvent e){
         Player player = e.getPlayer();
+        Action action = e.getAction();
         
-        if(e.getAction() == Action.RIGHT_CLICK_BLOCK){            
+        if(action == Action.RIGHT_CLICK_BLOCK || action == Action.LEFT_CLICK_BLOCK){
             TypeManager.Result result = TypeManager.canBreakBlock(player, e.getClickedBlock().getLocation());
             LuckyBlockType type;
             switch(result.resultCode){
@@ -41,10 +42,13 @@ public class LuckyTool extends SpecialItem{
                 return;
             }
             
-            //Break the Lucky Block
+            // Break the Lucky Block
             Block target = e.getClickedBlock();
             target.setType(Material.AIR);
-            type.execute(e.getPlayer(), target.getLocation().add(0.5, 0, 0.5));
+            if(action == Action.RIGHT_CLICK_BLOCK){
+                // Execute LuckyBlock type
+                type.execute(e.getPlayer(), target.getLocation().add(0.5, 0, 0.5));
+            }
             
             super.updatePlayerCooldown(player);
         }
