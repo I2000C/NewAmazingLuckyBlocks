@@ -8,6 +8,8 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.URLTextureException;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -239,23 +241,37 @@ public final class Equipment implements Cloneable{
         EntityEquipment equipment = le.getEquipment();
         if(helmet != null){
             equipment.setHelmet(helmet.clone());
-            equipment.setHelmetDropChance(helmetDropChance / 100f);
+            if(le.getType() != EntityType.ARMOR_STAND){
+                equipment.setHelmetDropChance(helmetDropChance / 100f);
+            }            
         }
         if(chestplate != null){
             equipment.setChestplate(chestplate.clone());
-            equipment.setChestplateDropChance(chestplateDropChance / 100f);
+            if(le.getType() != EntityType.ARMOR_STAND){
+                equipment.setChestplateDropChance(chestplateDropChance / 100f);
+            }
         }
         if(leggings != null){
             equipment.setLeggings(leggings.clone());
-            equipment.setLeggingsDropChance(leggingsDropChance / 100f);
+            if(le.getType() != EntityType.ARMOR_STAND){
+                equipment.setLeggingsDropChance(leggingsDropChance / 100f);
+            }
         }
         if(boots != null){
             equipment.setBoots(boots.clone());
-            equipment.setBootsDropChance(bootsDropChance / 100f);
+            if(le.getType() != EntityType.ARMOR_STAND){
+                equipment.setBootsDropChance(bootsDropChance / 100f);
+            }
         }
         if(itemInHand != null){
             equipment.setItemInHand(itemInHand.clone());
-            equipment.setItemInHandDropChance(itemInHandDropChance / 100f);
+            if(le.getType() != EntityType.ARMOR_STAND){
+                equipment.setItemInHandDropChance(itemInHandDropChance / 100f);
+            }else{
+                ArmorStand armorStand = (ArmorStand) le;
+                armorStand.setArms(true);
+                armorStand.setBasePlate(false);
+            }
         }
 //</editor-fold>
     }
