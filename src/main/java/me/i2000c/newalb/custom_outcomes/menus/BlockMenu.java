@@ -138,7 +138,7 @@ public class BlockMenu extends Editor<BlockReward>{
                 return;
             }
             
-            if(stack.getType().isSolid()){
+            if(stack.getType().isBlock()){
                 item.setItemBlock(new ItemStack(stack.getType()));
                 if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
                     item.getItemBlock().setDurability(stack.getDurability());
