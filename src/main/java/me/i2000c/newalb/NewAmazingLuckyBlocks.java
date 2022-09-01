@@ -80,29 +80,31 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         Logger.log(LangConfig.getMessages().getString("Loading.line2"));
         Logger.log(LangConfig.getMessages().getString("Loading.line3"));
         
+        initializeWorldEdit();
+        
         Task.initializeTaskManager(this);
-        SpecialItemManager.loadSpecialItems();
-        
-        getCommand("alb").setExecutor(new CommandManager(this));
-        getCommand("nalb").setExecutor(new CommandManager(this));
-        
         WorldConfig.initialize(this);
-        WorldConfig.reloadAll();
+        LocationManager.initialize(this);
+        TrapManager.initialize(this);
+        
+        SpecialItemManager.loadSpecialItems();
         
         PackManager.loadPacks();        
         TypeManager.loadTypes();
         
-        LocationManager.initialize(this);
-        LocationManager.loadLocations();
-        
-        TrapManager.initialize(this);
-        TrapManager.loadTraps();
-        
-        initializeWorldEdit();
-        
-        registerEvents();
-        
-        Logger.log(LangConfig.getMessages().getString("Enable.line1").replace("%version%", version));
+        Task.runTask(() -> {
+            Logger.log("&aLoading worlds...");
+            
+            WorldConfig.reloadAll();
+            LocationManager.loadLocations();
+            TrapManager.loadTraps();
+            
+            getCommand("alb").setExecutor(new CommandManager(this));
+            getCommand("nalb").setExecutor(new CommandManager(this));
+            registerEvents();
+            
+            Logger.log(LangConfig.getMessages().getString("Enable.line1").replace("%version%", version));
+        });
     }
     
     private void registerEvents(){
