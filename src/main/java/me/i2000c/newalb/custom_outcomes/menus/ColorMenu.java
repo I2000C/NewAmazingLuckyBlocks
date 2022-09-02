@@ -133,8 +133,13 @@ public class ColorMenu extends Editor<CustomColor>{
                 .withDisplayName("&3Choose custom color")
                 .build();
         
+        ItemStack chooseRandomColor = ItemBuilder.newItem(XMaterial.BOOKSHELF)
+                .withDisplayName("&3Choose custom color")
+                .build();
+        
         menu.setItem(16, leather);
         menu.setItem(15, chooseCustomColor);
+        menu.setItem(25, chooseRandomColor);
         menu.setItem(42, GUIItem.getBackItem());
         menu.setItem(43, GUIItem.getNextItem());
         
@@ -161,6 +166,10 @@ public class ColorMenu extends Editor<CustomColor>{
                         }
                     }, false);
                     player.closeInventory();
+                    break;
+                case 25:
+                    item = new CustomColor();
+                    openColorInventory(player);
                     break;
                 case 42:
                     // Back to previous menu

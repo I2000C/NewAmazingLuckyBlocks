@@ -5,6 +5,13 @@ import org.bukkit.Color;
 public class CustomColor{
     private final Color color;
     
+    public CustomColor(){
+        int red = OtherUtils.generateRandomInt(0, 255);
+        int green = OtherUtils.generateRandomInt(0, 255);
+        int blue = OtherUtils.generateRandomInt(0, 255);
+        this.color = Color.fromRGB(red, green, blue);
+    }
+    
     public CustomColor(Color color){
         this.color = color;
     }
