@@ -12,6 +12,7 @@ import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Zombie;
@@ -19,27 +20,47 @@ import org.bukkit.entity.Zombie;
 public class ExtendedEntityType{
     private static enum ExtraEntityType{
         //<editor-fold defaultstate="collapsed" desc="Code">
-        DONKEY(true, true, true, XMaterial.HORSE_SPAWN_EGG),
-        MULE(true, true, true, XMaterial.HORSE_SPAWN_EGG),
-        SKELETON_HORSE(true, true, true, XMaterial.SKELETON_SPAWN_EGG),
-        ZOMBIE_HORSE(true, true, true, XMaterial.ZOMBIE_SPAWN_EGG),
-        STRAY(false, false, true, XMaterial.SKELETON_SPAWN_EGG),
-        WITHER_SKELETON(false, false, true, XMaterial.WITHER_SKELETON_SKULL);
+        DONKEY(true, true, true, XMaterial.HORSE_SPAWN_EGG, null, MinecraftVersion.v1_10),
+        MULE(true, true, true, XMaterial.HORSE_SPAWN_EGG, null, MinecraftVersion.v1_10),
+        SKELETON_HORSE(true, true, true, XMaterial.SKELETON_SPAWN_EGG, null, MinecraftVersion.v1_10),
+        ZOMBIE_HORSE(true, true, true, XMaterial.ZOMBIE_SPAWN_EGG, null, MinecraftVersion.v1_10),
+        STRAY(false, false, true, XMaterial.SKELETON_SPAWN_EGG, MinecraftVersion.v1_10, MinecraftVersion.v1_10),
+        WITHER_SKELETON(false, false, true, XMaterial.WITHER_SKELETON_SKULL, null, MinecraftVersion.v1_10),
+        
+        RABBIT_BROWN(false, true, true, XMaterial.RABBIT_SPAWN_EGG, null, null),
+        RABBIT_WHITE(false, true, true, XMaterial.RABBIT_SPAWN_EGG, null, null),
+        RABBIT_BLACK(false, true, true, XMaterial.RABBIT_SPAWN_EGG, null, null),
+        RABBIT_BLACK_AND_WHITE(false, true, true, XMaterial.RABBIT_SPAWN_EGG, null, null),
+        RABBIT_GOLD(false, true, true, XMaterial.RABBIT_SPAWN_EGG, null, null),
+        RABBIT_SALT_AND_PEPPER(false, true, true, XMaterial.RABBIT_SPAWN_EGG, null, null),
+        RABBIT_THE_KILLER_BUNNY(false, true, true, XMaterial.RABBIT_SPAWN_EGG, null, null);
         
         public boolean isTameable;
         public boolean isAgeable;
         public boolean isAlive;
         public XMaterial material;
+        public MinecraftVersion minVersion;
+        public MinecraftVersion maxVersion;
         
         private ExtraEntityType(
                 boolean isTameable, 
                 boolean isAgeable, 
                 boolean isAlive, 
-                XMaterial material){
+                XMaterial material,
+                MinecraftVersion minVersion,
+                MinecraftVersion maxVersion){
             this.isTameable = isTameable;
             this.isAgeable = isAgeable;
             this.isAlive = isAlive;
             this.material = material;
+            if(minVersion == null){
+                minVersion = MinecraftVersion.getOldestVersion();
+            }
+            if(maxVersion == null){
+                maxVersion = MinecraftVersion.getLatestVersion();
+            }
+            this.minVersion = minVersion;
+            this.maxVersion = maxVersion;
         }
         
         public Entity spawnEntity(Location location){
@@ -69,6 +90,34 @@ public class ExtendedEntityType{
                     skeleton = world.spawn(location, Skeleton.class);
                     skeleton.setSkeletonType(Skeleton.SkeletonType.WITHER);
                     return skeleton;
+                case RABBIT_BROWN:
+                    Rabbit rabbit = world.spawn(location, Rabbit.class);
+                    rabbit.setRabbitType(Rabbit.Type.BROWN);
+                    return rabbit;
+                case RABBIT_WHITE:
+                    rabbit = world.spawn(location, Rabbit.class);
+                    rabbit.setRabbitType(Rabbit.Type.WHITE);
+                    return rabbit;
+                case RABBIT_BLACK:
+                    rabbit = world.spawn(location, Rabbit.class);
+                    rabbit.setRabbitType(Rabbit.Type.BLACK);
+                    return rabbit;
+                case RABBIT_BLACK_AND_WHITE:
+                    rabbit = world.spawn(location, Rabbit.class);
+                    rabbit.setRabbitType(Rabbit.Type.BLACK_AND_WHITE);
+                    return rabbit;
+                case RABBIT_GOLD:
+                    rabbit = world.spawn(location, Rabbit.class);
+                    rabbit.setRabbitType(Rabbit.Type.GOLD);
+                    return rabbit;
+                case RABBIT_SALT_AND_PEPPER:
+                    rabbit = world.spawn(location, Rabbit.class);
+                    rabbit.setRabbitType(Rabbit.Type.SALT_AND_PEPPER);
+                    return rabbit;
+                case RABBIT_THE_KILLER_BUNNY:
+                    rabbit = world.spawn(location, Rabbit.class);
+                    rabbit.setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
+                    return rabbit;
                 default:
                     throw new Error("This should not happen");
             }
@@ -214,14 +263,11 @@ public class ExtendedEntityType{
             }
             
             MinecraftVersion minecraftVersion = NewAmazingLuckyBlocks.getMinecraftVersion();
-            if(minecraftVersion.compareTo(MinecraftVersion.v1_11) < 0){
-                for(ExtraEntityType extraEntityType : ExtraEntityType.values()){
-                    // Stray skeletons appeared for the first time in Minecraft 1.10
-                    if(extraEntityType == ExtraEntityType.STRAY
-                            && minecraftVersion.compareTo(MinecraftVersion.v1_10) != 0){
-                        continue;
-                    }
-                    
+            for(ExtraEntityType extraEntityType : ExtraEntityType.values()){
+                MinecraftVersion minMinecraftVersion = extraEntityType.minVersion;
+                MinecraftVersion maxMinecraftVersion = extraEntityType.maxVersion;
+                if(minecraftVersion.compareTo(minMinecraftVersion) >= 0
+                        && minecraftVersion.compareTo(maxMinecraftVersion) <= 0){
                     VALUES.add(new ExtendedEntityType(extraEntityType));
                 }
             }
