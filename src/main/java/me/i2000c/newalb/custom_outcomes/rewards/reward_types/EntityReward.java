@@ -17,6 +17,7 @@ import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
@@ -337,7 +338,7 @@ public class EntityReward extends Reward{
                 if(this.lastSpawnedEntity instanceof Horse){
                     ((Horse) this.lastSpawnedEntity)
                             .getInventory()
-                            .addItem(new ItemStack[]{new ItemStack(XMaterial.SADDLE.parseItem())});
+                            .addItem(XMaterial.SADDLE.parseItem());
                 }else if(this.lastSpawnedEntity instanceof Ocelot){
                     if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_13) < 0){
                         int randomType = OtherUtils.generateRandomInt(1, 3);
@@ -350,6 +351,12 @@ public class EntityReward extends Reward{
             for(String effect : this.effects){
                 String[] effectData = effect.split(";");
                 PotionEffectType effectType = PotionEffectType.getByName(effectData[0]);
+                if(effectType.equals(PotionEffectType.INVISIBILITY)
+                        && le instanceof ArmorStand){
+                    ((ArmorStand) le).setVisible(false);
+                    continue;
+                }
+                
                 int time = Integer.parseInt(effectData[1]) * 20;
                 if(time < 0){
                     time = Integer.MAX_VALUE;
