@@ -1,6 +1,10 @@
 package me.i2000c.newalb.utils2;
 
+import java.util.ArrayList;
 import java.util.List;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ItemReward;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
@@ -13,6 +17,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public final class Equipment implements Cloneable{
     public static final String[] EQUIPMENT_KEYS = {
@@ -169,6 +175,7 @@ public final class Equipment implements Cloneable{
                     builder.withEnchantments(enchantments);
                 }
                 
+                //Load textureID
                 if(config.contains(fullPath + ".textureID")){
                     String textureID = config.getString(fullPath + ".textureID");
                     try{
@@ -180,6 +187,54 @@ public final class Equipment implements Cloneable{
                         Logger.err("Couldn't load texture of item at " + fullPath + ":");
                         Logger.err(ex);
                     }catch(TextureException ex){}
+                }
+                
+                //Load armor color
+                switch(builder.getMaterial()){
+                    case LEATHER_HELMET:
+                    case LEATHER_CHESTPLATE:
+                    case LEATHER_LEGGINGS:
+                    case LEATHER_BOOTS:
+                        if(config.contains(fullPath + ".armorColor")){
+                            String hexColor = config.getString(fullPath + ".armorColor");
+                            CustomColor color = new CustomColor(hexColor);
+                            builder.withColor(color.getBukkitColor());
+                        }
+                        break;
+                }
+
+                //Load potion effects
+                ItemReward.PotionSplashType type = ItemReward.PotionSplashType.getFromPotion(builder.build());
+                if(type != null){
+                    if(config.contains(fullPath + ".potionSplashType")){
+                        type = ItemReward.PotionSplashType.valueOf(config.getString(fullPath + ".potionSplashType"));
+                        type.setToPotion(builder.build());
+                    }
+                    if(config.contains(fullPath + ".potionEffects")){
+                        List<String> potionEffects = config.getStringList(fullPath + ".potionEffects");
+                        potionEffects.forEach(string -> {
+                            String[] splitted = string.split(";");
+                            String name = splitted[0];
+                            int duration = Integer.parseInt(splitted[1]) * 20;
+                            int amplifier = Integer.parseInt(splitted[2]);
+
+                            if(duration < 0){
+                                duration = Integer.MAX_VALUE;
+                            }
+                            if(amplifier < 0){
+                                amplifier = 0;
+                            }
+
+                            builder.addPotionEffect(new PotionEffect(PotionEffectType.getByName(name), duration, amplifier));
+                        });
+                    }
+                    if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+                        if(config.contains(fullPath + ".potionColor")){
+                            String hexColor = config.getString(fullPath + ".potionColor");
+                            CustomColor color = new CustomColor(hexColor);
+                            builder.withColor(color.getBukkitColor());
+                        }
+                    }
                 }
                 
                 int dropChance = config.getInt(fullPath + ".dropChance", 50);
@@ -214,9 +269,51 @@ public final class Equipment implements Cloneable{
                     if(builder.hasEnchantments()){
                         config.set(fullPath + ".enchantments", builder.getEnchantmentsIntoStringList());
                     }
+                    
+                    //Save texture
                     Texture texture = builder.getTexture();
                     if(texture != null){
                         config.set(fullPath + ".textureID", texture.getID());
+                    }
+                    
+                    //Save leather armor color
+                    switch(builder.getMaterial()){
+                        case LEATHER_HELMET:
+                        case LEATHER_CHESTPLATE:
+                        case LEATHER_LEGGINGS:
+                        case LEATHER_BOOTS:
+                            String hexColor = new CustomColor(builder.getColor()).getHexColorString();
+                            config.set(fullPath + ".armorColor", hexColor);
+                    }
+                    
+                    //Save potion effects
+                    ItemReward.PotionSplashType type = ItemReward.PotionSplashType.getFromPotion(builder.build());
+                    if(type != null){
+                        config.set(path + ".material" , "POTION");
+                        config.set(path + ".potionSplashType", type.name());   
+                        if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+                            if(builder.hasColor()){
+                                String hexColor = new CustomColor(builder.getColor()).getHexColorString();
+                                config.set(fullPath + ".potionColor", hexColor);
+                            }
+                        }
+                        List<String> effectList = new ArrayList<>();
+                        builder.getPotionEffects().forEach(potionEffect -> {
+                            String name = potionEffect.getType().getName();
+                            int duration = potionEffect.getDuration() / 20;
+                            int amplifier = potionEffect.getAmplifier();
+
+                            if(duration < 0){
+                                duration = 0;
+                            }
+                            if(amplifier < 0){
+                                amplifier = 0;
+                            }
+
+                            effectList.add(name + ";" + duration + ";" + amplifier);
+                        });
+
+                        config.set(fullPath + ".potionEffects", effectList);
                     }
                     
                     config.set(fullPath + ".dropChance", dropChance);

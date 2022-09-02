@@ -239,7 +239,8 @@ public class ItemReward extends Reward{
                 String hexColor = new CustomColor(builder.getColor()).getHexColorString();
                 config.set(path + ".armorColor", hexColor);
         }
-
+        
+        //Save potion effects
         PotionSplashType type = PotionSplashType.getFromPotion(this.item);
         if(type != null){
             config.set(path + ".material" , "POTION");
