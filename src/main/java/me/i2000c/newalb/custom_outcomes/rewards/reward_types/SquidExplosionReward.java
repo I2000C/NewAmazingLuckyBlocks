@@ -111,7 +111,10 @@ public class SquidExplosionReward extends Reward{
                     squid.getNearbyEntities(radius, radius, radius)
                             .forEach(entity -> {
                                 if(entity instanceof LivingEntity){
-                                    ((LivingEntity) entity).addPotionEffects(potionEffectList);
+                                    LivingEntity le = (LivingEntity) entity;
+                                    potionEffectList.forEach(potionEffect -> {
+                                        le.addPotionEffect(potionEffect, true);
+                                    });                                    
                                 }
                             });
                     squid.remove();
