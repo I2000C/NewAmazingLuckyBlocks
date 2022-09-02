@@ -130,6 +130,9 @@ public class EntityMenu extends Editor<EntityReward>{
         }else{
             builder.withDisplayName("&aEntity custom name: &r" + item.getCustomName());
         }
+        builder.addLoreLine("");
+        builder.addLoreLine("&7Use &a%player% &7if you want to use");
+        builder.addLoreLine("&7  the player's name in the entity name");
         ItemStack ent_name = builder.build();
         
         ItemStack ent_name_visible = GUIItem.getBooleanItem(
@@ -659,8 +662,4 @@ public class EntityMenu extends Editor<EntityReward>{
         }
 //</editor-fold>
     };
-    
-    private static enum e{
-        
-    }
 }

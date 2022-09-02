@@ -310,7 +310,7 @@ public class EntityReward extends Reward{
         
         
         if(this.customName != null){
-            this.lastSpawnedEntity.setCustomName(Logger.color(this.customName));
+            this.lastSpawnedEntity.setCustomName(Logger.color(this.customName.replace("%player%", player.getName())));
             this.lastSpawnedEntity.setCustomNameVisible(this.customNameVisible);
         }
         
