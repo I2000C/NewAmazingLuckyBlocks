@@ -333,6 +333,7 @@ public class TypeManager{
         
         File typeFile = new File(LUCKY_BLOCK_TYPES_FOLDER, type.getTypeName() + ".yml");
         ReadWriteConfig config = new ReadWriteConfig(PLUGIN, typeFile);
+        config.clearConfig();
         type.saveToConfig(config.getBukkitConfig());
         config.saveConfig();
         loadTypes();
@@ -355,7 +356,7 @@ public class TypeManager{
     
     private static void copyDefaultTypes(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        for(String filename : Arrays.asList("default.yml", "default2.yml", "other.yml", PERMISSIONS_FILENAME)){
+        for(String filename : Arrays.asList("default.yml", "default2.yml", PERMISSIONS_FILENAME)){
             File file = new File(LUCKY_BLOCK_TYPES_FOLDER, filename);
             NewAmazingLuckyBlocks.getInstance().copyResource("luckyblock_types/" + filename, file);
         }
