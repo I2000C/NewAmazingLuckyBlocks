@@ -90,7 +90,10 @@ public class ItemBuilder{
     }
     
     public ItemBuilder withDurability(int durability){
-        item.setDurability((short) durability);
+        if(durability >= 0 && durability <= item.getType().getMaxDurability()){
+            item.setDurability((short) durability);
+        }
+        
         return this;
     }
     public short getDurability(){

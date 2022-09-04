@@ -200,8 +200,10 @@ public class ItemMenu extends Editor<ItemReward>{
                 .withDisplayName("&6Click to add lore line")
                 .build();
         
+        short currentDurability = item.getItem().getDurability();
+        short maxDurability = item.getItem().getType().getMaxDurability();
         ItemStack durability = ItemBuilder.newItem(XMaterial.IRON_PICKAXE)
-                .withDisplayName("&7Current durability: &a" + item.getItem().getDurability())
+                .withDisplayName("&7Current durability: &a" + currentDurability + " &6/ &a" + maxDurability)
                 .addLoreLine("&3Click to reset")
                 .build();
         
