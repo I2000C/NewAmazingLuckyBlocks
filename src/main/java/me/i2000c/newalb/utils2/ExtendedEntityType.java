@@ -284,7 +284,13 @@ public class ExtendedEntityType{
         //<editor-fold defaultstate="collapsed" desc="Code">
         ExtendedEntityType eet;
         try{
-            eet = new ExtendedEntityType(EntityType.valueOf(string));
+            if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_16) >= 0
+                    && string.equals("PIG_ZOMBIE")){
+                // Since Minecraft 1.16, pig zombies were changed to zombified piglins
+                eet = new ExtendedEntityType(EntityType.valueOf("ZOMBIFIED_PIGLIN"));
+            }else{
+                eet = new ExtendedEntityType(EntityType.valueOf(string));
+            }            
         }catch(IllegalArgumentException ex){
             eet = new ExtendedEntityType(ExtraEntityType.valueOf(string));
         }
