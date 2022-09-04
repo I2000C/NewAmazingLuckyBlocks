@@ -80,6 +80,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         Logger.initializeLogger(prefix, coloredLogger);
         
         Logger.log(LangConfig.getMessage("Loading.plugin"));
+        Updater.checkUpdates(name, version);
+        
         Logger.log(LangConfig.getMessage("Loading.config"));
         Logger.log(LangConfig.getMessage("Loading.lang"));        
         
@@ -117,7 +119,6 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         pm.registerEvents(Timer.getTimer(), this);
         
-        Updater.checkUpdates(name, version);
         pm.registerEvents(new Updater(), this);
         pm.registerEvents(new BlockBreak(), this);
         pm.registerEvents(new BlockPlace(), this);
