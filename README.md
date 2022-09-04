@@ -1,6 +1,7 @@
 # NewAmazingLuckyBlocks
 
 Plugin link: <https://www.spigotmc.org/resources/new-amazing-lucky-blocks.62644/>
+<br>Discord link: <https://discord.gg/fXSSTvAqfh>
 
 ![Spiget Downloads](https://img.shields.io/spiget/downloads/62644)
 ![Spiget Stars](https://img.shields.io/spiget/stars/62644)
