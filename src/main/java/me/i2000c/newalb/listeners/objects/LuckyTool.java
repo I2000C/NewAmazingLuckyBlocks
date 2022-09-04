@@ -30,7 +30,7 @@ public class LuckyTool extends SpecialItem{
                     return;
                 case TypeManager.RESULT_NO_GLOBAL_PERMISSION:
                 case TypeManager.RESULT_NO_LOCAL_PERMISSION:
-                    Logger.sendMessage(LangConfig.getMessages().getString("NoPermission"), player);
+                    Logger.sendMessage(LangConfig.getMessage("NoPermission"), player);
                     return;
                 default:
                     e.setCancelled(true);
@@ -38,7 +38,7 @@ public class LuckyTool extends SpecialItem{
             }
             
             if(!ConfigManager.getConfig().getBoolean("Objects.LuckyTool.enable")){
-                Logger.sendMessage(LangConfig.getMessages().getString("Objects.LuckyTool.disabled"), player);
+                Logger.sendMessage(LangConfig.getMessage("Objects.LuckyTool.disabled"), player);
                 return;
             }
             
@@ -58,7 +58,7 @@ public class LuckyTool extends SpecialItem{
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.STICK)
                 .withDisplayName(getDisplayName())
-                .withLore(LangConfig.getMessages().getStringList("Objects.LuckyTool.lore"))
+                .withLore(LangConfig.getMessageList("Objects.LuckyTool.lore"))
                 .build();
     }
 }

@@ -140,14 +140,14 @@ public class WorldConfig extends ReadWriteConfig{
         //<editor-fold defaultstate="collapsed" desc="Code">
         String prefix = NewAmazingLuckyBlocks.getInstance().prefix;
         
-        String line1 = LangConfig.getMessages().getString("World-loading.line1").replace("%prefix%", "");
-        String line2 = LangConfig.getMessages().getString("World-loading.line2").replace("%prefix%", "");
-        String line3 = LangConfig.getMessages().getString("World-loading.line3").replace("%prefix%", "");
-        String line4 = LangConfig.getMessages().getString("World-loading.line4").replace("%prefix%", "");
-        String line5 = LangConfig.getMessages().getString("World-loading.line5").replace("%prefix%", "");
-        String line6 = LangConfig.getMessages().getString("World-loading.line6").replace("%prefix%", "");
-        String line7 = LangConfig.getMessages().getString("World-loading.line7").replace("%prefix%", "");
-        String line8 = LangConfig.getMessages().getString("World-loading.line8").replace("%prefix%", "");
+        String line1 = LangConfig.getMessage("World-loading.line1").replace("%prefix%", "");
+        String line2 = LangConfig.getMessage("World-loading.line2").replace("%prefix%", "");
+        String line3 = LangConfig.getMessage("World-loading.line3").replace("%prefix%", "");
+        String line4 = LangConfig.getMessage("World-loading.line4").replace("%prefix%", "");
+        String line5 = LangConfig.getMessage("World-loading.line5").replace("%prefix%", "");
+        String line6 = LangConfig.getMessage("World-loading.line6").replace("%prefix%", "");
+        String line7 = LangConfig.getMessage("World-loading.line7").replace("%prefix%", "");
+        String line8 = LangConfig.getMessage("World-loading.line8").replace("%prefix%", "");
         
         // Update and load worlds
         updateWorlds(true);

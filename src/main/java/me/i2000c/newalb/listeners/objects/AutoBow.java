@@ -200,7 +200,7 @@ public class AutoBow extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.BOW)
-                .withDisplayName(LangConfig.getMessages().getString("Objects.AutoBow.name"))
+                .withDisplayName(LangConfig.getMessage("Objects.AutoBow.name"))
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
                 .build();
     }

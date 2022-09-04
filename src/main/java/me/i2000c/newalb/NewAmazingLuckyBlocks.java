@@ -75,13 +75,13 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         LangConfig.initialize(this);
         LangConfig.loadConfig();
         
-        prefix = Logger.color(LangConfig.getMessages().getString("InGamePrefix"));
+        prefix = Logger.color(LangConfig.getMessage("InGamePrefix"));
         boolean coloredLogger = ConfigManager.getConfig().getBoolean("ColoredLogger");
         Logger.initializeLogger(prefix, coloredLogger);
         
-        Logger.log(LangConfig.getMessages().getString("Loading.plugin"));
-        Logger.log(LangConfig.getMessages().getString("Loading.config"));
-        Logger.log(LangConfig.getMessages().getString("Loading.lang"));        
+        Logger.log(LangConfig.getMessage("Loading.plugin"));
+        Logger.log(LangConfig.getMessage("Loading.config"));
+        Logger.log(LangConfig.getMessage("Loading.lang"));        
         
         initializeWorldEdit();
         
@@ -92,12 +92,12 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         SpecialItemManager.loadSpecialItems();
         
-        Logger.log(LangConfig.getMessages().getString("Loading.packs"));
+        Logger.log(LangConfig.getMessage("Loading.packs"));
         PackManager.loadPacks();        
         TypeManager.loadTypes();
         
         Task.runTask(() -> {
-            Logger.log(LangConfig.getMessages().getString("Loading.worlds"));
+            Logger.log(LangConfig.getMessage("Loading.worlds"));
             
             WorldConfig.reloadAll();
             LocationManager.loadLocations();
@@ -107,7 +107,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
             getCommand("nalb").setExecutor(new CommandManager(this));
             registerEvents();
             
-            Logger.log(LangConfig.getMessages().getString("Enable.line1").replace("%version%", version));
+            Logger.log(LangConfig.getMessage("Enable.line1").replace("%version%", version));
         });
     }
     
@@ -138,7 +138,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
             RewardListMenu.testRewardsPlayerList.clear();
             LocationManager.saveLocations();
         }
-        Logger.log(LangConfig.getMessages().getString("Disable.line1").replace("%prefix%", ""));
+        Logger.log(LangConfig.getMessage("Disable.line1").replace("%prefix%", ""));
     }
     
     public void copyResource(String filename, File file){

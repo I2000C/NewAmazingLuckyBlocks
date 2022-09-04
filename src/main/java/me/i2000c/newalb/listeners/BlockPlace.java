@@ -28,7 +28,7 @@ public class BlockPlace implements Listener{
                 break;
             case TypeManager.RESULT_NO_GLOBAL_PERMISSION:
             case TypeManager.RESULT_NO_LOCAL_PERMISSION:
-                Logger.sendMessage(LangConfig.getMessages().getString("NoPermission"), p);
+                Logger.sendMessage(LangConfig.getMessage("NoPermission"), p);
                 e.setCancelled(true);
                 break;
         }

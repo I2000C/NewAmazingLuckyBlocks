@@ -43,14 +43,14 @@ public class BlockBreak implements Listener{
                     break;
                 case TypeManager.RESULT_NO_GLOBAL_PERMISSION:
                 case TypeManager.RESULT_NO_LOCAL_PERMISSION:
-                    Logger.sendMessage(LangConfig.getMessages().getString("NoPermission"), p);
+                    Logger.sendMessage(LangConfig.getMessage("NoPermission"), p);
                     e.setCancelled(true);
                     break;
                 case TypeManager.RESULT_OK:
                     boolean requireLuckyTool = ConfigManager.getConfig().getBoolean("LuckyTool.enable");
                     boolean canOnlyBreakWithLuckyTool = ConfigManager.getConfig().getBoolean("LuckyTool.onlyCanBreakLuckyBlocksWithLuckyTool");
                     if(requireLuckyTool && canOnlyBreakWithLuckyTool){
-                        Logger.sendMessage(LangConfig.getMessages().getString("Objects.LuckyTool.need"), p);
+                        Logger.sendMessage(LangConfig.getMessage("Objects.LuckyTool.need"), p);
                         e.setCancelled(true);
                     }else{
                         b.setType(Material.AIR);
