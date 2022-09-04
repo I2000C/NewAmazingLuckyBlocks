@@ -141,8 +141,7 @@ public class RewardListMenu extends Editor<Outcome>{
                 XMaterial.REPEATER);
         ItemBuilder.fromItem(clone, false)
                 .addLoreLine("")
-                .addLoreLine("&6You can clone rewards using this option.")
-                .addLoreLine("&6However, you cannot clone &7EntityTowerRewards");
+                .addLoreLine("&6You can clone rewards using this option");
         
         ItemStack delay = GUIItem.getEnabledDisabledItem(
                 delayMode,
@@ -152,7 +151,7 @@ public class RewardListMenu extends Editor<Outcome>{
                 XMaterial.CLOCK);
         ItemBuilder.fromItem(delay, false)
                 .addLoreLine("")
-                .addLoreLine("&3Click here to configure the delay of a reward");
+                .addLoreLine("&eClick here to configure the delay of a reward");
         
         menu.setItem(BACK_SLOT, GUIItem.getBackItem());
         if(!deleteMode && !testMode && !cloneMode && !delayMode){
