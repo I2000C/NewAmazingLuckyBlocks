@@ -26,7 +26,7 @@ public class RegenWand extends SpecialItem{
             
             super.updatePlayerCooldown(player);
             int effectTime = ConfigManager.getConfig().getInt("Wands.RegenWand.effect-time") * 20;
-            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, effectTime, 0));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, effectTime, 0), true);
         }
     }
     
