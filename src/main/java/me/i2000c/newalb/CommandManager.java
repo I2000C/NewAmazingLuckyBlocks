@@ -182,8 +182,17 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             }
         }
         String key = "Helpmenu";
+        
+        int maxPages = 1;
+        for(int i=2;;i++){
+            if(!LangConfig.getMessages().isConfigurationSection(key + i)){
+                maxPages = i-1;
+                break;
+            }
+        }
+        
         if(help_n > 1){
-            key = key + help_n;
+            key += help_n;
         }
         if(!LangConfig.getMessages().isConfigurationSection(key)){
             Logger.sendMessage("&cThat page doesn't exist", sender);
@@ -191,7 +200,9 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         for(String str : LangConfig.getMessages().getConfigurationSection(key).getKeys(false)){
             String text = LangConfig.getMessages().getString(key + "." + str);
-            Logger.sendMessage(text.replace("%prefix%", NewAmazingLuckyBlocks.getInstance().prefix), sender);
+            Logger.sendMessage(text
+                    .replace("%prefix%", NewAmazingLuckyBlocks.getInstance().prefix)
+                    .replace("%maxPages%", String.valueOf(maxPages)), sender, false);
         }
         return true;
 //</editor-fold>
@@ -352,32 +363,30 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         GUIManager.setCurrentMenu(null);
-
+        RewardListMenu.testRewardsPlayerList.clear();
+        
+        Logger.logAndMessage(LangConfig.getMessages().getString("Reload.config"), sender);
         ConfigManager.getManager().loadConfig();
+        boolean coloredLogger = ConfigManager.getConfig().getBoolean("ColoredLogger");
+        Logger.initializeLogger(plugin.prefix, coloredLogger);
+        
+        Logger.logAndMessage(LangConfig.getMessages().getString("Reload.lang"), sender);
         LangConfig.loadConfig();
-
+        plugin.prefix = LangConfig.getMessages().getString("InGamePrefix");
+        
+        Logger.logAndMessage(LangConfig.getMessages().getString("Reload.worlds"), sender);
         WorldConfig.reloadAll();
 
         SpecialItemManager.reloadSpecialItems();
-
+        
+        Logger.logAndMessage(LangConfig.getMessages().getString("Reload.packs"), sender);
         PackManager.loadPacks();
         TrapManager.loadTraps();
         TypeManager.loadTypes();
 
         LocationManager.saveLocations();
-
-        RewardListMenu.testRewardsPlayerList.clear();
         
-        plugin.prefix = LangConfig.getMessages().getString("InGamePrefix");
-        boolean coloredLogger = ConfigManager.getConfig().getBoolean("ColoredLogger");
-        Logger.initializeLogger(plugin.prefix, coloredLogger);
-
-        String reload1 = LangConfig.getMessages().getString("Reload.line1");
-        String reload2 = LangConfig.getMessages().getString("Reload.line2");
-        String reload3 = LangConfig.getMessages().getString("Reload.line3");
-        Logger.sendMessage(reload1, sender);
-        Logger.sendMessage(reload2, sender);
-        Logger.sendMessage(reload3, sender);
+        Logger.logAndMessage(LangConfig.getMessages().getString("Reload.reload-finished"), sender);
         return true;
 //</editor-fold>
     }

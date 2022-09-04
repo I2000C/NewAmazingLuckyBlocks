@@ -66,24 +66,24 @@ Helpmenu:
   line4: '&c/alb reload &7- Reload config and lang files'
   line5: '&c/alb help <page> &7- Open the help page'
   line6: '&c/alb &7- Show plugin name and version'
-  line7: '&7--------&cNewAmazingHelp <page 1>&7--------'
+  line7: '&7--------&cNewAmazingHelp <page 1/%maxPages%>&7--------'
 Helpmenu2:
   line1: '%prefix%'
   line2: ''
   line3: '&c/alb give <wands/objects/luckyblocks> [amount] [player]'
-  line4: '&7     - Gives you all the wands (amount not needed)'
-  line5: '&7     - Gives you all the objects (amount is opcional)'
-  line6: '&7     - Gives you luckyblocks (amount is opcional)'
+  line4: '&7     - Gives you all the wands (amount is optional)'
+  line5: '&7     - Gives you all the objects (amount is optional)'
+  line6: '&7     - Gives you luckyblocks (amount is optional)'
   line7: '&c/alb menu &7- Open custom outcomes menu'
   line8: '&c/alb return &7- Return to the previous menu'
-  line9: '&7--------&cNewAmazingHelp <page 2>&7--------'
+  line9: '&7--------&cNewAmazingHelp <page 2/%maxPages%>&7--------'
 Helpmenu3:
   line1: '%prefix%'
   line2: ''
   line3: '&c/alb clear &7- Removes all LuckyBlocks of all worlds'
   line4: '&c/alb clear <world> &7- Removes all LuckyBlocks of the world &7world'
   line5: '&c/alb randomblock stop &7-Stop placing random lucky blocks'
-  line6: '&7--------&cNewAmazingHelp <page 3>&7--------'
+  line6: '&7--------&cNewAmazingHelp <page 3/%maxPages%>&7--------'
 Helpmenu4:
   line1: '%prefix%'
   line2: ''
@@ -92,7 +92,7 @@ Helpmenu4:
   line5: '&c/alb worlds set <world> <type>'
   line6: '   &7- Sets the world "world" to the type "type"'
   line7: '   &7- Valid types are: &e[enabled, disabled]'
-  line8: '&7--------&cNewAmazingHelp <page 4>&7--------'
+  line8: '&7--------&cNewAmazingHelp <page 4/%maxPages%>&7--------'
 Helpmenu5:
   line1: '%prefix%'
   line2: ''
@@ -101,7 +101,7 @@ Helpmenu5:
   line5: '&c/alb saveSchematic <schematic_name> &7- Saves your WorldEdit clipboard'
   line6: '&7into a schematic file'
   line7: '&c/alb removeSchematic <schematic_name> &7- Removes a schematic file'
-  line8: '&7--------&cNewAmazingHelp <page 5>&7--------'
+  line8: '&7--------&cNewAmazingHelp <page 5/%maxPages%>&7--------'
 
 World-loading:
   line1: '&cInvalid world in config:'
@@ -135,17 +135,21 @@ PlacingBlocks: '&dPlacing random lucky blocks...'
 LoadingLuckyTool: '&eLoading LuckyTool...'
 LoadingSpecialItem: '&5Loading special item...'
 Loading:
-  line1: "&aLoading &6NewAmazingLuckyBlocks&a..."
-  line2: "&aLoading lang..."
-  line3: "&aLoading wands..."
+  plugin: '&aLoading &6NewAmazingLuckyBlocks&a...'
+  config: '&aLoading config...'
+  lang: '&aLoading lang...'
+  worlds: '&aLoading worlds...'
+  packs: '&aLoading packs...'
 Enable:
-  line1: "&a[&6NewAmazingLuckyBlocks &b%version%&a] is now enabled"
+  line1: '&a[&6NewAmazingLuckyBlocks &b%version%&a] is now enabled'
 Disable:
-  line1: "&cis now disabled"
+  line1: '&cis now disabled'
 Reload:
-  line1: '&aReloading lang...'
-  line2: '&aReloading config...'
-  line3: '&cReload finished'
+  config: '&aReloading config...'
+  lang: '&aReloading lang...'  
+  worlds: '&aReloading worlds...'
+  packs: '&aReloading packs...'
+  reload-finished: '&cReload finished'  
 HelpMessage: '&cType &7/alb help &cfor help'
 UnknownCommand: '&cUnknown command. Type &7/alb &cfor plugin info'
 InGamePrefix: '&r[&6NewAmazingLuckyBlocks&r]'

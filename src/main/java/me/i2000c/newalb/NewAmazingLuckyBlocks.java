@@ -60,6 +60,16 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
     public void onEnable(){
         minecraftVersion = MinecraftVersion.getCurrentVersion();
         
+        Logger.initializeLogger("NewAmazingLuckyBlocks", false);
+        
+        if(minecraftVersion == null){
+            Logger.warn("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version");
+            Logger.warn("NewAmazingLuckyBlocks is going to shut down");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        
+        
         ConfigManager.initialize(this);
         ConfigManager.getManager().loadConfig();
         LangConfig.initialize(this);
@@ -69,16 +79,9 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         boolean coloredLogger = ConfigManager.getConfig().getBoolean("ColoredLogger");
         Logger.initializeLogger(prefix, coloredLogger);
         
-        if(minecraftVersion == null){
-            Logger.log("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version");
-            Logger.log("&cNewAmazingLuckyBlocks is going to shut down");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-        
-        Logger.log(LangConfig.getMessages().getString("Loading.line1"));
-        Logger.log(LangConfig.getMessages().getString("Loading.line2"));
-        Logger.log(LangConfig.getMessages().getString("Loading.line3"));
+        Logger.log(LangConfig.getMessages().getString("Loading.plugin"));
+        Logger.log(LangConfig.getMessages().getString("Loading.config"));
+        Logger.log(LangConfig.getMessages().getString("Loading.lang"));        
         
         initializeWorldEdit();
         
@@ -89,11 +92,12 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         
         SpecialItemManager.loadSpecialItems();
         
+        Logger.log(LangConfig.getMessages().getString("Loading.packs"));
         PackManager.loadPacks();        
         TypeManager.loadTypes();
         
         Task.runTask(() -> {
-            Logger.log("&aLoading worlds...");
+            Logger.log(LangConfig.getMessages().getString("Loading.worlds"));
             
             WorldConfig.reloadAll();
             LocationManager.loadLocations();
