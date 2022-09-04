@@ -226,7 +226,13 @@ public class Timer implements Listener{
                         .add(radius * Math.sin(angleRadians), height, radius * Math.cos(angleRadians));
                 
                 Vector v = loc2.toVector().subtract(loc1.toVector());
-                FallingBlock fb = loc2.getWorld().spawnFallingBlock(loc2, throwBlocksStack.getData());
+                byte data;
+                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                    data = (byte) throwBlocksStack.getDurability();
+                }else{
+                    data = 0;
+                }
+                FallingBlock fb = loc2.getWorld().spawnFallingBlock(loc2, throwBlocksStack.getType(), data);
                 fb.setDropItem(false);
                 fb.setVelocity(v);
                 fb.setMetadata(TAG, new FixedMetadataValue(NewAmazingLuckyBlocks.getInstance(), lavaMaterial));
