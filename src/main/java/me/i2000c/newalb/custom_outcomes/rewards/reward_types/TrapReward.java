@@ -10,6 +10,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -89,9 +90,13 @@ public class TrapReward extends Reward{
     
     @Override
     public void saveRewardIntoConfig(FileConfiguration config, String path){
+        if(trapOutcomePackName.endsWith(".yml")){
+            trapOutcomePackName = OtherUtils.removeExtension(trapOutcomePackName);
+        }
+        
         config.set(path + ".pressurePlateMaterial", trapMaterial.name());
-        config.set(path + ".trapName", this.trapName);
-        config.set(path + ".trapOutcome", this.trapOutcomePackName + "/" + this.trapOutcomeID);
+        config.set(path + ".trapName", trapName);
+        config.set(path + ".trapOutcome", trapOutcomePackName + "/" + trapOutcomeID);
     }
     
     @Override

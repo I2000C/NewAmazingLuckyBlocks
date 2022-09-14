@@ -59,17 +59,13 @@ public class Outcome implements Displayable, Executable, Cloneable{
         this.rewardList = new ArrayList<>();
     }
     
-    public static Outcome fromString(String string){
-        try{
-            String[] splitted = string.split("\\/");
-            String packName = splitted[0];
-            int outcomeID = Integer.parseInt(splitted[1]);
-            OutcomePack pack = PackManager.getPack(packName);
-            Outcome outcome = pack.getOutcome(outcomeID);
-            return outcome;
-        }catch(Exception ex){
-            return null;
-        }
+    public static Outcome fromString(String string) throws Exception{
+        String[] splitted = string.split("\\/");
+        String packName = splitted[0];
+        int outcomeID = Integer.parseInt(splitted[1]);
+        OutcomePack pack = PackManager.getPack(packName);
+        Outcome outcome = pack.getOutcome(outcomeID);
+        return outcome;
     }
     
     public OutcomePack getPack(){
