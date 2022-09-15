@@ -3,10 +3,13 @@
   "isGradleProject": true,
   "copyJarToProjectDir": false,
   "generateGitignore": true,
+  "generateJflexCupDependencies": false,
+  "generatePublishSettings": false,
   "javaVersion": 8,
   "jarName": "NewAmazingLuckyBlocks",
   "mainClassName": "NewAmazingLuckyBlocks",
   "mainClassPackage": "me.i2000c.newalb",
+  "version": "3.1.0_36",
   "localLibraries": [],
   "urlLibraries": [],
   "gradleLibraries": [
@@ -14,37 +17,37 @@
       "downloadJavadoc": true,
       "downloadSources": true,
       "name": "io.github.bananapuncher714:nbteditor:7.18.3",
-      "packIntoJar": true
+      "scope": "COMPILE_AND_RUNTIME"
     },
     {
       "downloadJavadoc": true,
       "downloadSources": true,
       "name": "com.github.cryptomorin:XSeries:9.0.0",
-      "packIntoJar": true
+      "scope": "COMPILE_AND_RUNTIME"
     },
     {
       "downloadJavadoc": true,
       "downloadSources": true,
       "name": "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT",
-      "packIntoJar": false
+      "scope": "COMPILE_ONLY"
     },
     {
       "downloadJavadoc": false,
       "downloadSources": false,
       "name": "com.mojang:authlib:1.5.21",
-      "packIntoJar": false
+      "scope": "COMPILE_ONLY"
     },
     {
       "downloadJavadoc": true,
       "downloadSources": true,
       "name": "xyz.xenondevs:particle:1.8.1",
-      "packIntoJar": true
+      "scope": "COMPILE_AND_RUNTIME"
     },
     {
       "downloadJavadoc": true,
       "downloadSources": true,
       "name": "com.sk89q.worldedit:worldedit-core:7.2.2",
-      "packIntoJar": false
+      "scope": "COMPILE_ONLY"
     }
   ],
   "gradleRepositories": [
@@ -60,5 +63,10 @@
     {
       "url": "https://maven.enginehub.org/repo/"
     }
-  ]
+  ],
+  "isSpigotPlugin": true,
+  "spigotDescription": "A new incredible LuckyBlock plugin",
+  "spigotAuthors": "I2000C",
+  "spigotDependencies": "WorldEdit",
+  "spigotCommands": "alb:The main command of New Amazing Lucky Blocks,nalb:The main command of New Amazing Lucky Blocks"
 }
