@@ -8,8 +8,8 @@ ext{
     version='3.1.0_36'
     mainClass='me.i2000c.newalb.NewAmazingLuckyBlocks'
     groupId='me.i2000c.newalb'
-    artifactId='newamazingluckyblocks'
-    pluginName='NewAmazingLuckyBlocks'
+    artifactId=project.name
+    pluginName=artifactId
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'

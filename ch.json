@@ -4,7 +4,6 @@
   "copyJarToProjectDir": false,
   "generateGitignore": true,
   "generateJflexCupDependencies": false,
-  "generatePublishSettings": false,
   "javaVersion": 8,
   "jarName": "NewAmazingLuckyBlocks",
   "mainClassName": "NewAmazingLuckyBlocks",
@@ -64,6 +63,9 @@
       "url": "https://maven.enginehub.org/repo/"
     }
   ],
+  "generatePublishSettings": false,
+  "generateJavadoc": false,
+  "generateSources": false,
   "isSpigotPlugin": true,
   "spigotDescription": "A new incredible LuckyBlock plugin",
   "spigotAuthors": "I2000C",
