@@ -49,6 +49,9 @@ shadowJar{
     archiveBaseName.set(project.name)
     archiveClassifier.set('')
     archiveVersion.set('')
+    relocate('com.cryptomorin.xseries', project.ext.groupId + '.com.cryptomorin.xseries')
+    relocate('io.github.bananapuncher714', project.ext.groupId + '.io.github.bananapuncher714')
+    relocate('xyz.xenondevs.particle', project.ext.groupId + '.xyz.xenondevs.particle')
 }
 
 [jar]*.dependsOn shadowJar

@@ -63,6 +63,11 @@
       "url": "https://maven.enginehub.org/repo/"
     }
   ],
+  "shadedPackagesList": [
+    "com.cryptomorin.xseries",
+    "io.github.bananapuncher714",
+    "xyz.xenondevs.particle",
+  ],
   "generatePublishSettings": false,
   "generateJavadoc": false,
   "generateSources": false,
