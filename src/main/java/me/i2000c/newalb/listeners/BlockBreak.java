@@ -1,24 +1,28 @@
 package me.i2000c.newalb.listeners;
 
+import com.cryptomorin.xseries.XMaterial;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.Executable;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.WorldConfig;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-
-import me.i2000c.newalb.utils.WorldConfig;
-import org.bukkit.GameMode;
-import org.bukkit.event.EventPriority;
+import org.bukkit.inventory.ItemStack;
 
 public class BlockBreak implements Listener{
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -63,15 +67,48 @@ public class BlockBreak implements Listener{
     
     private void dropLuckyBlock(BlockBreakEvent e){
         boolean drop = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.enable");
+        if(!drop){
+            return;
+        }
+        
         boolean survivalOnly = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.survivalOnly");
-        if(drop && (!survivalOnly || e.getPlayer().getGameMode() == GameMode.SURVIVAL)){
-            int prob = ConfigManager.getConfig().getInt("LuckyBlock.DropOnBlockBreak.probability");
-            Random r = new Random();
-            if(r.nextInt(100) < prob){
+        if(survivalOnly && e.getPlayer().getGameMode() != GameMode.SURVIVAL){
+            return;
+        }
+        
+        List<XMaterial> blockList = ConfigManager.getConfig().getStringList("LuckyBlock.DropOnBlockBreak.enabledBlocks")
+                .stream().map(materialName -> XMaterial.matchXMaterial(materialName).get())
+                .collect(Collectors.toList());
+        
+        if(!blockList.isEmpty() && !blockList.contains(XMaterial.matchXMaterial(e.getBlock().getType()))){
+            return;
+        }
+        
+        List<String> commandList = ConfigManager.getConfig().getStringList("LuckyBlock.DropOnBlockBreak.commands");
+        
+        int prob = ConfigManager.getConfig().getInt("LuckyBlock.DropOnBlockBreak.probability");
+        prob = prob > 100 ? 100 : prob;
+        prob = prob < 0 ? 0 : prob;
+        
+        Random r = new Random();
+        if(r.nextInt(100) < prob){
+            Block b = e.getBlock();
+            boolean dropOriginalItem = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.dropOriginalItem");
+            if(!dropOriginalItem){
                 e.setCancelled(true);
-                e.getBlock().setType(Material.AIR);
-                e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation().add(0.5, 0, 0.5), TypeManager.getRandomLuckyBlockType().getItem());
+                b.setType(Material.AIR);
             }
+            Location targetLocation = b.getLocation().add(0.5, 0, 0.5);
+            ItemStack luckyItem = TypeManager.getRandomLuckyBlockType().getItem();
+            b.getWorld().dropItemNaturally(targetLocation, luckyItem);
+            
+            commandList.forEach(command -> {
+                String fullCommand = command.replace("%bx%", b.getLocation().getBlockX() + "")
+                                            .replace("%by%", b.getLocation().getBlockY() + "")
+                                            .replace("%bz%", b.getLocation().getBlockZ() + "")
+                                            .replace("%player%", e.getPlayer().getDisplayName());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), fullCommand);
+            });
         }
     }
 }
