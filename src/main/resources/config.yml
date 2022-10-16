@@ -274,9 +274,35 @@ LuckyBlock:
     # If enabled, when you break a block (not LuckyBlock), 
     #   there is a probability that it dropped a LuckyBlock
     enable: false
+    # If enabled, LuckyBlocks will only be dropped in survival mode
     survivalOnly: true
+    # Probability of dropping LuckyBlocks (between 0 and 100)
     probability: 50
-
+    # If enabled, the original item will be dropped with the LuckyBlock.
+    #   If not, only the LuckyBlock will be dropped
+    dropOriginalItem: true
+    # List of blocks where this mode is enabled.
+    #   If the list is empty (enabledBlocks: []),
+    #   and 'enable' is true then, all blocks will use this mode
+    # You can find the material list here:
+    #   https://github.com/CryptoMorin/XSeries/blob/master/src/main/java/com/cryptomorin/xseries/XMaterial.java
+    enabledBlocks:
+    - STONE
+    - COAL_ORE
+    - EMERALD_ORE
+    - DIAMOND_ORE
+    - IRON_ORE
+    - GOLD_ORE
+    - LAPIS_ORE
+    - NETHER_QUARTZ_ORE
+    - REDSTONE_ORE
+    # List of commands to execute after dropping a LuckyBlock.
+    #   You can use %bx%, %by% and %bz% to get the x, y and z coordinates
+    #   of the broken block that dropped that LuckyBlock and %player%
+    #   to get the player's name.
+    # You should enter one command per line without the first '/'
+    # For example: - say %player% got a LuckyBlock at %bx% %by% %bz%
+    commands: []
 # Generate random LuckyBlocks when a chunk is populated (created)
 # This feature is experimental and can contain bugs
 GenerateRandomblocks-OnChunkCreated:
