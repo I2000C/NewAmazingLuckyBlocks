@@ -16,7 +16,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 public abstract class ReadOnlyConfig{
-    protected static final int INVALID_CONFIG_VERSION = -1;
+    protected static final double INVALID_CONFIG_VERSION = Double.NaN;
     protected static final String VERSION_KEY = "ConfigVersion";
     
     private final Plugin plugin;
@@ -93,7 +93,7 @@ public abstract class ReadOnlyConfig{
 //</editor-fold>
     }
     
-    public abstract int getConfigVersion();
+    public abstract double getConfigVersion();
     
     private boolean updateConfig(){
         //<editor-fold defaultstate="collapsed" desc="Code">
@@ -101,12 +101,12 @@ public abstract class ReadOnlyConfig{
             return false;
         }
         
-        int currentVersion = getConfigVersion();
+        double currentVersion = getConfigVersion();
         if(currentVersion == INVALID_CONFIG_VERSION){
             return false;
         }
         
-        int fileVersion = config.getInt(VERSION_KEY, Integer.MIN_VALUE);
+        double fileVersion = config.getDouble(VERSION_KEY, Double.MIN_VALUE);
         if(fileVersion >= currentVersion){
             return false;
         }

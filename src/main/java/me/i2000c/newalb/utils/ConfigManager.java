@@ -5,14 +5,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 public class ConfigManager extends ReadOnlyConfig{
-    private static final int CONFIG_VERSION = 1;
+    private static final double CONFIG_VERSION = 1.0;
     
     private ConfigManager(Plugin plugin){
         super(plugin, "config.yml", true);
     }
 
     @Override
-    public int getConfigVersion(){
+    public double getConfigVersion(){
         return CONFIG_VERSION;
     }
     

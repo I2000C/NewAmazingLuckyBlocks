@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 public class LangConfig{
     private static Plugin plugin;
     private static final String LANG_FILE_KEY = "LangFile";
-    private static final int LANG_VERSION = 1;
+    private static final double LANG_VERSION = 1.0;
     
     private static ReadOnlyConfig englishConfig;
     private static ReadOnlyConfig config;
@@ -22,7 +22,7 @@ public class LangConfig{
         Arrays.stream(Language.getValues()).forEach(language -> {
             ReadOnlyConfig langConfig = new ReadOnlyConfig(plugin, language.getLangFileName(), true) {
                 @Override
-                public int getConfigVersion(){
+                public double getConfigVersion(){
                     return LANG_VERSION;
                 }
             };
@@ -31,7 +31,7 @@ public class LangConfig{
         
         config = new ReadOnlyConfig(plugin, null, "null", true){
             @Override
-            public int getConfigVersion(){
+            public double getConfigVersion(){
                 return LANG_VERSION;
             }
         };
@@ -39,7 +39,7 @@ public class LangConfig{
         // Load English lang
         englishConfig = new ReadOnlyConfig(plugin, null){
             @Override
-            public int getConfigVersion(){
+            public double getConfigVersion(){
                 return INVALID_CONFIG_VERSION;
             }
         };

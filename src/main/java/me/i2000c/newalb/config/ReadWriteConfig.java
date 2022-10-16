@@ -22,7 +22,7 @@ public class ReadWriteConfig extends ReadOnlyConfig{
     }
     
     @Override
-    public int getConfigVersion(){
+    public double getConfigVersion(){
         return INVALID_CONFIG_VERSION;
     }
 }
