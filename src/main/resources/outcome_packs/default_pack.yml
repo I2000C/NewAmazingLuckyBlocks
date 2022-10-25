@@ -110,7 +110,7 @@ Outcomes:
           spawnInvSlot: 0
           amount: 1
           durability: 0
-          name: '%inv_wand%'
+          name: '%invisibility_wand%'
     delayer: []
   '6':
     outcome-name: Iron pickaxe, axe and spade
