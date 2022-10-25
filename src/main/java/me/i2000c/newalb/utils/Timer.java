@@ -44,7 +44,7 @@ public class Timer implements Listener{
     private static final String TAG = "volcano";
     
     public void executeDarkHole(Player player, Location location){
-        int blocks = ConfigManager.getConfig().getInt("Objects.DarkHole.number-of-blocks");
+        int blocks = ConfigManager.getConfig().getInt("Objects.DarkHole.depth");
         double radius = ConfigManager.getConfig().getDouble("Objects.DarkHole.radius");
         long ticks = ConfigManager.getConfig().getLong("Objects.DarkHole.time-between-one-block-and-the-next");
         long before_ticks = ConfigManager.getConfig().getLong("Objects.DarkHole.time-before-darkhole");
