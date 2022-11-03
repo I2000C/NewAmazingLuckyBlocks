@@ -2,11 +2,15 @@ package me.i2000c.newalb.utils2;
 
 import java.lang.reflect.Method;
 import java.util.Random;
+import java.util.function.Predicate;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class OtherUtils{
     // Source: https://stackoverflow.com/a/990492
@@ -36,6 +40,51 @@ public class OtherUtils{
     public static int generateRandomInt(int min, int max){
         Random random = new Random();
         return random.nextInt((max - min) + 1) + min;
+    }
+    
+    public static void removePlayerItems(Player player, int amount, Predicate<ItemStack> predicate){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(player == null || amount <= 0 || predicate == null){
+            return;
+        }
+        
+        Inventory inv = player.getInventory();
+        ItemStack[] armorContents = player.getInventory().getArmorContents();
+        for(int i=0; i<inv.getSize(); i++){
+            ItemStack stack = inv.getItem(i);
+            if(predicate.test(stack)){
+                int itemAmount = stack.getAmount();
+                int amountToRemove = Integer.min(itemAmount, amount);
+                int newAmount = itemAmount - amountToRemove;
+                if(newAmount > 0){
+                    stack.setAmount(newAmount);
+                }else{
+                    inv.setItem(i, null);
+                }
+                amount -= amountToRemove;
+                if(amount <= 0){
+                    return;
+                }
+            }
+        }
+        for(int i=0; i<armorContents.length; i++){
+            ItemStack stack = inv.getItem(i);
+            if(predicate.test(stack)){
+                int itemAmount = stack.getAmount();
+                int amountToRemove = Integer.min(itemAmount, amount);
+                int newAmount = itemAmount - amountToRemove;
+                if(newAmount > 0){
+                    stack.setAmount(newAmount);
+                }else{
+                    inv.setItem(i, null);
+                }
+                amount -= amountToRemove;
+                if(amount <= 0){
+                    return;
+                }
+            }
+        }
+//</editor-fold>
     }
     
     private static Method getMinHeightMethod = null;

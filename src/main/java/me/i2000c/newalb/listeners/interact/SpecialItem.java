@@ -197,6 +197,10 @@ public abstract class SpecialItem{
         return NBTEditor.set(stack, getSpecialItemName().ordinal(), ITEM_TAG);
     }
     protected static int getSpecialItemID(ItemStack stack){
+        if(stack == null || !stack.hasItemMeta()){
+            return -1;
+        }
+        
         if(NBTEditor.contains(stack, ITEM_TAG)){
             return NBTEditor.getInt(stack, ITEM_TAG);
         }else{

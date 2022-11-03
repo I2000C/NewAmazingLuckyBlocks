@@ -16,6 +16,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItemManager;
+import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
@@ -31,6 +32,7 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.Equipment;
+import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Schematic;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -99,6 +101,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 return executeHelp(sender, args);
             case "give":
                 return executeGive(sender, args);
+            case "take":
+                return executeTake(sender, args);
             case "reload":
                 return executeReload(sender, args);
             case "randomblocks":
@@ -308,17 +312,6 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         target.getInventory().addItem(stack);
                     }
                     break;
-                case "luckytool":
-                    if(!checkHasPermission(sender, "Commands.Give.LuckyTool")){
-                        return false;
-                    }
-                    
-                    String loadtool = LangConfig.getMessage("LoadingLuckyTool");
-                    Logger.sendMessage(loadtool, sender);
-                    ItemStack luckyToolItem = SpecialItemManager.getLuckyTool().getItem();
-                    luckyToolItem.setAmount(amount);
-                    target.getInventory().addItem(luckyToolItem);
-                    break;
                 default:
                     if(!checkHasPermission(sender, "Commands.Give.OtherItems")){
                         return false;
@@ -352,6 +345,143 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     target.getInventory().addItem(stack);
             }
             return true;
+        }
+//</editor-fold>
+    }
+    
+    private boolean executeTake(CommandSender sender, String[] args){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        String usage = "&cUsage: &7/alb take <all, wands, objects, luckyblocks, luckytool, other_items...> [amount | player [amount]]";
+        
+        if(args.length == 1){
+            Logger.sendMessage(usage, sender);
+            return false;
+        }
+            
+        Player target;
+        int amount;
+        String selectedItem = args[1];
+
+        switch(args.length){
+            case 2:
+                amount = Integer.MAX_VALUE;
+                if(!checkNotConsole(sender)){
+                    return false;
+                }
+
+                target = (Player) sender;
+                break;
+            case 3:
+                try{
+                    amount = Integer.parseInt(args[2]);
+                    if(!checkNotConsole(sender)){
+                        return false;
+                    }
+
+                    target = (Player) sender;
+                }catch(NumberFormatException ex){
+                    amount = Integer.MAX_VALUE;
+                    target = getOnlinePlayer(sender, args[2]);
+                    if(target == null){
+                        return false;
+                    }
+                }
+                break;
+            case 4:
+                target = getOnlinePlayer(sender, args[2]);
+                if(target == null){
+                    return false;
+                }
+                try{
+                    amount = Integer.parseInt(args[3]);
+                }catch(NumberFormatException ex){
+                    amount = Integer.MAX_VALUE;
+                }
+                break;
+            default:
+                Logger.sendMessage(usage, sender);
+                return false;
+        }
+
+        switch(selectedItem){
+            case "wands":
+                if(!checkHasPermission(sender, "Commands.Give.Wands")){
+                    return false;
+                }
+
+                OtherUtils.removePlayerItems(target, amount, itemStack -> {
+                    SpecialItemName name = SpecialItem.getSpecialItemName(itemStack);
+                    return name != null && name.isWand();
+                });
+                return true;
+            case "objects":
+                if(!checkHasPermission(sender, "Commands.Give.Objects")){
+                    return false;
+                }
+
+                OtherUtils.removePlayerItems(target, amount, itemStack -> {
+                    SpecialItemName name = SpecialItem.getSpecialItemName(itemStack);
+                    return name != null && !name.isWand();
+                });
+                return true;
+            case "luckyblocks":
+                if(!checkHasPermission(sender, "Commands.Give.LuckyBlocks")){
+                    return false;
+                }
+
+                OtherUtils.removePlayerItems(target, amount, itemStack -> {
+                    LuckyBlockType type = TypeManager.getType(itemStack);
+                    return type != null;
+                });
+                return true;
+            case "all":
+                if(!checkHasPermission(sender, "Commands.Give.Wands")){
+                    return false;
+                }
+                if(!checkHasPermission(sender, "Commands.Give.LuckyBlocks")){
+                    return false;
+                }
+                if(!checkHasPermission(sender, "Commands.Give.Objects")){
+                    return false;
+                }
+                
+                OtherUtils.removePlayerItems(target, amount, itemStack -> {
+                    SpecialItemName name = SpecialItem.getSpecialItemName(itemStack);
+                    if(name != null){
+                        return true;
+                    }
+                    
+                    LuckyBlockType type = TypeManager.getType(itemStack);
+                    return type != null;
+                });
+                return true;
+            default:
+                if(!checkHasPermission(sender, "Commands.Give.OtherItems")){
+                    return false;
+                }
+
+                // Get special item
+                SpecialItem specialItem = SpecialItemManager.getSpecialItem(selectedItem);
+                if(specialItem != null){
+                    OtherUtils.removePlayerItems(target, amount, itemStack -> {
+                        SpecialItemName name = SpecialItem.getSpecialItemName(itemStack);
+                        return name == specialItem.getSpecialItemName();
+                    });
+                    return true;
+                }
+
+                // If selected item is not a special item, check if it is a LuckyBlockType
+                LuckyBlockType luckyBlockType = TypeManager.getType(selectedItem);
+                if(luckyBlockType != null){
+                    OtherUtils.removePlayerItems(target, amount, itemStack -> {
+                        LuckyBlockType type = TypeManager.getType(itemStack);
+                        return luckyBlockType.equals(type);
+                    });
+                    return true;
+                }                
+                
+                Logger.sendMessage(usage, sender);
+                return false;
         }
 //</editor-fold>
     }
@@ -870,7 +1000,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 //</editor-fold>
     }
     
-    private static final String[] CMD_LIST = {"help", "reload", "give", "randomblocks", "menu", "return", "worlds", 
+    private static final String[] CMD_LIST = {"help", "reload", "give", "take", "randomblocks", "menu", "return", "worlds", 
         "loadSchematic", "loadSchem", "loadS", "saveSchematic", "saveSchem", "saveS", 
         "removeSchematic", "removeSchem", "removeS", "clear", "getSkull"};
     
@@ -893,6 +1023,10 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             }
         }else if(args.length == 2){
             switch(args[0]){
+                case "take":
+                    if("all".startsWith(args[1].toLowerCase())){
+                        ls.add("all");
+                    }
                 case "give":
                     if("wands".startsWith(args[1].toLowerCase())){
                         ls.add("wands");
@@ -913,6 +1047,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                             ls.add(type.getTypeName());
                         }
                     }
+                    break;
                 case "reload":
                 case "return":
                 case "menu":
@@ -986,8 +1121,9 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             }
             
             switch(args[1]){
+                case "wands":
                 case "objects":
-                case "luckyblock":
+                case "luckyblocks":
                     ls.add("5");
                     break;
                 default:

@@ -67,6 +67,7 @@ public class GiveMenu{
         ItemStack luckyTool = ItemBuilder
                 .fromItem(SpecialItemManager.getLuckyTool().getItem(), false)
                 .withDisplayName("&eGive LuckyTool")
+                .withLore()
                 .build();        
         
         menu.setItem(0, wands);
@@ -210,8 +211,13 @@ public class GiveMenu{
         
         List<SpecialItem> wandsList = SpecialItemManager.getWands();
         for(int i=0; i<wandsList.size() && i<16; i++){
-            menu.setItem(i, wandsList.get(i).getItem());
+            ItemStack stack = wandsList.get(i).getItem();
+            stack.setAmount(amount);
+            menu.setItem(i, stack);
         }
+        
+        menu.setItem(16, GUIItem.getPlusLessItem(+1));
+        menu.setItem(17, GUIItem.getPlusLessItem(-1));
         
         menu.setItem(18, playerItem);
         
@@ -230,6 +236,22 @@ public class GiveMenu{
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
+                case 16:
+                    if(amount == 64){
+                        amount = 1;
+                    }else{
+                        amount++;
+                    }
+                    openWandsMenu(p);
+                    break;
+                case 17:
+                    if(amount == 1){
+                        amount = 64;
+                    }else{
+                        amount--;
+                    }
+                    openWandsMenu(p);
+                    break;
                 case 18:
                     //Do nothing
                     break;

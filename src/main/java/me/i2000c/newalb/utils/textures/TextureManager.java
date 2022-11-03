@@ -69,6 +69,10 @@ public class TextureManager{
     
     public static Texture getTexture(ItemStack stack){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(stack == null || !stack.hasItemMeta()){
+            return null;
+        }
+        
         ItemMeta meta = stack.getItemMeta();
         if(!(meta instanceof SkullMeta)){
             return null;

@@ -15,6 +15,13 @@ public class TypeData{
     
     public TypeData(ItemStack stack){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(stack == null){
+            this.material = null;
+            this.durability = 0;
+            this.texture = null;
+            return;
+        }
+        
         this.texture = TextureManager.getTexture(stack);
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             if(this.texture == null){
