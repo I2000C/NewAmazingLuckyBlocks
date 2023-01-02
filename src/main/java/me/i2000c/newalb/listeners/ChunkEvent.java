@@ -14,7 +14,7 @@ public class ChunkEvent implements Listener{
     @EventHandler
     private void onChunkCreated(ChunkPopulateEvent e){
         if(ConfigManager.getConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.enable")){
-            if(WorldConfig.isRegistered(e.getWorld().getName())){
+            if(WorldConfig.isEnabled(e.getWorld().getName())){
                 int x = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.radx");
                 int y = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.rady");
                 int z = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");

@@ -616,7 +616,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 
             String world = player.getWorld().getName();
 
-            if(WorldConfig.isRegistered(world)){
+            if(WorldConfig.isEnabled(world)){
                 RandomBlocks rb = new RandomBlocks(radx,rady,radz,blocks,floating_blocks,forceMode,player,isPlayer,sender);
                 rb.generatePackets();
                 return true;
@@ -955,7 +955,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return true;
         }
         String world = args[1];
-        if(WorldConfig.isRegistered(world)){
+        if(WorldConfig.isEnabled(world)){
             LocationManager.removeLocations(Bukkit.getWorld(world));
             Logger.sendMessage("&aAll LuckyBlocks of the world &b" + world + " &awere removed", sender);
             return true;

@@ -137,7 +137,7 @@ public class TrapManager extends ReadWriteConfig implements Listener{
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private static void onTrapActivated(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!WorldConfig.isRegistered(e.getPlayer().getWorld().getName())){
+        if(!WorldConfig.isEnabled(e.getPlayer().getWorld().getName())){
             return;
         }
         

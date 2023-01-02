@@ -49,7 +49,7 @@ public class SpecialEventListener implements Listener{
                 return;
             }
             
-            if(!WorldConfig.isRegistered(player.getWorld().getName())){
+            if(!WorldConfig.isEnabled(player.getWorld().getName())){
                 return;
             }
             
@@ -82,7 +82,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Item item = e.getItem();
         
-        if(!WorldConfig.isRegistered(item.getWorld().getName())) {
+        if(!WorldConfig.isEnabled(item.getWorld().getName())) {
             return;
         }
         
@@ -100,7 +100,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity damager = e.getDamager();
         
-        if(!WorldConfig.isRegistered(damager.getWorld().getName())) {
+        if(!WorldConfig.isEnabled(damager.getWorld().getName())) {
             return;
         }
 
@@ -125,7 +125,7 @@ public class SpecialEventListener implements Listener{
         if(projectile instanceof Arrow){
             Arrow arrow = (Arrow) projectile;
             
-            if(!WorldConfig.isRegistered(arrow.getWorld().getName())) {
+            if(!WorldConfig.isEnabled(arrow.getWorld().getName())) {
                 return;
             }
             
@@ -158,7 +158,7 @@ public class SpecialEventListener implements Listener{
         
         Player player = (Player) e.getEntity();
         
-        if(!WorldConfig.isRegistered(player.getWorld().getName())){
+        if(!WorldConfig.isEnabled(player.getWorld().getName())){
             return;
         }
         
@@ -190,7 +190,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getRightClicked();
         
-        if(!WorldConfig.isRegistered(entity.getWorld().getName())) {
+        if(!WorldConfig.isEnabled(entity.getWorld().getName())) {
             return;
         }
         
@@ -208,7 +208,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getEntity();
         
-        if(!WorldConfig.isRegistered(entity.getWorld().getName())) {
+        if(!WorldConfig.isEnabled(entity.getWorld().getName())) {
             return;
         }
         

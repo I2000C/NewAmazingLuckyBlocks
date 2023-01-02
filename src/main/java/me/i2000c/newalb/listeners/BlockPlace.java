@@ -15,7 +15,7 @@ public class BlockPlace implements Listener{
     @EventHandler
     public void onBlockPlaced(BlockPlaceEvent e){
         Player p = e.getPlayer();
-        if(!WorldConfig.isRegistered(p.getWorld().getName())){
+        if(!WorldConfig.isEnabled(p.getWorld().getName())){
             return;
         }
         

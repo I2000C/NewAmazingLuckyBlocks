@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 public class BlockProtect implements Listener{
     @EventHandler
     public void noSkullCrash(BlockFromToEvent event){
-        if(WorldConfig.isRegistered(event.getToBlock().getWorld().getName()) && 
+        if(WorldConfig.isEnabled(event.getToBlock().getWorld().getName()) && 
             TypeManager.getType(event.getToBlock()) != null){
             event.setCancelled(true);
         }
@@ -27,7 +27,7 @@ public class BlockProtect implements Listener{
     @EventHandler
     public void noSkullCrash2(EntityExplodeEvent event){
         String worldName = event.getLocation().getWorld().getName();
-        if(WorldConfig.isRegistered(worldName)){
+        if(WorldConfig.isEnabled(worldName)){
             event.blockList().removeIf(block -> TypeManager.getType(block) != null);
         }
     }
@@ -35,7 +35,7 @@ public class BlockProtect implements Listener{
     @EventHandler
     public void noSkullCrash3(BlockExplodeEvent event){
         String worldName = event.getBlock().getLocation().getWorld().getName();
-        if(WorldConfig.isRegistered(worldName)){
+        if(WorldConfig.isEnabled(worldName)){
             event.blockList().removeIf(block -> TypeManager.getType(block) != null);
         }
     }

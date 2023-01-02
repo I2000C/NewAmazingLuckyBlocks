@@ -39,7 +39,7 @@ public class BlockBreak implements Listener{
             return;
         }
         
-        if(WorldConfig.isRegistered(w.getName())){
+        if(WorldConfig.isEnabled(w.getName())){
             TypeManager.Result result = TypeManager.canBreakBlock(p, loc);
             switch(result.resultCode){
                 case TypeManager.RESULT_NOT_LUCKYBLOCK:
