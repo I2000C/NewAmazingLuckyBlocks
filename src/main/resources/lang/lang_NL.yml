@@ -3,152 +3,148 @@ ConfigVersion: 0
 
 Wands:
   RegenWand:
-    name: '&dGenezings staf &7- &6Rechtermuisklik'
+    name: "&dGenezings staf &7- &6Rechtermuisklik"
   FireWand:
-    name: '&cVuur staf &7- &6Rechtermuisklik'
+    name: "&cVuur staf &7- &6Rechtermuisklik"
   InvisibilityWand:
-    name: '&8Onzichtbaarheids staf &7- &6Rechtermuisklik'
+    name: "&8Onzichtbaarheids staf &7- &6Rechtermuisklik"
   TntWand:
-    name: '&4TNT staf &7- &6Rechtermuisklik'
+    name: "&4TNT staf &7- &6Rechtermuisklik"
   SlimeWand:
-    name: '&2Slijmkubus staf &7- &6Rechtermuisklik'
+    name: "&2Slijmkubus staf &7- &6Rechtermuisklik"
   LightningWand:
-    name: '&eBliksem staf &7- &6Rechtermuisklik'
+    name: "&eBliksem staf &7- &6Rechtermuisklik"
   ShieldWand:
-    name: '&3Schild staf &7- &6Rechtermuisklik'
+    name: "&3Schild staf &7- &6Rechtermuisklik"
   PotionWand:
-    name: '&1Drankjes staf &7- &6Rechtermuisklik'
+    name: "&1Drankjes staf &7- &6Rechtermuisklik"
   FrostPathWand:
-    name: '&bBevroren Pad staf &7- &6Rechtermuisklik'
+    name: "&bBevroren Pad staf &7- &6Rechtermuisklik"
 
 Objects:
   DarkHole:
-    name: '&8Gat in de grond &7- &6Rechtermuisklik'
+    name: "&8Gat in de grond &7- &6Rechtermuisklik"
   MiniVolcano:
-    name: '&cMini Vulkaan &7- &6Rechtermuisklik'
+    name: "&cMini Vulkaan &7- &6Rechtermuisklik"
   IceBow:
-    name: '&bIjs Boog &7- &6Rechtermuisklik'
+    name: "&bIjs Boog &7- &6Rechtermuisklik"
   AutoBow:
-    name: '&aAuto Boog &7- &6Rechtermuisklik'
+    name: "&aAuto Boog &7- &6Rechtermuisklik"
   MultiBow:
-    name: '&dMulti Boog &7- &6Rechtermuisklik'
+    name: "&dMulti Boog &7- &6Rechtermuisklik"
   ExplosiveBow:
-    name: '&4Explosieve Boog &7- &6Rechtermuisklik'
+    name: "&4Explosieve Boog &7- &6Rechtermuisklik"
   HomingBow:
-    name: '&3Aim-Bot Boog &7- &6Rechtermuisklik'
+    name: "&3Aim-Bot Boog &7- &6Rechtermuisklik"
   HookBow:
-    name: '&5Hook Bow &7- &6Right Click'
+    name: "&5Hook Bow &7- &6Right Click"
   PlayerTracker:
-    name: '&eSpeler Compas &7- &6Rechtermuisklik'
-    message1: '&aDe speler &6%player% &ais op &b%distance% &ablokken afstand van jou'
-    message2: '&aHet Wezen &e%entity% &ais op &b%distance% &ablokken afstand van jou'
-    message3: '&cEr zijn geen spelers of wezens bij jou in de buurt'
+    name: "&eSpeler Compas &7- &6Rechtermuisklik"
+    message1: "&aDe speler &6%player% &ais op &b%distance% &ablokken afstand van jou"
+    message2: "&aHet Wezen &e%entity% &ais op &b%distance% &ablokken afstand van jou"
+    message3: "&cEr zijn geen spelers of wezens bij jou in de buurt"
   EndermanSoup:
-    name: '&dEnderman Soep &7- &6Rechtermuisklik'
+    name: "&dEnderman Soep &7- &6Rechtermuisklik"
   HotPotato:
-    name: '&cHot Potato &7- &6Right Click'
+    name: "&cHot Potato &7- &6Right Click"
   LuckyTool:
-    name: '&6LuckyTool &7- &3Rechtermuisklik op een &eLucky Blok'
+    name: "&6LuckyTool &7- &3Rechtermuisklik op een &eLucky Blok"
     lore:
-    - '&cLeft Click on a &eLuckyBlock &cto remove it'
-    need: '&cJe hebt &6gereedschap &cnodig om dit &eLucky Blok &cte krijgen'
-    disabled: '&cLuckyTool is uitgeschakeld'
+    - "&cLeft Click on a &eLuckyBlock &cto remove it"
+    need: "&cJe hebt &6gereedschap &cnodig om dit &eLucky Blok &cte krijgen"
+    disabled: "&cLuckyTool is uitgeschakeld"
 
-Cooldown-message: '&cJe kunt deze staf/dit voorwerp niet gebruiken gedurende %time% seconden'
-need-permission: '&cJe hebt niet de juiste rechten om deze staf/dit voorwerp te gebruiken'
-cannot-rename: '&cJe kunt Lucky Blokken niet hernoemen'
+Cooldown-message: "&cJe kunt deze staf/dit voorwerp niet gebruiken gedurende %time% seconden"
+need-permission: "&cJe hebt niet de juiste rechten om deze staf/dit voorwerp te gebruiken"
+cannot-rename: "&cJe kunt Lucky Blokken niet hernoemen"
 
 Helpmenu:
-  line1: '%prefix%'
-  line2: ''
+  line1: "%prefix%"
+  line2: ""
   line3: '&c/alb randomblock <radx> <rady> <radz> <blocks> <floating_blocks: true/false/force>
     [player] &7- Plaatst willekeurig lucky blokken om de speler'
-  line4: '&c/alb reload &7- Herlaad de configuratie and taal bestanden files'
-  line5: '&c/alb help <page> &7- Opent de help pagina'
-  line6: '&c/alb &7- Laat de naam van de plugin en de versie zien'
-  line7: '&7--------&cNieuweGeweldigeHelp <page 1/%maxPages%>&7--------'
+  line4: "&c/alb reload &7- Herlaad de configuratie and taal bestanden files"
+  line5: "&c/alb help <page> &7- Opent de help pagina"
+  line6: "&c/alb &7- Laat de naam van de plugin en de versie zien"
+  line7: "&7--------&cNieuweGeweldigeHelp <page 1/%maxPages%>&7--------"
 Helpmenu2:
-  line1: '%prefix%'
-  line2: ''
-  line3: '&c/alb give <wands/objects/luckyblock> [amount] [player]'
-  line4: '&7     - Geeft je alle Staven die er zijn (hoeveelheid is optioneel)'
-  line5: '&7     - Geeft je alle Voowerpen die er zijn (hoeveelheid is optioneel)'
-  line6: '&7     - Geeft je Lucky blokken (hoeveelheid is optioneel)'
-  line7: '&c/alb menu &7- Opent een aangepast uitkomsten menu'
-  line8: '&c/alb return &7- Terug naar het vorige menu'
-  line9: '&7--------&cNieuweGeweldigeHelp <page 2/%maxPages%>&7--------'
+  line1: "%prefix%"
+  line2: ""
+  line3: "&c/alb give <wands/objects/luckyblock> [amount] [player]"
+  line4: "&7     - Geeft je alle Staven die er zijn (hoeveelheid is optioneel)"
+  line5: "&7     - Geeft je alle Voowerpen die er zijn (hoeveelheid is optioneel)"
+  line6: "&7     - Geeft je Lucky blokken (hoeveelheid is optioneel)"
+  line7: "&c/alb menu &7- Opent een aangepast uitkomsten menu"
+  line8: "&c/alb return &7- Terug naar het vorige menu"
+  line9: "&7--------&cNieuweGeweldigeHelp <page 2/%maxPages%>&7--------"
 Helpmenu3:
-  line1: '%prefix%'
-  line2: ''
-  line3: '&c/alb clear &7- Verwijdert alle LuckyBlokken van alle werelden'
-  line4: '&c/alb clear <world> &7- Verwijdert alle Lucky Blokken van de wereld &7world'
-  line5: '&c/alb randomblock stop &7-Stoppen met het plaatsen van Lucky Blokken'
-  line6: '&7--------&cNieuweGeweldigeHelp <page 3/%maxPages%>&7--------'
+  line1: "%prefix%"
+  line2: ""
+  line3: "&c/alb clear &7- Verwijdert alle LuckyBlokken van alle werelden"
+  line4: "&c/alb clear <world> &7- Verwijdert alle Lucky Blokken van de wereld &7world"
+  line5: "&c/alb randomblock stop &7-Stoppen met het plaatsen van Lucky Blokken"
+  line6: "&7--------&cNieuweGeweldigeHelp <page 3/%maxPages%>&7--------"
 Helpmenu4:
-  line1: '%prefix%'
-  line2: ''
-  line3: '&c/alb worlds &7- Opent een wereld menu'
-  line4: '&c/alb worlds list &7- Laat een lijst met werelden zien'
-  line5: '&c/alb worlds set <world> <type>'
-  line6: '   &7- Zet Lucky Blokken aan of uit in de wereld "world"'
-  line7: '   &7- Geldige types zijn: &e[enabled, disabled]'
-  line8: '&7--------&cNieuweGeweldigeHelp <page 4/%maxPages%>&7--------'
+  line1: "%prefix%"
+  line2: ""
+  line3: "&c/alb worlds &7- Opent een wereld menu"
+  line4: "&c/alb worlds list &7- Laat een lijst met werelden zien"
+  line5: "&c/alb worlds add <world>"
+  line6: "   &7- Adds the world 'world' to the world list"
+  line7: "&c/alb worlds delete <world>"
+  line8: "   &7- Deletes the world 'world' from the world list"
+  line9: "&c/alb worlds changeListMode"
+  line10: "   &7- Changes the operating mode of the world list"
+  line11: "&7--------&cNieuweGeweldigeHelp <page 4/%maxPages%>&7--------"
 Helpmenu5:
-  line1: '%prefix%'
-  line2: ''
-  line3: '&c/alb loadSchematic <schematic_name> &7- Laad een schema bestand'
-  line4: '&7naar je WorldEdit klembord'
-  line5: '&c/alb saveSchematic <schematic_name> &7- Slaat wereld op vanuit WorldEdit'
-  line6: '&7naar een schema bestand'
-  line7: '&c/alb removeSchematic <schematic_name> &7- Verwijdert een Schema Bestand'
-  line8: '&7--------&cNieuweGeweldigeHelp <page 5/%maxPages%>&7--------'
+  line1: "%prefix%"
+  line2: ""
+  line3: "&c/alb loadSchematic <schematic_name> &7- Laad een schema bestand"
+  line4: "&7naar je WorldEdit klembord"
+  line5: "&c/alb saveSchematic <schematic_name> &7- Slaat wereld op vanuit WorldEdit"
+  line6: "&7naar een schema bestand"
+  line7: "&c/alb removeSchematic <schematic_name> &7- Verwijdert een Schema Bestand"
+  line8: "&7--------&cNieuweGeweldigeHelp <page 5/%maxPages%>&7--------"
 
-World-loading:
-  line1: '&cOngeldige wereld in configuratie:'
-  line2: '******************************'
-  line3: '&cWereld-lijst in configuratie is leeg'
-  line4: '&cOm verdere fouten te voorkomen, is de wereld ''world'' toegevoegd'
-  line5: '&3Voeg wat weerlden toe aan de configuratie en gebruik dan &2/alb reload'
-  line6: '******************************'
-  line7: '&eNieuweGeweldigeLuckyBlokken has loaded:'
-  line8: '&bworld(s)'
+World-loading: "&eNieuweGeweldigeLuckyBlokken has loaded: &d%worlds% &bworld(s)"
 World-management1:
-  line1: '&b=== &6Wereld-lijst &b==='
-  line2: ''
-  worldName: '&3%world%'
-  enabledWorld: '  &aINGESCHAKELDE WERELD'
-  disabledWorld: '  &cUITGESCHAKELDE WERELD'
+  currentMode: "&5Current mode: %worldListMode%"
+  title: "&b=== &6Wereld-lijst &b==="
+  separator: ""
+  worldName: "&3%world%"
 World-management2:
-  line1: '&6Wereld &3%world% &6is ingesteld op:'
-  line2: '&cOngeldig wereld type: &b%type%'
-  line3: '&3Geldige wereld types zijn: &a[enabled, disabled]'
-  line4: '&cWereld &b%world% &cbestaat niet'
+  worldAdded: "&6World &b%world% &6has been &aadded &6to the world list"
+  worldDeleted: "&6World &b%world% &6has been &cdeleted &6from the world list"
+  worldAlreadyAdded: "&cWorld &b%world% &cis already present in the world list"
+  worldAlreadyDeleted: "&cWorld &b%world% &cis not present in the world list"
+  worldNotExists: "&cWereld &b%world% &cbestaat niet"
+  worldListModeChanged: "&aWorld list mode has been changed to: %worldListMode%"
 MenuConfirmation:
-  line1: '&cEen vorig menu was al geopend'
-  line2: '&cAls je het vorige menu wilt openen, gebruik dan &b/alb return'
-  line3: '&cAls je een nieuw menu wilt openen, gebruik dan &b/alb menu &cagain'
-NoPermission: '&cJe hebt onvoldoende rechten'
-LoadingWands: '&aStaven aan het inladen...'
-LoadingObjects: '&bVoorwepen aan het inladen...'
-LoadingBlocks: '&6Lucky Blokken aan het inladen...'
-PlacingBlocks: '&dBezig met het plaatsen van willekeurige Lucky Blokken...'
-LoadingLuckyTool: '&eLuckyTool aan het inladen...'
+  line1: "&cEen vorig menu was al geopend"
+  line2: "&cAls je het vorige menu wilt openen, gebruik dan &b/alb return"
+  line3: "&cAls je een nieuw menu wilt openen, gebruik dan &b/alb menu &cagain"
+NoPermission: "&cJe hebt onvoldoende rechten"
+LoadingWands: "&aStaven aan het inladen..."
+LoadingObjects: "&bVoorwepen aan het inladen..."
+LoadingBlocks: "&6Lucky Blokken aan het inladen..."
+PlacingBlocks: "&dBezig met het plaatsen van willekeurige Lucky Blokken..."
+LoadingLuckyTool: "&eLuckyTool aan het inladen..."
 Loading:
-  plugin: '&a&6NieuweGeweldigeLuckyBlokken&a aan het inladen...'
-  config: '&aLoading config...'
-  lang: '&aTalen aan het inladen...'
-  worlds: '&aLoading worlds...'
-  packs: '&aLoading packs...'
+  plugin: "&a&6NieuweGeweldigeLuckyBlokken&a aan het inladen..."
+  config: "&aLoading config..."
+  lang: "&aTalen aan het inladen..."
+  worlds: "&aLoading worlds..."
+  packs: "&aLoading packs..."
 Enable:
-  line1: '&a[&6NieuweGeweldigeLuckyBlokken &b%version%&a] is nu ingeladen'
+  line1: "&a[&6NieuweGeweldigeLuckyBlokken &b%version%&a] is nu ingeladen"
 Disable:
-  line1: '&cis nu uitgeschakeld'
+  line1: "&cis nu uitgeschakeld"
 Reload:
-  config: '&aconfiguratie aan het herladen...'
-  lang: '&aTalen aan het herladen...'
-  worlds: '&aReloading worlds...'
-  packs: '&aReloading packs...'
-  reload-finished: '&cHerladen voltooid'
-HelpMessage: '&cType &7/alb help &cvoor de help pagina''s'
-UnknownCommand: '&cOnbekend commando. Type &7/alb &cvoor plugin informatie'
-InGamePrefix: '&r[&6NieuweGeweldigeLuckyBlokken&r]'
+  config: "&aconfiguratie aan het herladen..."
+  lang: "&aTalen aan het herladen..."
+  worlds: "&aReloading worlds..."
+  packs: "&aReloading packs..."
+  reload-finished: "&cHerladen voltooid"
+HelpMessage: "&cType &7/alb help &cvoor de help pagina's"
+UnknownCommand: "&cOnbekend commando. Type &7/alb &cvoor plugin informatie"
+InGamePrefix: "&r[&6NieuweGeweldigeLuckyBlokken&r]"
