@@ -25,6 +25,13 @@ public class WorldConfig extends ReadWriteConfig{
         sortedWorlds = new TreeSet<>();
     }
     
+    private static void saveWorlds(){
+        List<String> worldsList = new LinkedList<>(sortedWorlds);
+        worldConfig.getBukkitConfig().set(WORLD_LIST_MODE_KEY, worldListMode.name());
+        worldConfig.getBukkitConfig().set(WORLD_LIST_KEY, worldsList);        
+        worldConfig.saveConfig();
+    }
+    
     public static WorldListMode getWorldListMode() {
         return worldListMode;
     }
@@ -39,6 +46,7 @@ public class WorldConfig extends ReadWriteConfig{
     
     public static boolean addWorld(String worldName) {
         if(worlds.add(worldName)) {
+            sortedWorlds.add(worldName);
             saveWorlds();        
             return true;
         } else {
@@ -48,6 +56,7 @@ public class WorldConfig extends ReadWriteConfig{
     
     public static boolean deleteWorld(String worldName) {
         if(worlds.remove(worldName)) {
+            sortedWorlds.remove(worldName);
             saveWorlds();
             return true;
         } else {
@@ -79,7 +88,11 @@ public class WorldConfig extends ReadWriteConfig{
         sortedWorlds.clear();
         List<String> worldsList = worldConfig.getBukkitConfig().getStringList(WORLD_LIST_KEY);
         worldsList.forEach(worldName -> {
-            worldName = worldName.substring(0, worldName.indexOf(';'));
+            int semicolonIndex = worldName.indexOf(';');
+            if(semicolonIndex > 0) {
+                worldName = worldName.substring(0, semicolonIndex);
+            }
+            
             worlds.add(worldName);
             sortedWorlds.add(worldName);
         });
@@ -88,13 +101,6 @@ public class WorldConfig extends ReadWriteConfig{
                 .replace("%worlds%", worlds.size() + "");
         Logger.log(message);
 //</editor-fold>
-    }
-    
-    static void saveWorlds(){
-        List<String> worldsList = new LinkedList<>(sortedWorlds);
-        worldConfig.getBukkitConfig().set(WORLD_LIST_MODE_KEY, worldListMode.name());
-        worldConfig.getBukkitConfig().set(WORLD_LIST_KEY, worldsList);        
-        worldConfig.saveConfig();
     }
     
     

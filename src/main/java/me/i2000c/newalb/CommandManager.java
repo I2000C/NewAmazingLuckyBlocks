@@ -775,7 +775,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         return false;
                     }
                     
-                    if(WorldConfig.addWorld(worldName)) {
+                    if(WorldConfig.deleteWorld(worldName)) {
                         message = LangConfig.getMessage("World-management2.worldDeleted")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
