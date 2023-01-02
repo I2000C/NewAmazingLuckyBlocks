@@ -107,6 +107,16 @@ public class WorldConfig extends ReadWriteConfig{
             return VALUES[index];
         }
         
+        @Override
+        public String toString() {
+            switch(this) {
+                case DISABLED: return "&c&lDISABLED";
+                case WHITELIST: return "&f&lWHITELIST";
+                case BLACKLIST: return "&7&lBLACKLIST";
+                default: return "";
+            }
+        }
+        
         private static final WorldListMode[] VALUES = values();
     }
 }
