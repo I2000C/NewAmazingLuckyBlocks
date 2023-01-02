@@ -18,9 +18,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class WorldMenu{
     private static final int MENU_SIZE = 36;
-    private static final int PREVIOUS_PAGE_SLOT = 42;
-    private static final int CURRENT_PAGE_SLOT = 43;
-    private static final int NEXT_PAGE_SLOT = 44;
+    private static final int PREVIOUS_PAGE_SLOT = 40;
+    private static final int CURRENT_PAGE_SLOT = 41;
+    private static final int NEXT_PAGE_SLOT = 42;
     private static GUIPagesAdapter<String> adapter;
     
     private static List<String> serverWorlds;
@@ -100,6 +100,39 @@ public class WorldMenu{
                 .withDisplayName("&6Toggle &3all worlds")
                 .build();
         
+        WorldConfig.WorldListMode mode = WorldConfig.getWorldListMode();
+        ItemBuilder builder;
+        switch(mode) {
+            case DISABLED:
+                builder = ItemBuilder.newItem(XMaterial.RED_WOOL);
+                builder.addLoreLine("");
+                builder.addLoreLine("&dIn this mode, the list is");
+                builder.addLoreLine("&d  disabled, so LuckyBlocks");
+                builder.addLoreLine("&d  are enabled in all worlds");
+                break;
+            case WHITELIST:
+                builder = ItemBuilder.newItem(XMaterial.WHITE_WOOL);
+                builder.addLoreLine("");
+                builder.addLoreLine("&dIn this mode, LuckyBlocks");
+                builder.addLoreLine("&d  will be enabled only");
+                builder.addLoreLine("&d  in the worlds of the list");
+                break;
+            default: //case BLACKLIST:
+                builder = ItemBuilder.newItem(XMaterial.BLACK_WOOL);
+                builder.addLoreLine("");
+                builder.addLoreLine("&dIn this mode, LuckyBlocks");
+                builder.addLoreLine("&d  will be enabled only");
+                builder.addLoreLine("&d  in the worlds that aren't");
+                builder.addLoreLine("&d  in the list");
+                break;
+        }
+        builder.withDisplayName("&6Current list mode: " + mode);
+        builder.addLoreLine("");
+        builder.addLoreLine("&3Click to change");
+        
+        ItemStack worldListMode = builder.build();
+        
+        menu.setItem(46, worldListMode);
         menu.setItem(49, allNormal);
         menu.setItem(50, toggleAllWorlds);
         menu.setItem(51, allDisabled);
@@ -135,6 +168,11 @@ public class WorldMenu{
                     if(adapter.goToNextPage()){
                         openWorldsMenu(p);
                     }
+                    break;
+                case 46:
+                    // Change world list mode
+                    WorldConfig.setWorldListMode(WorldConfig.getWorldListMode().next());
+                    openWorldsMenu(p);
                     break;
                 case 49:
                     // Add all worlds to list
