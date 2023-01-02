@@ -124,7 +124,7 @@ public class WorldConfig extends ReadWriteConfig{
             switch(this) {
                 case DISABLED: return "&c&lDISABLED";
                 case WHITELIST: return "&f&lWHITELIST";
-                case BLACKLIST: return "&7&lBLACKLIST";
+                case BLACKLIST: return "&8&lBLACKLIST";
                 default: return "";
             }
         }
