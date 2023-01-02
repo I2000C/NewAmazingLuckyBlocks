@@ -2,7 +2,6 @@ package me.i2000c.newalb.utils;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.functions.InventoryFunction;
@@ -56,14 +55,14 @@ public class WorldMenu{
         
         adapter.goToMainPage();
         
-        worlds = new LinkedHashMap<>(WorldConfig.getWorlds());
+//        worlds = new LinkedHashMap<>(WorldConfig.getWorlds());
         adapter.setItemList(new ArrayList<>(worlds.keySet()));
 //</editor-fold>
     }
     
     public static void openWorldsMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        WorldConfig.updateWorlds(false);
+//        WorldConfig.updateWorlds(false);
         
         Menu menu = GUIFactory.newMenu(CustomInventoryType.WORLD_MENU, 54, "&3&lWorlds Menu");
         
@@ -162,7 +161,7 @@ public class WorldMenu{
                     break;
                 case 52:
                     //Save worlds to config
-                    WorldConfig.setWorlds(worlds);
+//                    WorldConfig.setWorlds(worlds);
                     WorldConfig.saveWorlds();
                     p.closeInventory();
                     Logger.sendMessage("&aWorlds list has been saved", p);

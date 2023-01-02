@@ -66,6 +66,8 @@ public class WorldConfig extends ReadWriteConfig{
    
     public static void reloadWorlds(){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        worldConfig.loadConfig();
+        
         String worldListTypeString = worldConfig.getBukkitConfig().getString(WORLD_LIST_MODE_KEY);
         try {
             worldListMode = WorldListMode.valueOf(worldListTypeString);
@@ -81,6 +83,10 @@ public class WorldConfig extends ReadWriteConfig{
             worlds.add(worldName);
             sortedWorlds.add(worldName);
         });
+        
+        String message = LangConfig.getMessage("World-loading")
+                .replace("%worlds%", worlds.size() + "");
+        Logger.log(message);
 //</editor-fold>
     }
     

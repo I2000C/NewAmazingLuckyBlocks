@@ -713,12 +713,24 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             case 2:
                 // /alb worlds list
                 if(args[1].equals("list")){
-                    Logger.sendMessage(LangConfig.getMessage("World-management1.line1"), sender);
-                    Logger.sendMessage(LangConfig.getMessage("World-management1.line2"), sender);
+                    WorldConfig.WorldListMode currentMode = WorldConfig.getWorldListMode();
+                    String currentModeMessage = LangConfig.getMessage("World-management1.currentMode")
+                            .replace("%worldListMode%", currentMode.toString());
+                    Logger.sendMessage(currentModeMessage, sender);
+                    Logger.sendMessage(LangConfig.getMessage("World-management1.title"), sender);
+                    Logger.sendMessage(LangConfig.getMessage("World-management1.separator"), sender);
                     WorldConfig.getWorlds().forEach(worldName -> {
                         String message = LangConfig.getMessage("World-management1.worldName").replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                     });
+                    return true;
+                // /alb worlds changeListMode
+                }else if(args[1].equals("changeListMode")) {
+                    WorldConfig.WorldListMode nextMode = WorldConfig.getWorldListMode().next();
+                    WorldConfig.setWorldListMode(nextMode);
+                    String message = LangConfig.getMessage("World-management2.worldListModeChanged")
+                            .replace("%worldListMode%", nextMode.toString());
+                    Logger.sendMessage(message, sender);
                     return true;
                 }else if(args[1].equals("add")){
                     Logger.sendMessage("&cUsage: &7/alb worlds add <world>", sender);
@@ -727,7 +739,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     Logger.sendMessage("&cUsage: &7/alb worlds delete <world>", sender);
                     return false;
                 }else{
-                    Logger.sendMessage("&cUsage: &7/alb worlds [list|add|delete]", sender);
+                    Logger.sendMessage("&cUsage: &7/alb worlds [list|changeListMode|add|delete]", sender);
                     return false;
                 }
             case 3:
@@ -736,19 +748,19 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     String worldName = args[2];                    
                     String message;
                     if(Bukkit.getWorld(worldName) == null) {
-                        message = LangConfig.getMessage("World-management2.line5")
+                        message = LangConfig.getMessage("World-management2.worldNotExists")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return false;
                     }
                     
                     if(WorldConfig.addWorld(worldName)) {
-                        message = LangConfig.getMessage("World-management2.line1")
+                        message = LangConfig.getMessage("World-management2.worldAdded")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return true;
                     } else {
-                        message = LangConfig.getMessage("World-management2.line3")
+                        message = LangConfig.getMessage("World-management2.worldAlreadyAdded")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return false;
@@ -757,19 +769,19 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     String worldName = args[2];                    
                     String message;
                     if(Bukkit.getWorld(worldName) == null) {
-                        message = LangConfig.getMessage("World-management2.line5")
+                        message = LangConfig.getMessage("World-management2.worldNotExists")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return false;
                     }
                     
                     if(WorldConfig.addWorld(worldName)) {
-                        message = LangConfig.getMessage("World-management2.line2")
+                        message = LangConfig.getMessage("World-management2.worldDeleted")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return true;
                     } else {
-                        message = LangConfig.getMessage("World-management2.line4")
+                        message = LangConfig.getMessage("World-management2.worldAlreadyDeleted")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return false;
@@ -1040,6 +1052,9 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     }
                     if("list".startsWith(args[1].toLowerCase())){
                         ls.add("list");
+                    }                    
+                    if("changeListMode".startsWith(args[1].toLowerCase())){
+                        ls.add("changeListMode");
                     }                    
                     break;
                 case "loadSchematic":
