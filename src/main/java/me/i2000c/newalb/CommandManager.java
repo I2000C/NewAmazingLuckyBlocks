@@ -1088,7 +1088,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             if(args[0].equalsIgnoreCase("worlds")) {
                 if(args[1].equalsIgnoreCase("add")) {
                     for(World world : Bukkit.getWorlds()) {
-                        if(!WorldConfig.getWorlds().contains(world.getName())) {
+                        if(!WorldConfig.isContained(world.getName())) {
                             ls.add(world.getName());
                         }
                     }

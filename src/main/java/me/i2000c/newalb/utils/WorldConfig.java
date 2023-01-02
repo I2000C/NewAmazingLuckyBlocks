@@ -1,11 +1,13 @@
 package me.i2000c.newalb.utils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import me.i2000c.newalb.config.ReadWriteConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 public class WorldConfig extends ReadWriteConfig{
@@ -64,6 +66,36 @@ public class WorldConfig extends ReadWriteConfig{
         }
     }
     
+    public static void addAllWorlds() {
+        Bukkit.getWorlds().forEach(world -> {
+            worlds.add(world.getName());
+            sortedWorlds.add(world.getName());
+        });
+        saveWorlds();
+    }
+    
+    public static void deleteAllWorlds() {
+        worlds.clear();
+        sortedWorlds.clear();
+        saveWorlds();
+    }
+    
+    public static void toggleAllWorlds() {
+        List<String> serverWorlds = new ArrayList<>();
+        Bukkit.getWorlds().forEach(world -> {
+            if(!worlds.contains(world.getName())) {
+                serverWorlds.add(world.getName());
+            }
+        });
+        
+        worlds.clear();
+        sortedWorlds.clear();
+        worlds.addAll(serverWorlds);
+        sortedWorlds.addAll(serverWorlds);
+        
+        saveWorlds();
+    }
+    
     public static boolean isEnabled(String worldName){
         switch(worldListMode) {
             case DISABLED: return true;
@@ -71,6 +103,9 @@ public class WorldConfig extends ReadWriteConfig{
             case BLACKLIST: return !worlds.contains(worldName);
             default: return false;
         }
+    }
+    public static boolean isContained(String worldName) {
+        return worlds.contains(worldName);
     }
    
     public static void reloadWorlds(){
@@ -106,6 +141,7 @@ public class WorldConfig extends ReadWriteConfig{
     
     
     public static enum WorldListMode {
+        //<editor-fold defaultstate="collapsed" desc="Code">
         DISABLED,
         WHITELIST,
         BLACKLIST;
@@ -130,5 +166,6 @@ public class WorldConfig extends ReadWriteConfig{
         }
         
         private static final WorldListMode[] VALUES = values();
+//</editor-fold>
     }
 }
