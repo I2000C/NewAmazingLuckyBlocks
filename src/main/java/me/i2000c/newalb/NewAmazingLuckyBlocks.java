@@ -101,7 +101,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         Task.runTask(() -> {
             Logger.log(LangConfig.getMessage("Loading.worlds"));
             
-            WorldConfig.reloadAll();
+            WorldConfig.reloadWorlds();
             LocationManager.loadLocations();
             TrapManager.loadTraps();
             
