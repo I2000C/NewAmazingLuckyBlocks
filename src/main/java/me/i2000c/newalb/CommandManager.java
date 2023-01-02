@@ -35,6 +35,7 @@ import me.i2000c.newalb.utils2.Equipment;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Schematic;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -505,7 +506,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         plugin.prefix = LangConfig.getMessage("InGamePrefix");
         
         Logger.logAndMessage(LangConfig.getMessage("Reload.worlds"), sender);
-        WorldConfig.reloadAll();
+        WorldConfig.reloadWorlds();
 
         SpecialItemManager.reloadSpecialItems();
         
@@ -712,99 +713,69 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             case 2:
                 // /alb worlds list
                 if(args[1].equals("list")){
-                    WorldConfig.updateWorlds(false);
                     Logger.sendMessage(LangConfig.getMessage("World-management1.line1"), sender);
                     Logger.sendMessage(LangConfig.getMessage("World-management1.line2"), sender);
-                    WorldConfig.getWorlds().forEach((worldName, worldType) -> {
+                    WorldConfig.getWorlds().forEach(worldName -> {
                         String message = LangConfig.getMessage("World-management1.worldName").replace("%world%", worldName);
-                        if(worldType){
-                            message += LangConfig.getMessage("World-management1.enabledWorld");
-                        }else{
-                            message += LangConfig.getMessage("World-management1.disabledWorld");
-                        }
                         Logger.sendMessage(message, sender);
                     });
                     return true;
-                }else if(args[1].equals("set")){
-                    Logger.sendMessage("&cUsage: &7/alb worlds set <world/*> <enabled/disabled>", sender);
+                }else if(args[1].equals("add")){
+                    Logger.sendMessage("&cUsage: &7/alb worlds add <world>", sender);
                     return false;
-                }else if(args[1].equals("toggle")){
-                    Logger.sendMessage("&cUsage: &7/alb worlds toggle <world/*>", sender);
+                }else if(args[1].equals("delete")){
+                    Logger.sendMessage("&cUsage: &7/alb worlds delete <world>", sender);
                     return false;
                 }else{
-                    Logger.sendMessage("&cUsage: &7/alb worlds [list/set/toggle]", sender);
+                    Logger.sendMessage("&cUsage: &7/alb worlds [list|add|delete]", sender);
                     return false;
                 }
             case 3:
-                if(args[1].equals("toggle")){
-                    String worldName = args[2];
-                    
-                    if(worldName.equals("*")){
-                        String message = "&3Toggled all worlds";
-                        WorldConfig.toggleAllWorlds();
+                // /alb worlds [add|delete] <world>
+                if(args[1].equals("add")){
+                    String worldName = args[2];                    
+                    String message;
+                    if(Bukkit.getWorld(worldName) == null) {
+                        message = LangConfig.getMessage("World-management2.line5")
+                                .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
-                        return true;
-                    }else{
-                        String message = LangConfig.getMessage("World-management2.line1").replace("%world%", worldName);
-                        if(Bukkit.getWorld(worldName) != null){
-                            boolean enabled = !WorldConfig.getWorlds().get(worldName);
-
-                            if(enabled){
-                                message += LangConfig.getMessage("World-management1.enabledWorld");
-                            }else{
-                                message += LangConfig.getMessage("World-management1.disabledWorld");
-                            }
-                            WorldConfig.setWorldEnabled(worldName, enabled);
-                            Logger.sendMessage(message, sender);
-                            return true;
-                        }else{
-                            Logger.sendMessage(LangConfig.getMessage("World-management2.line4").replace("%world%", worldName), sender);
-                            return false;
-                        }
-                    }
-                }else{
-                    Logger.sendMessage("&cUsage: &7/alb worlds toggle <world/*>", sender);
-                    return false;
-                }
-            case 4:
-                // /alb worlds set <world> <type>
-                if(args[1].equals("set")){
-                    String worldName = args[2];
-                    String worldEnabled = args[3];
-                    if(!args[3].equals("enabled") && !args[3].equals("disabled")){
-                        Logger.sendMessage("&cUsage: /alb worlds set <world/*> <enabled/disabled>", sender);
                         return false;
                     }
                     
-                    boolean enabled = worldEnabled.equals("enabled");
-                    if(worldName.equals("*")){
-                        String message = "Setted all worlds to ";
-                        if(enabled){
-                            message += LangConfig.getMessage("World-management1.enabledWorld");
-                        }else{
-                            message += LangConfig.getMessage("World-management1.disabledWorld");
-                        }
-                        WorldConfig.setAllWorldsEnabled(enabled);
+                    if(WorldConfig.addWorld(worldName)) {
+                        message = LangConfig.getMessage("World-management2.line1")
+                                .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return true;
-                    }else{
-                        String message = LangConfig.getMessage("World-management2.line1").replace("%world%", worldName);
-                        if(Bukkit.getWorld(worldName) != null){
-                            if(enabled){
-                                message += LangConfig.getMessage("World-management1.enabledWorld");
-                            }else{
-                                message += LangConfig.getMessage("World-management1.disabledWorld");
-                            }
-                            WorldConfig.setWorldEnabled(worldName, enabled);
-                            Logger.sendMessage(message, sender);
-                            return true;
-                        }else{
-                            Logger.sendMessage(LangConfig.getMessage("World-management2.line4").replace("%world%", worldName), sender);
-                            return false;
-                        }
-                    }                        
-                }else{
-                    Logger.sendMessage("&cUsage: &7/alb worlds set <world/*> <enabled/disabled>", sender);
+                    } else {
+                        message = LangConfig.getMessage("World-management2.line3")
+                                .replace("%world%", worldName);
+                        Logger.sendMessage(message, sender);
+                        return false;
+                    }
+                }else if(args[1].equals("delete")) {
+                    String worldName = args[2];                    
+                    String message;
+                    if(Bukkit.getWorld(worldName) == null) {
+                        message = LangConfig.getMessage("World-management2.line5")
+                                .replace("%world%", worldName);
+                        Logger.sendMessage(message, sender);
+                        return false;
+                    }
+                    
+                    if(WorldConfig.addWorld(worldName)) {
+                        message = LangConfig.getMessage("World-management2.line2")
+                                .replace("%world%", worldName);
+                        Logger.sendMessage(message, sender);
+                        return true;
+                    } else {
+                        message = LangConfig.getMessage("World-management2.line4")
+                                .replace("%world%", worldName);
+                        Logger.sendMessage(message, sender);
+                        return false;
+                    }
+                } else {
+                    Logger.sendMessage("&cUsage: &7/alb worlds [add|delete] <world>", sender);
                     return false;
                 }
             default:
@@ -1061,11 +1032,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     }                    
                     break;
                 case "worlds":
-                    if("set".startsWith(args[1].toLowerCase())){
-                        ls.add("set");
+                    if("add".startsWith(args[1].toLowerCase())){
+                        ls.add("add");
                     }
-                    if("toggle".startsWith(args[1].toLowerCase())){
-                        ls.add("toggle");
+                    if("delete".startsWith(args[1].toLowerCase())){
+                        ls.add("delete");
                     }
                     if("list".startsWith(args[1].toLowerCase())){
                         ls.add("list");
@@ -1088,7 +1059,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     break;
                 case "clear":
                     List<String> aux = ls;
-                    WorldConfig.getWorlds().forEach((world, enabled) -> {if(enabled) aux.add(world);});
+                    WorldConfig.getWorlds().forEach(world -> aux.add(world));
                     break;
                 default:
                     for(Player p : Bukkit.getOnlinePlayers()){
@@ -1099,15 +1070,16 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     break;
             }
         }else if(args.length == 3){
-            if(args[0].equalsIgnoreCase("worlds") && 
-                    (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("toggle"))){
-                for(String world : ConfigManager.getConfig().getStringList("Worlds-list")){
-                    String worldName = world.split(";")[0];
-                    if(worldName.toLowerCase().startsWith(args[2].toLowerCase())){
-                        ls.add(worldName);
+            if(args[0].equalsIgnoreCase("worlds")) {
+                if(args[1].equalsIgnoreCase("add")) {
+                    for(World world : Bukkit.getWorlds()) {
+                        if(!WorldConfig.getWorlds().contains(world.getName())) {
+                            ls.add(world.getName());
+                        }
                     }
+                } else if(args[1].equalsIgnoreCase("delete")) {
+                    ls.addAll(WorldConfig.getWorlds());
                 }
-                ls.add("*");
                 return ls;
             }
             
