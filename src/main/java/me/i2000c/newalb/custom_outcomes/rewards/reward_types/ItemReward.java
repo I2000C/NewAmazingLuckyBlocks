@@ -134,6 +134,10 @@ public class ItemReward extends Reward{
             List<String> enchantments = config.getStringList(path + ".enchantments");
             builder.withEnchantments(enchantments);
         }
+        if(config.contains(path + ".bookEnchantments")){
+            List<String> enchantments = config.getStringList(path + ".bookEnchantments");
+            builder.withBookEnchantments(enchantments);
+        }
         
         //Load armor color
         switch(builder.getMaterial()){
@@ -222,6 +226,9 @@ public class ItemReward extends Reward{
         }
         if(builder.hasEnchantments()){
             config.set(path + ".enchantments", builder.getEnchantmentsIntoStringList());
+        }
+        if(builder.hasBookEnchantments()){
+            config.set(path + ".bookEnchantments", builder.getBookEnchantmentsIntoStringList());
         }
 
         //Save texture

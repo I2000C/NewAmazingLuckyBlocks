@@ -3,6 +3,7 @@ package me.i2000c.newalb.utils2;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -18,6 +19,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -215,6 +217,93 @@ public class ItemBuilder{
     }
     public ItemBuilder clearEnchantments(){
         item.getEnchantments().forEach((enchantment, level) -> item.removeEnchantment(enchantment));
+        return this;
+    }
+    
+    public ItemBuilder addBookEnchantment(Enchantment enchantment, int level){
+        Objects.requireNonNull(enchantment);
+        
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof EnchantmentStorageMeta) {
+            EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
+            esm.addStoredEnchant(enchantment, level, true);
+            item.setItemMeta(esm);
+        }
+        
+        return this;
+    }
+    public ItemBuilder withBookEnchantments(Map<Enchantment, Integer> enchantments){
+        Objects.requireNonNull(enchantments);
+        clearBookEnchantments();
+        
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof EnchantmentStorageMeta) {
+            EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
+            enchantments.forEach((enchantment, level) -> 
+                    esm.addStoredEnchant(enchantment, level, true));
+            item.setItemMeta(esm);
+        }
+        
+        return this;
+    }
+    public ItemBuilder withBookEnchantments(List<String> enchantments){
+        clearBookEnchantments();
+        
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof EnchantmentStorageMeta) {
+            EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
+            enchantments.forEach(enchant -> {
+                String[] splitted = enchant.split(";");
+                Enchantment enchantment = Enchantment.getByName(splitted[0]);
+                Objects.requireNonNull(enchantment);
+
+                int level = Integer.parseInt(splitted[1]);
+                esm.addStoredEnchant(enchantment, level, true);
+            });
+            item.setItemMeta(esm);
+        }
+        
+        return this;
+    }
+    public Map<Enchantment, Integer> getBookEnchantments(){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof EnchantmentStorageMeta) {
+            EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
+            return esm.getStoredEnchants();
+        } else {
+            return Collections.EMPTY_MAP;
+        }
+    }
+    public List<String> getBookEnchantmentsIntoStringList(){
+        List<String> enchantments = new ArrayList<>();
+        
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof EnchantmentStorageMeta) {
+            EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
+            esm.getStoredEnchants().forEach((enchantment, level) -> {
+                enchantments.add(enchantment.getName() + ";" + level);
+            });
+        }
+        
+        return enchantments;
+    }
+    public boolean hasBookEnchantments(){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof EnchantmentStorageMeta) {
+            EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
+            return esm.hasStoredEnchants();
+        } else {
+            return false;
+        }
+    }
+    public ItemBuilder clearBookEnchantments(){
+        ItemMeta meta = item.getItemMeta();
+        if(meta instanceof EnchantmentStorageMeta) {
+            EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
+            esm.getStoredEnchants().forEach((enchantment, level) -> esm.removeStoredEnchant(enchantment));
+            item.setItemMeta(esm);
+        }
+        
         return this;
     }
     

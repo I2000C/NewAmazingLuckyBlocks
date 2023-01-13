@@ -241,6 +241,16 @@ public class ItemMenu extends Editor<ItemReward>{
                     .withDisplayName("&cClick to remove custom texture")
                     .build();
         }else switch(XMaterial.matchXMaterial(item.getItem().getType())){
+            case ENCHANTED_BOOK:
+                // EnchantmentStorageMeta
+                specialItem = ItemBuilder.newItem(XMaterial.ENCHANTED_BOOK)
+                        .withDisplayName("&5Click to add custom enchantments to this book")
+                        .build();
+                
+                removeSpecialData = ItemBuilder.newItem(XMaterial.BARRIER)
+                        .withDisplayName("&cClick to remove all book enchantments")
+                        .build();
+                break;
             case POTION:
             case SPLASH_POTION:
             case LINGERING_POTION:
@@ -598,6 +608,18 @@ public class ItemMenu extends Editor<ItemReward>{
                         player.closeInventory();
                         Logger.sendMessage("&3Enter the texture ID and press ENTER", player);
                     }else switch(e.getCurrentItem().getType()){
+                        case ENCHANTED_BOOK:
+                            // Open enchantment menu
+                            Editor<EnchantmentWithLevel> editorBook = EditorType.ENCHANTMENT.getEditor();
+                            editorBook.createNewItem(
+                                    player, 
+                                    p -> openItemMenu2(p), 
+                                    (p, enchantmentWithLevel) -> {
+                                        ItemBuilder.fromItem(item.getItem(), false)
+                                                .addBookEnchantment(enchantmentWithLevel.enchantment, enchantmentWithLevel.level);
+                                        openItemMenu2(p);
+                                    });
+                            break;
                         case POTION:
                             //Open potion meta menu
                             Editor<EffectReward> editor2 = EditorType.EFFECT_REWARD.getEditor();
@@ -651,6 +673,12 @@ public class ItemMenu extends Editor<ItemReward>{
                         TextureManager.setTexture(item.getItem(), null);
                         openItemMenu2(player);
                     }else switch(XMaterial.matchXMaterial(item.getItem().getType())){
+                        case ENCHANTED_BOOK:
+                            // Remove all book enchantments
+                            ItemBuilder.fromItem(item.getItem(), false)
+                                    .clearBookEnchantments();
+                            openItemMenu2(player);
+                            break;
                         case POTION:
                         case SPLASH_POTION:
                         case LINGERING_POTION:
