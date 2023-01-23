@@ -1,6 +1,7 @@
 package me.i2000c.newalb.utils2;
 
 import com.cryptomorin.xseries.XMaterial;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,12 +10,15 @@ import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
 
 public class ExtendedEntityType{
@@ -198,6 +202,12 @@ public class ExtendedEntityType{
 //</editor-fold>
     }
     
+    private static boolean isAngryable(EntityType entityType) {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        return entityType == EntityType.WOLF || entityType.name().equals("BEE");
+//</editor-fold>
+    }
+    
     private static XMaterial getMaterialFromEntityType(EntityType type){        
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(type == null){
@@ -306,6 +316,7 @@ public class ExtendedEntityType{
         this.isAlive = entityType.isAlive();
         this.isAgeable = Age.isAgeable(entityType);
         this.isTameable = isTameable(entityType);
+        this.isAngryable = isAngryable(entityType);
         this.material = getMaterialFromEntityType(entityType);
 //</editor-fold>
     }
@@ -317,6 +328,7 @@ public class ExtendedEntityType{
         this.isAlive = extraEntityType.isAlive;
         this.isAgeable = extraEntityType.isAgeable;
         this.isTameable = extraEntityType.isTameable;
+        this.isAngryable = false; 
         this.material = extraEntityType.material;
 //</editor-fold>
     }
@@ -327,6 +339,7 @@ public class ExtendedEntityType{
     private final boolean isAlive;
     private final boolean isAgeable;
     private final boolean isTameable;
+    private final boolean isAngryable;
     private final XMaterial material;
     
     public Entity spawnEntity(Location location){
@@ -354,6 +367,10 @@ public class ExtendedEntityType{
         return isTameable;
     }
     
+    public boolean isAngryable() {
+        return isAngryable;
+    }
+    
     public XMaterial getMaterial(){
         return material;
     }
@@ -365,6 +382,35 @@ public class ExtendedEntityType{
     
     public boolean isOcelot(){
         return entityType == EntityType.OCELOT;
+    }
+    
+    private static Method setAnger = null;
+    
+    public void setAngry(Entity entity, Player player) {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(this.isAngryable()) {
+            if(entity instanceof Wolf) {
+                ((Wolf) entity).setAngry(true);
+                ((Wolf) entity).setTarget(player);
+            } else if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_15) >= 0) {
+                if(!this.name().equals("BEE")) {
+                    return;
+                }
+                
+                // Bees appeared for the first time in Minecraft 1.15
+                try {
+                    if(setAnger == null) {
+                        setAnger = entity.getClass().getMethod("setAnger", int.class);
+                    }
+                    
+                    setAnger.invoke(entity, Integer.MAX_VALUE);
+                    ((Creature) entity).setTarget(player);
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+//</editor-fold>
     }
     
     public String name(){

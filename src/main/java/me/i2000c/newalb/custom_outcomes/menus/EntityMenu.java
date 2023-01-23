@@ -53,6 +53,11 @@ public class EntityMenu extends Editor<EntityReward>{
                     }else{
                         builder.addLoreLine("&6Is tameable entity: &7false");
                     }
+                    if(extendedEntityType.isAngryable()){
+                        builder.addLoreLine("&6Is angryable entity: &atrue");
+                    }else{
+                        builder.addLoreLine("&6Is angryable entity: &7false");
+                    }
                     return builder.build();
                 }
         );
@@ -120,6 +125,11 @@ public class EntityMenu extends Editor<EntityReward>{
                 builder.addLoreLine("&3Is tameable entity: &atrue");
             }else{
                 builder.addLoreLine("&3Is tameable entity: &7false");
+            }
+            if(entityType.isAngryable()){
+                builder.addLoreLine("&3Is angryable entity: &atrue");
+            }else{
+                builder.addLoreLine("&3Is angryable entity: &7false");
             }
         }
         ItemStack ent_type = builder.build();
@@ -243,6 +253,19 @@ public class EntityMenu extends Editor<EntityReward>{
         builder.addLoreLine("&6  if the entity is tameable");
         ItemStack isTamedStack = builder.build();
         
+        if(item.isAngry()) {
+            builder = ItemBuilder.newItem(XMaterial.LAVA_BUCKET);
+            builder.withDisplayName("&eIs angry: &atrue");
+        } else {
+            builder = ItemBuilder.newItem(XMaterial.WATER_BUCKET);
+            builder.withDisplayName("&eIs angry: &cfalse");
+        }
+        builder.addLoreLine("&3Click to toggle");
+        builder.addLoreLine("");
+        builder.addLoreLine("&6Note that this is only used");
+        builder.addLoreLine("&6  if the entity is angryable");
+        ItemStack isAngryStack = builder.build();
+        
         switch(item.getAge()){
             case BABY:
                 builder = ItemBuilder.newItem(XMaterial.LEATHER_HELMET);
@@ -314,6 +337,9 @@ public class EntityMenu extends Editor<EntityReward>{
         }
         if(entityType != null && entityType.isTameable()){
             menu.setItem(2, isTamedStack);
+        }
+        if(entityType != null && entityType.isAngryable()) {
+            menu.setItem(19, isAngryStack);
         }
         if(entityType != null && entityType.isAlive()){
             menu.setItem(34, GUIItem.getPlusLessItem(+100));
@@ -439,6 +465,14 @@ public class EntityMenu extends Editor<EntityReward>{
                     }
                     
                     item.setIsTamed(!item.isTamed());
+                    openEntityMenu(player);
+                    break;
+                case 19:
+                    if(item.getType() == null || !item.getType().isAngryable()){
+                        break;
+                    }
+                    
+                    item.setIsAngry(!item.isAngry());
                     openEntityMenu(player);
                     break;
                 case 20:

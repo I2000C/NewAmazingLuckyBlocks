@@ -42,6 +42,7 @@ public class EntityReward extends Reward{
     private Age age;
     private boolean isTamed;
     private int slimeSize;
+    private boolean isAngry;
     
     private Equipment equipment;
     
@@ -54,6 +55,7 @@ public class EntityReward extends Reward{
         this.slimeSize = -1;
         this.age = Age.ADULT;
         this.isTamed = false;
+        this.isAngry = false;
         this.type = null;
         this.customName = null;
         this.customNameVisible = true;
@@ -118,6 +120,12 @@ public class EntityReward extends Reward{
     public void setIsTamed(boolean isTamed){
         this.isTamed = isTamed;
     }
+    public boolean isAngry() {
+        return this.isAngry;
+    }
+    public void setIsAngry(boolean isAngry) {
+        this.isAngry = isAngry;
+    }
     public Equipment getEquipment(){
         return equipment;
     }
@@ -155,6 +163,9 @@ public class EntityReward extends Reward{
         }
         if(type.isTameable()){
             builder.addLoreLine("&bIs tamed: &e" + isTamed);
+        }
+        if(type.isAngryable()) {
+            builder.addLoreLine("&bIs angry: &e" + isAngry);
         }
         
         if(type.isAlive()){
@@ -257,7 +268,12 @@ public class EntityReward extends Reward{
         if(this.type.isAlive()){
             config.set(path + ".health", this.health);
             config.set(path + ".age", this.age.name());
-            config.set(path + ".isTamed", this.isTamed);
+            if(this.type.isTameable()) {
+                config.set(path + ".isTamed", this.isTamed);
+            }
+            if(this.type.isAngryable()) {
+                config.set(path + ".isAngry", this.isAngry);
+            }            
             if(type.isSlime()){
                 config.set(path + ".slimeSize", this.slimeSize);
             }
@@ -278,6 +294,7 @@ public class EntityReward extends Reward{
             this.health = config.getInt(path + ".health", -1);
             this.age = Age.valueOf(config.getString(path + ".age", Age.ADULT.name()));
             this.isTamed = config.getBoolean(path + ".isTamed");
+            this.isAngry = config.getBoolean(path + ".isAngry");
             this.slimeSize = config.getInt(path + ".slimeSize", -1);
             this.effects = config.getStringList(path + ".effects");
             this.equipment = new Equipment(config, path + ".equipment");
@@ -346,6 +363,10 @@ public class EntityReward extends Reward{
                         ((Ocelot) this.lastSpawnedEntity).setCatType(catType);
                     }                    
                 }
+            }
+            
+            if(this.isAngry) {
+                this.type.setAngry(this.lastSpawnedEntity, player);
             }
             
             for(String effect : this.effects){
