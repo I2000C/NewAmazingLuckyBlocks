@@ -78,7 +78,9 @@ public class TrapReward extends Reward{
             TRAP_MATERIALS = new ArrayList<>();
             for(Material material : Material.values()){
                 if(material.isBlock() && material.name().contains("PLATE")){
-                    TRAP_MATERIALS.add(XMaterial.matchXMaterial(material));
+                    try {
+                        TRAP_MATERIALS.add(XMaterial.matchXMaterial(material));
+                    } catch(IllegalArgumentException ex) {}
                 }
             }
             TRAP_MATERIALS.add(XMaterial.CHEST);
