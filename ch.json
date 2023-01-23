@@ -37,7 +37,7 @@
     {
       "downloadJavadoc": true,
       "downloadSources": true,
-      "name": "xyz.xenondevs:particle:1.8.1",
+      "name": "xyz.xenondevs:particle:1.8.3",
       "packIntoJar": true
     },
     {
