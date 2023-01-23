@@ -24,9 +24,9 @@ configurations{
     runtimeLibraries
 }
 dependencies{
-    implementation 'io.github.bananapuncher714:nbteditor:7.18.3'
-    implementation 'io.github.bananapuncher714:nbteditor:7.18.3:javadoc'
-    implementation 'io.github.bananapuncher714:nbteditor:7.18.3:sources'
+    implementation 'io.github.bananapuncher714:nbteditor:7.18.4'
+    implementation 'io.github.bananapuncher714:nbteditor:7.18.4:javadoc'
+    implementation 'io.github.bananapuncher714:nbteditor:7.18.4:sources'
     implementation 'com.github.cryptomorin:XSeries:9.2.0'
     implementation 'com.github.cryptomorin:XSeries:9.2.0:javadoc'
     implementation 'com.github.cryptomorin:XSeries:9.2.0:sources'
