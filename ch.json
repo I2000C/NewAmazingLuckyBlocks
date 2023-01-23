@@ -19,7 +19,7 @@
     {
       "downloadJavadoc": true,
       "downloadSources": true,
-      "name": "com.github.cryptomorin:XSeries:9.0.0",
+      "name": "com.github.cryptomorin:XSeries:9.2.0",
       "packIntoJar": true
     },
     {
