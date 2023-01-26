@@ -788,11 +788,16 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     }
                 } else {
                     Logger.sendMessage("&cUsage: &7/alb worlds [add|delete] <world>", sender);
+                    Logger.sendMessage("   &cor: &7/alb worlds list", sender);
+                    Logger.sendMessage("   &cor: &7/alb worlds changeListMode", sender);
+                    Logger.sendMessage("   &cor: &7/alb worlds", sender);
                     return false;
                 }
             default:
-                String unknowncommand = LangConfig.getMessage("UnknownCommand");
-                Logger.sendMessage(unknowncommand, sender);
+                Logger.sendMessage("&cUsage: &7/alb worlds [add|delete] <world>", sender);
+                Logger.sendMessage("   &cor: &7/alb worlds list", sender);
+                Logger.sendMessage("   &cor: &7/alb worlds changeListMode", sender);
+                Logger.sendMessage("   &cor: &7/alb worlds", sender);
                 return false;
         }
 //</editor-fold>
