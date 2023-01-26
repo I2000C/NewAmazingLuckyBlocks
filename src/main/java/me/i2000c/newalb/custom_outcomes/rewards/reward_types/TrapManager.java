@@ -71,8 +71,8 @@ public class TrapManager extends ReadWriteConfig implements Listener{
             int z = config.getInt(path + ".location.z");
             Location trapLocation = new Location(world, x, y, z);
             
-            Material material = trapLocation.getBlock().getType();
-            if(!TrapReward.getPressurePlateMaterials().contains(material)){
+            XMaterial xmaterial = XMaterial.matchXMaterial(trapLocation.getBlock().getType());
+            if(!TrapReward.getPressurePlateMaterials().contains(xmaterial)){
                 continue;
             }
             
@@ -80,8 +80,11 @@ public class TrapManager extends ReadWriteConfig implements Listener{
             String materialName = config.getString(path + ".item.material");
             String name = config.getString(path + ".item.name");
             
-            Outcome outcome = Outcome.fromString(config.getString(path + ".trapOutcome"));
-            if(outcome == null){
+            Outcome outcome;
+            try {
+                outcome = Outcome.fromString(config.getString(path + ".trapOutcome"));
+            } catch(Exception ex) {
+                ex.printStackTrace();
                 continue;
             }
             
@@ -103,7 +106,7 @@ public class TrapManager extends ReadWriteConfig implements Listener{
     
     public static void saveTraps(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        trapManager.clearConfig();        
+        trapManager.clearConfig();
         FileConfiguration config = trapManager.getBukkitConfig();
         
         int i = 0;

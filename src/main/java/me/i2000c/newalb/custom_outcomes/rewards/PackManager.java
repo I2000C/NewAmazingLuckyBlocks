@@ -48,6 +48,10 @@ public class PackManager{
     }
     
     public static OutcomePack getPack(String filename){
+        if(filename.endsWith(".yml")) {
+            filename = OtherUtils.removeExtension(filename);
+        }
+        
         return packList.get(filename);
     }
     
