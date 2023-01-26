@@ -41,7 +41,7 @@ dependencies{
     implementation 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'
     implementation 'com.sk89q.worldedit:worldedit-core:7.2.2:sources'
     
-    runtimeLibraries 'io.github.bananapuncher714:nbteditor:7.18.3', 'com.github.cryptomorin:XSeries:9.0.0', 'xyz.xenondevs:particle:1.8.1' 
+    runtimeLibraries 'io.github.bananapuncher714:nbteditor:7.18.4', 'com.github.cryptomorin:XSeries:9.2.0', 'xyz.xenondevs:particle:1.8.3' 
 }
 
 // Create jar with dependencies
