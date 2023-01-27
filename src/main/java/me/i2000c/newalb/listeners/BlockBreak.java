@@ -17,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -75,6 +76,14 @@ public class BlockBreak implements Listener{
         if(survivalOnly && e.getPlayer().getGameMode() != GameMode.SURVIVAL){
             return;
         }
+        
+        boolean disableWithSilkTouch = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.disableWithSilkTouch");
+        if(disableWithSilkTouch) {
+            ItemStack item = e.getPlayer().getItemInHand();
+            if(item != null && item.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0) {
+                return;
+            }
+        }        
         
         List<XMaterial> blockList = ConfigManager.getConfig().getStringList("LuckyBlock.DropOnBlockBreak.enabledBlocks")
                 .stream().map(materialName -> XMaterial.matchXMaterial(materialName).get())

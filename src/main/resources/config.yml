@@ -276,6 +276,11 @@ LuckyBlock:
     enable: false
     # If enabled, LuckyBlocks will only be dropped in survival mode
     survivalOnly: true
+    # Disable LuckyBlock drop when using a tool with silk touch.
+    # If this option is set to false, players will be able to break and place
+    #   the same block whenever they want if they use a tool with silk touch.
+    # So they will be able to get an infinite amount of LuckyBlocks
+    disableWithSilkTouch: true
     # Probability of dropping LuckyBlocks (between 0 and 100)
     probability: 50
     # If enabled, the original item will be dropped with the LuckyBlock.
