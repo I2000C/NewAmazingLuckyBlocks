@@ -24,12 +24,12 @@ configurations{
     runtimeLibraries
 }
 dependencies{
-    implementation 'io.github.bananapuncher714:nbteditor:7.18.4'
-    implementation 'io.github.bananapuncher714:nbteditor:7.18.4:javadoc'
-    implementation 'io.github.bananapuncher714:nbteditor:7.18.4:sources'
-    implementation 'com.github.cryptomorin:XSeries:9.2.0'
-    implementation 'com.github.cryptomorin:XSeries:9.2.0:javadoc'
-    implementation 'com.github.cryptomorin:XSeries:9.2.0:sources'
+    implementation 'io.github.bananapuncher714:nbteditor:7.18.5'
+    implementation 'io.github.bananapuncher714:nbteditor:7.18.5:javadoc'
+    implementation 'io.github.bananapuncher714:nbteditor:7.18.5:sources'
+    implementation 'com.github.cryptomorin:XSeries:9.3.0'
+    implementation 'com.github.cryptomorin:XSeries:9.3.0:javadoc'
+    implementation 'com.github.cryptomorin:XSeries:9.3.0:sources'
     implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:javadoc'
     implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:sources'
@@ -41,7 +41,7 @@ dependencies{
     implementation 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'
     implementation 'com.sk89q.worldedit:worldedit-core:7.2.2:sources'
     
-    runtimeLibraries 'io.github.bananapuncher714:nbteditor:7.18.4', 'com.github.cryptomorin:XSeries:9.2.0', 'xyz.xenondevs:particle:1.8.3' 
+    runtimeLibraries 'io.github.bananapuncher714:nbteditor:7.18.5', 'com.github.cryptomorin:XSeries:9.3.0', 'xyz.xenondevs:particle:1.8.3' 
 }
 
 // Create jar with dependencies
