@@ -70,7 +70,7 @@ Helpmenu:
 Helpmenu2:
   line1: "%prefix%"
   line2: ""
-  line3: "&c/alb give <wands/objects/luckyblocks> [amount]"
+  line3: "&c/alb give <wands/objects/luckyblocks> [amount] [player]"
   line4: "&7     - Te proporciona todas las varas (el parámetro amount es opcional)"
   line5: "&7     - Te proporciona todos los objetos (el parámetro amount es opcional)"
   line6: "&7     - Te proporciona bloques lucky (el parámetro amount es opcional)"

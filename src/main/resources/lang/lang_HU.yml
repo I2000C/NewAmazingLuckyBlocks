@@ -69,7 +69,7 @@ Helpmenu:
 Helpmenu2:
   line1: "%prefix%"
   line2: ""
-  line3: "&c/alb give <Pálcák/objektek/luckyblokok> [számok]"
+  line3: "&c/alb give <Pálcák/objektek/luckyblokok> [számok] [player]"
   line4: "&7     - Gives you all the wands (amount is optional)"
   line5: "&7     - Gives you all the objects (amount is optional)"
   line6: "&7     - Gives you luckyblocks (amount is optional)"

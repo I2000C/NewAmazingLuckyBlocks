@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 public class LangConfig{
     private static Plugin plugin;
     private static final String LANG_FILE_KEY = "LangFile";
-    private static final double LANG_VERSION = 1.1;
+    private static final double LANG_VERSION = 1.2;
     
     private static ReadOnlyConfig englishConfig;
     private static ReadOnlyConfig config;
