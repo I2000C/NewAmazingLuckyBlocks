@@ -258,18 +258,18 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     }
                     break;
                 case 4:
-                    target = getOnlinePlayer(sender, args[2]);
-                    if(target == null){
-                        return false;
-                    }
                     try{
-                        amount = Integer.parseInt(args[3]);
+                        amount = Integer.parseInt(args[2]);
                     }catch(NumberFormatException ex){
                         amount = 1;
                     }
+                    target = getOnlinePlayer(sender, args[3]);
+                    if(target == null){
+                        return false;
+                    }                    
                     break;
                 default:
-                    Logger.sendMessage("&cUsage: &7/alb give <wands, objects, luckyblocks, luckytool, other_items...> [player] [amount]", sender);
+                    Logger.sendMessage("&cUsage: &7/alb give <wands, objects, luckyblocks, luckytool, other_items...> [amount] [player]", sender);
                     return false;
             }
             
@@ -333,7 +333,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         }
                         
                         if(stack == null){
-                            Logger.sendMessage("&cUsage: &7/alb give <wands, objects, luckyblocks, luckytool, other_items...> [player | amount] [amount]", sender);
+                            Logger.sendMessage("&cUsage: &7/alb give <wands, objects, luckyblocks, luckytool, other_items...> [amount] [player]", sender);
                             return false;
                         }
                     }else{
@@ -992,6 +992,16 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         "loadSchematic", "loadSchem", "loadS", "saveSchematic", "saveSchem", "saveS", 
         "removeSchematic", "removeSchem", "removeS", "clear", "getSkull"};
     
+    private static List<String> getPlayers(String[] args) {
+        List<String> players = new ArrayList<>();
+        for(Player p : Bukkit.getOnlinePlayers()){
+            if(p.getName().toLowerCase().startsWith(args[args.length - 1].toLowerCase())){
+                players.add(p.getName());
+            }
+        }
+        return players;
+    }
+    
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
@@ -1082,11 +1092,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     WorldConfig.getWorlds().forEach(world -> aux.add(world));
                     break;
                 default:
-                    for(Player p : Bukkit.getOnlinePlayers()){
-                        if(p.getName().toLowerCase().startsWith(args[args.length - 1].toLowerCase())){
-                            ls.add(p.getName());
-                        }
-                    }
+                    ls.addAll(getPlayers(args));
                     break;
             }
         }else if(args.length == 3){
@@ -1117,13 +1123,16 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 case "objects":
                 case "luckyblocks":
                     ls.add("5");
+                    ls.addAll(getPlayers(args));
                     break;
                 default:
-                    for(Player p : Bukkit.getOnlinePlayers()){
-                        if(p.getName().toLowerCase().startsWith(args[args.length - 1].toLowerCase())){
-                            ls.add(p.getName());
+                    for(String specialName : SpecialItemManager.getSpecialNames()){
+                        if(specialName.equals(args[1])){
+                            ls.add("5");
+                            break;
                         }
                     }
+                    ls.addAll(getPlayers(args));
             }
         }else if(args.length == 4){
             if(args[0].equalsIgnoreCase("randomblocks")){
@@ -1136,21 +1145,13 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     ls.add("disabled");
                 }
             }else{
-                for(Player p : Bukkit.getOnlinePlayers()){
-                    if(p.getName().toLowerCase().startsWith(args[args.length - 1].toLowerCase())){
-                        ls.add(p.getName());
-                    }
-                }
+                ls.addAll(getPlayers(args));
             }
         }else if(args.length == 5){
             if(args[0].equalsIgnoreCase("randomblocks")){
                 ls.add("5");
             }else{
-                for(Player p : Bukkit.getOnlinePlayers()){
-                    if(p.getName().toLowerCase().startsWith(args[args.length - 1].toLowerCase())){
-                        ls.add(p.getName());
-                    }
-                }
+                ls.addAll(getPlayers(args));
             }
         }else if(args.length == 6){
             if(args[0].equalsIgnoreCase("randomblocks")){
@@ -1164,18 +1165,10 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     ls.add("force");
                 }
             }else{
-                for(Player p : Bukkit.getOnlinePlayers()){
-                if(p.getName().toLowerCase().startsWith(args[args.length - 1].toLowerCase())){
-                    ls.add(p.getName());
-                }
-            }
+                ls.addAll(getPlayers(args));
             }
         }else{
-            for(Player p : Bukkit.getOnlinePlayers()){
-                if(p.getName().toLowerCase().startsWith(args[args.length - 1].toLowerCase())){
-                    ls.add(p.getName());
-                }
-            }
+            ls.addAll(getPlayers(args));
         }
         
         Collections.sort(ls);
