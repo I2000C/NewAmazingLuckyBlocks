@@ -14,7 +14,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -271,7 +271,7 @@ public class BlockReplacingSphereReward extends Reward{
     }
     
     private ItemStack getRandomItem(){
-        int randomNumber = OtherUtils.generateRandomInt(0, totalProbability);
+        int randomNumber = RandomUtils.getInt(totalProbability);
         
         for(Map.Entry<ItemStack, Integer> entry : materials.entrySet()){
             ItemStack item = entry.getKey();

@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
@@ -20,6 +19,7 @@ import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -248,8 +248,7 @@ public class OutcomePack implements Displayable, Executable{
     @Override
     public void execute(Player player, Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Random r = new Random();
-        int randomNumber = r.nextInt(totalProbability);
+        int randomNumber = RandomUtils.getInt(totalProbability);
         for(int i=0;i<outcomes.size();i++){
             Outcome outcome = outcomes.get(i);
             randomNumber = randomNumber - outcome.getProbability();

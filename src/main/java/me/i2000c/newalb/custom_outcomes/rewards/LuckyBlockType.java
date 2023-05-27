@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
@@ -16,6 +15,7 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -412,8 +412,7 @@ public class LuckyBlockType implements Displayable, Executable{
             Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
                     typeName));
         }else{
-            Random r = new Random();
-            int randomNumber = r.nextInt(totalProbability);
+            int randomNumber = RandomUtils.getInt(totalProbability);
             for(Map.Entry<OutcomePack, Integer> entry : packs.entrySet()){
                 OutcomePack pack = entry.getKey();
                 Integer probability = entry.getValue();

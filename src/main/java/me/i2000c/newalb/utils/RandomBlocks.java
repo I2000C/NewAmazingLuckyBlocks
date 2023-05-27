@@ -3,10 +3,10 @@ package me.i2000c.newalb.utils;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils2.ActionBarUtils;
+import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -221,9 +221,8 @@ public class RandomBlocks {
                     this.placeBlock(loc.getBlock());
                 }
             }else{
-                Random r = new Random();
                 for(int i=0;i<blocks;i++){
-                    Location l = locations.get(r.nextInt(locations.size()));
+                    Location l = locations.get(RandomUtils.getInt(locations.size()));
                     this.placeBlock(l.getBlock());
                     locations.remove(l);
                 }
@@ -233,9 +232,9 @@ public class RandomBlocks {
         
         for(int i = 0; i < blocks; i++){
             //r.nextInt((max - min) + 1) + min;
-            randomx = new Random().nextInt(((x+radx) - (x-radx))+1)+(x-radx);
-            randomy = new Random().nextInt(((y+rady) - (y-rady))+1)+(y-rady);
-            randomz = new Random().nextInt(((z+radz) - (z-radz))+1)+(z-radz);
+            randomx = RandomUtils.getInt(((x+radx) - (x-radx))+1)+(x-radx);
+            randomy = RandomUtils.getInt(((y+rady) - (y-rady))+1)+(y-rady);
+            randomz = RandomUtils.getInt(((z+radz) - (z-radz))+1)+(z-radz);
             location.setX(randomx);
             location.setY(randomy);
             location.setZ(randomz);            

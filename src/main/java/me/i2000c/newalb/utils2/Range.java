@@ -1,9 +1,6 @@
 package me.i2000c.newalb.utils2;
 
-import java.util.Random;
-
 public class Range implements Cloneable{
-    private final Random random;
     private int min;
     private int max;
     
@@ -16,7 +13,6 @@ public class Range implements Cloneable{
     }
     
     public Range(int a, int b){
-        random = new Random();
         if(a <= b){
             this.min = a;
             this.max = b;
@@ -54,7 +50,7 @@ public class Range implements Cloneable{
         if(min == max){
             return min;
         }else{
-            return random.nextInt((max - min) + 1) + min;
+            return RandomUtils.getInt(min, max);
         }
     }
     

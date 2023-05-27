@@ -14,7 +14,7 @@ import me.i2000c.newalb.utils2.ExtendedEntityType;
 import me.i2000c.newalb.utils2.ExtendedEntityType.Age;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
-import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
@@ -358,7 +358,7 @@ public class EntityReward extends Reward{
                             .addItem(XMaterial.SADDLE.parseItem());
                 }else if(this.lastSpawnedEntity instanceof Ocelot){
                     if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_13) < 0){
-                        int randomType = OtherUtils.generateRandomInt(1, 3);
+                        int randomType = RandomUtils.getInt(1, 3);
                         Ocelot.Type catType = Ocelot.Type.getType(randomType);
                         ((Ocelot) this.lastSpawnedEntity).setCatType(catType);
                     }                    

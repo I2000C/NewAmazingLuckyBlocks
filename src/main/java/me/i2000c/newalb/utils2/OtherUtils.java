@@ -1,7 +1,6 @@
 package me.i2000c.newalb.utils2;
 
 import java.lang.reflect.Method;
-import java.util.Random;
 import java.util.function.Predicate;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
@@ -35,11 +34,6 @@ public class OtherUtils{
         
         return filename.substring(0, extensionIndex);
 //</editor-fold>
-    }
-    
-    public static int generateRandomInt(int min, int max){
-        Random random = new Random();
-        return random.nextInt((max - min) + 1) + min;
     }
     
     public static void removePlayerItems(Player player, int amount, Predicate<ItemStack> predicate){

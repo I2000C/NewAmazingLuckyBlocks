@@ -2,13 +2,13 @@ package me.i2000c.newalb.listeners.wands;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.List;
-import java.util.Random;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownPotion;
@@ -71,7 +71,7 @@ public class PotionWand extends SpecialItem{
             Logger.warn("&cTotal probability must be &a>0 in potionWandEffects");
             return;
         }else{
-            r = new Random().nextInt(weightSum);
+            r = RandomUtils.getInt(weightSum);
         }
         
         int selection = r;

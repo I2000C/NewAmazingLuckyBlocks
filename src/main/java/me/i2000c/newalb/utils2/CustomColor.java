@@ -6,9 +6,9 @@ public class CustomColor{
     private final Color color;
     
     public CustomColor(){
-        int red = OtherUtils.generateRandomInt(0, 255);
-        int green = OtherUtils.generateRandomInt(0, 255);
-        int blue = OtherUtils.generateRandomInt(0, 255);
+        int red = RandomUtils.getInt(0, 255);
+        int green = RandomUtils.getInt(0, 255);
+        int blue = RandomUtils.getInt(0, 255);
         this.color = Color.fromRGB(red, green, blue);
     }
     

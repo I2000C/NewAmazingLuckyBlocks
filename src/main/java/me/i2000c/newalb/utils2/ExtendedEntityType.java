@@ -4,7 +4,6 @@ import com.cryptomorin.xseries.XMaterial;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import org.bukkit.Location;
@@ -154,8 +153,7 @@ public class ExtendedEntityType{
                     }
                     break;
                 case RANDOM:
-                    Random random = new Random();
-                    if(random.nextBoolean()){
+                    if(RandomUtils.getBoolean()){
                         BABY.setAge(entity);
                     }else{
                         ADULT.setAge(entity);

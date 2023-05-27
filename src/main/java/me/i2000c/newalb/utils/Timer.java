@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -211,7 +211,6 @@ public class Timer implements Listener{
     public void executeThrowBlocks(Location location, int numberOfBlocks, double height, double radius, ItemStack throwBlocksStack, long time, Material lavaMaterial){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Location loc1 = location;
-        Random r = new Random();
         Task task = new Task(){
             int i = 0;
             @Override
@@ -220,7 +219,7 @@ public class Timer implements Listener{
                     this.cancel();
                     return;
                 }
-                int angle360 = r.nextInt(360);
+                int angle360 = RandomUtils.nextInt(360);
                 double angleRadians = Math.toRadians(angle360);
                 Location loc2 = loc1.clone()
                         .add(radius * Math.sin(angleRadians), height, radius * Math.cos(angleRadians));

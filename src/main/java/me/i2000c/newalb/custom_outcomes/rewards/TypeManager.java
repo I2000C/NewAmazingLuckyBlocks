@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.config.ReadWriteConfig;
 import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -130,8 +130,7 @@ public class TypeManager{
     }
     
     public static LuckyBlockType getRandomLuckyBlockType(){
-        Random r = new Random();
-        return luckyBlockTypes.get(r.nextInt(luckyBlockTypes.size()));
+        return luckyBlockTypes.get(RandomUtils.getInt(luckyBlockTypes.size()));
     }
     
     public static LuckyBlockType getType(ItemStack stack){

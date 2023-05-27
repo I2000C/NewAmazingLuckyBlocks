@@ -2,7 +2,6 @@ package me.i2000c.newalb.listeners;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.Executable;
@@ -11,6 +10,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.WorldConfig;
+import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -99,8 +99,7 @@ public class BlockBreak implements Listener{
         prob = prob > 100 ? 100 : prob;
         prob = prob < 0 ? 0 : prob;
         
-        Random r = new Random();
-        if(r.nextInt(100) < prob){
+        if(RandomUtils.getInt(100) < prob){
             Block b = e.getBlock();
             boolean dropOriginalItem = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.dropOriginalItem");
             if(!dropOriginalItem){
