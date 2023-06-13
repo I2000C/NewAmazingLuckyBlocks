@@ -69,7 +69,6 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
             return;
         }
         
-        
         ConfigManager.initialize(this);
         ConfigManager.getManager().loadConfig();
         LangConfig.initialize(this);
@@ -133,11 +132,13 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
     
     @Override
     public void onDisable(){
-        if(minecraftVersion != null){
+        if(minecraftVersion == null) {
+            Logger.log("has been disabled");
+        } else {
             RewardListMenu.testRewardsPlayerList.clear();
             LocationManager.saveLocations();
-        }
-        Logger.log(LangConfig.getMessage("Disable.line1").replace("%prefix%", ""));
+            Logger.log(LangConfig.getMessage("Disable.line1").replace("%prefix%", ""));
+        }        
     }
     
     public void copyResource(String filename, File file){

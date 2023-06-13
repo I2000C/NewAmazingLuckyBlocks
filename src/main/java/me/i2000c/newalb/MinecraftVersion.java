@@ -22,7 +22,11 @@ public enum MinecraftVersion{
         String version = Bukkit.getServer().getClass().getPackage().getName();
         version = version.substring(version.lastIndexOf('.') + 1);
         version = version.substring(0, version.lastIndexOf('_'));
-        return valueOf(version);
+        try {
+            return valueOf(version);
+        } catch(IllegalArgumentException ex) {
+            return null;
+        }
     }
     
     private MinecraftVersion(boolean isLegacyVersion, boolean isNewNMS){
