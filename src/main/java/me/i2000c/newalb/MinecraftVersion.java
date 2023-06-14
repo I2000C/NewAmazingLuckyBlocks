@@ -14,7 +14,8 @@ public enum MinecraftVersion{
     v1_16(false, false),
     v1_17(false, true),
     v1_18(false, true),
-    v1_19(false, true);
+    v1_19(false, true),
+    v1_20(false, true);
     
     private static final MinecraftVersion[] VALUES = values();
     

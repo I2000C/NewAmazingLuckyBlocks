@@ -108,7 +108,13 @@ public class HookBowAux{
                     try{
                         playerConnectionField = targetPlayerEntity.getClass().getField("playerConnection");
                     }catch(NoSuchFieldException ex){
-                        playerConnectionField = targetPlayerEntity.getClass().getField("b");
+                        try{
+                            // Up to Minecraft 1.19.4, the field is called "b"
+                            playerConnectionField = targetPlayerEntity.getClass().getField("b");
+                        }catch(NoSuchFieldException ex2){
+                            // From Minecraft 1.20, the field is called "c"
+                            playerConnectionField = targetPlayerEntity.getClass().getField("c");
+                        }
                     }
                 }
                 
