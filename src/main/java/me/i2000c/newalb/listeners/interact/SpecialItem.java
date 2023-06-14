@@ -11,6 +11,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -137,12 +138,15 @@ public abstract class SpecialItem{
     
     // Decrease amount of special item (Used in some objects)
     protected void decreaseAmountOfItem(PlayerInteractEvent e){
-        ItemStack itemInHand = e.getItem();
-        int amount = itemInHand.getAmount() - 1;
-        if(amount == 0){
-            e.getPlayer().setItemInHand(null);
-        }else{
-            itemInHand.setAmount(amount);
+        GameMode gamemode = e.getPlayer().getGameMode();
+        if(gamemode == GameMode.SURVIVAL || gamemode == GameMode.ADVENTURE) {
+            ItemStack itemInHand = e.getItem();
+            int amount = itemInHand.getAmount() - 1;
+            if(amount == 0){
+                e.getPlayer().setItemInHand(null);
+            }else{
+                itemInHand.setAmount(amount);
+            }
         }
     }
     
@@ -168,6 +172,7 @@ public abstract class SpecialItem{
         }        
         return lore;
     }
+    // Decrease uses of wands
     protected boolean decreaseWandUses(ItemStack stack, Player player){
         ItemBuilder builder = ItemBuilder.fromItem(stack, false);
         if(ConfigManager.getConfig().getBoolean(itemPathKey + ".limited-uses.enable")){
@@ -176,15 +181,20 @@ public abstract class SpecialItem{
                 builder.withLore(getLoreOfWand());
                 return true;
             }else{
-                int usesLeft = Integer.parseInt(Logger.stripColor(lore.get(1))) - 1;
-                if(usesLeft >= 0){
-                    lore.set(1, getChatcolorString(usesLeft) + usesLeft);
-                    builder.withLore(lore);
+                GameMode gamemode = player.getGameMode();
+                if(gamemode == GameMode.SURVIVAL || gamemode == GameMode.ADVENTURE) {
+                    int usesLeft = Integer.parseInt(Logger.stripColor(lore.get(1))) - 1;
+                    if(usesLeft >= 0){
+                        lore.set(1, getChatcolorString(usesLeft) + usesLeft);
+                        builder.withLore(lore);
+                        return true;
+                    }else{
+                        Logger.sendMessage("&cThis wand has expired", player, false);
+                        return false;
+                    }
+                } else {
                     return true;
-                }else{
-                    Logger.sendMessage("&cThis wand has expired", player, false);
-                    return false;
-                }                
+                }
             }
         }else{
             builder.withLore();
