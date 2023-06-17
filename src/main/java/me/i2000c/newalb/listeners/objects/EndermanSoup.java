@@ -2,22 +2,20 @@ package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import java.awt.Color;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
+import me.i2000c.newalb.utils.particles.ParticleBuilder;
+import me.i2000c.newalb.utils.particles.Particles;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import xyz.xenondevs.particle.ParticleBuilder;
-import xyz.xenondevs.particle.ParticleEffect;
-import xyz.xenondevs.particle.data.color.DustData;
+import xyz.xenondevs.particle.data.color.RegularColor;
 
 public class EndermanSoup extends SpecialItem{
     
@@ -49,10 +47,14 @@ public class EndermanSoup extends SpecialItem{
                 int i = 0;
                 @Override
                 public void run() {
-                    ItemStack item = new ItemStack(Material.DIAMOND_AXE);
+                    ParticleBuilder.newParticle(Particles.SPELL_MOB)
+                            .setAmount(0)
+                            .setParticleData(RegularColor.random())
+                            .display(l);
+                    /*ItemStack item = new ItemStack(Material.DIAMOND_AXE);
                     new ParticleBuilder(ParticleEffect.REDSTONE, l)
                         .setParticleData(new DustData(Color.black, 4))
-                        .display();
+                        .display();*/
                     //XParticle.atom(5, 5, 30, ParticleDisplay.simple(l, Particles.VILLAGER_HAPPY), ParticleDisplay.simple(l, Particles.FLAME));
                     //ParticleDisplay pd = ParticleDisplay.simple(l, Particles.NOTE).directional().withColor(Color.blue, 2);
                     //XParticle.blackSun(3, 0.5, 50, 5, pd);

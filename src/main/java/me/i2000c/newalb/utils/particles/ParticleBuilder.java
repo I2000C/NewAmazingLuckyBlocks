@@ -1,197 +1,187 @@
-//package me.i2000c.newalb.utils.particles;
-//
-//import com.cryptomorin.xseries.particles.ParticleDisplay;
-//import java.lang.reflect.Method;
-//import me.i2000c.newalb.utils2.CustomColor;
-//import org.bukkit.Color;
-//import org.bukkit.Location;
-//import org.bukkit.Particle;
-//import org.bukkit.World;
-//import org.bukkit.material.MaterialData;
-//import org.bukkit.util.Vector;
-//
-//public class ParticleBuilder {
-//    private static boolean isMinecraft_1_8;
-//    private static Method withBlock;
-//    static {
-//        try {
-//            ParticleDisplay pd = new ParticleDisplay();
-//            withBlock = pd.getClass().getMethod("withBlock", MaterialData.class);
-//            isMinecraft_1_8 = false;
-//        } catch(Throwable ex) {
-//            isMinecraft_1_8 = true;
-//        }
-//    }
-//    
-//    public static ParticleBuilder newParticle(Location location, Particles particles) {
-//        return new ParticleBuilder(location, particles);
-//    }
-//    public static ParticleBuilder newParticle(Particles particles) {
-//        return new ParticleBuilder(null, particles);
-//    }
-//    
-//    private Location loc;
-//    private Particles particles;
-//    private CustomColor color;
-//    private int count;
-//    private double extra;
-//    private Vector offset;
-//    private Vector rotation;
-//    private MaterialData materialData;
-//    private ParticleDisplay cachedPD;
-//    
-//    private ParticleBuilder(Location loc, Particles particles) {
-//        this.loc = loc;
-//        this.particles = particles;
-//        this.color = null;
-//        this.count = 1;
-//        this.extra = 0;
-//        this.offset = new Vector();
-//        this.rotation = new Vector();
-//        this.materialData = null;
-//        this.cachedPD = null;
-//    }
-//    
-//    public ParticleBuilder withLocation(Location loc) {
-//        this.loc = loc.clone();
-//        return this;
-//    }
-//    public Location getLocation() {
-//        return this.loc.clone();
-//    }
-//    public ParticleBuilder withParticles(Particles particles) {
-//        this.particles = particles;
-//        return this;
-//    }
-//    public Particles getParticles() {
-//        return this.particles;
-//    }
-//    
-//    public ParticleBuilder withRandomColor() {
-//        this.color = new CustomColor();
-//        return this;
-//    }
-//    public ParticleBuilder withColor(Color color) {
-//        this.color = new CustomColor(color);
-//        return this;
-//    }
-//    public ParticleBuilder withColor(CustomColor color) {
-//        this.color = color;
-//        return this;
-//    }
-//    public ParticleBuilder withColor(int r, int g, int b) {
-//        return withColor(Color.fromRGB(r, g, b));
-//    }
-//    public ParticleBuilder withColor(String hex) {
-//        return withColor(new CustomColor(hex));
-//    }
-//    public CustomColor getColor() {
-//        return color;
-//    }
-//    
-//    public ParticleBuilder withCount(int count) {
-//        this.count = count >= 0 ? count : 1;
-//        return this;
-//    }
-//    public int getCount() {
-//        return this.count;
-//    }
-//    public ParticleBuilder setDirectional() {
-//        this.count = 0;
-//        return this;
-//    }
-//    public boolean isDirectional() {
-//        return this.count == 0;
-//    }
-//    
-//    public ParticleBuilder withOffset(double offsetX, double offsetY, double offsetZ) {
-//        this.offset = new Vector(offsetX, offsetY, offsetZ);
-//        return this;
-//    }
-//    public Vector getOffset() {
-//        return this.offset;
-//    }
-//    
-//    public ParticleBuilder withExtra(double extra) {
-//        this.extra = extra;
-//        return this;
-//    }
-//    public double getExtra() {
-//        return this.extra;
-//    }
-//    
-//    public ParticleBuilder withMaterialData(MaterialData materialData) {
-//        this.materialData = materialData;
-//        return this;
-//    }
-//    public MaterialData getMaterialData() {
-//        return this.materialData;
-//    }
-//    
-//    public void resetCachedParticleDisplay() {
-//        this.cachedPD = null;
-//    }
-//    
-//    public void spawn() {
-//        if(this.loc == null) {
-//            throw new IllegalArgumentException("Location cannot be null");
-//        }
-//        spawn(this.loc);
-//    }
-//    public void spawn(World w, double x, double y, double z) {
-//        spawn(new Location(w, x, y, z));
-//    }
-//    public void spawn(double x, double y, double z) {
-//        if(this.loc == null) {
-//            throw new IllegalArgumentException("Location cannot be null");
-//        }
-//        spawn(new Location(this.loc.getWorld(), x, y, z));
-//    }
-//    public void spawn(Location loc) {        
-//        if(isMinecraft_1_8) {
-//            if(this.particles.isColorable() && this.color != null) {
-//                int r = this.color.getBukkitColor().getRed();
-//                int g = this.color.getBukkitColor().getGreen();
-//                int b = this.color.getBukkitColor().getBlue();
-//                this.particles.spawn(loc, r/255.0, g/255.0, b/255.0, 2, count, 0);
-//            } else if(this.particles.requiresBlock() && this.materialData != null) {
-//                this.particles.spawn(loc, offsetX, offsetY, offsetZ, extra, count, materialData.getItemTypeId(), materialData.getData());
-//            } else {
-//                this.particles.spawn(loc, offsetX, offsetY, offsetZ, extra, count, 0);
-//            }
-//        } else {
-//            if(cachedPD == null) {
-//                ParticleDisplay pd = ParticleDisplay
-//                    .simple(loc, Particle.valueOf(this.particles.name()))
-//                    .withExtra(this.extra)
-//                    .offset(this.offset)
-//                    .rotate(this.rotation)
-//                    .withCount(this.count);
-//                if(this.color != null) {
-//                    int r = this.color.getBukkitColor().getRed();
-//                    int g = this.color.getBukkitColor().getGreen();
-//                    int b = this.color.getBukkitColor().getBlue();
-//                    pd.withColor(r, g, b, 1);
-//                }
-//                if(this.materialData != null) {
-//                    try {
-//                        withBlock.invoke(pd, this.materialData);
-//                    } catch(Exception ex) {
-//                        ex.printStackTrace();
-//                    }
-//                }
-//                cachedPD = pd;
-//            }
-//            
-//            cachedPD.spawn();
-//        }
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "ParticleBuilder{" + "loc=" + loc + ", particles=" + particles + 
-//                ", color=" + color + ", count=" + count + ", extra=" + extra + 
-//                ", offsetX=" + offsetX + ", offsetY=" + offsetY + ", offsetZ=" + offsetZ + 
-//                ", materialData=" + materialData + '}';
-//    }    
-//}
+package me.i2000c.newalb.utils.particles;
+
+import com.cryptomorin.xseries.particles.ParticleDisplay;
+import java.awt.Color;
+import java.lang.reflect.Method;
+import me.i2000c.newalb.MinecraftVersion;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
+import org.bukkit.util.Vector;
+import xyz.xenondevs.particle.PropertyType;
+import xyz.xenondevs.particle.data.ParticleData;
+import xyz.xenondevs.particle.data.color.DustData;
+import xyz.xenondevs.particle.data.color.ParticleColor;
+import xyz.xenondevs.particle.data.texture.ParticleTexture;
+
+public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
+    private static boolean isMinecraft_1_8;
+    private static Method withBlock;
+    static {
+        try {
+            ParticleDisplay pd = new ParticleDisplay();
+            withBlock = pd.getClass().getMethod("withBlock", MaterialData.class);
+            isMinecraft_1_8 = false;
+        } catch(Throwable ex) {
+            isMinecraft_1_8 = true;
+        }
+    }
+    
+    public static ParticleBuilder newParticle(Particles particles, Location loc) {
+        return new ParticleBuilder(particles, loc);
+    }
+    public static ParticleBuilder newParticle(Particles particles) {
+        return new ParticleBuilder(particles, null);
+    }
+    
+    
+    
+    private ParticleDisplay pd;
+        
+    private ParticleBuilder(Particles particle, Location loc) {
+        super(particle.getParticleEffect(), loc);
+        if(isMinecraft_1_8) {
+            this.pd = null;
+        } else {
+            this.pd = ParticleDisplay.simple(loc, (Particle) particle.getBukkitParticle());
+        }
+    }
+
+    @Override
+    public ParticleBuilder setColor(Color color) {
+        super.setColor(color);
+        if(!isMinecraft_1_8) {
+            pd.withColor(color, 1);
+        }
+        return this;
+    }
+    
+    @Override
+    public ParticleBuilder setAmount(int amount) {
+        super.setAmount(amount);
+        if(!isMinecraft_1_8) {
+            pd.withCount(amount);
+        }
+        return this;
+    }
+
+    @Override
+    public ParticleBuilder setSpeed(float speed) {
+        super.setSpeed(speed);
+        if(!isMinecraft_1_8) {
+            pd.withExtra(speed);
+        }
+        return this;
+    }
+    
+    @Override
+    public ParticleBuilder setOffset(Vector offset) {
+        super.setOffset(offset);
+        if(!isMinecraft_1_8) {
+            pd.offset(offset);
+        }
+        return this;
+    }
+    @Override
+    public ParticleBuilder setOffset(float offsetX, float offsetY, float offsetZ) {
+        super.setOffset(offsetX, offsetY, offsetZ);
+        if(!isMinecraft_1_8) {
+            pd.offset(offsetX, offsetY, offsetZ);
+        }
+        return this;
+    }
+    @Override
+    public ParticleBuilder setOffsetX(float offsetX) {
+        super.setOffsetX(offsetX);
+        if(!isMinecraft_1_8) {
+            pd.offset(super.getOffsetX(), super.getOffsetY(), super.getOffsetZ());
+        }
+        return this;
+    }
+    @Override
+    public ParticleBuilder setOffsetY(float offsetY) {
+        super.setOffsetY(offsetY);
+        if(!isMinecraft_1_8) {
+            pd.offset(super.getOffsetX(), super.getOffsetY(), super.getOffsetZ());
+        }
+        return this;
+    }
+    @Override
+    public ParticleBuilder setOffsetZ(float offsetZ) {
+        super.setOffsetZ(offsetZ);
+        if(!isMinecraft_1_8) {
+            pd.offset(super.getOffsetX(), super.getOffsetY(), super.getOffsetZ());
+        }
+        return this;
+    }
+
+    @Override
+    public ParticleBuilder setLocation(Location location) {
+        super.setLocation(location);
+        if(!isMinecraft_1_8) {
+            pd.withLocation(location);
+        }
+        return this;
+    }
+    
+    @Override
+    public ParticleBuilder setParticleData(ParticleData particleData) {
+        super.setParticleData(particleData);
+        if(!isMinecraft_1_8) {
+            if(particleData instanceof ParticleColor) {
+                float red = ((ParticleColor) particleData).getRed() * 255f;
+                float green = ((ParticleColor) particleData).getGreen() * 255f;
+                float blue = ((ParticleColor) particleData).getBlue() * 255f;
+                float size = 2f;
+                if(particleData instanceof DustData) {
+                    size = ((DustData) particleData).getSize();
+                }
+                pd.withColor((int) red, (int) green, (int) blue, size);
+            } else if(particleData instanceof ParticleTexture) {
+                MaterialData md;
+                Material material = ((ParticleTexture) particleData).getMaterial();
+                if(MinecraftVersion.getCurrentVersion().isLegacyVersion()) {
+                    byte data = ((ParticleTexture) particleData).getData();
+                    md = new MaterialData(material, data);
+                } else {
+                    md = new MaterialData(material);
+                }
+                if(super.getParticle().hasProperty(PropertyType.REQUIRES_ITEM)) {
+                    ItemStack item = new ItemStack(md.getItemType());
+                    if(MinecraftVersion.getCurrentVersion().isLegacyVersion()) {
+                        item.setData(md);
+                    }
+                    pd.withItem(item);
+                } else if(super.getParticle().hasProperty(PropertyType.REQUIRES_BLOCK)) {
+                    try {
+                        withBlock.invoke(pd, md);
+                    } catch(Exception ex) {
+                        throw new Error(ex);
+                    }
+                }
+            }
+        }
+        return this;
+    }
+    
+    @Override
+    public void display() {
+        if(isMinecraft_1_8) {
+            super.display();
+        } else {
+            pd.spawn();
+        }
+    }    
+    public void display(Location loc) {
+        if(isMinecraft_1_8) {
+            Location oldLoc = super.getLocation();
+            super.setLocation(loc);
+            super.display();
+            super.setLocation(oldLoc);
+        } else {
+            pd.spawn(loc);
+        }
+    }
+}
