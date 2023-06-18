@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.particles.ParticleBuilder;
+import me.i2000c.newalb.utils.particles.ParticleEffects;
 import me.i2000c.newalb.utils.particles.Particles;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
@@ -15,7 +15,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import xyz.xenondevs.particle.data.color.RegularColor;
+import xyz.xenondevs.particle.data.color.NoteColor;
 
 public class EndermanSoup extends SpecialItem{
     
@@ -47,10 +47,13 @@ public class EndermanSoup extends SpecialItem{
                 int i = 0;
                 @Override
                 public void run() {
-                    ParticleBuilder.newParticle(Particles.SPELL_MOB)
-                            .setAmount(0)
+                    ParticleEffects.sphere(5, 30, Particles.NOTE.create(l).setParticleData(NoteColor.random()));
+                    /*ParticleBuilder.newParticle(Particles.SPELL_MOB)
                             .setParticleData(RegularColor.random())
-                            .display(l);
+                            .display(l);*/
+                    
+                    
+                    
                     /*ItemStack item = new ItemStack(Material.DIAMOND_AXE);
                     new ParticleBuilder(ParticleEffect.REDSTONE, l)
                         .setParticleData(new DustData(Color.black, 4))
@@ -58,12 +61,12 @@ public class EndermanSoup extends SpecialItem{
                     //XParticle.atom(5, 5, 30, ParticleDisplay.simple(l, Particles.VILLAGER_HAPPY), ParticleDisplay.simple(l, Particles.FLAME));
                     //ParticleDisplay pd = ParticleDisplay.simple(l, Particles.NOTE).directional().withColor(Color.blue, 2);
                     //XParticle.blackSun(3, 0.5, 50, 5, pd);
-                    if(i++ > 20*5) {
+                    if(i++ > 0.5*5) {
                         cancel();
                     }
                 }
             };
-            task.runTask(0, 1);
+            task.runTask(0, 10);
             
             
         }

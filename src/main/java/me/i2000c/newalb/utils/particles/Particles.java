@@ -3,6 +3,7 @@ package me.i2000c.newalb.utils.particles;
 // Info about particles: https://github.com/ByteZ1337/ParticleLib/blob/master/src/main/java/xyz/xenondevs/particle/ParticleEffect.java
 
 import com.cryptomorin.xseries.particles.XParticle;
+import org.bukkit.Location;
 import xyz.xenondevs.particle.ParticleEffect;
 import xyz.xenondevs.particle.PropertyType;
 
@@ -61,6 +62,13 @@ public enum Particles {
     
     public boolean hasPropery(PropertyType property) {
         return this.particleEffect.hasProperty(property);
+    }
+    
+    public ParticleBuilder create() {
+        return ParticleBuilder.newParticle(this);
+    }
+    public ParticleBuilder create(Location loc) {
+        return ParticleBuilder.newParticle(this, loc);
     }
     
     ParticleEffect getParticleEffect() {
