@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
+import me.i2000c.newalb.utils.particles.Particles;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -12,7 +13,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import xyz.xenondevs.particle.ParticleEffect;
 
 public class EndermanSoup extends SpecialItem{
     
@@ -32,7 +32,7 @@ public class EndermanSoup extends SpecialItem{
             
             Sound sound = XSound.ENTITY_FIREWORK_ROCKET_LAUNCH.parseSound();
             l.getWorld().playSound(l, sound, 20, 1);
-            ParticleEffect.VILLAGER_HAPPY.display(l, 1.0f, 1.0f, 1.0f, 1, 100, null, pl -> pl.getWorld().equals(l.getWorld()));
+            Particles.VILLAGER_HAPPY.create().setOffset(1, 1, 1).setAmount(100).display(l);
         }
     }
     

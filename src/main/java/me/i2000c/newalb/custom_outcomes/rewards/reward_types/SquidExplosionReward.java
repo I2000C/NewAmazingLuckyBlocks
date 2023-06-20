@@ -9,6 +9,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.particles.Particles;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
@@ -19,7 +20,6 @@ import org.bukkit.entity.Squid;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import xyz.xenondevs.particle.ParticleEffect;
 
 public class SquidExplosionReward extends Reward{
     private int countdownTime;
@@ -119,7 +119,7 @@ public class SquidExplosionReward extends Reward{
                             });
                     squid.remove();
                     XSound.ENTITY_GENERIC_EXPLODE.play(loc, 5, 1);
-                    ParticleEffect.EXPLOSION_HUGE.display(loc);
+                    Particles.EXPLOSION_HUGE.create().display(loc);
                     return;
                 }
                 
