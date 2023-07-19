@@ -318,7 +318,12 @@ public class ItemBuilder{
     public ItemBuilder withOwner(Player player){
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof SkullMeta){
-            ((SkullMeta) meta).setOwningPlayer(player);
+            try {
+                ((SkullMeta) meta).setOwningPlayer(player);
+            } catch(NoSuchMethodError ex) {
+                ((SkullMeta) meta).setOwner(player.getName());
+            }
+            
             item.setItemMeta(meta);
         }
         return this;
