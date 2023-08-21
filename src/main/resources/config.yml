@@ -269,6 +269,7 @@ Commands:
   GetSkull-permission: amazinglb.getskull
   Tab-completer: amazinglb.tabcompleter
   Schematic: amazinglb.schematic
+  LuckyEvent-permission: amazinglb.luckyevent
 
 # Enable or disable the use of colors in the console logger
 ColoredLogger: true

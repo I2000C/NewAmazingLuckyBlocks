@@ -130,6 +130,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 return executeClear(sender, args);
             case "getSkull":
                 return getSkull(sender, args);
+            case "luckyEvent":
+                return executeLuckyEvent(sender, args);
             case "debug":
                 return executeDebug(sender, args);
             default:
@@ -988,9 +990,68 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 //</editor-fold>
     }
     
+    private boolean executeLuckyEvent(CommandSender sender, String[] args){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(!checkHasPermission(sender, "Commands.LuckyEvent-permission")){
+            return false;
+        }
+        
+        Player player;
+        LuckyBlockType type;
+        switch(args.length) {
+            case 1:
+                if(!checkNotConsole(sender)) {
+                    return false;
+                }
+                
+                player = (Player) sender;
+                type = TypeManager.getRandomLuckyBlockType();
+                break;
+            case 2:                
+                String name = args[1];
+                type = TypeManager.getType(name);
+                if(type == null) {
+                    player = Bukkit.getPlayer(name);
+                    if(player == null) {
+                        Logger.sendMessage("&cPlayer &b" + name + " &c is offline", sender);
+                        return false;
+                    }
+                    type = TypeManager.getRandomLuckyBlockType();
+                } else {
+                    if(!checkNotConsole(sender)) {
+                        return false;
+                    }
+                    player = (Player) sender;
+                }
+                break;
+            case 3:
+                String typeName = args[1];
+                String playerName = args[2];
+                player = Bukkit.getPlayer(playerName);
+                if(player == null) {
+                    Logger.sendMessage("&cPlayer &b" + playerName + "&c is offline", sender);
+                    return false;
+                }
+                type = TypeManager.getType(typeName);
+                if(type == null) {
+                    Logger.sendMessage("&cLuckyBlock type &b" + typeName + "&cdoesn't exist", sender);
+                    return false;
+                }
+                break;
+            default:
+                Logger.sendMessage("&cUsage: &7/alb luckyEvent [luckyBlockType] [player]", sender);
+                return false;
+        }
+        
+        type.execute(player, player.getLocation());
+        
+        return true;
+//</editor-fold>
+    }
+    
     private static final String[] CMD_LIST = {"help", "reload", "give", "take", "randomblocks", "menu", "return", "worlds", 
         "loadSchematic", "loadSchem", "loadS", "saveSchematic", "saveSchem", "saveS", 
-        "removeSchematic", "removeSchem", "removeS", "clear", "getSkull"};
+        "removeSchematic", "removeSchem", "removeS", "clear", "getSkull", "luckyEvent"};
     
     private static List<String> getPlayers(String[] args) {
         List<String> players = new ArrayList<>();
@@ -1090,6 +1151,14 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 case "clear":
                     List<String> aux = ls;
                     WorldConfig.getWorlds().forEach(world -> aux.add(world));
+                    break;
+                case "luckyEvent":
+                    for(LuckyBlockType type : TypeManager.getTypes()){
+                        if(type.getTypeName().startsWith(args[1].toLowerCase())){
+                            ls.add(type.getTypeName());
+                        }
+                    }
+                    ls.addAll(getPlayers(args));
                     break;
                 default:
                     ls.addAll(getPlayers(args));
