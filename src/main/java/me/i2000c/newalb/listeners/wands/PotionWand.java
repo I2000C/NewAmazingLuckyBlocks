@@ -98,6 +98,7 @@ public class PotionWand extends SpecialItem{
         return ItemBuilder.newItem(XMaterial.MUSIC_DISC_11)
                 .withDisplayName(getDisplayName())
                 .withLore(super.getLoreOfWand())
+                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

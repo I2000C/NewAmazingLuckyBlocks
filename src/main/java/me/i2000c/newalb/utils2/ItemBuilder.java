@@ -25,9 +25,10 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 
 public class ItemBuilder{
-    private final ItemStack item;
+    private ItemStack item;
     
     private ItemBuilder(XMaterial material){
         this.item = material.parseItem();
@@ -416,6 +417,11 @@ public class ItemBuilder{
     }
     public boolean hasItemFlag(ItemFlag itemFlag){
         return item.getItemMeta().hasItemFlag(itemFlag);
+    }
+    
+    public ItemBuilder setNbtTag(Object value, Object... tags) {
+        item = NBTEditor.set(item, value, tags);
+        return this;
     }
     
     public ItemStack build(){

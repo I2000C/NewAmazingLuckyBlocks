@@ -202,6 +202,7 @@ public class AutoBow extends SpecialItem{
         return ItemBuilder.newItem(XMaterial.BOW)
                 .withDisplayName(LangConfig.getMessage("Objects.AutoBow.name"))
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

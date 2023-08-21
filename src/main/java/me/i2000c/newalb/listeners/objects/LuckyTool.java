@@ -59,6 +59,7 @@ public class LuckyTool extends SpecialItem{
         return ItemBuilder.newItem(XMaterial.STICK)
                 .withDisplayName(getDisplayName())
                 .withLore(LangConfig.getMessageList("Objects.LuckyTool.lore"))
+                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

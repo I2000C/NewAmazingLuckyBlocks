@@ -27,6 +27,7 @@ public class DarkHole extends SpecialItem{
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.BUCKET)
                 .withDisplayName(getDisplayName())
+                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

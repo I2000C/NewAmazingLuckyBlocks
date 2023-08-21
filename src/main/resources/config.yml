@@ -31,6 +31,7 @@ Wands:
     effect-time: 10
     required-permission: false
     permission: amazinglb.wands.regenwand
+    custom-model-data: 1000
     limited-uses:
       enable: false
       uses: 5
@@ -40,6 +41,7 @@ Wands:
     fire-radius: 1.5
     required-permission: false
     permission: amazinglb.wands.firewand
+    custom-model-data: 1000
     limited-uses:
       enable: false
       uses: 5
@@ -50,6 +52,7 @@ Wands:
     effect-time: 10
     required-permission: false
     permission: amazinglb.wands.invwand
+    custom-model-data: 1000
     limited-uses:
       enable: false
       uses: 5
@@ -58,6 +61,7 @@ Wands:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.tntwand
+    custom-model-data: 1000
     limited-uses:
       enable: false
       uses: 5
@@ -66,6 +70,7 @@ Wands:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.slimewand
+    custom-model-data: 1000
     limited-uses:
       enable: false
       uses: 5
@@ -74,6 +79,7 @@ Wands:
     cooldown-time: 20
     required-permission: false
     permission: amazinglb.wands.lightning
+    custom-model-data: 1000
     limited-uses:
       enable: false
       uses: 5
@@ -86,6 +92,7 @@ Wands:
     protect-structures: true
     required-permission: false
     permission: amazinglb.wands.shield
+    custom-model-data: 1000
     limited-uses:
       enable: false
       uses: 5
@@ -102,6 +109,7 @@ Wands:
     - SPEED;15;20;100
     required-permission: false
     permission: amazinglb.wands.potion
+    custom-model-data: 1000
     limited-uses:
       enable: false
       uses: 5
@@ -120,6 +128,7 @@ Wands:
     row-width: 3
     required-permission: false
     permission: amazinglb.wands.frost
+    custom-model-data: 1000
     limited-uses:
       enable: false
       uses: 5
@@ -140,6 +149,7 @@ Objects:
       block: BEDROCK
     required-permission: false
     permission: amazinglb.objets.darkhole
+    custom-model-data: 1000
   MiniVolcano:
     # The time must be in ticks. 1 second = 20 ticks
     time-before-minivolcano: 20
@@ -158,6 +168,7 @@ Objects:
       time-between-blocks: 10
     required-permission: false
     permission: amazinglb.objets.minivolcano
+    custom-model-data: 1000
   IceBow:
     freeze-material: ICE
     disableArrowKnockback: false
@@ -170,6 +181,7 @@ Objects:
     snowRadius: 2.0
     required-permission: false
     permission: amazinglb.objects.icebow
+    custom-model-data: 1000
   PlayerTracker:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 5
@@ -177,12 +189,14 @@ Objects:
     detect-players-only: true
     required-permission: false
     permission: amazinglb.objects.playertracker
+    custom-model-data: 1000
   EndermanSoup:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 5
     speedMultiplier: 1.5
     required-permission: false
     permission: amazinglb.objects.enderman_soup
+    custom-model-data: 1000
   HotPotato:
     ticksBeforeExplosion: 60
     explosionPower: 2.0
@@ -190,26 +204,31 @@ Objects:
     breakBlocks: true
     required-permission: false
     permission: amazinglb.objects.hot_potato
+    custom-model-data: 1000
   AutoBow:
     required-permission: false
     permission: amazinglb.objects.autobow
+    custom-model-data: 1000
   MultiBow:
     numberOfArrows: 5
     spread: 3.5
     required-permission: false
     permission: amazinglb.objects.multibow
+    custom-model-data: 1000
   ExplosiveBow:
     explosionPower: 2.0
     createFire: true
     breakBlocks: true
     required-permission: false
     permission: amazinglb.objects.explosivebow
+    custom-model-data: 1000
   HomingBow:
     followPlayersOnly: true
     arrowRadius: 5.0
     velocityMultiplier: 0.1
     required-permission: false
     permission: amazinglb.objects.homingbow
+    custom-model-data: 1000
   HookBow:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 10
@@ -222,6 +241,7 @@ Objects:
     leashTimeoutSeconds: 10    
     required-permission: false
     permission: amazinglb.objects.hookbow
+    custom-model-data: 1000
   LuckyTool:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 0
@@ -229,6 +249,7 @@ Objects:
     onlyCanBreakLuckyBlocksWithLuckyTool: false    
     required-permission: false
     permission: 'amazinglb.lucky_tool'
+    custom-model-data: 1000
     
 # Command permissions
 Commands:

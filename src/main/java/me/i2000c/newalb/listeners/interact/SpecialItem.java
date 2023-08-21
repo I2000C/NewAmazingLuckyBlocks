@@ -29,6 +29,7 @@ public abstract class SpecialItem{
     protected static final String CLASS_METADATA_TAG = "NewAmazingLuckyBlocks.ClassMetadata";
     protected static final String CUSTOM_METADATA_TAG = "NewAmazingLuckyBlocks.CustomMetadata";
     protected static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
+    protected static final String CUSTOM_MODEL_DATA_TAG = "CustomModelData";
     private final String itemPathKey;
     private final SpecialItemName specialItemName;
     private Map<UUID, Long> cooldownMap;
@@ -84,6 +85,10 @@ public abstract class SpecialItem{
     
     public final String getDisplayName(){
         return LangConfig.getMessage(this.itemPathKey + ".name");
+    }
+    
+    public final int getCustomModelData(){
+        return ConfigManager.getConfig().getInt(this.itemPathKey + ".custom-model-data");
     }
     
     protected abstract ItemStack buildItem();

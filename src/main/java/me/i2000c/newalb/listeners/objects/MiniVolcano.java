@@ -25,6 +25,7 @@ public class MiniVolcano extends SpecialItem{
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.LAVA_BUCKET)
                 .withDisplayName(getDisplayName())
+                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

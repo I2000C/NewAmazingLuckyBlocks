@@ -98,6 +98,7 @@ public class IceBow extends SpecialItem{
         return ItemBuilder.newItem(XMaterial.BOW)
                 .withDisplayName(getDisplayName())
                 .addEnchantment(Enchantment.DURABILITY, 5)
+                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }
