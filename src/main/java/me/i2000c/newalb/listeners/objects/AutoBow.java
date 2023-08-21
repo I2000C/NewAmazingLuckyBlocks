@@ -6,8 +6,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
+import org.bukkit.util.Vector;
 
 public class AutoBow extends SpecialItem{
     
@@ -103,7 +104,10 @@ public class AutoBow extends SpecialItem{
     private static Object pickupStatus = null;
     private static boolean initialized = false;
     
-    private static void launchArrow(Player player, boolean infinityBow, boolean fireBow, ItemStack arrowStack){
+    private void launchArrow(Player player, boolean infinityBow, boolean fireBow, ItemStack arrowStack){
+        double multiplier = ConfigManager.getConfig().getDouble(super.itemPathKey + ".velocityMultiplier");
+        Vector velocity = player.getLocation().getDirection().multiply(multiplier);
+        
         //<editor-fold defaultstate="collapsed" desc="Code">
         try{
             if(!initialized){
@@ -138,7 +142,7 @@ public class AutoBow extends SpecialItem{
         Arrow arrow;
         switch(arrowStack.getType()){
             case SPECTRAL_ARROW:
-                SpectralArrow sa = player.launchProjectile(SpectralArrow.class, player.getLocation().getDirection());
+                SpectralArrow sa = player.launchProjectile(SpectralArrow.class, velocity);
                 if(fireBow){
                     //In 1.16 SpectralArrow cannot be casted to Arrow
                     sa.setFireTicks(2000);
@@ -148,7 +152,7 @@ public class AutoBow extends SpecialItem{
             case TIPPED_ARROW:
                 try{
                     EntityType et = EntityType.TIPPED_ARROW;
-                    TippedArrow ta = (TippedArrow) player.launchProjectile(TippedArrow.class, player.getLocation().getDirection());
+                    TippedArrow ta = (TippedArrow) player.launchProjectile(TippedArrow.class, velocity);
                     PotionMeta meta = (PotionMeta) arrowStack.getItemMeta();
                     ta.setBasePotionData(meta.getBasePotionData());
                     arrow = (Arrow) ta;
@@ -156,7 +160,7 @@ public class AutoBow extends SpecialItem{
                         arrow.setFireTicks(2000);
                     }
                 }catch(NoSuchFieldError | ClassCastException ex){
-                    arrow = (Arrow) player.launchProjectile(Arrow.class, player.getLocation().getDirection());
+                    arrow = (Arrow) player.launchProjectile(Arrow.class, velocity);
                     //In 1.16 tipped arrow is a normal arrow with effects
                     //Set effects
                     try{
@@ -170,7 +174,7 @@ public class AutoBow extends SpecialItem{
                 }
                 break;
             default:
-                arrow = player.launchProjectile(Arrow.class, player.getLocation().getDirection());
+                arrow = player.launchProjectile(Arrow.class, velocity);
                 if(fireBow){
                     arrow.setFireTicks(2000);
                 }
@@ -200,7 +204,7 @@ public class AutoBow extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.BOW)
-                .withDisplayName(LangConfig.getMessage("Objects.AutoBow.name"))
+                .withDisplayName(getDisplayName())
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
                 .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();

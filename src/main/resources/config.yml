@@ -206,6 +206,7 @@ Objects:
     permission: amazinglb.objects.hot_potato
     custom-model-data: 1000
   AutoBow:
+    velocityMultiplier: 1.0
     required-permission: false
     permission: amazinglb.objects.autobow
     custom-model-data: 1000

@@ -30,7 +30,7 @@ public abstract class SpecialItem{
     protected static final String CUSTOM_METADATA_TAG = "NewAmazingLuckyBlocks.CustomMetadata";
     protected static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
     protected static final String CUSTOM_MODEL_DATA_TAG = "CustomModelData";
-    private final String itemPathKey;
+    protected final String itemPathKey;
     private final SpecialItemName specialItemName;
     private Map<UUID, Long> cooldownMap;
     
