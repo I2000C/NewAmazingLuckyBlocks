@@ -51,19 +51,18 @@ public enum MinecraftVersion{
     public static MinecraftVersion getLatestVersion(){
         return VALUES[VALUES.length - 1];
     }
-    
-    public static MinecraftVersion fromDouble(double version){
-        String versionName = String.valueOf(version);
-        versionName = versionName.replace('.', '_');
+        
+    public static MinecraftVersion fromString(String version){
+        if(version == null){
+            return null;
+        }
+        
+        String versionName = version.replace('.', '_');
         try{
             return valueOf("v" + versionName);
         }catch(IllegalArgumentException ex){
-            throw new IllegalArgumentException("MinecraftVersion " + version + " doesn't exist");
-        }        
-    }
-    
-    public double toDouble(){
-        return Double.parseDouble(this.name().replace("v", "").replace('_', '.'));
+            return null;
+        } 
     }
     
     @Override

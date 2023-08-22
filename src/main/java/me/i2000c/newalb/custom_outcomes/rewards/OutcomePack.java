@@ -72,14 +72,13 @@ public class OutcomePack implements Displayable, Executable{
         outcomeConfig = YamlConfigurationUTF8.loadConfiguration(outcomeFile);
         outcomes.clear();
         
-        MinecraftVersion currentVersion = NewAmazingLuckyBlocks.getMinecraftVersion();
-        double packVersionDouble = outcomeConfig.getDouble("MinMinecraftVersion");
-        MinecraftVersion packVersion;
-        if(packVersionDouble != 0){
-            packVersion = MinecraftVersion.fromDouble(packVersionDouble);
-        }else{
-            packVersion = currentVersion;
+        String packVersionName = outcomeConfig.getString("MinMinecraftVersion");
+        MinecraftVersion packVersion = MinecraftVersion.fromString(packVersionName);
+        if(packVersion == null){
+            packVersion = MinecraftVersion.getLatestVersion();
         }
+        
+        MinecraftVersion currentVersion = NewAmazingLuckyBlocks.getMinecraftVersion();
         if(currentVersion.compareTo(packVersion) < 0){
             Logger.warn("Pack \"" + getPackname() + "\" requires at least Minecraft " + packVersion);
             Logger.warn("However, you are using Minecraft " + currentVersion);
@@ -221,7 +220,7 @@ public class OutcomePack implements Displayable, Executable{
         //<editor-fold defaultstate="collapsed" desc="Code">
         outcomeConfig = new YamlConfigurationUTF8();
         
-        outcomeConfig.set("MinMinecraftVersion", NewAmazingLuckyBlocks.getMinecraftVersion().toDouble());
+        outcomeConfig.set("MinMinecraftVersion", NewAmazingLuckyBlocks.getMinecraftVersion().toString());
         outcomeConfig.set("Icon", ItemBuilder.fromItem(icon, false).toString());
         outcomes.values().stream()
                 .sorted((outcome1, outcome2) -> outcome1.getID() - outcome2.getID())
