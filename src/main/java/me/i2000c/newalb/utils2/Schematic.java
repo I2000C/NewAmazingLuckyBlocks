@@ -65,6 +65,8 @@ public class Schematic{
     private static Method getZ;
     private static Method isAir;
     
+    private static Method flushQueue;
+    
     private static Constructor bukkitWorldConstructor;
     private static Constructor schematicWriterConstructor;
     private static Constructor clipboardHolderConstructor;
@@ -115,6 +117,9 @@ public class Schematic{
                 getZ = vectorClass.getMethod("getZ");
                 
                 isAir = baseBlockClass.getMethod("isAir");
+                
+                Class editSessionClass = EditSession.class;
+                flushQueue = editSessionClass.getMethod("flushQueue");
             }
             
             getSession = WORLDEDIT_PLUGIN.getClass().getMethod("getSession", Player.class);
@@ -268,6 +273,8 @@ public class Schematic{
                 }
             }
         }
+        
+        flushQueue.invoke(editSession);
 //</editor-fold>
     }
     
