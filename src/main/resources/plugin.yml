@@ -1,6 +1,6 @@
 name: NewAmazingLuckyBlocks
 main: me.i2000c.newalb.NewAmazingLuckyBlocks
-version: 3.3.4-FAWE-bug-fix_39
+version: 3.3.5-EntityRewards-bug-fix_39
 description: A new incredible LuckyBlock plugin
 author: I2000C
 commands:

@@ -214,7 +214,12 @@ public class ExtendedEntityType{
         
         try{
             String materialName = type.name() + "_SPAWN_EGG";
-            return XMaterial.valueOf(materialName);
+            XMaterial xmaterial = XMaterial.valueOf(materialName);
+            if(xmaterial.parseMaterial() == null){
+                throw new NullPointerException("Material doesn't exist");
+            }
+            
+            return xmaterial;
         }catch(Exception ex){
             switch(type){
                 case EGG: return XMaterial.EGG;
