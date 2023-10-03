@@ -225,6 +225,7 @@ Objects:
     custom-model-data: 1000
   HomingBow:
     followPlayersOnly: true
+    followInvisibleEntities: false
     arrowRadius: 5.0
     velocityMultiplier: 0.1
     required-permission: false

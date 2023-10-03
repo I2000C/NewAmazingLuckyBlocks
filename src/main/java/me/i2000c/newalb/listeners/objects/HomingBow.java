@@ -5,14 +5,15 @@ import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
+import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-import org.bukkit.GameMode;
 
 public class HomingBow extends SpecialItem{
   
@@ -29,6 +30,7 @@ public class HomingBow extends SpecialItem{
         double radiusS = radius * radius;
         double multiplier = ConfigManager.getConfig().getDouble("Objects.HomingBow.velocityMultiplier");
         boolean playersOnly = ConfigManager.getConfig().getBoolean("Objects.HomingBow.followPlayersOnly");
+        boolean followInvisibleEntities = ConfigManager.getConfig().getBoolean("Objects.HomingBow.followInvisibleEntities");
         
         Task task = new Task(){
             private double minDistanceSquared = -1.0;
@@ -54,6 +56,11 @@ public class HomingBow extends SpecialItem{
                                 continue;
                             }
                             
+                            if(!followInvisibleEntities
+                                    && p.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                                continue;
+                            }
+                            
                             LivingEntity le = p;
                             double distanceSquared = projectile.getLocation().distanceSquared(le.getEyeLocation());
                             if(nearestEnt == null || distanceSquared < minDistanceSquared){
@@ -74,6 +81,11 @@ public class HomingBow extends SpecialItem{
                             }
                             
                             LivingEntity le = (LivingEntity) ent;
+                            if(!followInvisibleEntities
+                                    && le.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+                                continue;
+                            }
+                            
                             double distanceSAux = projectile.getLocation().distanceSquared(le.getEyeLocation());
                             if(nearestEnt == null || distanceSAux < minDistanceSquared){
                                 nearestEnt = le;
