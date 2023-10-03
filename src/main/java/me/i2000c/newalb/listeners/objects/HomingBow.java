@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.bukkit.GameMode;
 
 public class HomingBow extends SpecialItem{
   
@@ -47,6 +48,11 @@ public class HomingBow extends SpecialItem{
                             if(p.equals(player)){
                                 continue;
                             }
+
+                            GameMode gamemode = p.getGameMode();
+                            if(gamemode == GameMode.CREATIVE || gamemode == GameMode.SPECTATOR) {
+                                continue;
+                            }
                             
                             LivingEntity le = p;
                             double distanceSquared = projectile.getLocation().distanceSquared(le.getEyeLocation());
@@ -75,8 +81,7 @@ public class HomingBow extends SpecialItem{
                             }
                         }
                     }
-                }
-                if(nearestEnt != null){
+                } else {
                     if(nearestEnt.isDead()){
                         this.cancel();
                     }else{
