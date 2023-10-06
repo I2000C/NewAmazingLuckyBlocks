@@ -75,7 +75,7 @@ public class OutcomePack implements Displayable, Executable{
         String packVersionName = outcomeConfig.getString("MinMinecraftVersion");
         MinecraftVersion packVersion = MinecraftVersion.fromString(packVersionName);
         if(packVersion == null){
-            packVersion = MinecraftVersion.getLatestVersion();
+            packVersion = MinecraftVersion.getCurrentVersion();
         }
         
         MinecraftVersion currentVersion = NewAmazingLuckyBlocks.getMinecraftVersion();
