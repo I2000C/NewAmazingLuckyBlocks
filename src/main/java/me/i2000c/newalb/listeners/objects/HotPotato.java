@@ -18,7 +18,7 @@ public class HotPotato extends SpecialItem{
     @Override
     public void onPlayerInteract(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">        
-        if(e.getAction() == Action.RIGHT_CLICK_AIR){
+        if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){
             e.setCancelled(true);
             
             super.decreaseAmountOfItem(e);
