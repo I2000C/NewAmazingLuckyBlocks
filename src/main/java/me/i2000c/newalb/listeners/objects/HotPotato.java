@@ -34,8 +34,15 @@ public class HotPotato extends SpecialItem{
             boolean breakBlocks = ConfigManager.getConfig().getBoolean("Objects.HotPotato.breakBlocks");
             
             Task.runTask(() -> {
+                if(item.isDead()) {
+                    return;
+                }
+                
+                int amount = item.getItemStack().getAmount();
                 Location targetLoc = item.getLocation();
-                targetLoc.getWorld().createExplosion(targetLoc.getX(), targetLoc.getBlockY(), targetLoc.getZ(), power, withFire, breakBlocks);
+                for(int i=0; i<amount; i++) {
+                    targetLoc.getWorld().createExplosion(targetLoc.getX(), targetLoc.getBlockY(), targetLoc.getZ(), power, withFire, breakBlocks);
+                }
                 item.remove();
             }, delayTicks);
         }
