@@ -228,6 +228,8 @@ public class EntityMenu extends Editor<EntityReward>{
         
         ItemStack offsetStack = item.getOffset().getItemToDisplay();
         
+        ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(item.getUsePlayerLoc());
+        
         ItemStack resetName = ItemBuilder.newItem(XMaterial.BARRIER)
                 .withDisplayName("&cReset custom name")
                 .build();
@@ -330,6 +332,7 @@ public class EntityMenu extends Editor<EntityReward>{
         menu.setItem(13, ent_effects);
         menu.setItem(14, ent_equipment);
         menu.setItem(15, offsetStack);
+        menu.setItem(25, usePlayerLocStack);
         menu.setItem(16, GUIItem.getNextItem());
         
         if(entityType != null && entityType.isAgeable()){
@@ -458,6 +461,10 @@ public class EntityMenu extends Editor<EntityReward>{
                                 item.setOffset(offset);
                                 openEntityMenu(p);
                             });
+                    break;
+                case 25:
+                    item.setUsePlayerLoc(!item.getUsePlayerLoc());
+                    openEntityMenu(player);
                     break;
                 case 2:
                     if(item.getType() == null || !item.getType().isTameable()){

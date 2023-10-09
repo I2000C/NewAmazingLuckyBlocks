@@ -1,6 +1,6 @@
 name: NewAmazingLuckyBlocks
 main: me.i2000c.newalb.NewAmazingLuckyBlocks
-version: 3.3.7-HotPotato-bug-fix_39
+version: 3.3.8-EntityRewards-new-option_39
 description: A new incredible LuckyBlock plugin
 author: I2000C
 commands:

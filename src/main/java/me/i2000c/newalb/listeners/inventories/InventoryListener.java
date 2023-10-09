@@ -1,8 +1,8 @@
 package me.i2000c.newalb.listeners.inventories;
 
-import me.i2000c.newalb.functions.InventoryFunction;
 import java.util.EnumMap;
 import java.util.Map;
+import me.i2000c.newalb.functions.InventoryFunction;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;

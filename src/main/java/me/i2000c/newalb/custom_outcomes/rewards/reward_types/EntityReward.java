@@ -31,6 +31,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public class EntityReward extends Reward{
     private Offset offset;
+    private boolean usePlayerLoc;
     
     private int entityID;
     private ExtendedEntityType type;
@@ -62,6 +63,7 @@ public class EntityReward extends Reward{
         this.effects = new ArrayList<>();
         this.equipment = new Equipment();
         this.offset = new Offset();
+        this.usePlayerLoc = false;
     }
     
     public int getID(){
@@ -76,6 +78,13 @@ public class EntityReward extends Reward{
     }
     public Offset getOffset(){
         return this.offset;
+    }
+    
+    public void setUsePlayerLoc(boolean usePlayerLoc){
+        this.usePlayerLoc = usePlayerLoc;
+    }
+    public boolean getUsePlayerLoc(){
+        return this.usePlayerLoc;
     }
     
     public ExtendedEntityType getType(){
@@ -250,6 +259,12 @@ public class EntityReward extends Reward{
             }
         }
         
+        if(usePlayerLoc){
+            builder.addLoreLine("&bTarget location: &2player");
+        }else{
+            builder.addLoreLine("&bTarget location: &6lucky block");
+        }
+        
         builder.addLoreLine("&dOffset:");
         builder.addLoreLine("   &5X: &3" + offset.getOffsetX());
         builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
@@ -281,6 +296,7 @@ public class EntityReward extends Reward{
             equipment.saveToConfig(config, path + ".equipment");
         }
         offset.saveToConfig(config, path + ".offset");
+        config.set(path + ".usePlayerLoc", this.usePlayerLoc);
 //</editor-fold>
     }
     
@@ -302,13 +318,15 @@ public class EntityReward extends Reward{
             this.equipment = new Equipment();
         }
         this.offset = new Offset(config, path + ".offset");
+        this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
 //</editor-fold>
     }
 
     @Override
     public void execute(Player player, Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Location targetLocation = this.offset.applyToLocation(location.clone());
+        Location baseLocation = this.usePlayerLoc ? player.getLocation() : location;
+        Location targetLocation = this.offset.applyToLocation(baseLocation.clone());
         try{
             ExtendedEntityType targetType = this.type;
             if(this.type.isOcelot() && this.isTamed){
