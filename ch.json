@@ -13,13 +13,13 @@
     {
       "downloadJavadoc": true,
       "downloadSources": true,
-      "name": "io.github.bananapuncher714:nbteditor:7.18.6",
+      "name": "io.github.bananapuncher714:nbteditor:7.19.0",
       "packIntoJar": true
     },
     {
       "downloadJavadoc": true,
       "downloadSources": true,
-      "name": "com.github.cryptomorin:XSeries:9.4.0",
+      "name": "com.github.cryptomorin:XSeries:9.7.0",
       "packIntoJar": true
     },
     {
