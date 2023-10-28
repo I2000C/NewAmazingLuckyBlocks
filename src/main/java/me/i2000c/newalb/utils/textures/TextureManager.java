@@ -28,6 +28,7 @@ public class TextureManager{
     
     private static Field profileFieldItem;
     private static Field profileFieldBlock;
+    private static Method setProfile;
     
     private static Method update;
     
@@ -55,6 +56,13 @@ public class TextureManager{
             }catch(ClassNotFoundException | NoSuchMethodException | SecurityException ex){
                 getGameProfile = null;
                 setGameProfile = null;
+            }
+            
+            try {
+                setProfile = OtherUtils.getCraftClass("inventory.CraftMetaSkull").getDeclaredMethod("setProfile", GameProfile.class);
+                setProfile.setAccessible(true);
+            } catch(NoSuchMethodException ex) {
+                setProfile = null;
             }
             
             profileFieldItem = null;
@@ -100,12 +108,17 @@ public class TextureManager{
         }
         
         try{
-            SkullMeta sk = (SkullMeta) meta;            
-            if(profileFieldItem == null){
-                profileFieldItem = meta.getClass().getDeclaredField("profile");
-                profileFieldItem.setAccessible(true);
+            SkullMeta sk = (SkullMeta) meta;
+            if(setProfile != null) {
+                // This is required since Minecraft 1.20.2
+                setProfile.invoke(sk, texture == null ? null : texture.getProfile());
+            } else {
+                if(profileFieldItem == null){
+                    profileFieldItem = sk.getClass().getDeclaredField("profile");
+                    profileFieldItem.setAccessible(true);
+                }
+                profileFieldItem.set(sk, texture == null ? null : texture.getProfile());
             }
-            profileFieldItem.set(meta, texture == null ? null : texture.getProfile());
             
             stack.setItemMeta(sk);
             if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){

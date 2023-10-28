@@ -3,6 +3,7 @@ package me.i2000c.newalb.utils.textures;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -13,6 +14,8 @@ import java.util.regex.Pattern;
 import me.i2000c.newalb.utils.ConfigManager;
 
 public final class Texture{
+    private static Method getValue = null;
+    
     private String ID;
     private GameProfile profile;
 
@@ -32,7 +35,7 @@ public final class Texture{
 
             this.ID = ID;
             this.profile = new GameProfile(UUID.randomUUID(), "CustomHead");
-            byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", textureURL).getBytes());
+            byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{\"url\":\"%s\"}}}", textureURL).getBytes());
             this.profile.getProperties().put("textures", new Property("textures", new String(encodedData)));
         }catch(IOException ex){
             this.profile = null;
@@ -51,9 +54,22 @@ public final class Texture{
     }
 
     public String getEncodedTexture(){
-        try{
-            return this.profile.getProperties().get("textures").iterator().next().getValue();
-        }catch(Exception ex){
+        try {
+            if(getValue == null) {
+                try {
+                    // From Minecraft 1.8 to 1.20.1, the method is called getValue()
+                    getValue = Property.class.getMethod("getValue");
+                } catch(NoSuchMethodException ex) {
+                    // Since Minecraft 1.20.2, the method is called value()
+                    getValue = Property.class.getMethod("value");
+                }
+            }
+            
+            Property property = this.profile.getProperties().get("textures").iterator().next();
+            return (String) getValue.invoke(property);
+        } catch(ReflectiveOperationException ex) {
+            throw new InternalError(ex);
+        } catch(Exception ex){
             return null;
         }
     }
@@ -61,10 +77,10 @@ public final class Texture{
     public String getURL(){
         try{
             String preUrl = new String(Base64.getDecoder().decode(this.getEncodedTexture().getBytes()));
-            Pattern p = Pattern.compile("\"([^\"]*)\"");
+            Pattern p = Pattern.compile("https?[^\"]*");
             Matcher m = p.matcher(preUrl);
             if(m.find()){
-                return m.group(1);
+                return m.group(0);
             }else{
                 return null;
             }                
