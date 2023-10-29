@@ -112,7 +112,7 @@ public class HookBowAux{
                             // Up to Minecraft 1.19.4, the field is called "b"
                             playerConnectionField = targetPlayerEntity.getClass().getField("b");
                         }catch(NoSuchFieldException ex2){
-                            // From Minecraft 1.20, the field is called "c"
+                            // Since Minecraft 1.20, the field is called "c"
                             playerConnectionField = targetPlayerEntity.getClass().getField("c");
                         }
                     }
@@ -120,14 +120,28 @@ public class HookBowAux{
                 
                 Object playerConnection = playerConnectionField.get(targetPlayerEntity);
                 if(sendPacketMethod == null){
-                    try{
-                        sendPacketMethod = playerConnection.getClass().getMethod("sendPacket", PacketClass);
-                    }catch(NoSuchMethodException ex){
-                        sendPacketMethod = playerConnection.getClass().getMethod("a", PacketClass);
+                    try {
+                        // Since Minecraft 1.20.2
+                        // More info here: https://bukkit.org/threads/sending-packets-in-1-20-2.502472/
+                        Class<?> PacketListenerClass = OtherUtils.getNMSClass("net.minecraft.network", "PacketSendListener");
+                        sendPacketMethod = playerConnection.getClass().getMethod("a", PacketClass, PacketListenerClass);
+                    } catch(ClassNotFoundException | NoSuchMethodException ex) {
+                        // From Minecraft 1.8 to 1.20.1
+                        try{
+                            sendPacketMethod = playerConnection.getClass().getMethod("sendPacket", PacketClass);
+                        }catch(NoSuchMethodException ex2){
+                            sendPacketMethod = playerConnection.getClass().getMethod("a", PacketClass);
+                        }
                     }
                 }
                 
-                sendPacketMethod.invoke(playerConnection, packet);
+                try {
+                    // From Minecraft 1.8 to 1.20.1
+                    sendPacketMethod.invoke(playerConnection, packet);
+                } catch(IllegalArgumentException ex) {
+                    // Since Minecraft 1.20.2
+                    sendPacketMethod.invoke(playerConnection, packet, null);
+                }
             }
         }catch(Exception ex){
             ex.printStackTrace();
