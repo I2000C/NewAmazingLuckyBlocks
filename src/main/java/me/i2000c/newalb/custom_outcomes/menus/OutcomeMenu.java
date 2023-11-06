@@ -13,6 +13,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -60,6 +61,14 @@ public class OutcomeMenu extends Editor<Outcome>{
         Menu menu = GUIFactory.newMenu(CustomInventoryType.NEW_OUTCOME_MENU, 27, inventoryName);
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
+        for(int i=0;i<9;i++){
+            menu.setItem(i, glass);
+        }
+        for(int i=18;i<27;i++){
+            menu.setItem(i, glass);
+        }
+        menu.setItem(9, glass);
+        menu.setItem(17, glass);
         
         ItemStack name = ItemBuilder.newItem(XMaterial.OAK_SIGN)
                 .withDisplayName("&7Outcome name: &r" + item.getName())
@@ -73,6 +82,9 @@ public class OutcomeMenu extends Editor<Outcome>{
                           "&bBy default it's CHEST"
                 ).build();
         
+        ItemStack creative = ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
+                .withDisplayName("&3Close menu to pick items from creative mode")
+                .build();
         
         ItemBuilder builder = ItemBuilder.newItem(XMaterial.GLOWSTONE_DUST);
         if(item.getProbability() < 0){
@@ -83,21 +95,14 @@ public class OutcomeMenu extends Editor<Outcome>{
         builder.withLore("&3Click to change");
         ItemStack prob = builder.build();
         
-        for(int i=0;i<9;i++){
-            menu.setItem(i, glass);
-        }
-        for(int i=18;i<27;i++){
-            menu.setItem(i, glass);
-        }
-        menu.setItem(9, glass);
-        menu.setItem(17, glass);
-        
         menu.setItem(10, GUIItem.getBackItem());
         menu.setItem(16, GUIItem.getNextItem());
         
         menu.setItem(12, name);
         menu.setItem(13, icon);
         menu.setItem(14, prob);
+        
+        menu.setItem(22, creative);
         
         menu.openToPlayer(player);
 //</editor-fold>
@@ -147,6 +152,11 @@ public class OutcomeMenu extends Editor<Outcome>{
                                 p -> openOutcomeMenu(p), 
                                 onNext);
                     }
+                    break;
+                case 22:
+                    //Close menu
+                    player.closeInventory();
+                    Logger.sendMessage("&6Use &b/alb return &6to return to the menu", player);
                     break;
             }
         }else{
