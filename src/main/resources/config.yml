@@ -139,14 +139,17 @@ Objects:
     # Depth of the dark hole.
     # If this value is negative, an infinite depth will be used
     depth: 5
-    radius: 1.0
+    radius: 1
+    squared: true
     # The time must be in ticks. 1 second = 20 ticks
     time-before-darkhole: 20
     # The time must be in ticks. 1 second = 20 ticks
     time-between-one-block-and-the-next: 5
+    # If a block of these list is found, the dark hole will be stopped
     block-stop-mode:
       enable: false
-      block: BEDROCK
+      block-list:
+      - BEDROCK
     required-permission: false
     permission: amazinglb.objets.darkhole
     custom-model-data: 1000
