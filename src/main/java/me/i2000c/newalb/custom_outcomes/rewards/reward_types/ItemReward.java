@@ -140,7 +140,7 @@ public class ItemReward extends Reward{
         }
         
         //Load armor color
-        switch(builder.getMaterial()){
+        switch(builder.getXMaterial()){
             case LEATHER_HELMET:
             case LEATHER_CHESTPLATE:
             case LEATHER_LEGGINGS:

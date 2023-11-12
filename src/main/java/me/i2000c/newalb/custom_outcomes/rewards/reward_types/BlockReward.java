@@ -62,7 +62,7 @@ public class BlockReward extends Reward{
     @Override
     public ItemStack getItemToDisplay(){
         ItemBuilder builder = ItemBuilder.fromItem(blockItem);
-        switch(builder.getMaterial()){
+        switch(builder.getXMaterial()){
             case WATER:
                 builder.withMaterial(XMaterial.WATER_BUCKET);
                 break;

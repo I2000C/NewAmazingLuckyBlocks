@@ -107,7 +107,7 @@ public class TrapReward extends Reward{
         if(trapMaterialName == null){
             trapMaterialName = config.getString(path + ".pressurePlateMaterial");
         }
-        this.trapMaterial = ItemBuilder.newItem(trapMaterialName).getMaterial();
+        this.trapMaterial = ItemBuilder.newItem(trapMaterialName).getXMaterial();
         
         this.trapName = config.getString(path + ".trapName");
         String[] aux = config.getString(path + ".trapOutcome").split("\\/");

@@ -66,7 +66,7 @@ public class BlockMenu extends Editor<BlockReward>{
         ItemBuilder builder;
         if(item.getItemBlock() != null){
             builder = ItemBuilder.fromItem(item.getItemBlock());
-            switch(builder.getMaterial()){
+            switch(builder.getXMaterial()){
                 case WATER:
                     builder.withMaterial(XMaterial.WATER_BUCKET);
                     break;

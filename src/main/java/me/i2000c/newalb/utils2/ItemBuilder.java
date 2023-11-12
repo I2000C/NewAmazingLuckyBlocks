@@ -96,7 +96,7 @@ public class ItemBuilder{
         material.setType(item);
         return this;
     }
-    public XMaterial getMaterial(){
+    public XMaterial getXMaterial(){
         return XMaterial.matchXMaterial(item);
     }
     
@@ -466,6 +466,6 @@ public class ItemBuilder{
     
     @Override
     public String toString(){
-        return this.getMaterial().name();
+        return this.getXMaterial().name();
     }
 }

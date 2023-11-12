@@ -198,7 +198,7 @@ public class TrapMenu extends Editor<TrapReward>{
                 openTrapMenu(player);
             }else if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 //Open trap inventory
-                item.setTrapMaterial(ItemBuilder.fromItem(e.getCurrentItem(), false).getMaterial());
+                item.setTrapMaterial(ItemBuilder.fromItem(e.getCurrentItem(), false).getXMaterial());
                 openTrapMenu(player);
             }
         }

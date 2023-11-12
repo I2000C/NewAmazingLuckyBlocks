@@ -190,7 +190,7 @@ public final class Equipment implements Cloneable{
                 }
                 
                 //Load armor color
-                switch(builder.getMaterial()){
+                switch(builder.getXMaterial()){
                     case LEATHER_HELMET:
                     case LEATHER_CHESTPLATE:
                     case LEATHER_LEGGINGS:
@@ -277,7 +277,7 @@ public final class Equipment implements Cloneable{
                     }
                     
                     //Save leather armor color
-                    switch(builder.getMaterial()){
+                    switch(builder.getXMaterial()){
                         case LEATHER_HELMET:
                         case LEATHER_CHESTPLATE:
                         case LEATHER_LEGGINGS:
