@@ -1,6 +1,7 @@
 package me.i2000c.newalb.utils2;
 
 import com.cryptomorin.xseries.XMaterial;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,7 +16,11 @@ import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +30,6 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 
 public class ItemBuilder{
     private ItemStack item;
@@ -35,6 +39,12 @@ public class ItemBuilder{
     }
     private ItemBuilder(ItemStack item){
         this.item = item;
+    }
+    private ItemBuilder(Block block) {
+        this.item = new ItemStack(block.getType());
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()) {
+            this.item.setDurability(block.getData());
+        }
     }
     
     public static ItemBuilder newItem(XMaterial material){
@@ -74,6 +84,12 @@ public class ItemBuilder{
     }
     public static ItemBuilder fromItem(ItemStack item){
         return ItemBuilder.fromItem(item, true);
+    }
+    public static ItemBuilder fromBlock(Block block) {
+        return new ItemBuilder(block);
+    }
+    public static ItemBuilder fromBlock(Location loc) {
+        return new ItemBuilder(loc.getBlock());
     }
     
     public ItemBuilder withMaterial(XMaterial material){
@@ -422,6 +438,26 @@ public class ItemBuilder{
     public ItemBuilder setNbtTag(Object value, Object... tags) {
         item = NBTEditor.set(item, value, tags);
         return this;
+    }
+    
+    public void placeAt(Block block) {
+        block.setType(item.getType());
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()) {
+            block.setData((byte) item.getDurability());
+        }
+    }
+    public void placeAt(Location loc) {
+        placeAt(loc.getBlock());
+    }
+    
+    public FallingBlock spawnFallingBlock(Location loc) {        
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()) {
+            Material material = item.getType();
+            byte data = (byte) item.getDurability();
+            return loc.getWorld().spawnFallingBlock(loc, material, data);
+        } else {
+            return loc.getWorld().spawnFallingBlock(loc, item.getData());
+        }        
     }
     
     public ItemStack build(){

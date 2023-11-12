@@ -158,6 +158,7 @@ Objects:
     time-before-minivolcano: 20
     # The time must be in ticks. 1 second = 20 ticks
     time-between-one-block-and-the-next: 20
+    squared: false
     height: 3
     lava-material: LAVA
     base-material: OBSIDIAN
