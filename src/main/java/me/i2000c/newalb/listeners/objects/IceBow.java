@@ -6,6 +6,7 @@ import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -82,7 +83,7 @@ public class IceBow extends SpecialItem{
     
     @Override
     public void onArrowShooted(EntityShootBowEvent e){
-        super.setClassMetadata(e.getProjectile());
+        MetadataManager.setClassMetadata(e.getProjectile(), this);
     }
     
     public void execute(Entity entity) {

@@ -5,6 +5,7 @@ import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.MetadataManager;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Projectile;
@@ -27,7 +28,7 @@ public class ExplosiveBow extends SpecialItem{
   
     @Override
     public void onArrowShooted(EntityShootBowEvent e){
-        super.setClassMetadata(e.getProjectile());
+        MetadataManager.setClassMetadata(e.getProjectile(), this);
     }
     
     @Override

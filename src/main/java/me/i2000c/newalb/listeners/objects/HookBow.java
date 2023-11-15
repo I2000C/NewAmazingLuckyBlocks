@@ -9,6 +9,7 @@ import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
@@ -177,7 +178,7 @@ public class HookBow extends SpecialItem{
         
         hookData.targetLocation = null;
         hookData.chicken = HookBowAux.createEntityChicken(arrow.getLocation());
-        super.setClassMetadata(hookData.chicken);
+        MetadataManager.setClassMetadata(hookData.chicken, this);
         
         if(shooter.isOnline() && shooter.getWorld().equals(arrow.getWorld())){
             int leashPacketRadius = ConfigManager.getConfig().getInt("Objects.HookBow.leashPacketRadius");
@@ -202,7 +203,7 @@ public class HookBow extends SpecialItem{
         
         hookData.targetLocation = target;
         hookData.chicken = HookBowAux.createEntityChicken(hookData.targetLocation.clone().add(0, -0.8, 0));
-        super.setClassMetadata(hookData.chicken);
+        MetadataManager.setClassMetadata(hookData.chicken, this);
         
         if(shooter.isOnline() && shooter.getWorld().equals(arrow.getWorld())){
             int leashPacketRadius = ConfigManager.getConfig().getInt("Objects.HookBow.leashPacketRadius");
@@ -248,7 +249,7 @@ public class HookBow extends SpecialItem{
         
         // Shoot the arrow
         hookData.arrow = arrow;
-        super.setClassMetadata(hookData.arrow);
+        MetadataManager.setClassMetadata(hookData.arrow, this);
         
         int maxDistance = ConfigManager.getConfig().getInt("Objects.HookBow.maxDistance");
         int maxDistanceSquared = maxDistance*maxDistance;
@@ -365,7 +366,7 @@ public class HookBow extends SpecialItem{
             Location loc2 = hookData.targetLocation != null ? hookData.targetLocation : hookData.chicken.getLocation();
             
             FallingBlock fb = player.getWorld().spawnFallingBlock(player.getLocation(), Material.WATER, (byte) 0);
-            super.setClassMetadata(fb);
+            MetadataManager.setClassMetadata(fb, this);
             Vector v = calculateVelocity(loc1, loc2, heightGain, gravity);
             fb.setDropItem(false);
             fb.setVelocity(v);
@@ -414,7 +415,7 @@ public class HookBow extends SpecialItem{
     
     @Override
     public void onEntityDamaged(EntityDamageByEntityEvent e){        
-        if(e.getEntity() instanceof Chicken && SpecialItem.hasClassMetadata(e.getEntity())){
+        if(e.getEntity() instanceof Chicken){
             //Remove chicken if damaged in creative mode
             e.setCancelled(true);
             e.getEntity().remove();            

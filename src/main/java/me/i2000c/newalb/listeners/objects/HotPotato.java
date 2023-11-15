@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
@@ -25,7 +26,7 @@ public class HotPotato extends SpecialItem{
             
             Location loc = e.getPlayer().getEyeLocation();
             Item item = loc.getWorld().dropItem(loc, getItem());
-            super.setClassMetadata(item);
+            MetadataManager.setClassMetadata(item, this);
             item.setVelocity(e.getPlayer().getLocation().getDirection());
             
             long delayTicks = ConfigManager.getConfig().getLong("Objects.HotPotato.ticksBeforeExplosion");

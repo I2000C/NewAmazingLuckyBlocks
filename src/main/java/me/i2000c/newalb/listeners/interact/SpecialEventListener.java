@@ -5,6 +5,7 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.objects.MaterialChecker;
 import me.i2000c.newalb.utils.WorldConfig;
+import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
@@ -86,17 +87,15 @@ public class SpecialEventListener implements Listener{
             return;
         }
         
-        if(item.hasMetadata(SpecialItem.CLASS_METADATA_TAG)){
-            SpecialItem specialItem = SpecialItem.getClassMetadata(item);
-            if(specialItem != null){
-                specialItem.onItemPickup(e);
-            }
+        SpecialItem specialItem = MetadataManager.getClassMetadata(item);        
+        if(specialItem != null) {
+            specialItem.onItemPickup(e);
         }
 //</editor-fold>
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
-    private static void onProjectileHitEntity(EntityDamageByEntityEvent e){
+    private static void onEntityDamaged(EntityDamageByEntityEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity damager = e.getDamager();
         
@@ -104,17 +103,16 @@ public class SpecialEventListener implements Listener{
             return;
         }
 
-        SpecialItem specialItem = SpecialItem.getClassMetadata(damager);
+        SpecialItem specialItem = MetadataManager.getClassMetadata(damager);
         if(specialItem != null){
             if(damager instanceof Projectile){
-                boolean entityHit = true;
-                specialItem.setCustomMetadata(damager, entityHit);
+                // Set custom metadata to avoid generating ProjectileHitEvent with block
+                MetadataManager.setCustomMetadata(damager, new Object());
                 
                 CustomProjectileHitEvent event = new CustomProjectileHitEvent(e);
                 specialItem.onArrowHit(event);
-            }else{
-                specialItem.onEntityDamaged(e);
             }
+            specialItem.onEntityDamaged(e);
         }
 //</editor-fold>
     }    
@@ -129,20 +127,17 @@ public class SpecialEventListener implements Listener{
                 return;
             }
             
-            SpecialItem specialItem = SpecialItem.getClassMetadata(arrow);
+            SpecialItem specialItem = MetadataManager.getClassMetadata(arrow);
             if(specialItem != null){
-                specialItem.setCustomMetadata(arrow, false);
-                
                 Task.runTask(() -> {
-                    Boolean entityHit = (Boolean) SpecialItem.getCustomMetadata(arrow);
-                    
-                    if(!entityHit){
+                    // If custom metadata has been set, it means that
+                    //      the projectile hit an entity so,
+                    //      it shouldn't generate a ProjectileHitEvent with block
+                    if(!MetadataManager.hasCustomMetadata(projectile)){
                         Block block = arrow.getLocation().getBlock();
                         CustomProjectileHitEvent event = new CustomProjectileHitEvent(e);
                         specialItem.onArrowHit(event);
                     }
-                    
-                    SpecialItem.removeClassMetadata(arrow);
                 });
             }
         }
@@ -194,11 +189,9 @@ public class SpecialEventListener implements Listener{
             return;
         }
         
-        if(entity.hasMetadata(SpecialItem.CLASS_METADATA_TAG)){
-            SpecialItem specialItem = SpecialItem.getClassMetadata(entity);
-            if(specialItem != null){
-                specialItem.onPlayerInteractAtEntity(e);
-            }
+        SpecialItem specialItem = MetadataManager.getClassMetadata(entity);
+        if(specialItem != null) {
+            specialItem.onPlayerInteractAtEntity(e);
         }
 //</editor-fold>
     }
@@ -212,11 +205,9 @@ public class SpecialEventListener implements Listener{
             return;
         }
         
-        if(entity.hasMetadata(SpecialItem.CLASS_METADATA_TAG)){
-            SpecialItem specialItem = SpecialItem.getClassMetadata(entity);
-            if(specialItem != null){
-                specialItem.onFallingBlockConvert(e);
-            }
+        SpecialItem specialItem = MetadataManager.getClassMetadata(entity);
+        if(specialItem != null) {
+            specialItem.onFallingBlockConvert(e);
         }
 //</editor-fold>
     }

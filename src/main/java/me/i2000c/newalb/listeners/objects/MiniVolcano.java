@@ -6,6 +6,7 @@ import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.particles.Particles;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
@@ -175,8 +176,8 @@ public class MiniVolcano extends SpecialItem{
                 FallingBlock fb = throwBlocksMaterial.spawnFallingBlock(loc);
                 fb.setDropItem(false);
                 fb.setVelocity(speed);
-                MiniVolcano.super.setClassMetadata(fb);
-                MiniVolcano.super.setCustomMetadata(fb, lavaMaterial);
+                MetadataManager.setClassMetadata(fb, MiniVolcano.this);
+                MetadataManager.setCustomMetadata(fb, lavaMaterial);
                 
                 blocks++;
             }
@@ -187,8 +188,8 @@ public class MiniVolcano extends SpecialItem{
 
     @Override
     public void onFallingBlockConvert(EntityChangeBlockEvent e) {
-        if(SpecialItem.hasCustomMetadata(e.getEntity())) {
-            ItemBuilder lavaMaterial = (ItemBuilder) SpecialItem.getCustomMetadata(e.getEntity());
+        if(MetadataManager.hasCustomMetadata(e.getEntity())) {
+            ItemBuilder lavaMaterial = MetadataManager.getCustomMetadata(e.getEntity());
             e.setCancelled(true);
             lavaMaterial.placeAt(e.getBlock());
         }
