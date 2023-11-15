@@ -1,12 +1,12 @@
 package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import com.cryptomorin.xseries.XSound;
 import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,7 +17,34 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class IceBow extends SpecialItem{
+public class IceBow extends SpecialItem{    
+    
+    private static final int ICE_CAGE_HEIGHT = 3;
+    
+    private ItemBuilder iceItem;
+    private boolean protectStructures;
+    private long ticks;
+    private long beforeTicks;
+    private int snowRadius;
+    private boolean generateSnow;
+    private boolean disableArrowKnockback;
+    
+    @Override
+    public ItemStack buildItem(){
+        this.iceItem = ItemBuilder.newItem(ConfigManager.getConfig().getString(super.itemPathKey + ".freeze-material"));
+        this.protectStructures = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".protect-structures");
+        this.ticks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
+        this.beforeTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-before-freezing");
+        this.snowRadius = ConfigManager.getConfig().getInt(super.itemPathKey + ".snowRadius");
+        this.generateSnow = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".generateSnow");
+        this.disableArrowKnockback = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".disableArrowKnowback");
+        
+        return ItemBuilder.newItem(XMaterial.BOW)
+                .withDisplayName(getDisplayName())
+                .addEnchantment(Enchantment.DURABILITY, 5)
+                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
+                .build();
+    }
     
     @Override
     public void onArrowHit(CustomProjectileHitEvent e){
@@ -28,22 +55,27 @@ public class IceBow extends SpecialItem{
             Block hitBlock = e.getHitBlock();
             
             if(hitEntity != null){
-                Entity damagee = e.getEntity();
-                if(ConfigManager.getConfig().getBoolean("Objects.IceBow.disableArrowKnockback")){
+                if(disableArrowKnockback){
+                    // Remove knockback but not damage
                     e.setCancelled(true);
-                    ((Damageable) damagee).damage(e.getDamage(), arrow);
-                    arrow.remove();
+                    ((Damageable) hitEntity).damage(e.getDamage(), arrow);
+                    
+                    // Teleport entity to the center of its block
+                    Location loc = hitEntity.getLocation();
+                    loc.setX(loc.getBlockX() + 0.5);
+                    loc.setZ(loc.getBlockZ() + 0.5);
+                    hitEntity.teleport(loc);
                 }
-                damagee.setFireTicks(0);
-                Timer.getTimer().executeIceBow(damagee);
                 
-                if(!ConfigManager.getConfig().getBoolean("Objects.IceBow.generateSnow")){
-                    e.getEntity().removeMetadata("NewAmazingLuckyBlocks", NewAmazingLuckyBlocks.getInstance());
+                hitEntity.setFireTicks(0);
+                execute(hitEntity);
+            }else if(hitBlock != null) {
+                if(generateSnow) {
+                    simulateSnow(hitBlock.getLocation(), snowRadius);
                 }
-            }else if(hitBlock != null){
-                double radius = ConfigManager.getConfig().getDouble("Objects.IceBow.snowRadius");
-                simulateSnow(hitBlock.getLocation(), radius);
             }
+            
+            arrow.remove();
         }
     }
     
@@ -52,19 +84,60 @@ public class IceBow extends SpecialItem{
         super.setClassMetadata(e.getProjectile());
     }
     
-    private static void simulateSnow(Location loc, double radius){
+    public void execute(Entity entity) {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        final Location baseLocation = entity.getLocation().clone();
+        
+        Task task = new Task() {
+            final XSound sound = XSound.BLOCK_GLASS_BREAK;
+            int currentHeight = 0;
+            
+            @Override
+            public void run() {
+                Location center = baseLocation.clone().add(0, currentHeight, 0);
+                
+                Location[] locs;
+                if(currentHeight >= ICE_CAGE_HEIGHT-1) {
+                    locs = new Location[] {center};
+                } else {
+                    locs = new Location[] {
+                        center.clone().add(+1, 0, 0),
+                        center.clone().add(-1, 0, 0),
+                        center.clone().add(0, 0, +1),
+                        center.clone().add(0, 0, -1),
+                    };
+                }
+                
+                for(Location loc : locs) {
+                    Block block = loc.getBlock();
+                    if(!protectStructures
+                            || (protectStructures && block.getType() == Material.AIR)) {
+                        sound.play(loc);
+                        iceItem.placeAt(block);
+                    }
+                }
+                
+                if(++currentHeight >= ICE_CAGE_HEIGHT) {
+                    cancel();
+                }
+            }
+        };
+        task.runTask(beforeTicks, ticks);
+//</editor-fold>
+    }
+    
+    private static void simulateSnow(Location loc, int radius){
         //<editor-fold defaultstate="collapsed" desc="Code">
         double radiusSq = radius * radius;
         int ox = loc.getBlockX();
         int oy = loc.getBlockY();
         int oz = loc.getBlockZ();
         
-        int ceilRadius = (int) Math.ceil(radius);
-        for(int x = ox - ceilRadius; x <= ox + ceilRadius; x++){
-            for(int z = oz - ceilRadius; z <= oz + ceilRadius; z++){
+        for(int x = ox - radius; x <= ox + radius; x++){
+            for(int z = oz - radius; z <= oz + radius; z++){
                 Location l = new Location(loc.getWorld(), x, oy, z);
                 if(loc.distanceSquared(l) <= radiusSq){
-                    for(int y = oy - ceilRadius; y <= oy + ceilRadius; y++){
+                    for(int y = oy - radius; y <= oy + radius; y++){
                         l.setY(y);
                         Block b = l.getBlock();
                         switch(b.getType()){
@@ -91,14 +164,5 @@ public class IceBow extends SpecialItem{
             }
         }
 //</editor-fold>
-    }
-    
-    @Override
-    public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.BOW)
-                .withDisplayName(getDisplayName())
-                .addEnchantment(Enchantment.DURABILITY, 5)
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
-                .build();
     }
 }

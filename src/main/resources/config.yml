@@ -175,14 +175,14 @@ Objects:
     custom-model-data: 1000
   IceBow:
     freeze-material: ICE
-    disableArrowKnockback: false
+    disableArrowKnockback: true
     protect-structures: true
     # The time must be in ticks. 1 second = 20 ticks
     time-before-freezing: 0
     # The time must be in ticks. 1 second = 20 ticks
     time-between-one-block-and-the-next: 5
     generateSnow: true
-    snowRadius: 2.0
+    snowRadius: 2
     required-permission: false
     permission: amazinglb.objects.icebow
     custom-model-data: 1000
