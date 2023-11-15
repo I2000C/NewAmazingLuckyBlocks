@@ -14,6 +14,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,7 +38,7 @@ public class IceBow extends SpecialItem{
         this.beforeTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-before-freezing");
         this.snowRadius = ConfigManager.getConfig().getInt(super.itemPathKey + ".snowRadius");
         this.generateSnow = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".generateSnow");
-        this.disableArrowKnockback = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".disableArrowKnowback");
+        this.disableArrowKnockback = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".disableArrowKnockback");
         
         return ItemBuilder.newItem(XMaterial.BOW)
                 .withDisplayName(getDisplayName())
@@ -48,7 +49,7 @@ public class IceBow extends SpecialItem{
     
     @Override
     public void onArrowHit(CustomProjectileHitEvent e){
-        Entity projectile = e.getDamager();
+        Projectile projectile = e.getProjectile();
         if(projectile instanceof Arrow){
             Arrow arrow = (Arrow) projectile;
             Entity hitEntity = e.getHitEntity();

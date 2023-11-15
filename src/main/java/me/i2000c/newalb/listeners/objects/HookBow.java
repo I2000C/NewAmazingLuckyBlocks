@@ -20,10 +20,12 @@ import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -290,8 +292,8 @@ public class HookBow extends SpecialItem{
                             try{
                                 cancel();
                                 hookData.arrow.remove();
-                                onArrowHit(new CustomProjectileHitEvent(hookData.arrow, 
-                                        hookData.arrow.getLocation().getBlock()));
+                                ProjectileHitEvent event = new ProjectileHitEvent(hookData.arrow);
+                                onArrowHit(new CustomProjectileHitEvent(event));
                             }catch(Exception ex){                                                    
                             }                                                    
                         }
@@ -311,12 +313,12 @@ public class HookBow extends SpecialItem{
     @Override
     public void onArrowHit(CustomProjectileHitEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Entity damager = e.getDamager();
-        if(!(damager instanceof Arrow)){
+        Projectile projectile = e.getProjectile();
+        if(!(projectile instanceof Arrow)){
             return;
         }
         
-        Arrow arrow = (Arrow) damager;
+        Arrow arrow = (Arrow) projectile;
         if(!(arrow.getShooter() instanceof Player)){
             return;
         }
@@ -331,9 +333,9 @@ public class HookBow extends SpecialItem{
         Block hitBlock = e.getHitBlock();
 
         if(hitEntity != null){
-            placeLeash((Arrow) damager, hitEntity);
+            placeLeash((Arrow) projectile, hitEntity);
         }else if(hitBlock != null){
-            placeLeash((Arrow) damager, hitBlock.getLocation());
+            placeLeash((Arrow) projectile, hitBlock.getLocation());
         }
         
         hookData.state = HookState.WAITING_PLAYER_ACTION;

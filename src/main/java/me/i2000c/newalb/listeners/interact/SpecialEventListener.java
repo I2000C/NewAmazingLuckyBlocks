@@ -138,12 +138,12 @@ public class SpecialEventListener implements Listener{
                     
                     if(!entityHit){
                         Block block = arrow.getLocation().getBlock();
-                        CustomProjectileHitEvent event = new CustomProjectileHitEvent(arrow, block);
+                        CustomProjectileHitEvent event = new CustomProjectileHitEvent(e);
                         specialItem.onArrowHit(event);
                     }
                     
                     SpecialItem.removeClassMetadata(arrow);
-                }, 2L);
+                });
             }
         }
 //</editor-fold>

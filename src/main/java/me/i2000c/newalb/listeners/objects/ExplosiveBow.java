@@ -7,7 +7,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,7 +16,7 @@ public class ExplosiveBow extends SpecialItem{
     
     @Override
     public void onArrowHit(CustomProjectileHitEvent e){
-        Entity projectile = e.getDamager();
+        Projectile projectile = e.getProjectile();
         float power = (float) ConfigManager.getConfig().getDouble("Objects.ExplosiveBow.explosionPower");
         boolean withFire = ConfigManager.getConfig().getBoolean("Objects.ExplosiveBow.createFire");
         boolean breakBlocks = ConfigManager.getConfig().getBoolean("Objects.ExplosiveBow.breakBlocks");
