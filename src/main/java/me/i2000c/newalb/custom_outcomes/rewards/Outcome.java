@@ -191,11 +191,18 @@ public class Outcome implements Displayable, Executable, Cloneable{
                 if(delay <= 0){
                     reward.execute(player, location);
                 }else{
-                    Task.runTask(() -> reward.execute(player, location), delay);
+                    Task.runTask(() -> {
+                        try {
+                            reward.execute(player, location);
+                        } catch(Exception ex) {
+                            Logger.err("An error occurred while executing outcome: " + this.ID + " of pack " + this.pack.getPackname());
+                            ex.printStackTrace();
+                        }
+                    }, delay);
                 }
             }
         }catch(Exception ex){
-            Logger.err("An error occurred while excuting outcome " + this.ID);
+            Logger.err("An error occurred while executing outcome: " + this.ID + " of pack " + this.pack.getPackname());
             ex.printStackTrace();
         }
 //</editor-fold>
