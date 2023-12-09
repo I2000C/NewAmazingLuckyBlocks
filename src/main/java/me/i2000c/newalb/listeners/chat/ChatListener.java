@@ -1,8 +1,8 @@
 package me.i2000c.newalb.listeners.chat;
 
-import me.i2000c.newalb.functions.ChatFunction;
 import java.util.HashMap;
 import java.util.Map;
+import me.i2000c.newalb.functions.ChatFunction;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,7 @@ public class ChatListener implements Listener{
         players.remove(player);
     }
     
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     private static void onPlayerChat(PlayerChatEvent e){
         if(players.isEmpty()){
             return;

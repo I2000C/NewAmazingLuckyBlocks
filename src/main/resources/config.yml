@@ -298,6 +298,8 @@ CheckIfTexturesAreValid: false
 
 # General LuckyBlock configurations
 LuckyBlock:
+  # If this option is enabled, LuckyBlocks will be protected against liquids and explosions
+  EnableEnvironmentProtection: true
   DropOnBlockBreak:
     # If enabled, when you break a block (not LuckyBlock), 
     #   there is a probability that it dropped a LuckyBlock

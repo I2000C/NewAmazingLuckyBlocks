@@ -1,9 +1,11 @@
 package me.i2000c.newalb.utils;
 
+import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItemName;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,27 +20,69 @@ import org.bukkit.inventory.ItemStack;
 
 
 public class BlockProtect implements Listener{
-    @EventHandler
+    
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void noSkullCrash(BlockFromToEvent event){
-        if(WorldConfig.isEnabled(event.getToBlock().getWorld().getName()) && 
-            TypeManager.getType(event.getToBlock()) != null){
-            event.setCancelled(true);
+        if(!WorldConfig.isEnabled(event.getToBlock().getWorld().getName())) {
+            return;
+        }
+        
+        LuckyBlockType type = TypeManager.getType(event.getToBlock());
+        if(type == null) {
+            return;
+        }
+        
+        event.setCancelled(true);
+        if(!ConfigManager.getConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {
+            event.getToBlock().setType(Material.AIR);
+            Location loc = event.getToBlock().getLocation();
+            loc.getWorld().dropItemNaturally(loc, type.getItem());
         }
     }
     
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void noSkullCrash2(EntityExplodeEvent event){
-        String worldName = event.getLocation().getWorld().getName();
-        if(WorldConfig.isEnabled(worldName)){
+        if(!WorldConfig.isEnabled(event.getLocation().getWorld().getName())) {
+            return;
+        }
+        
+        if(ConfigManager.getConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {
             event.blockList().removeIf(block -> TypeManager.getType(block) != null);
+        } else {
+            event.blockList().removeIf(block -> {
+                LuckyBlockType type = TypeManager.getType(block);
+                if(type != null) {
+                    block.setType(Material.AIR);
+                    Location loc = block.getLocation();
+                    loc.getWorld().dropItemNaturally(loc, type.getItem());
+                    return true;
+                } else {
+                    return false;
+                }
+            });
         }
     }
     
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void noSkullCrash3(BlockExplodeEvent event){
-        String worldName = event.getBlock().getLocation().getWorld().getName();
-        if(WorldConfig.isEnabled(worldName)){
+        if(!WorldConfig.isEnabled(event.getBlock().getLocation().getWorld().getName())) {
+            return;
+        }
+        
+        if(ConfigManager.getConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {
             event.blockList().removeIf(block -> TypeManager.getType(block) != null);
+        } else {
+            event.blockList().removeIf(block -> {
+                LuckyBlockType type = TypeManager.getType(block);
+                if(type != null) {
+                    block.setType(Material.AIR);
+                    Location loc = block.getLocation();
+                    loc.getWorld().dropItemNaturally(loc, type.getItem());
+                    return true;
+                } else {
+                    return false;
+                }
+            });
         }
     }
     
