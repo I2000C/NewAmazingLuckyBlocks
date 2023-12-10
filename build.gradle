@@ -1,10 +1,17 @@
 plugins{
     id 'java'
-    id 'application'
-    id 'de.undercouch.download' version '5.1.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-mainClassName = 'me.i2000c.newalb.NewAmazingLuckyBlocks'
+ext{
+    version='1.0'
+    groupId='me.i2000c.newalb'
+    artifactId=project.name
+}
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+java.sourceCompatibility = '8'
+java.targetCompatibility = '8'
 
 repositories{
     mavenCentral()
@@ -14,40 +21,48 @@ repositories{
     maven { url 'https://maven.enginehub.org/repo/' }
 }
 
-compileJava.options.encoding = 'UTF-8'
-java.sourceCompatibility = '8'
-java.targetCompatibility = '8'
-ext.libDirName = 'lib'
-ext.libDir = new File(projectDir, libDirName)
-
-configurations{
-    runtimeLibraries
-}
 dependencies{
     implementation 'io.github.bananapuncher714:nbteditor:7.19.0'
-    implementation 'io.github.bananapuncher714:nbteditor:7.19.0:javadoc'
-    implementation 'io.github.bananapuncher714:nbteditor:7.19.0:sources'
+    compileOnly 'io.github.bananapuncher714:nbteditor:7.19.0:javadoc'
+    compileOnly 'io.github.bananapuncher714:nbteditor:7.19.0:sources'
     implementation 'com.github.cryptomorin:XSeries:9.7.0'
-    implementation 'com.github.cryptomorin:XSeries:9.7.0:javadoc'
-    implementation 'com.github.cryptomorin:XSeries:9.7.0:sources'
-    implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
-    implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:javadoc'
-    implementation 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:sources'
-    implementation 'com.mojang:authlib:1.5.21'
+    compileOnly 'com.github.cryptomorin:XSeries:9.7.0:javadoc'
+    compileOnly 'com.github.cryptomorin:XSeries:9.7.0:sources'
+    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:javadoc'
+    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:sources'
+    compileOnly 'com.mojang:authlib:1.5.21'
     implementation 'xyz.xenondevs:particle:1.8.3'
-    implementation 'xyz.xenondevs:particle:1.8.3:javadoc'
-    implementation 'xyz.xenondevs:particle:1.8.3:sources'
-    implementation 'com.sk89q.worldedit:worldedit-core:7.2.2'
-    implementation 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'
-    implementation 'com.sk89q.worldedit:worldedit-core:7.2.2:sources'
-    
-    runtimeLibraries 'io.github.bananapuncher714:nbteditor:7.19.0', 'com.github.cryptomorin:XSeries:9.7.0', 'xyz.xenondevs:particle:1.8.3'
+    compileOnly 'xyz.xenondevs:particle:1.8.3:javadoc'
+    compileOnly 'xyz.xenondevs:particle:1.8.3:sources'
+    compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2'
+    compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'
+    compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:sources'
 }
 
-// Create jar with dependencies
-jar{
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    
-    from sourceSets.main.output
-    from configurations.runtimeLibraries.collect{ zipTree(it) }
+// Create shaded jar
+shadowJar{
+    minimize()
+    archiveBaseName.set(project.name)
+    archiveClassifier.set('')
+    archiveVersion.set('')
+    relocate('com.cryptomorin.xseries', project.ext.groupId + '.com.cryptomorin.xseries')
+    relocate('io.github.bananapuncher714', project.ext.groupId + '.io.github.bananapuncher714')
+    relocate('xyz.xenondevs.particle', project.ext.groupId + '.xyz.xenondevs.particle')
+}
+
+task copyJar(type: Copy){
+    doNotTrackState('Do not track state of copy task')
+    from shadowJar
+    into projectDir
+}
+
+[jar]*.dependsOn shadowJar
+
+tasks.jar.configure{
+    classifier = 'original'
+}
+
+tasks.shadowJar.configure{
+    classifier = null
 }
