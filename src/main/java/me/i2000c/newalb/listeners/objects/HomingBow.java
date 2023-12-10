@@ -116,8 +116,8 @@ public class HomingBow extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.BOW)
-                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+        return ItemBuilder.newItem(XMaterial.BOW)
+                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
                 .build();
     }
 }

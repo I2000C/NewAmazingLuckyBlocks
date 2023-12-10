@@ -19,7 +19,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class IceBow extends SpecialItem{    
+public class IceBow extends SpecialItem{
     
     private static final int ICE_CAGE_HEIGHT = 3;
     
@@ -41,8 +41,8 @@ public class IceBow extends SpecialItem{
         this.generateSnow = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".generateSnow");
         this.disableArrowKnockback = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".disableArrowKnockback");
         
-        return ItemBuilder.newItem(XMaterial.BOW)
-                .addEnchantment(Enchantment.DURABILITY, 5)
+        return ItemBuilder.newItem(XMaterial.BOW)
+                .addEnchantment(Enchantment.DURABILITY, 5)
                 .build();
     }
     
