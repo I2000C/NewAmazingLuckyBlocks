@@ -440,10 +440,8 @@ public class HookBow extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.BOW)
-                .withDisplayName(getDisplayName())
-                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
+        return ItemBuilder.newItem(XMaterial.BOW)
+                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
                 .build();
     }
 }

@@ -1,6 +1,5 @@
 package me.i2000c.newalb.listeners.interact;
 
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +19,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class SpecialItem{
-    private static int GLOBAL_ID = 0;
-    protected static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
-    protected static final String CUSTOM_MODEL_DATA_TAG = "CustomModelData";
-        
+public abstract class SpecialItem {
+    static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";    
+    static final String CUSTOM_MODEL_DATA_TAG = "CustomModelData";
+    
     protected final String itemPathKey;
     private Map<UUID, Long> cooldownMap;
     
@@ -36,7 +34,7 @@ public abstract class SpecialItem{
     
     public SpecialItem(){
         String className = this.getClass().getSimpleName();
-        id = GLOBAL_ID++;
+        id = SpecialItems.GLOBAL_ID++;
         name = className.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
         isWand = name.contains("wand");
         
@@ -66,8 +64,14 @@ public abstract class SpecialItem{
     }
     
     public final void loadItem(){
-        this.item = buildItem();
-        this.item = setSpecialItemID(this.item);
+        int customModelData = ConfigManager.getConfig().getInt(this.itemPathKey + ".custom-model-data");
+        String displayName = LangConfig.getMessage(this.itemPathKey + ".name");
+        
+        this.item = ItemBuilder.fromItem(buildItem())
+                        .withDisplayName(displayName)
+                        .setNbtTag(this.id, ITEM_TAG)
+                        .setNbtTag(customModelData, CUSTOM_MODEL_DATA_TAG)
+                        .build();
         this.clearCooldownMap();
     }
     
@@ -81,14 +85,6 @@ public abstract class SpecialItem{
         }else{
             return true;
         }
-    }
-    
-    public final String getDisplayName(){
-        return LangConfig.getMessage(this.itemPathKey + ".name");
-    }
-    
-    public final int getCustomModelData(){
-        return ConfigManager.getConfig().getInt(this.itemPathKey + ".custom-model-data");
     }
     
     protected abstract ItemStack buildItem();
@@ -205,29 +201,6 @@ public abstract class SpecialItem{
             builder.withLore();
             return true;
         }
-    }
-    
-    // Special item ID methods
-    private ItemStack setSpecialItemID(ItemStack stack){
-        return NBTEditor.set(stack, getID(), ITEM_TAG);
-    }
-    protected static int getSpecialItemID(ItemStack stack){
-        if(stack == null || !stack.hasItemMeta()){
-            return -1;
-        }
-        
-        if(NBTEditor.contains(stack, ITEM_TAG)){
-            return NBTEditor.getInt(stack, ITEM_TAG);
-        }else{
-            return -1;
-        }
-    }
-    protected static boolean hasSpecialItemID(ItemStack stack){
-        return NBTEditor.contains(stack, ITEM_TAG);
-    }
-    public static SpecialItem getSpecialItem(ItemStack stack){
-        int specialItemID = getSpecialItemID(stack);
-        return SpecialItems.getById(specialItemID);
     }
     
     // Overridable events

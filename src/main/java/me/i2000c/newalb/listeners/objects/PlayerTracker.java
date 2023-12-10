@@ -88,8 +88,6 @@ public class PlayerTracker extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.COMPASS)
-                .withDisplayName(getDisplayName())
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

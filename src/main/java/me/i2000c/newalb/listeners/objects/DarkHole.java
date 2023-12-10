@@ -60,9 +60,7 @@ public class DarkHole extends SpecialItem {
             }
         });
         
-        return ItemBuilder.newItem(XMaterial.BUCKET)
-                .withDisplayName(getDisplayName())
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
+        return ItemBuilder.newItem(XMaterial.BUCKET)
                 .build();
     }
     

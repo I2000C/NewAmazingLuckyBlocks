@@ -100,9 +100,7 @@ public class ShieldWand extends SpecialItem{
         }
         
         return ItemBuilder.newItem(XMaterial.MUSIC_DISC_STRAD)
-                .withDisplayName(getDisplayName())
                 .withLore(super.getLoreOfWand())
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

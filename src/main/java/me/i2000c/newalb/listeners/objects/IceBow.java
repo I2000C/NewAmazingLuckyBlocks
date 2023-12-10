@@ -41,10 +41,8 @@ public class IceBow extends SpecialItem{
         this.generateSnow = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".generateSnow");
         this.disableArrowKnockback = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".disableArrowKnockback");
         
-        return ItemBuilder.newItem(XMaterial.BOW)
-                .withDisplayName(getDisplayName())
-                .addEnchantment(Enchantment.DURABILITY, 5)
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
+        return ItemBuilder.newItem(XMaterial.BOW)
+                .addEnchantment(Enchantment.DURABILITY, 5)
                 .build();
     }
     

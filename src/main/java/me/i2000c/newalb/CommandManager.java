@@ -412,7 +412,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 }
 
                 OtherUtils.removePlayerItems(target, amount, itemStack -> {
-                    SpecialItem specialItem = SpecialItem.getSpecialItem(itemStack);
+                    SpecialItem specialItem = SpecialItems.getByItemStack(itemStack);
                     return specialItem != null && specialItem.isWand();
                 });
                 return true;
@@ -422,7 +422,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 }
 
                 OtherUtils.removePlayerItems(target, amount, itemStack -> {
-                    SpecialItem specialItem = SpecialItem.getSpecialItem(itemStack);
+                    SpecialItem specialItem = SpecialItems.getByItemStack(itemStack);
                     return specialItem != null && !specialItem.isWand();
                 });
                 return true;
@@ -448,7 +448,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 }
                 
                 OtherUtils.removePlayerItems(target, amount, itemStack -> {
-                    SpecialItem specialItem = SpecialItem.getSpecialItem(itemStack);
+                    SpecialItem specialItem = SpecialItems.getByItemStack(itemStack);
                     if(specialItem != null){
                         return true;
                     }
@@ -466,7 +466,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 SpecialItem specialItem = SpecialItems.getByName(selectedItem);
                 if(specialItem != null){
                     OtherUtils.removePlayerItems(target, amount, itemStack -> {
-                        return SpecialItem.getSpecialItem(itemStack) == specialItem;
+                        return SpecialItems.getByItemStack(itemStack) == specialItem;
                     });
                     return true;
                 }

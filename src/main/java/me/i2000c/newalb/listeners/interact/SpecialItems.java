@@ -1,5 +1,6 @@
 package me.i2000c.newalb.listeners.interact;
 
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,11 +28,14 @@ import me.i2000c.newalb.listeners.wands.RegenWand;
 import me.i2000c.newalb.listeners.wands.ShieldWand;
 import me.i2000c.newalb.listeners.wands.SlimeWand;
 import me.i2000c.newalb.listeners.wands.TntWand;
+import org.bukkit.inventory.ItemStack;
 
 public class SpecialItems {
     private static final List<SpecialItem> ITEMS_BY_ID = new ArrayList<>();
     private static final Map<String, SpecialItem> ITEMS_BY_NAME = new HashMap<>();
     private static final List<String> ITEMS_NAMES = new ArrayList<>();
+    
+    static int GLOBAL_ID = 0;
     
     ////////////////////////////////////////
     // Begin of special items declaration //
@@ -92,6 +96,19 @@ public class SpecialItems {
     
     public static SpecialItem getByName(String name) {
         return ITEMS_BY_NAME.get(name);
+    }
+    
+    public static SpecialItem getByItemStack(ItemStack stack) {
+        if(stack == null || !stack.hasItemMeta()) {
+            return null;
+        }
+        
+        if(NBTEditor.contains(stack, SpecialItem.ITEM_TAG)) {
+            int itemID = NBTEditor.getInt(stack, SpecialItem.ITEM_TAG);
+            return getById(itemID);
+        } else {
+            return null;
+        }
     }
     
     public static List<String> getItemsNames() {

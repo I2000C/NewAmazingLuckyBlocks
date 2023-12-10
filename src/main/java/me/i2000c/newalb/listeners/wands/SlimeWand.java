@@ -35,9 +35,7 @@ public class SlimeWand extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.MUSIC_DISC_CHIRP)
-                .withDisplayName(getDisplayName())
                 .withLore(super.getLoreOfWand())
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

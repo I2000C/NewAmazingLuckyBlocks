@@ -57,10 +57,8 @@ public class HotPotato extends SpecialItem{
         
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.BAKED_POTATO)
-                .withDisplayName(getDisplayName())
-                .addEnchantment(Enchantment.FIRE_ASPECT, 1)
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
+        return ItemBuilder.newItem(XMaterial.BAKED_POTATO)
+                .addEnchantment(Enchantment.FIRE_ASPECT, 1)
                 .build();
     }
 }

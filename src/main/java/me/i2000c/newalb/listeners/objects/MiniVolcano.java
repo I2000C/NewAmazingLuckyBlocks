@@ -58,9 +58,7 @@ public class MiniVolcano extends SpecialItem{
         this.throwBlocksMaterial = ItemBuilder.newItem(ConfigManager.getConfig().getString(super.itemPathKey + ".throwBlocks.material"));
         this.throwBlocksTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".throwBlocks.time-between-blocks");
         
-        return ItemBuilder.newItem(XMaterial.LAVA_BUCKET)
-                .withDisplayName(getDisplayName())
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
+        return ItemBuilder.newItem(XMaterial.LAVA_BUCKET)
                 .build();
     }
     

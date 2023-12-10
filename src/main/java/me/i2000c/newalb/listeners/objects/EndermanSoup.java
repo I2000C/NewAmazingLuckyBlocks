@@ -39,8 +39,6 @@ public class EndermanSoup extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.RABBIT_STEW)
-                .withDisplayName(getDisplayName())
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

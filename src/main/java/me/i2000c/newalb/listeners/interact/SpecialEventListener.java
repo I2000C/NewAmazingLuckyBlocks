@@ -48,7 +48,7 @@ public class SpecialEventListener implements Listener{
                 return;
             }
             
-            SpecialItem specialItem = SpecialItem.getSpecialItem(stack);
+            SpecialItem specialItem = SpecialItems.getByItemStack(stack);
             if(specialItem != null){
                 if(!specialItem.checkPermission(player)){
                     e.setCancelled(true);
@@ -146,7 +146,7 @@ public class SpecialEventListener implements Listener{
             return;
         }
         
-        SpecialItem specialItem = SpecialItem.getSpecialItem(e.getBow());
+        SpecialItem specialItem = SpecialItems.getByItemStack(e.getBow());
         if(specialItem != null){
             if(!specialItem.checkPermission(player)){
                 e.setCancelled(true);

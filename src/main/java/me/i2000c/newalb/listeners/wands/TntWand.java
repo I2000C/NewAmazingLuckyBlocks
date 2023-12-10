@@ -35,9 +35,7 @@ public class TntWand extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.MUSIC_DISC_BLOCKS)
-                .withDisplayName(getDisplayName())
                 .withLore(super.getLoreOfWand())
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

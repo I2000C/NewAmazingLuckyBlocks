@@ -252,9 +252,7 @@ public class MultiBow extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemBuilder.newItem(XMaterial.BOW)
-                .withDisplayName(getDisplayName())
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
-                .setNbtTag(getCustomModelData(), CUSTOM_MODEL_DATA_TAG)
                 .build();
     }
 }

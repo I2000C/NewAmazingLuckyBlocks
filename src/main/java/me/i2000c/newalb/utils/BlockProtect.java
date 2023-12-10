@@ -114,7 +114,7 @@ public class BlockProtect implements Listener{
             return;
         }
         
-        SpecialItem specialItem = SpecialItem.getSpecialItem(sk0);
+        SpecialItem specialItem = SpecialItems.getByItemStack(sk0);
         if(specialItem == SpecialItems.auto_bow || specialItem == SpecialItems.multi_bow){            
             String displayName = ItemBuilder.fromItem(sk0, false)
                     .getDisplayName();            
