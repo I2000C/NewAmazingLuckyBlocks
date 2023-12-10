@@ -26,14 +26,13 @@ import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
+public class NewAmazingLuckyBlocks extends JavaPlugin {
     private static NewAmazingLuckyBlocks instance = null;
 
     public NewAmazingLuckyBlocks(){
