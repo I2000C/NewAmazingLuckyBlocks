@@ -3,9 +3,9 @@ package me.i2000c.newalb.listeners.objects;
 import com.cryptomorin.xseries.XMaterial;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
+import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils2.ActionBarUtils;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.GameMode;
@@ -28,7 +28,7 @@ public class PlayerTracker extends SpecialItem{
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
-                super.updatePlayerCooldown(player);
+                super.getPlayerCooldown().updateCooldown(player);
                 
                 int radius = ConfigManager.getConfig().getInt("Objects.PlayerTracker.radius");
                 double minDistanceS = radius*radius;

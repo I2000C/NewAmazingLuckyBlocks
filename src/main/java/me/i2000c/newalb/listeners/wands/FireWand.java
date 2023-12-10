@@ -26,7 +26,7 @@ public class FireWand extends SpecialItem{
                 return;
             }
             
-            super.updatePlayerCooldown(player);            
+            super.getPlayerCooldown().updateCooldown(player);            
             Vector direction = player.getEyeLocation().getDirection().multiply(4.0);
             Vector speed = player.getEyeLocation().getDirection().multiply(2.8);
             Location location = player.getEyeLocation().add(direction);

@@ -24,7 +24,7 @@ public class TntWand extends SpecialItem{
                 return;
             }
             
-            super.updatePlayerCooldown(player);
+            super.getPlayerCooldown().updateCooldown(player);
             Location eyeLocation = player.getEyeLocation();
             Vector direction = eyeLocation.getDirection().multiply(4.5);
             TNTPrimed tnt = (TNTPrimed) player.getWorld().spawn(eyeLocation.add(direction), TNTPrimed.class);

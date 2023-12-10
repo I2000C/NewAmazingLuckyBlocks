@@ -33,7 +33,7 @@ public class PotionWand extends SpecialItem{
                 return;
             }
             
-            super.updatePlayerCooldown(player);
+            super.getPlayerCooldown().updateCooldown(player);
             Vector vector = player.getLocation().getDirection().multiply(0.5);
             ItemStack iStack;
             if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){

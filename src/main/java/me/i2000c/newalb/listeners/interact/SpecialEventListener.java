@@ -55,7 +55,7 @@ public class SpecialEventListener implements Listener{
                     return;
                 }
 
-                if(!specialItem.isCooldownExpired(player)){
+                if(!specialItem.getPlayerCooldown().isCooldownExpired(player)){
                     specialItem.sendRemainingSecondsMessage(player);
                     e.setCancelled(true);
                     return;
@@ -153,7 +153,7 @@ public class SpecialEventListener implements Listener{
                 return;
             }
 
-            if(!specialItem.isCooldownExpired(player)){
+            if(!specialItem.getPlayerCooldown().isCooldownExpired(player)){
                 specialItem.sendRemainingSecondsMessage(player);
                 e.setCancelled(true);
                 return;

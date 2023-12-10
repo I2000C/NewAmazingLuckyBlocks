@@ -50,7 +50,7 @@ public class LuckyTool extends SpecialItem{
                 type.execute(e.getPlayer(), target.getLocation().add(0.5, 0, 0.5));
             }
             
-            super.updatePlayerCooldown(player);
+            super.getPlayerCooldown().updateCooldown(player);
         }
     }
     

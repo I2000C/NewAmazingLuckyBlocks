@@ -22,7 +22,7 @@ public class LightningWand extends SpecialItem{
                 return;
             }
             
-            super.updatePlayerCooldown(player);
+            super.getPlayerCooldown().updateCooldown(player);
             Block block = player.getTargetBlock(null, 120);
             player.getWorld().strikeLightning(block.getLocation());
         }        

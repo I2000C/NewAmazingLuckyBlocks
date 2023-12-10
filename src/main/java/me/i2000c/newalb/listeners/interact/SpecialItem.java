@@ -1,14 +1,12 @@
 package me.i2000c.newalb.listeners.interact;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.PlayerCooldown;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -24,7 +22,7 @@ public abstract class SpecialItem {
     static final String CUSTOM_MODEL_DATA_TAG = "CustomModelData";
     
     protected final String itemPathKey;
-    private Map<UUID, Long> cooldownMap;
+    private final PlayerCooldown playerCooldown;
     
     private final int id;
     private final String name;    
@@ -44,7 +42,8 @@ public abstract class SpecialItem {
             itemPathKey = "Objects." + className;
         }
         
-        cooldownMap = null;
+        int cooldownTime = ConfigManager.getConfig().getInt(itemPathKey + ".cooldown-time");
+        playerCooldown = new PlayerCooldown(cooldownTime);
     }
     
     public final int getID() {
@@ -72,7 +71,11 @@ public abstract class SpecialItem {
                         .setNbtTag(this.id, ITEM_TAG)
                         .setNbtTag(customModelData, CUSTOM_MODEL_DATA_TAG)
                         .build();
-        this.clearCooldownMap();
+        this.playerCooldown.clear();
+    }
+    
+    public final PlayerCooldown getPlayerCooldown() {
+        return this.playerCooldown;
     }
     
     public final boolean checkPermission(Player player){
@@ -87,53 +90,9 @@ public abstract class SpecialItem {
         }
     }
     
-    protected abstract ItemStack buildItem();
-    
-    // Cooldown map methods
-    protected void updatePlayerCooldown(Player player){
-        int cooldownSeconds = ConfigManager.getConfig().getInt(itemPathKey + ".cooldown-time");
-        if(cooldownSeconds <= 0){
-            return;
-        }
-        
-        if(cooldownMap == null){
-            cooldownMap = new HashMap<>();
-        }
-        
-        cooldownMap.put(player.getUniqueId(), System.currentTimeMillis() + cooldownSeconds*1000);
-    }
-    
-    protected boolean isCooldownExpired(Player player){
-        if(cooldownMap == null){
-            return true;
-        }
-        
-        long cooldownValue = cooldownMap.getOrDefault(player.getUniqueId(), 0L);
-        return System.currentTimeMillis() > cooldownValue;
-    }
-    
-    protected void clearCooldownMap(){
-        if(cooldownMap != null){
-            cooldownMap.clear();
-        }
-    }
-    
-    protected int getRemainingSeconds(Player player){
-        if(cooldownMap == null){
-            return 0;
-        }
-        
-        long cooldownValue = cooldownMap.getOrDefault(player.getUniqueId(), 0L);
-        long remainingTime = cooldownValue - System.currentTimeMillis();
-        if(remainingTime < 0){
-            remainingTime = 0;
-        }
-        return (int)remainingTime / 1000;
-    }
-    
     protected void sendRemainingSecondsMessage(Player player){
         String message = LangConfig.getMessage("Cooldown-message");
-        message = message.replace("%time%", String.valueOf(getRemainingSeconds(player)));
+        message = message.replace("%time%", String.format("%.2f", playerCooldown.getRemainingSeconds(player)));
         Logger.sendMessage(message, player, false);
     }
     
@@ -202,6 +161,9 @@ public abstract class SpecialItem {
             return true;
         }
     }
+    
+    // Methods to implement
+    protected abstract ItemStack buildItem();
     
     // Overridable events
     public void onPlayerInteract(PlayerInteractEvent e){}

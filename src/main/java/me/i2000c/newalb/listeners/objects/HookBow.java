@@ -65,7 +65,7 @@ public class HookBow extends SpecialItem{
                         Logger.sendMessage("&cLeash time has expired", player, false);
                     }
                     
-                    HookBow.super.updatePlayerCooldown(player);
+                    HookBow.super.getPlayerCooldown().updateCooldown(player);
                     state = HookState.BEFORE_ARROW_SHOOT;
                 }
             };
@@ -382,7 +382,7 @@ public class HookBow extends SpecialItem{
                             cancel();
                             fb.remove();
                             hookData.removeChicken();
-                            HookBow.super.updatePlayerCooldown(player);
+                            HookBow.super.getPlayerCooldown().updateCooldown(player);
                             hookData.state = HookState.BEFORE_ARROW_SHOOT;
                         }
                     }catch(Exception ex){
@@ -401,7 +401,7 @@ public class HookBow extends SpecialItem{
                 Logger.sendMessage("Leash has been removed", e.getPlayer());
             }
             
-            updatePlayerCooldown(player);
+            super.getPlayerCooldown().updateCooldown(player);
             hookData.state = HookState.BEFORE_ARROW_SHOOT;
         }
 //</editor-fold>
@@ -440,8 +440,10 @@ public class HookBow extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.BOW)
-                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+        return ItemBuilder.newItem(XMaterial.BOW)
+
+                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+
                 .build();
     }
 }

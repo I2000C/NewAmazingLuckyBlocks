@@ -20,7 +20,7 @@ public class EndermanSoup extends SpecialItem{
     public void onPlayerInteract(PlayerInteractEvent e){
         if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){
             e.setCancelled(true);
-            super.updatePlayerCooldown(e.getPlayer());
+            super.getPlayerCooldown().updateCooldown(e.getPlayer());
             super.decreaseAmountOfItem(e);
             
             Player p = e.getPlayer();

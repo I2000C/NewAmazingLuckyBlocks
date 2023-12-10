@@ -33,7 +33,7 @@ public class ShieldWand extends SpecialItem{
                 return;
             }
             
-            super.updatePlayerCooldown(player);
+            super.getPlayerCooldown().updateCooldown(player);
             World w = player.getWorld();
             boolean protect = ConfigManager.getConfig().getBoolean("Wands.ShieldWand.protect-structures");
             float radius = (float) ConfigManager.getConfig().getDouble("Wands.ShieldWand.radius");

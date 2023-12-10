@@ -67,7 +67,7 @@ public class FrostPathWand extends SpecialItem{
                 return;
             }
             
-            super.updatePlayerCooldown(player);
+            super.getPlayerCooldown().updateCooldown(player);
             execute(e.getPlayer());
         }
     }

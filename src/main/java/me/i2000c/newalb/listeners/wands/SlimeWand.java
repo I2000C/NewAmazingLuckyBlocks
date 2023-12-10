@@ -24,7 +24,7 @@ public class SlimeWand extends SpecialItem{
                 return;
             }
             
-            super.updatePlayerCooldown(player);
+            super.getPlayerCooldown().updateCooldown(player);
             Location eyeLocation = player.getEyeLocation();
             Vector direction = eyeLocation.getDirection().multiply(4.5);
             Slime slime = (Slime) player.getWorld().spawn(eyeLocation.add(direction), Slime.class);

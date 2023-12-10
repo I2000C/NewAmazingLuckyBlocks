@@ -24,7 +24,7 @@ public class InvisibilityWand extends SpecialItem{
                 return;
             }
             
-            super.updatePlayerCooldown(player);
+            super.getPlayerCooldown().updateCooldown(player);
             int effectTime = ConfigManager.getConfig().getInt("Wands.InvisibilityWand.effect-time") * 20;
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, effectTime, 0), true);
         }
