@@ -21,27 +21,26 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class SpecialItem{
-    protected static final SpecialItemName[] SPECIAL_ITEM_NAMES = SpecialItemName.values();
+    private static int GLOBAL_ID = 0;
     protected static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";
     protected static final String CUSTOM_MODEL_DATA_TAG = "CustomModelData";
+        
     protected final String itemPathKey;
-    private final SpecialItemName specialItemName;
     private Map<UUID, Long> cooldownMap;
+    
+    private final int id;
+    private final String name;    
+    private final boolean isWand;
     
     private ItemStack item;
     
     public SpecialItem(){
         String className = this.getClass().getSimpleName();
+        id = GLOBAL_ID++;
+        name = className.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
+        isWand = name.contains("wand");
         
-        String[] splitted_name = className.split("(?=[A-Z])");
-        StringBuilder stringBuilder = new StringBuilder();
-        for(String string : splitted_name){
-            stringBuilder.append(string.toLowerCase()).append('_');
-        }
-        stringBuilder.setLength(stringBuilder.length() - 1);
-        specialItemName = SpecialItemName.valueOf(stringBuilder.toString());
-        
-        if(specialItemName.isWand()){
+        if(isWand){
             itemPathKey = "Wands." + className;
         }else{
             itemPathKey = "Objects." + className;
@@ -50,8 +49,16 @@ public abstract class SpecialItem{
         cooldownMap = null;
     }
     
-    public final SpecialItemName getSpecialItemName(){
-        return this.specialItemName;
+    public final int getID() {
+        return this.id;
+    }
+    
+    public final String getName() {
+        return this.name;
+    }
+    
+    public final boolean isWand() {
+        return this.isWand;
     }
     
     public final ItemStack getItem(){
@@ -62,7 +69,6 @@ public abstract class SpecialItem{
         this.item = buildItem();
         this.item = setSpecialItemID(this.item);
         this.clearCooldownMap();
-        SpecialEventListener.registerSpecialtem(this);
     }
     
     public final boolean checkPermission(Player player){
@@ -203,7 +209,7 @@ public abstract class SpecialItem{
     
     // Special item ID methods
     private ItemStack setSpecialItemID(ItemStack stack){
-        return NBTEditor.set(stack, getSpecialItemName().ordinal(), ITEM_TAG);
+        return NBTEditor.set(stack, getID(), ITEM_TAG);
     }
     protected static int getSpecialItemID(ItemStack stack){
         if(stack == null || !stack.hasItemMeta()){
@@ -219,13 +225,9 @@ public abstract class SpecialItem{
     protected static boolean hasSpecialItemID(ItemStack stack){
         return NBTEditor.contains(stack, ITEM_TAG);
     }
-    public static SpecialItemName getSpecialItemName(ItemStack stack){
+    public static SpecialItem getSpecialItem(ItemStack stack){
         int specialItemID = getSpecialItemID(stack);
-        if(specialItemID >= 0 && specialItemID < SPECIAL_ITEM_NAMES.length){
-            return SPECIAL_ITEM_NAMES[specialItemID];
-        }else{
-            return null;
-        }
+        return SpecialItems.getById(specialItemID);
     }
     
     // Overridable events

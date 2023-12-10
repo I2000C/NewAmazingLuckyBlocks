@@ -15,8 +15,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemManager;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
+import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
@@ -283,7 +282,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     
                     String loadwands = LangConfig.getMessage("LoadingWands");
                     Logger.sendMessage(loadwands, sender);
-                    for(SpecialItem wand : SpecialItemManager.getWands()){
+                    for(SpecialItem wand : SpecialItems.getWands()){
                         ItemStack stack = wand.getItem();
                         stack.setAmount(amount);
                         target.getInventory().addItem(stack);
@@ -296,7 +295,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     
                     String loadobjects = LangConfig.getMessage("LoadingObjects");                    
                     Logger.sendMessage(loadobjects, sender);
-                    for(SpecialItem object : SpecialItemManager.getObjects()){
+                    for(SpecialItem object : SpecialItems.getObjects()){
                         ItemStack stack = object.getItem();
                         stack.setAmount(amount);
                         target.getInventory().addItem(stack);
@@ -323,7 +322,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     ItemStack stack = null;
                     
                     // Get special item
-                    SpecialItem specialItem = SpecialItemManager.getSpecialItem(selectedItem);
+                    SpecialItem specialItem = SpecialItems.getByName(selectedItem);
                     
                     // If selected item is not a special item, check if it is a LuckyBlockType
                     if(specialItem == null){
@@ -413,8 +412,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 }
 
                 OtherUtils.removePlayerItems(target, amount, itemStack -> {
-                    SpecialItemName name = SpecialItem.getSpecialItemName(itemStack);
-                    return name != null && name.isWand();
+                    SpecialItem specialItem = SpecialItem.getSpecialItem(itemStack);
+                    return specialItem != null && specialItem.isWand();
                 });
                 return true;
             case "objects":
@@ -423,8 +422,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 }
 
                 OtherUtils.removePlayerItems(target, amount, itemStack -> {
-                    SpecialItemName name = SpecialItem.getSpecialItemName(itemStack);
-                    return name != null && !name.isWand();
+                    SpecialItem specialItem = SpecialItem.getSpecialItem(itemStack);
+                    return specialItem != null && !specialItem.isWand();
                 });
                 return true;
             case "luckyblocks":
@@ -449,8 +448,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 }
                 
                 OtherUtils.removePlayerItems(target, amount, itemStack -> {
-                    SpecialItemName name = SpecialItem.getSpecialItemName(itemStack);
-                    if(name != null){
+                    SpecialItem specialItem = SpecialItem.getSpecialItem(itemStack);
+                    if(specialItem != null){
                         return true;
                     }
                     
@@ -464,11 +463,10 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 }
 
                 // Get special item
-                SpecialItem specialItem = SpecialItemManager.getSpecialItem(selectedItem);
+                SpecialItem specialItem = SpecialItems.getByName(selectedItem);
                 if(specialItem != null){
                     OtherUtils.removePlayerItems(target, amount, itemStack -> {
-                        SpecialItemName name = SpecialItem.getSpecialItemName(itemStack);
-                        return name == specialItem.getSpecialItemName();
+                        return SpecialItem.getSpecialItem(itemStack) == specialItem;
                     });
                     return true;
                 }
@@ -510,7 +508,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         Logger.logAndMessage(LangConfig.getMessage("Reload.worlds"), sender);
         WorldConfig.reloadWorlds();
 
-        SpecialItemManager.reloadSpecialItems();
+        SpecialItems.loadItems();
         
         Logger.logAndMessage(LangConfig.getMessage("Reload.packs"), sender);
         PackManager.loadPacks();
@@ -1096,7 +1094,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     if("luckyblocks".startsWith(args[1].toLowerCase())){
                         ls.add("luckyblocks");
                     }
-                    for(String specialName : SpecialItemManager.getSpecialNames()){
+                    for(String specialName : SpecialItems.getItemsNames()){
                         if(specialName.startsWith(args[1].toLowerCase())){
                             ls.add(specialName);
                         }
@@ -1195,7 +1193,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     ls.addAll(getPlayers(args));
                     break;
                 default:
-                    for(String specialName : SpecialItemManager.getSpecialNames()){
+                    for(String specialName : SpecialItems.getItemsNames()){
                         if(specialName.equals(args[1])){
                             ls.add("5");
                             break;

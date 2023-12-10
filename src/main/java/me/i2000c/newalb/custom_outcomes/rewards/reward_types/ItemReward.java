@@ -8,7 +8,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemManager;
+import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
@@ -289,7 +289,7 @@ public class ItemReward extends Reward{
         if(displayName != null){
             String name = Logger.stripColor(displayName);
             if(name.charAt(0) == '%' && name.charAt(name.length()-1) == '%'){
-                SpecialItem specialItem = SpecialItemManager.getSpecialItem(name);
+                SpecialItem specialItem = SpecialItems.getByName(name.substring(1, name.length()-1));
                 if(specialItem != null){
                     stack = specialItem.getItem();
                 }

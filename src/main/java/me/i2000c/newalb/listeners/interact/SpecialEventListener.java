@@ -1,6 +1,5 @@
 package me.i2000c.newalb.listeners.interact;
 
-import java.util.EnumMap;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.objects.MaterialChecker;
@@ -27,11 +26,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 public class SpecialEventListener implements Listener{
-    private static final EnumMap<SpecialItemName, SpecialItem> EVENTS = new EnumMap<>(SpecialItemName.class);
-    
-    public static void registerSpecialtem(SpecialItem specialItem){
-        EVENTS.putIfAbsent(specialItem.getSpecialItemName(), specialItem);
-    }
     
     @EventHandler(priority = EventPriority.HIGHEST)
     private static void onPlayerInteract(PlayerInteractEvent e){
@@ -54,12 +48,7 @@ public class SpecialEventListener implements Listener{
                 return;
             }
             
-            SpecialItemName specialItemName = SpecialItem.getSpecialItemName(stack);
-            if(specialItemName == null){
-                return;
-            }
-            
-            SpecialItem specialItem = EVENTS.get(specialItemName);
+            SpecialItem specialItem = SpecialItem.getSpecialItem(stack);
             if(specialItem != null){
                 if(!specialItem.checkPermission(player)){
                     e.setCancelled(true);
@@ -157,12 +146,7 @@ public class SpecialEventListener implements Listener{
             return;
         }
         
-        SpecialItemName specialItemName = SpecialItem.getSpecialItemName(e.getBow());
-        if(specialItemName == null){
-            return;
-        }
-        
-        SpecialItem specialItem = EVENTS.get(specialItemName);
+        SpecialItem specialItem = SpecialItem.getSpecialItem(e.getBow());
         if(specialItem != null){
             if(!specialItem.checkPermission(player)){
                 e.setCancelled(true);

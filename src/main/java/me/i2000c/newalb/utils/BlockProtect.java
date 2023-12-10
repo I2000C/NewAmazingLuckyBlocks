@@ -3,7 +3,7 @@ package me.i2000c.newalb.utils;
 import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemName;
+import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -114,8 +114,8 @@ public class BlockProtect implements Listener{
             return;
         }
         
-        SpecialItemName specialItemName = SpecialItem.getSpecialItemName(sk0);
-        if(specialItemName == SpecialItemName.auto_bow || specialItemName == SpecialItemName.multi_bow){            
+        SpecialItem specialItem = SpecialItem.getSpecialItem(sk0);
+        if(specialItem == SpecialItems.auto_bow || specialItem == SpecialItems.multi_bow){            
             String displayName = ItemBuilder.fromItem(sk0, false)
                     .getDisplayName();            
             ItemBuilder.fromItem(sk2, false)

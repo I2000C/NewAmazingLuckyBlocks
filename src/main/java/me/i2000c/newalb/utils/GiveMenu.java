@@ -7,7 +7,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItemManager;
+import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.GUIItem;
@@ -65,7 +65,7 @@ public class GiveMenu{
                 .build();
         
         ItemStack luckyTool = ItemBuilder
-                .fromItem(SpecialItemManager.getLuckyTool().getItem(), false)
+                .fromItem(SpecialItems.lucky_tool.getItem(), false)
                 .withDisplayName("&eGive LuckyTool")
                 .withLore()
                 .build();        
@@ -102,7 +102,7 @@ public class GiveMenu{
                     break;
                 case 3:
                     if(target != null){
-                        target.getInventory().addItem(SpecialItemManager.getLuckyTool().getItem());
+                        target.getInventory().addItem(SpecialItems.lucky_tool.getItem());
                     }
                     break;
                 case 8:
@@ -209,7 +209,7 @@ public class GiveMenu{
         
         Menu menu = GUIFactory.newMenu(CustomInventoryType.WANDS_MENU, 27, "&aGive Wands");
         
-        List<SpecialItem> wandsList = SpecialItemManager.getWands();
+        List<SpecialItem> wandsList = SpecialItems.getWands();
         for(int i=0; i<wandsList.size() && i<16; i++){
             ItemStack stack = wandsList.get(i).getItem();
             stack.setAmount(amount);
@@ -279,7 +279,7 @@ public class GiveMenu{
         
         Menu menu = GUIFactory.newMenu(CustomInventoryType.OBJECTS_MENU, 27, "&bGive Objects");
         
-        List<SpecialItem> objectsList = SpecialItemManager.getObjects();
+        List<SpecialItem> objectsList = SpecialItems.getObjects();
         for(int i=0; i<objectsList.size() && i<16; i++){
             ItemStack stack = objectsList.get(i).getItem();
             stack.setAmount(amount);

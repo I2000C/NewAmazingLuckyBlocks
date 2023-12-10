@@ -14,7 +14,7 @@ import me.i2000c.newalb.listeners.BlockPlace;
 import me.i2000c.newalb.listeners.ChunkEvent;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialEventListener;
-import me.i2000c.newalb.listeners.interact.SpecialItemManager;
+import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.BlockProtect;
 import me.i2000c.newalb.utils.ConfigManager;
@@ -91,7 +91,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
         LocationManager.initialize(this);
         TrapManager.initialize(this);
         
-        SpecialItemManager.loadSpecialItems();
+        SpecialItems.loadItems();
         
         Logger.log(LangConfig.getMessage("Loading.packs"));
         PackManager.loadPacks();        
