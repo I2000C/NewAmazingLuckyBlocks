@@ -38,6 +38,11 @@ dependencies{
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2'
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:sources'
+    
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    compileOnly 'org.projectlombok:lombok:1.18.30:javadoc'
+    compileOnly 'org.projectlombok:lombok:1.18.30:sources'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 // Create shaded jar
