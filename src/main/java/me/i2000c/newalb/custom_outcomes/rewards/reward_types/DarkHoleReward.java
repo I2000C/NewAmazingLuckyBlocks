@@ -4,8 +4,8 @@ import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
+import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -89,7 +89,7 @@ public class DarkHoleReward extends Reward{
 
     @Override
     public void execute(Player player, Location location){
-        Timer.getTimer().executeDarkHole(player, location, depth, radius, ticks, 0L, squared);
+        SpecialItems.dark_hole.execute(location, depth, depth, ticks, 0L, squared);
     }
     
     @Override

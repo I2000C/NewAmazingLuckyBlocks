@@ -83,7 +83,7 @@ public class MiniVolcanoMenu extends Editor<MiniVolcanoReward>{
                 lavaMaterialStack = new ItemStack(Material.WATER_BUCKET);
                 break;
             default:
-                lavaMaterialStack = new ItemStack(item.getLavaMaterial());
+                lavaMaterialStack = item.getLavaMaterial().parseItem();
                 break;
         }
         ItemBuilder.fromItem(lavaMaterialStack, false)
@@ -214,10 +214,10 @@ public class MiniVolcanoMenu extends Editor<MiniVolcanoReward>{
                     break;
                 case 30:
                     //Toggle lava material
-                    if(item.getLavaMaterial() == Material.LAVA){
-                        item.setLavaMaterial(Material.WATER);
+                    if(item.getLavaMaterial() == XMaterial.LAVA){
+                        item.setLavaMaterial(XMaterial.WATER);
                     }else{
-                        item.setLavaMaterial(Material.LAVA);
+                        item.setLavaMaterial(XMaterial.LAVA);
                     }
                     openMiniVolcanoMenu(player);
                     break;

@@ -21,7 +21,6 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.Timer;
 import me.i2000c.newalb.utils.Updater;
 import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils2.Task;
@@ -113,8 +112,6 @@ public class NewAmazingLuckyBlocks extends JavaPlugin implements Listener{
     private void registerEvents(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         PluginManager pm = getServer().getPluginManager();
-        
-        pm.registerEvents(Timer.getTimer(), this);
         
         pm.registerEvents(new Updater(), this);
         pm.registerEvents(new BlockBreak(), this);
