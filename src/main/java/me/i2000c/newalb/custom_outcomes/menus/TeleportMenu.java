@@ -73,7 +73,7 @@ public class TeleportMenu extends Editor<TeleportReward>{
                 .addLoreLine("")
                 .addLoreLine("&6This world is only used")
                 .addLoreLine("&6  if teleport source is &b&lABSOLUTE&6.")
-                .addLoreLine("&6You can use &a%world% &6 to select")
+                .addLoreLine("&6You can use &a%world% &6to select")
                 .addLoreLine("&6  the world of the player")
                 .build();
         
