@@ -1,12 +1,13 @@
 package me.i2000c.newalb.utils.particles;
 
 import com.cryptomorin.xseries.particles.ParticleDisplay;
+import com.cryptomorin.xseries.particles.XParticle;
 import java.awt.Color;
-import java.lang.reflect.Method;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -20,17 +21,7 @@ import xyz.xenondevs.particle.data.color.ParticleColor;
 import xyz.xenondevs.particle.data.texture.ParticleTexture;
 
 public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
-    private static boolean isMinecraft_1_8;
-    private static Method withBlock;
-    static {
-        try {
-            ParticleDisplay pd = new ParticleDisplay();
-            withBlock = pd.getClass().getMethod("withBlock", MaterialData.class);
-            isMinecraft_1_8 = false;
-        } catch(Throwable ex) {
-            isMinecraft_1_8 = true;
-        }
-    }
+    private static final boolean IS_MINECRAFT_1_8 = MinecraftVersion.getCurrentVersion() == MinecraftVersion.v1_8;
     
     public static ParticleBuilder newParticle(Particles particles, Location loc) {
         return new ParticleBuilder(particles, loc);
@@ -41,11 +32,11 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     
     
     
-    private ParticleDisplay pd;
+    private final ParticleDisplay pd;
         
     private ParticleBuilder(Particles particle, Location loc) {
         super(particle.getParticleEffect(), loc);
-        if(isMinecraft_1_8) {
+        if(IS_MINECRAFT_1_8) {
             this.pd = null;
         } else {
             this.pd = ParticleDisplay.simple(loc, (Particle) particle.getBukkitParticle());
@@ -55,7 +46,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setColor(Color color) {
         super.setColor(color);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             pd.withColor(color, 1);
         }
         return this;
@@ -64,7 +55,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setAmount(int amount) {
         super.setAmount(amount);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             pd.withCount(amount);
         }
         return this;
@@ -80,7 +71,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setSpeed(float speed) {
         super.setSpeed(speed);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             pd.withExtra(speed);
         }
         return this;
@@ -89,7 +80,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setOffset(Vector offset) {
         super.setOffset(offset);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             pd.offset(offset);
         }
         return this;
@@ -97,7 +88,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setOffset(float offsetX, float offsetY, float offsetZ) {
         super.setOffset(offsetX, offsetY, offsetZ);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             pd.offset(offsetX, offsetY, offsetZ);
         }
         return this;
@@ -105,7 +96,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setOffsetX(float offsetX) {
         super.setOffsetX(offsetX);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             pd.offset(super.getOffsetX(), super.getOffsetY(), super.getOffsetZ());
         }
         return this;
@@ -113,7 +104,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setOffsetY(float offsetY) {
         super.setOffsetY(offsetY);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             pd.offset(super.getOffsetX(), super.getOffsetY(), super.getOffsetZ());
         }
         return this;
@@ -121,7 +112,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setOffsetZ(float offsetZ) {
         super.setOffsetZ(offsetZ);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             pd.offset(super.getOffsetX(), super.getOffsetY(), super.getOffsetZ());
         }
         return this;
@@ -142,7 +133,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setLocation(Location location) {
         super.setLocation(location);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             pd.withLocation(location);
         }
         return this;
@@ -151,7 +142,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     @Override
     public ParticleBuilder setParticleData(ParticleData particleData) {
         super.setParticleData(particleData);
-        if(!isMinecraft_1_8) {
+        if(!IS_MINECRAFT_1_8) {
             if(particleData instanceof ParticleColor) {
                 float red = ((ParticleColor) particleData).getRed() * 255f;
                 float green = ((ParticleColor) particleData).getGreen() * 255f;
@@ -180,10 +171,8 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
                     }
                     pd.withItem(item);
                 } else if(super.getParticle().hasProperty(PropertyType.REQUIRES_BLOCK)) {
-                    try {
-                        withBlock.invoke(pd, md);
-                    } catch(Exception ex) {
-                        throw new Error(ex);
+                    if(!IS_MINECRAFT_1_8) {
+                        ReflectionManager.callMethod(pd, "withBlock", md);
                     }
                 }
             }
@@ -193,14 +182,14 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
     
     @Override
     public void display() {
-        if(isMinecraft_1_8) {
+        if(IS_MINECRAFT_1_8) {
             super.display();
         } else {
             pd.spawn();
         }
     }    
     public void display(Location loc) {
-        if(isMinecraft_1_8) {
+        if(IS_MINECRAFT_1_8) {
             Location oldLoc = super.getLocation();
             super.setLocation(loc);
             super.display();
