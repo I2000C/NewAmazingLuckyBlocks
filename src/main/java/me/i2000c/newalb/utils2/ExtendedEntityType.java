@@ -1,11 +1,11 @@
 package me.i2000c.newalb.utils2;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Ageable;
@@ -387,8 +387,6 @@ public class ExtendedEntityType{
         return entityType == EntityType.OCELOT;
     }
     
-    private static Method setAnger = null;
-    
     public void setAngry(Entity entity, Player player) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(this.isAngryable()) {
@@ -401,16 +399,8 @@ public class ExtendedEntityType{
                 }
                 
                 // Bees appeared for the first time in Minecraft 1.15
-                try {
-                    if(setAnger == null) {
-                        setAnger = entity.getClass().getMethod("setAnger", int.class);
-                    }
-                    
-                    setAnger.invoke(entity, Integer.MAX_VALUE);
-                    ((Creature) entity).setTarget(player);
-                } catch(Exception ex) {
-                    ex.printStackTrace();
-                }
+                ReflectionManager.callMethod(entity, "setAnger", Integer.MAX_VALUE);
+                ((Creature) entity).setTarget(player);
             }
         }
 //</editor-fold>
