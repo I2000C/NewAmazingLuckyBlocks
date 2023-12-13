@@ -273,7 +273,7 @@ public final class Equipment implements Cloneable{
                     //Save texture
                     Texture texture = builder.getTexture();
                     if(texture != null){
-                        config.set(fullPath + ".textureID", texture.getID());
+                        config.set(fullPath + ".textureID", texture.getId());
                     }
                     
                     //Save leather armor color

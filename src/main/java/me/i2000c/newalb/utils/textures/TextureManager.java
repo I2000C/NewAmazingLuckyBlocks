@@ -1,13 +1,10 @@
 package me.i2000c.newalb.utils.textures;
 
 import com.mojang.authlib.GameProfile;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.reflection.RefClass;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,61 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class TextureManager{
-    private static Constructor blockPostitionConstructor;
-    private static Method getWorldHandle;
-    private static Method getTileEntity;
-    
-    private static Method getGameProfile;
-    private static Method setGameProfile;
-    
-    private static Field profileFieldItem;
-    private static Field profileFieldBlock;
-    private static Method setProfile;
-    
-    private static Method update;
-    
-    static{
-        try{
-            //https://www.spigotmc.org/threads/tutorial-reflection.147407/
-            Class blockPositionClass = OtherUtils.getNMSClass("net.minecraft.core", "BlockPosition");
-            blockPostitionConstructor = blockPositionClass.getConstructor(int.class, int.class, int.class);
-
-            getWorldHandle = OtherUtils.getCraftClass("CraftWorld").getMethod("getHandle");
-            
-            Class worldServerClass = OtherUtils.getNMSClass("net.minecraft.world.level", "World");
-            //Class worldServerClass = OtherUtils.getNMSClass("net.minecraft.server.level", "WorldServer");
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_18) >= 0){
-                // In Minecraft 1.18 these classes' name have been changed
-                // Go to "net.minecraft.world.level" and search "c_"
-                getTileEntity = worldServerClass.getMethod("c_", blockPositionClass);
-            }else{
-                getTileEntity = worldServerClass.getMethod("getTileEntity", blockPositionClass);
-            }
-            
-            try{
-                getGameProfile = OtherUtils.getNMSClass("", "TileEntitySkull").getMethod("getGameProfile");
-                setGameProfile = OtherUtils.getNMSClass("", "TileEntitySkull").getMethod("setGameProfile", GameProfile.class);
-            }catch(ClassNotFoundException | NoSuchMethodException | SecurityException ex){
-                getGameProfile = null;
-                setGameProfile = null;
-            }
-            
-            try {
-                setProfile = OtherUtils.getCraftClass("inventory.CraftMetaSkull").getDeclaredMethod("setProfile", GameProfile.class);
-                setProfile.setAccessible(true);
-            } catch(NoSuchMethodException ex) {
-                setProfile = null;
-            }
-            
-            profileFieldItem = null;
-            profileFieldBlock = null;
-            
-            update = null;
-        }catch(Exception ex){
-            Logger.err("An error ocurred while enabling TextureManager:");
-            ex.printStackTrace();
-        }        
-    }
     
     public static Texture getTexture(ItemStack stack){
         //<editor-fold defaultstate="collapsed" desc="Code">
@@ -86,18 +28,8 @@ public class TextureManager{
             return null;
         }
         
-        SkullMeta skMeta = (SkullMeta) meta;
-        
-        try{
-            if(profileFieldItem == null){
-                profileFieldItem = meta.getClass().getDeclaredField("profile");
-                profileFieldItem.setAccessible(true);
-            }
-            GameProfile profile = (GameProfile) profileFieldItem.get(skMeta);
-            return new Texture(profile);
-        }catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ex){
-            return null;
-        }
+        GameProfile profile = ReflectionManager.getFieldValue(meta, "profile");
+        return new Texture(profile);
 //</editor-fold>
     }
     public static boolean setTexture(ItemStack stack, Texture texture){
@@ -107,107 +39,64 @@ public class TextureManager{
             return false;
         }
         
-        try{
-            SkullMeta sk = (SkullMeta) meta;
-            if(setProfile != null) {
-                // This is required since Minecraft 1.20.2
-                setProfile.invoke(sk, texture == null ? null : texture.getProfile());
-            } else {
-                if(profileFieldItem == null){
-                    profileFieldItem = sk.getClass().getDeclaredField("profile");
-                    profileFieldItem.setAccessible(true);
-                }
-                profileFieldItem.set(sk, texture == null ? null : texture.getProfile());
-            }
-            
-            stack.setItemMeta(sk);
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
-                stack.setDurability((short) 3);
-            }
-            
-            return true;
-        }catch (Exception ex){
-            return false;
+        GameProfile profile = texture != null ? texture.getProfile() : null;
+        if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_20) >= 0) {
+            ReflectionManager.callMethod(meta, "setProfile", profile);
+        } else {
+            ReflectionManager.setFieldValue(meta, "profile", profile);
         }
+        
+        stack.setItemMeta(meta);
+        if(MinecraftVersion.getCurrentVersion().isLegacyVersion()) {
+            stack.setDurability((short) 3);
+        }
+        
+        return true;
 //</editor-fold>
     }
     public static Texture getTexture(Block block){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(isSkull(block.getType())){
-            try{
-                Object tileEntitySkull;
-                GameProfile profile;
-                if(getGameProfile != null){
-                    Object blockPosition = blockPostitionConstructor.newInstance(block.getX(), block.getY(), block.getZ());
-                    Object world = getWorldHandle.invoke(block.getWorld());
-                    tileEntitySkull = getTileEntity.invoke(world, blockPosition);
-                    
-                    profile = (GameProfile) getGameProfile.invoke(tileEntitySkull);
-                }else{
-                    tileEntitySkull = block.getState();
-                    if(profileFieldBlock == null){
-                        try{
-                            profileFieldBlock = tileEntitySkull.getClass().getDeclaredField("profile");
-                        }catch(NoSuchFieldException ex){
-                            profileFieldBlock = tileEntitySkull.getClass().getDeclaredField("gameProfile");
-                        }
-                        profileFieldBlock.setAccessible(true);
-                    }
-                    profile = (GameProfile) profileFieldBlock.get(tileEntitySkull);
-                }
-                return new Texture(profile);
-            }catch(Exception ex){
-                //block is not a head block
-                return null;
-            }
-        }else{
+        if(!isSkull(block.getType())) {
             return null;
         }
+        
+        Object tileEntitySkull = block.getState();
+        GameProfile profile = ReflectionManager.getFieldValue(tileEntitySkull, "profile");
+        
+        return new Texture(profile);
 //</editor-fold>
     }
     public static boolean setTexture(Block block, Texture texture, boolean force){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(!isSkull(block.getType())){
-            return false;
-        }
-        
-        try{            
-            if(texture != null && force && !isSkull(block.getType())){
+            if(force) {
                 block.setType(getBlockSkullMaterial());
                 if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
                     block.setData((byte) 1);
                 }
+            } else {
+                return false;
             }
-            
-            Object tileEntitySkull;
-            if(setGameProfile != null){
-                Object blockPosition = blockPostitionConstructor.newInstance(block.getX(), block.getY(), block.getZ());
-                Object world = getWorldHandle.invoke(block.getWorld());
-                tileEntitySkull = getTileEntity.invoke(world, blockPosition);
-                
-                setGameProfile.invoke(tileEntitySkull, texture == null ? null : texture.getProfile());
-            }else{
-                tileEntitySkull = block.getState();
-                if(profileFieldBlock == null){
-                    try{
-                        profileFieldBlock = tileEntitySkull.getClass().getDeclaredField("profile");
-                    }catch(NoSuchFieldException ex){
-                        profileFieldBlock = tileEntitySkull.getClass().getDeclaredField("gameProfile");
-                    }
-                    profileFieldBlock.setAccessible(true);
-                }
-                profileFieldBlock.set(tileEntitySkull, texture == null ? null : texture.getProfile());
-                
-                if(update == null){
-                    update = tileEntitySkull.getClass().getMethod("update", boolean.class);
-                }                    
-                update.invoke(tileEntitySkull, true);
-            }
-            return true;
-        }catch(Exception ex){
-            ex.printStackTrace();
-            return false;
         }
+        
+        GameProfile profile = texture != null ? texture.getProfile() : null;
+        if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_17) >= 0) {
+            Object tileEntitySkull = block.getState();
+            ReflectionManager.setFieldValue(tileEntitySkull, "profile", profile);
+            ReflectionManager.callMethod(tileEntitySkull, "update", true);
+        } else {
+            RefClass blockPositionClass = ReflectionManager.getCachedNMSClass("net.minecraft.core", "BlockPosition");
+            RefClass craftWorldClass = ReflectionManager.getCachedCraftClass("CraftWorld");
+            RefClass worldServerClass = ReflectionManager.getCachedNMSClass("net.minecraft.world.level", "World");
+            
+            Object blockPosition = blockPositionClass.callConstructor(block.getX(), block.getY(), block.getZ());
+            Object craftWorld = craftWorldClass.callMethod("getHandle", block.getWorld());
+            Object tileEntitySkull = worldServerClass.callMethod("getTileEntity", craftWorld, blockPosition);
+            
+            ReflectionManager.callMethod(tileEntitySkull, "setGameProfile", profile);
+        }
+        
+        return true;
 //</editor-fold>
     }
     
@@ -218,22 +107,11 @@ public class TextureManager{
             return false;
         }
         
-        SkullMeta sk = (SkullMeta) meta;
-        
-        if(true || NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        SkullMeta sk = (SkullMeta) meta;        
+        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
             sk.setOwner(player.getName());
         }else{
-            try{
-                Class playerProfileClass = Class.forName("org.bukkit.profile.PlayerProfile");
-                Method getPlayerProfile = player.getClass().getMethod("getPlayerProfile");
-                Object playerProfile = getPlayerProfile.invoke(player);
-                Method setPlayerProfile = sk.getClass().getMethod("setOwnerProfile", playerProfileClass);
-                setPlayerProfile.setAccessible(true);
-                setPlayerProfile.invoke(sk, playerProfile);
-            }catch(Exception ex){
-                ex.printStackTrace();
-                return false;
-            }                
+            sk.setOwningPlayer(player);
         }
         
         stack.setItemMeta(sk);

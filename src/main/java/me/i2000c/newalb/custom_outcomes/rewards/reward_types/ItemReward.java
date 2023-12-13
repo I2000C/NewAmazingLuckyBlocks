@@ -234,7 +234,7 @@ public class ItemReward extends Reward{
         //Save texture
         Texture texture = builder.getTexture();
         if(texture != null){
-            config.set(path + ".textureID", texture.getID());
+            config.set(path + ".textureID", texture.getId());
         }
 
         //Save leather armor color
