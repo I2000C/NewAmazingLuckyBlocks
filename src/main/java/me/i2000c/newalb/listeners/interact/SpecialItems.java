@@ -1,7 +1,6 @@
 package me.i2000c.newalb.listeners.interact;
 
 import io.github.bananapuncher714.nbteditor.NBTEditor;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +27,8 @@ import me.i2000c.newalb.listeners.wands.RegenWand;
 import me.i2000c.newalb.listeners.wands.ShieldWand;
 import me.i2000c.newalb.listeners.wands.SlimeWand;
 import me.i2000c.newalb.listeners.wands.TntWand;
+import me.i2000c.newalb.reflection.RefClass;
+import me.i2000c.newalb.reflection.RefField;
 import org.bukkit.inventory.ItemStack;
 
 public class SpecialItems {
@@ -70,19 +71,14 @@ public class SpecialItems {
     //////////////////////////////////////
     
     static {
-        try {
-            for(Field field : SpecialItems.class.getDeclaredFields()) {
-                field.setAccessible(true);
-                Object object = field.get(null);
-                if(object instanceof SpecialItem) {
-                    SpecialItem specialItem = (SpecialItem) object;
-                    ITEMS_NAMES.add(specialItem.getName());
-                    ITEMS_BY_ID.add(specialItem);
-                    ITEMS_BY_NAME.put(specialItem.getName(), specialItem);
-                }
+        for(RefField field : RefClass.of(SpecialItems.class).getFields()) {
+            Object object = field.getStaticValue();
+            if(object instanceof SpecialItem) {
+                SpecialItem specialItem = (SpecialItem) object;
+                ITEMS_NAMES.add(specialItem.getName());
+                ITEMS_BY_ID.add(specialItem);
+                ITEMS_BY_NAME.put(specialItem.getName(), specialItem);
             }
-        } catch(ReflectiveOperationException ex) {
-            throw new InternalError(ex);
         }
     }
     
