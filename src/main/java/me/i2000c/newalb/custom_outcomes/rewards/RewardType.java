@@ -1,6 +1,5 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
-import java.lang.reflect.Constructor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.BlockReplacingSphereReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.BlockReward;
@@ -21,6 +20,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.reward_types.SquidExplosionRewar
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.StructureReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TeleportReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapReward;
+import me.i2000c.newalb.reflection.RefClass;
 
 public enum RewardType{
     item(ItemReward.class, EditorType.ITEM_REWARD),
@@ -44,24 +44,16 @@ public enum RewardType{
     
     particle(ParticleReward.class, null);
     
-    private final Constructor rewardConstructor;
+    private final RefClass rewardClass;
     private final EditorType editorType;
 
     private RewardType(Class rewardClass, EditorType editorType){
-        try{
-            this.rewardConstructor = rewardClass.getConstructor(Outcome.class);
-            this.editorType = editorType;
-        }catch(Exception ex){
-            throw new Error(ex);
-        }
+        this.rewardClass = RefClass.of(rewardClass);
+        this.editorType = editorType;
     }
     
     public Reward createReward(Outcome outcome){
-        try{
-            return (Reward) rewardConstructor.newInstance(outcome);
-        }catch(Exception ex){
-            throw new Error(ex);
-        }
+        return this.rewardClass.callConstructor(outcome);
     }
     
     public EditorType getEditorType(){
