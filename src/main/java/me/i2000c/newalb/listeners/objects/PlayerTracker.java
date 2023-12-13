@@ -1,12 +1,11 @@
 package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import com.cryptomorin.xseries.messages.ActionBar;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangConfig;
-import me.i2000c.newalb.utils2.ActionBarUtils;
+import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
@@ -61,24 +60,22 @@ public class PlayerTracker extends SpecialItem{
                 String message;
                 if(nearestEntity == null){
                     message = LangConfig.getMessage("Objects.PlayerTracker.message3");
-                    ActionBarUtils.sendMessage(message, player);
+                    ActionBar.sendActionBar(player, Logger.color(message));
                 }else{
                     player.setCompassTarget(nearestEntity.getLocation());
 
                     double distance = Math.sqrt(minDistanceS);
-                    BigDecimal d = new BigDecimal(distance).setScale(2, RoundingMode.HALF_EVEN);
-                    distance = d.doubleValue();
 
                     if(nearestEntity instanceof Player){
-                        message = LangConfig.getMessage("Objects.PlayerTracker.message1");
-                        ActionBarUtils.sendMessage(message
+                        message = LangConfig.getMessage("Objects.PlayerTracker.message1")
                                 .replace("%player%", ((Player)nearestEntity).getName())
-                                .replace("%distance%", String.valueOf(distance)), player);
+                                .replace("%distance%", String.format("%.2f", distance));
+                        ActionBar.sendActionBar(player, Logger.color(message));
                     }else{
-                        message = LangConfig.getMessage("Objects.PlayerTracker.message2");
-                        ActionBarUtils.sendMessage(message
+                        message = LangConfig.getMessage("Objects.PlayerTracker.message2")
                                 .replace("%entity%", nearestEntity.getName())
-                                .replace("%distance%", String.valueOf(distance)), player);
+                                .replace("%distance%", String.format("%.2f", distance));
+                        ActionBar.sendActionBar(player, Logger.color(message));
                     }
                 }
                 break;

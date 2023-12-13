@@ -1,11 +1,11 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.messages.ActionBar;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ActionBarUtils;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -91,7 +91,7 @@ public class MessageReward extends Reward{
                 Logger.sendTitle(replacedTitle, replacedSubtitle, player);
                 break;
             case ACTION_BAR:
-                ActionBarUtils.sendMessage(replacedTitle, player);
+                ActionBar.sendActionBar(player, Logger.color(replacedTitle));
                 break;
             case CHAT:
                 Logger.sendMessage(replacedTitle, player, false);

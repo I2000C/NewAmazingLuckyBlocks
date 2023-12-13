@@ -1,11 +1,11 @@
 package me.i2000c.newalb.utils;
 
+import com.cryptomorin.xseries.messages.ActionBar;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.utils2.ActionBarUtils;
 import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -116,7 +116,7 @@ public class RandomBlocks {
                             int percentajeValue = (totalBlocks-restBlocks)*100/totalBlocks;
                             String message = percentaje + " " + percentajeValue + "%";
                             
-                            ActionBarUtils.sendMessage(message, Bukkit.getPlayer(playerName));
+                            ActionBar.sendActionBar(Bukkit.getPlayer(playerName), Logger.color(message));
                         }catch(Exception ex){
                         }
                     }                    
@@ -166,7 +166,7 @@ public class RandomBlocks {
                             int percentajeValue = (totalBlocks-restBlocks)*100/totalBlocks;
                             String message = percentaje + " " + percentajeValue + "%";
                             
-                            ActionBarUtils.sendMessage(message, Bukkit.getPlayer(playerName));
+                            ActionBar.sendActionBar(Bukkit.getPlayer(playerName), Logger.color(message));
                         }catch(Exception ex){
                         }
                     }                    
