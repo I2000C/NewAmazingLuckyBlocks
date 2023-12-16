@@ -3,7 +3,6 @@ package me.i2000c.newalb.listeners.objects;
 import java.util.List;
 import java.util.Objects;
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.reflection.RefClass;
 import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils2.Task;
@@ -16,29 +15,66 @@ import org.bukkit.potion.PotionEffectType;
 
 public class HookBowAux {
     
-    public static Chicken createEntityChicken(Location loc){
-        return createEntityChicken(loc, true, true, false, true);
+    public static Chicken createEntityChicken(Location loc) {
+        if(MinecraftVersion.getCurrentVersion() == MinecraftVersion.v1_8) {
+            return createEntityChicken_1_8(loc, true, true, false, true);
+        } else {
+            return createEntityChicken(loc, true, true, false, true);
+        }
     }
     
-    public static Chicken createEntityChicken(Location loc, boolean isInvisible, boolean isInvulnerable, boolean withAI, boolean isSilent){
+    private static Chicken createEntityChicken(Location loc, 
+                                                  boolean isInvisible, boolean isInvulnerable, 
+                                                  boolean withAI, boolean isSilent) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
-            return HookBowAux1_8.createEntityChicken(loc, isInvisible, isInvulnerable, withAI, isSilent);
+        Chicken entity;
+        if(isInvisible){
+            entity = loc.getWorld().spawn(loc.clone().add(0, 200, 0), Chicken.class);
+            PotionEffect invisibility = new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 255, false, false);
+            entity.addPotionEffect(invisibility, true);
+            Task.runTask(() -> entity.teleport(loc), 2L);
         }else{
-            Chicken entity;
-            if(isInvisible){
-                entity = loc.getWorld().spawn(loc.clone().add(0, 200, 0), Chicken.class);
-                PotionEffect invisibility = new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 255, false, false);
-                entity.addPotionEffect(invisibility, true);
-                Task.runTask(() -> entity.teleport(loc), 2L);
-            }else{
-                entity = loc.getWorld().spawn(loc, Chicken.class);
-            }
-            entity.setAI(withAI);
-            entity.setSilent(isSilent);
-            entity.setInvulnerable(isInvulnerable);
-            return entity;
+            entity = loc.getWorld().spawn(loc, Chicken.class);
         }
+        entity.setAI(withAI);
+        entity.setSilent(isSilent);
+        entity.setInvulnerable(isInvulnerable);
+        return entity;
+//</editor-fold>
+    }    
+    private static Chicken createEntityChicken_1_8(Location loc, 
+                                                  boolean isInvisible, boolean isInvulnerable, 
+                                                  boolean withAI, boolean isSilent) {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Chicken entity;
+        if(isInvisible){
+            entity = loc.getWorld().spawn(loc.clone().add(0, 200, 0), Chicken.class);
+            PotionEffect invisibility = new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 255, false, false);
+            entity.addPotionEffect(invisibility, true);
+            Task.runTask(() -> entity.teleport(loc), 1L);
+        }else{
+            entity = loc.getWorld().spawn(loc, Chicken.class);
+        }
+        
+        //https://wiki.vg/Protocol
+        //https://www.spigotmc.org/threads/attach-lead-to-arrow.509913/
+        //https://bukkit.org/threads/send-packets-to-a-player.117055/
+        
+        //https://www.spigotmc.org/threads/how-to-make-a-horse-invulnerable-unable-to-move-invisible-and-silent.500750/
+        Object nmsEntity = ReflectionManager.callMethod(entity, "getHandle");
+        Object nbtTagCompound = ReflectionManager.callMethod(nmsEntity, "getNBTTag");
+        if(nbtTagCompound == null){
+            nbtTagCompound = ReflectionManager.getCachedNMSClass(null, "NBTTagCompound").callConstructor();
+        }
+        
+        ReflectionManager.callMethod(nmsEntity, "c", nbtTagCompound);
+        if(!withAI) ReflectionManager.callMethod(nbtTagCompound, "setInt", "NoAI", 1);
+        if(isSilent) ReflectionManager.callMethod(nbtTagCompound, "setInt", "Silent", 1);
+        ReflectionManager.callMethod(nmsEntity, "f", nbtTagCompound);
+        
+        if(isInvulnerable) ReflectionManager.getCachedNMSClass(null, "Entity").setFieldValue("invulnerable", nmsEntity, true);
+        
+        return entity;
 //</editor-fold>
     }
     
