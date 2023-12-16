@@ -1,13 +1,11 @@
 package me.i2000c.newalb.listeners.objects;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.reflection.RefClass;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.entity.Animals;
@@ -16,33 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class HookBowAux{
-    private static Class PacketPlayOutAttachEntityClass;
-    private static Class PacketClass;
-    private static Method getHandle;
-    private static Constructor packetConstructor;
-    
-    private static Field playerConnectionField;
-    private static Method sendPacketMethod;
-    
-    static{
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        try{
-            PacketPlayOutAttachEntityClass = OtherUtils.getNMSClass("net.minecraft.network.protocol.game", "PacketPlayOutAttachEntity");
-            PacketClass = OtherUtils.getNMSClass("net.minecraft.network.protocol", "Packet");
-            
-            getHandle = OtherUtils.getCraftClass("entity.CraftEntity").getMethod("getHandle");
-            
-            try{
-                packetConstructor = PacketPlayOutAttachEntityClass.getConstructor(int.class, getHandle.getReturnType(), getHandle.getReturnType());
-            }catch(NoSuchMethodException ex){
-                packetConstructor = PacketPlayOutAttachEntityClass.getConstructor(getHandle.getReturnType(), getHandle.getReturnType());
-            }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-//</editor-fold>
-    }
+public class HookBowAux {
     
     public static Chicken createEntityChicken(Location loc){
         return createEntityChicken(loc, true, true, false, true);
@@ -51,11 +23,7 @@ public class HookBowAux{
     public static Chicken createEntityChicken(Location loc, boolean isInvisible, boolean isInvulnerable, boolean withAI, boolean isSilent){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
-            try{
-                return HookBowAux1_8.createEntityChicken(loc, isInvisible, isInvulnerable, withAI, isSilent);
-            }catch(Exception ex){
-                return null;
-            }
+            return HookBowAux1_8.createEntityChicken(loc, isInvisible, isInvulnerable, withAI, isSilent);
         }else{
             Chicken entity;
             if(isInvisible){
@@ -90,66 +58,49 @@ public class HookBowAux{
             return;
         }
         
-        try{
-            //Build the packet
-            Object leashPlayerEntity = getHandle.invoke(leashPlayer);
-            Object entityToLeashEntity = getHandle.invoke(entityToLeash);
-            Object packet;
-            try{
-                packet = packetConstructor.newInstance(1, entityToLeashEntity, leashPlayerEntity);
-            }catch(Exception ex){
-                packet = packetConstructor.newInstance(entityToLeashEntity, leashPlayerEntity);
+        Object leashPlayerEntity = ReflectionManager.callMethod(leashPlayer, "getHandle");
+        Object entityToLeashEntity = ReflectionManager.callMethod(entityToLeash, "getHandle");
+        
+        // Build the packet
+        RefClass packetClass = ReflectionManager.getCachedNMSClass("net.minecraft.network.protocol.game", "PacketPlayOutAttachEntity");
+        Object packet;
+        if(MinecraftVersion.getCurrentVersion() == MinecraftVersion.v1_8) {
+            packet = packetClass.callConstructor(1, entityToLeashEntity, leashPlayerEntity);
+        } else {
+            packet = packetClass.callConstructor(entityToLeashEntity, leashPlayerEntity);
+        }
+        
+        // Send the packet to every target player
+        for(Player player : targetPlayers) {
+            Object targetPlayerEntity = ReflectionManager.callMethod(player, "getHandle");
+            
+            Object playerConnection;
+            if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_20) >= 0) {
+                // Since Minecraft 1.20, the field is called "c"
+                playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "c");
+            } else if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_17) >= 0) {
+                // From Minecraft 1.17 to Minecraft 1.19, the field is called "b"
+                playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "b");
+            } else {
+                // From Minecraft 1.8 to Minecraft 1.16, the field is called "playerConnection"
+                playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "playerConnection");
             }
             
-            //Send the packet to every target player
-            for(Player player : targetPlayers){
-                Object targetPlayerEntity = getHandle.invoke(player);
-                if(playerConnectionField == null){
-                    try{
-                        playerConnectionField = targetPlayerEntity.getClass().getField("playerConnection");
-                    }catch(NoSuchFieldException ex){
-                        try{
-                            // Up to Minecraft 1.19.4, the field is called "b"
-                            playerConnectionField = targetPlayerEntity.getClass().getField("b");
-                        }catch(NoSuchFieldException ex2){
-                            // Since Minecraft 1.20, the field is called "c"
-                            playerConnectionField = targetPlayerEntity.getClass().getField("c");
-                        }
-                    }
-                }
-                
-                Object playerConnection = playerConnectionField.get(targetPlayerEntity);
-                if(sendPacketMethod == null){
-                    try {
-                        // Since Minecraft 1.20.2
-                        // More info here: https://bukkit.org/threads/sending-packets-in-1-20-2.502472/
-                        Class<?> PacketListenerClass = OtherUtils.getNMSClass("net.minecraft.network", "PacketSendListener");
-                        sendPacketMethod = playerConnection.getClass().getMethod("a", PacketClass, PacketListenerClass);
-                    } catch(ClassNotFoundException | NoSuchMethodException ex) {
-                        // From Minecraft 1.8 to 1.20.1
-                        try{
-                            sendPacketMethod = playerConnection.getClass().getMethod("sendPacket", PacketClass);
-                        }catch(NoSuchMethodException ex2){
-                            sendPacketMethod = playerConnection.getClass().getMethod("a", PacketClass);
-                        }
-                    }
-                }
-                
-                try {
-                    // From Minecraft 1.8 to 1.20.1
-                    sendPacketMethod.invoke(playerConnection, packet);
-                } catch(IllegalArgumentException ex) {
-                    // Since Minecraft 1.20.2
-                    sendPacketMethod.invoke(playerConnection, packet, null);
-                }
+            if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_20) >= 0) {
+                // More info here: https://bukkit.org/threads/sending-packets-in-1-20-2.502472/
+                ReflectionManager.callMethod(playerConnection, "a", packet, null);
+            } else if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_18) >= 0) {
+                // Since Minecraft 1.18, the method is called "a"
+                ReflectionManager.callMethod(playerConnection, "a", packet);
+            } else {
+                // From Minecraft 1.8 to Minecraft 1.17, the method is called "sendPacket"
+                ReflectionManager.callMethod(playerConnection, "sendPacket", packet);                
             }
-        }catch(Exception ex){
-            ex.printStackTrace();
         }
 //</editor-fold>
     }
     
     public static void sendLeashAttachPacket(Player leashPlayer, Animals entityToLeash, List<Player> targetPlayers){
-        sendLeashAttachPacket(leashPlayer, entityToLeash, targetPlayers.toArray(new Player[1]));
+        sendLeashAttachPacket(leashPlayer, entityToLeash, targetPlayers.toArray(new Player[0]));
     }
 }

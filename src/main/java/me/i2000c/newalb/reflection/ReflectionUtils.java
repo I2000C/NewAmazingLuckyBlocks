@@ -77,18 +77,25 @@ class ReflectionUtils {
             Class[] classes = executable.getParameterTypes();
             for(int i=0; i<classes.length; i++) {
                 Class executableParameterClass = classes[i];
-                Class parameterClass = params[i].getClass();
-                
-                if(executableParameterClass.isPrimitive()) {
-                    executableParameterClass = PRIMITIVE_CLASS_MAP.get(executableParameterClass);
-                }
-                if(parameterClass.isPrimitive()) {
-                    parameterClass = PRIMITIVE_CLASS_MAP.get(parameterClass);
-                }
-                
-                if(!executableParameterClass.isAssignableFrom(parameterClass)) {
-                    executableFound = false;
-                    break;
+                if(params[i] == null) {
+                    if(executableParameterClass.isPrimitive()) {
+                        executableFound = false;
+                        break;
+                    }
+                } else {                
+                    Class parameterClass = params[i].getClass();
+
+                    if(executableParameterClass.isPrimitive()) {
+                        executableParameterClass = PRIMITIVE_CLASS_MAP.get(executableParameterClass);
+                    }
+                    if(parameterClass.isPrimitive()) {
+                        parameterClass = PRIMITIVE_CLASS_MAP.get(parameterClass);
+                    }
+
+                    if(!executableParameterClass.isAssignableFrom(parameterClass)) {
+                        executableFound = false;
+                        break;
+                    }
                 }
             }
             
