@@ -1,15 +1,14 @@
-package me.i2000c.newalb.listeners.objects;
+package me.i2000c.newalb.listeners.interact;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.EnumSet;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 
 public class MaterialChecker{
-    private static final Set<XMaterial> PROTECTED_MATERIALS = new HashSet<>();
+    private static final EnumSet<XMaterial> PROTECTED_MATERIALS = EnumSet.noneOf(XMaterial.class);
     
-    private static void addProtectedMaterials(){
+    static {
         PROTECTED_MATERIALS.add(XMaterial.CHEST);
         PROTECTED_MATERIALS.add(XMaterial.TRAPPED_CHEST);
         PROTECTED_MATERIALS.add(XMaterial.ENDER_CHEST);
@@ -86,10 +85,6 @@ public class MaterialChecker{
     }
     
     public static boolean check(PlayerInteractEvent e){
-        if(PROTECTED_MATERIALS.isEmpty()){
-            addProtectedMaterials();
-        }        
-        
         if(e.getClickedBlock() == null){
             return false;
         }

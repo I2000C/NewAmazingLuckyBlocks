@@ -2,7 +2,6 @@ package me.i2000c.newalb.listeners.interact;
 
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.listeners.objects.MaterialChecker;
 import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
