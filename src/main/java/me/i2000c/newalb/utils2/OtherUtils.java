@@ -5,7 +5,6 @@ import java.util.function.Predicate;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -113,20 +112,5 @@ public class OtherUtils{
             return value;
         }
 //</editor-fold>
-    }
-    
-    //Reflection Utils
-    public static Class<?> getNMSClass(String nmsPackage, String name) throws ClassNotFoundException{
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isNewNMS()){
-            return Class.forName(nmsPackage + "." + name);
-        }else{
-            String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-            return Class.forName("net.minecraft.server." + version + "." + name);
-        }        
-    }
-    
-    public static Class<?> getCraftClass(String name) throws ClassNotFoundException{
-        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        return Class.forName("org.bukkit.craftbukkit." + version + "." + name);
     }
 }
