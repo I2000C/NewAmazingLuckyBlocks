@@ -103,6 +103,18 @@ public class OtherUtils{
 //</editor-fold>
     }
     
+    public static <T extends Comparable<T>> T clamp(T value, T min, T max) {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(value.compareTo(min) < 0) {
+            return min;
+        } else if (value.compareTo(max) > 0) {
+            return max;
+        } else {
+            return value;
+        }
+//</editor-fold>
+    }
+    
     //Reflection Utils
     public static Class<?> getNMSClass(String nmsPackage, String name) throws ClassNotFoundException{
         if(NewAmazingLuckyBlocks.getMinecraftVersion().isNewNMS()){

@@ -216,7 +216,7 @@ Objects:
     custom-model-data: 1000
   MultiBow:
     numberOfArrows: 5
-    spread: 3.5
+    spreadAngle: 25
     required-permission: false
     permission: amazinglb.objects.multibow
     custom-model-data: 1000
