@@ -3,6 +3,7 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import java.io.File;
 import java.io.FilenameFilter;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
@@ -30,7 +31,7 @@ public class StructureMenu extends Editor<StructureReward>{
     
     private static final FilenameFilter FILENAME_FILTER = (File dir, String name) -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             return name.endsWith(".schematic");
         }else{
             return name.endsWith(".schematic") || name.endsWith(".schem");

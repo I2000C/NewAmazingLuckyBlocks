@@ -206,7 +206,7 @@ public class SoundMenu extends Editor<SoundReward>{
         //<editor-fold defaultstate="collapsed" desc="Code">        
         Menu menu = GUIFactory.newMenu(CustomInventoryType.SOUND_TYPE_MENU, 54, "&3&lSound Type");
         
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_10) >= 0){
+        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_10) >= 0){
             ItemStack stop = ItemBuilder.newItem(XMaterial.BARRIER)
                     .withDisplayName("&cStop all sounds")
                     .build();
@@ -233,7 +233,7 @@ public class SoundMenu extends Editor<SoundReward>{
                     break;
                 case 48:
                     //Stop sounds if minecraft version > 1.9
-                    if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) > 0){
+                    if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_9) > 0){
                         for(Sound sound : soundList){
                             player.stopSound(sound);
                         }

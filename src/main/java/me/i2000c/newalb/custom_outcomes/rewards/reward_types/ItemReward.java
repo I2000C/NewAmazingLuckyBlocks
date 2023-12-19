@@ -39,7 +39,7 @@ public class ItemReward extends Reward{
     public static final int ITEM_IN_OFF_HAND_SLOT = 41;
     
     public static int getMaxSlot(){
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) >= 0){
+        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_9) >= 0){
             return ITEM_IN_OFF_HAND_SLOT;
         }else{
             return ITEM_IN_OFF_HAND_SLOT - 1;
@@ -178,7 +178,7 @@ public class ItemReward extends Reward{
                     builder.addPotionEffect(new PotionEffect(PotionEffectType.getByName(name), duration, amplifier));
                 });
             }
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
                 if(config.contains(path + ".potionColor")){
                     String hexColor = config.getString(path + ".potionColor");
                     CustomColor color = new CustomColor(hexColor);
@@ -252,7 +252,7 @@ public class ItemReward extends Reward{
         if(type != null){
             config.set(path + ".material" , "POTION");
             config.set(path + ".potionSplashType", type.name());   
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
                 if(builder.hasColor()){
                     String hexColor = new CustomColor(builder.getColor()).getHexColorString();
                     config.set(path + ".potionColor", hexColor);
@@ -353,7 +353,7 @@ public class ItemReward extends Reward{
                 case BOOTS_SLOT: return equipment.getBoots();
                 case ITEM_IN_HAND_SLOT: return equipment.getItemInHand();
                 case ITEM_IN_OFF_HAND_SLOT:
-                    if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) >= 0){
+                    if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_9) >= 0){
                         return equipment.getItemInOffHand();
                     }else{
                         Logger.warn("Invalid slot (" + slot + "). There is no off-hand in Minecraft 1.8");
@@ -384,7 +384,7 @@ public class ItemReward extends Reward{
                 case BOOTS_SLOT: equipment.setBoots(stack); break;
                 case ITEM_IN_HAND_SLOT: equipment.setItemInHand(stack); break;
                 case ITEM_IN_OFF_HAND_SLOT:
-                    if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) >= 0){
+                    if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_9) >= 0){
                         equipment.setItemInOffHand(stack);
                     }else{
                         Logger.log("Invalid slot (" + slot + "). There is no off-hand in Minecraft 1.8");
@@ -417,7 +417,7 @@ public class ItemReward extends Reward{
         LINGERING;
         
         public static PotionSplashType getFromPotion(ItemStack stack){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
                 if(stack.getType() != Material.POTION){
                     return null;
                 }
@@ -445,7 +445,7 @@ public class ItemReward extends Reward{
         }
         
         public void setToPotion(ItemStack stack){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
                 Potion potion = Potion.fromItemStack(stack);
                 potion.setSplash(this != NORMAL);
                 potion.apply(stack);
@@ -465,7 +465,7 @@ public class ItemReward extends Reward{
         }
         
         public PotionSplashType next(){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
                 return this == NORMAL ? SPLASH : NORMAL;
             }else{
                 switch(this){

@@ -57,10 +57,10 @@ public class ExtendedEntityType{
             this.isAlive = isAlive;
             this.material = material;
             if(minVersion == null){
-                minVersion = MinecraftVersion.getOldestVersion();
+                minVersion = MinecraftVersion.OLDEST_VERSION;
             }
             if(maxVersion == null){
-                maxVersion = MinecraftVersion.getLatestVersion();
+                maxVersion = MinecraftVersion.LATEST_VERSION;
             }
             this.minVersion = minVersion;
             this.maxVersion = maxVersion;
@@ -275,7 +275,7 @@ public class ExtendedEntityType{
                 VALUES.add(new ExtendedEntityType(entityType));
             }
             
-            MinecraftVersion minecraftVersion = NewAmazingLuckyBlocks.getMinecraftVersion();
+            MinecraftVersion minecraftVersion = MinecraftVersion.CURRENT_VERSION;
             for(ExtraEntityType extraEntityType : ExtraEntityType.values()){
                 MinecraftVersion minMinecraftVersion = extraEntityType.minVersion;
                 MinecraftVersion maxMinecraftVersion = extraEntityType.maxVersion;
@@ -297,7 +297,7 @@ public class ExtendedEntityType{
         //<editor-fold defaultstate="collapsed" desc="Code">
         ExtendedEntityType eet;
         try{
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_16) >= 0
+            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_16) >= 0
                     && string.equals("PIG_ZOMBIE")){
                 // Since Minecraft 1.16, pig zombies were changed to zombified piglins
                 eet = new ExtendedEntityType(EntityType.valueOf("ZOMBIFIED_PIGLIN"));
@@ -393,7 +393,7 @@ public class ExtendedEntityType{
             if(entity instanceof Wolf) {
                 ((Wolf) entity).setAngry(true);
                 ((Wolf) entity).setTarget(player);
-            } else if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_15) >= 0) {
+            } else if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_15) >= 0) {
                 if(!this.name().equals("BEE")) {
                     return;
                 }

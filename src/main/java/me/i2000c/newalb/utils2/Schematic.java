@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.reflection.ReflectionManager;
 import org.bukkit.Location;
@@ -49,7 +50,7 @@ public class Schematic{
     public void loadFromFile(File file, World world) throws IOException {
         //<editor-fold defaultstate="collapsed" desc="Code">
         try(FileInputStream fis = new FileInputStream(file)){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                 ClipboardFormat format = ReflectionManager.callStaticMethod(ClipboardFormat.class, "findByFile", file);
                 ClipboardReader reader = ReflectionManager.callMethod(format, "getReader", fis);
                 clipboard = ReflectionManager.callMethod(reader, "read", getWorldData(world));
@@ -69,7 +70,7 @@ public class Schematic{
     public void saveToFile(File file, World world) throws IOException {
         //<editor-fold defaultstate="collapsed" desc="Code">
         try(FileOutputStream fos = new FileOutputStream(file)){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                 try(GZIPOutputStream gzipOuputStream = new GZIPOutputStream(fos)){
                     Object schematicWriter = ReflectionManager.callConstructor("com.sk89q.worldedit.extent.clipboard.io.SchematicWriter", 
                                                                                     new NBTOutputStream(gzipOuputStream));
@@ -88,7 +89,7 @@ public class Schematic{
         //<editor-fold defaultstate="collapsed" desc="Code">
         LocalSession session = ReflectionManager.callMethod(WORLDEDIT_PLUGIN, "getSession", player);
         ClipboardHolder holder;
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             Object worldData = getWorldData(player.getWorld());
             holder = ReflectionManager.callConstructor(ClipboardHolder.class, clipboard, worldData);
         }else{
@@ -109,7 +110,7 @@ public class Schematic{
         //<editor-fold defaultstate="collapsed" desc="Code">
         WorldEdit worldEdit = ReflectionManager.callMethod(WORLDEDIT_PLUGIN, "getWorldEdit");
         EditSession session = worldEdit.getEditSessionFactory().getEditSession(getWorldEditWorld(location.getWorld()), 10000);
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             pasteClipboardLegacy(session, clipboard, location, replaceBlocks, placeAirBlocks);
         }else{
             pasteClipboardNoLegacy(session, clipboard, location, replaceBlocks, placeAirBlocks);

@@ -49,18 +49,11 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     public String name = ChatColor.GOLD + pdffile.getName() + ChatColor.RESET;
     public String prefix;
     
-    private static MinecraftVersion minecraftVersion;
-    public static MinecraftVersion getMinecraftVersion(){
-        return minecraftVersion;
-    }
-    
     @Override
     public void onEnable(){
-        minecraftVersion = MinecraftVersion.getCurrentVersion();
-        
         Logger.initializeLogger("NewAmazingLuckyBlocks", false);
         
-        if(minecraftVersion == null){
+        if(MinecraftVersion.CURRENT_VERSION == null){
             Logger.warn("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version");
             Logger.warn("NewAmazingLuckyBlocks is going to shut down");
             Bukkit.getPluginManager().disablePlugin(this);
@@ -128,7 +121,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     
     @Override
     public void onDisable(){
-        if(minecraftVersion == null) {
+        if(MinecraftVersion.CURRENT_VERSION == null) {
             Logger.log("has been disabled");
         } else {
             RewardListMenu.testRewardsPlayerList.clear();

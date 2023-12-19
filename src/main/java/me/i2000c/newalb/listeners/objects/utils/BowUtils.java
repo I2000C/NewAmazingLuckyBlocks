@@ -88,7 +88,7 @@ public class BowUtils {
                     potionData = meta.getBasePotionData();
                 }
                 
-                if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_16) >= 0) {
+                if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_16) >= 0) {
                     // Since Minecraft 1.16, tipped arrows are normal arrows with effects
                     arrow = player.launchProjectile(Arrow.class, velocity);
                     if(potionData != null) {
@@ -169,7 +169,7 @@ public class BowUtils {
             return;
         }
         
-        if(MinecraftVersion.getCurrentVersion().isLegacyVersion()) {
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             player.setItemInHand(stack);
         } else {
             player.setItemInHand(null);
@@ -184,13 +184,13 @@ public class BowUtils {
         public void setToArrow(Arrow arrow) {
             //<editor-fold defaultstate="collapsed" desc="Code">
             Object craftArrow = ReflectionManager.callMethod(arrow, "getHandle");
-            if(MinecraftVersion.getCurrentVersion() == MinecraftVersion.v1_8) {
+            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8) {
                 // In Minecraft 1.8, the field is called "fromPlayer" and requires an int (0, 1 or 2)
                 ReflectionManager.setFieldValue(craftArrow, "fromPlayer", this.ordinal());
             } else {
                 RefClass refClass = ReflectionManager.getNMSClass("net.minecraft.world.entity.projectile", "EntityArrow$PickupStatus");
                 Object pickupStatus = refClass.callStaticMethod("valueOf", this.name());
-                if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_17) >= 0) {
+                if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_17) >= 0) {
                     // Since Minecraft 1.17, the field is called "d"
                     ReflectionManager.setFieldValue(craftArrow, "d", pickupStatus);
                 } else {

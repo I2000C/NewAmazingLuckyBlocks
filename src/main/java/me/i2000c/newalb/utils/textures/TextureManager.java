@@ -40,14 +40,14 @@ public class TextureManager{
         }
         
         GameProfile profile = texture != null ? texture.getProfile() : null;
-        if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_20) >= 0) {
+        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_20) >= 0) {
             ReflectionManager.callMethod(meta, "setProfile", profile);
         } else {
             ReflectionManager.setFieldValue(meta, "profile", profile);
         }
         
         stack.setItemMeta(meta);
-        if(MinecraftVersion.getCurrentVersion().isLegacyVersion()) {
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             stack.setDurability((short) 3);
         }
         
@@ -71,7 +71,7 @@ public class TextureManager{
         if(!isSkull(block.getType())){
             if(force) {
                 block.setType(getBlockSkullMaterial());
-                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                     block.setData((byte) 1);
                 }
             } else {
@@ -80,7 +80,7 @@ public class TextureManager{
         }
         
         GameProfile profile = texture != null ? texture.getProfile() : null;
-        if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_17) >= 0) {
+        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_17) >= 0) {
             Object tileEntitySkull = block.getState();
             ReflectionManager.setFieldValue(tileEntitySkull, "profile", profile);
             ReflectionManager.callMethod(tileEntitySkull, "update", true);
@@ -108,7 +108,7 @@ public class TextureManager{
         }
         
         SkullMeta sk = (SkullMeta) meta;        
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             sk.setOwner(player.getName());
         }else{
             sk.setOwningPlayer(player);
@@ -130,28 +130,28 @@ public class TextureManager{
     }
     public static boolean isSkull(Material m){
         String name = m.name();
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             return name.equals("SKULL") || name.equals("SKULL_ITEM");
         }else{
             return name.equals("PLAYER_HEAD") || name.equals("PLAYER_WALL_HEAD");
         }
     }
     public static Material getBlockSkullMaterial(){
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             return Material.SKULL;
         }else{
             return Material.valueOf("PLAYER_HEAD");
         }
     }
     public static Material getItemSkullMaterial(){
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             return Material.SKULL_ITEM;
         }else{
             return Material.valueOf("PLAYER_HEAD");
         }
     }
     public static ItemStack getItemSkullStack(){
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             return new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         }else{
             return new ItemStack(Material.valueOf("PLAYER_HEAD"));

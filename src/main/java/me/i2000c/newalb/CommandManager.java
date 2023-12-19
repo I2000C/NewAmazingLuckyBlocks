@@ -865,7 +865,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return false;
         }
         
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             if(!args[1].endsWith(".schematic")){
                 Logger.sendMessage("&cSchematic files must end in &6.schematic", sender);
                 return false;

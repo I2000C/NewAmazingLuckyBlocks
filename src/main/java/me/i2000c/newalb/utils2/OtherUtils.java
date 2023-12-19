@@ -83,7 +83,7 @@ public class OtherUtils{
     private static Method getMinHeightMethod = null;
     public static int getMinWorldHeight(World world){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_18) >= 0){
+        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_18) >= 0){
             // In Minecraft 1.18+ the min height can be negative
             try{
                 if(getMinHeightMethod == null){

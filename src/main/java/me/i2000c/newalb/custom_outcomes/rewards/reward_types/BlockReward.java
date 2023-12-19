@@ -1,7 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
@@ -44,7 +44,7 @@ public class BlockReward extends Reward{
     
     public void setItemBlock(ItemStack itemBlock){
         this.blockItem = new ItemStack(itemBlock.getType());
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             this.blockItem.setData(itemBlock.getData());
         }
     }
@@ -125,7 +125,7 @@ public class BlockReward extends Reward{
         offset.applyToLocation(loc);
         if(isFallingBlock){
             byte data;
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                 data = (byte) blockItem.getDurability();
             }else{
                 data = 0;
@@ -135,7 +135,7 @@ public class BlockReward extends Reward{
         }else{
             Task.runTask(() -> {
                 loc.getWorld().getBlockAt(loc).setType(blockItem.getType());
-                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                     loc.getWorld().getBlockAt(loc).setData(blockItem.getData().getData());
                 }
             }, 1L);             

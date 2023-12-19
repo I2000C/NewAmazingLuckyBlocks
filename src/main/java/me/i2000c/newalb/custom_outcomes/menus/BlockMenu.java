@@ -1,7 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
@@ -140,7 +140,7 @@ public class BlockMenu extends Editor<BlockReward>{
             
             if(stack.getType().isBlock()){
                 item.setItemBlock(new ItemStack(stack.getType()));
-                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                     item.getItemBlock().setDurability(stack.getDurability());
                 }
                 openBlockMenu(player);

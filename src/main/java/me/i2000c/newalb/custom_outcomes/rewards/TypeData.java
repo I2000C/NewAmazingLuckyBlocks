@@ -1,7 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
 import java.util.Objects;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Material;
@@ -23,7 +23,7 @@ public class TypeData{
         }
         
         this.texture = TextureManager.getTexture(stack);
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             if(this.texture == null){
                 this.material = processMaterial(stack.getType());
                 this.durability = stack.getDurability();                
@@ -40,7 +40,7 @@ public class TypeData{
     public TypeData(Block block){
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.texture = TextureManager.getTexture(block);
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             if(this.texture == null){
                 this.material = processMaterial(block.getType());
                 this.durability = block.getData();                

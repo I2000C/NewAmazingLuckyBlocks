@@ -228,7 +228,7 @@ public final class Equipment implements Cloneable{
                             builder.addPotionEffect(new PotionEffect(PotionEffectType.getByName(name), duration, amplifier));
                         });
                     }
-                    if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+                    if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
                         if(config.contains(fullPath + ".potionColor")){
                             String hexColor = config.getString(fullPath + ".potionColor");
                             CustomColor color = new CustomColor(hexColor);
@@ -291,7 +291,7 @@ public final class Equipment implements Cloneable{
                     if(type != null){
                         config.set(path + ".material" , "POTION");
                         config.set(path + ".potionSplashType", type.name());   
-                        if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+                        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
                             if(builder.hasColor()){
                                 String hexColor = new CustomColor(builder.getColor()).getHexColorString();
                                 config.set(fullPath + ".potionColor", hexColor);

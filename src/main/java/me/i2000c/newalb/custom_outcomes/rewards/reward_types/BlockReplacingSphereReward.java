@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
@@ -76,7 +76,7 @@ public class BlockReplacingSphereReward extends Reward{
     
     public void addItemStack(ItemStack stack){
         ItemStack item = new ItemStack(stack.getType());
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             item.setDurability(stack.getDurability());
         }
         
@@ -86,7 +86,7 @@ public class BlockReplacingSphereReward extends Reward{
     }
     public void removeItemStack(ItemStack stack){
         ItemStack item = new ItemStack(stack.getType());
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             item.setDurability(stack.getDurability());
         }
         if(!this.materials.containsKey(stack)){
@@ -114,7 +114,7 @@ public class BlockReplacingSphereReward extends Reward{
         //<editor-fold defaultstate="collapsed" desc="Code">
         int compared = item1.getType().name().compareTo(item2.getType().name());
         if(compared == 0){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                 Integer durability1 = Integer.valueOf(item1.getDurability());
                 Integer durability2 = Integer.valueOf(item2.getDurability());
                 
@@ -255,7 +255,7 @@ public class BlockReplacingSphereReward extends Reward{
                             ItemStack item = getRandomItem();
                             if(item != null){
                                 block.setType(item.getType());
-                                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                                     block.setData((byte) item.getDurability());
                                 }
                                 placedLocations.add(block.getLocation());

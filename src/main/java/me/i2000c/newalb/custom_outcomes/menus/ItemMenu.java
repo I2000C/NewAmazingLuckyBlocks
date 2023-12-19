@@ -268,7 +268,7 @@ public class ItemMenu extends Editor<ItemReward>{
                         .addLoreLine("&dCurrent type: &e" + PotionSplashType.getFromPotion(item.getItem()))
                         .build();
                 
-                if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+                if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
                     setPotionColor = ItemBuilder.newItem(XMaterial.BLAZE_POWDER)
                             .withDisplayName("&dClick to set potion color")
                             .build();
@@ -374,7 +374,7 @@ public class ItemMenu extends Editor<ItemReward>{
             builder.addLoreLine("&2Slot &b40 &2is &e&lITEM IN HAND");
         }
         
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_9) >= 0){
+        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_9) >= 0){
             if(item.getSpawnInvSlot() == ItemReward.ITEM_IN_OFF_HAND_SLOT){
                 builder.addLoreLine("&2Slot &b41 &2is &5&lITEM IN OFF-HAND");
             }else{
@@ -568,7 +568,7 @@ public class ItemMenu extends Editor<ItemReward>{
                 //Open select potion color menu
                 if(e.getCurrentItem() != null){
                     if(e.getCurrentItem().getType() == Material.BLAZE_POWDER){
-                        if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+                        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
                             Color itemColor = ItemBuilder.fromItem(item.getItem(), false)
                                     .getColor();
                             Editor<CustomColor> editor3 = EditorType.COLOR.getEditor();
@@ -686,7 +686,7 @@ public class ItemMenu extends Editor<ItemReward>{
                             ItemBuilder.fromItem(item.getItem(), false)
                                     .clearPotionEffects();
                             
-                            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+                            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
                                 Potion potion = Potion.fromItemStack(item.getItem());
                                 potion.setType(PotionType.WATER);
                                 potion.apply(item.getItem());

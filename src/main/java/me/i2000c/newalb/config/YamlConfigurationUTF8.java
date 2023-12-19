@@ -46,7 +46,7 @@ public class YamlConfigurationUTF8 extends YamlConfiguration{
     public void load(File file){
         //<editor-fold defaultstate="collapsed" desc="Code">
         try{
-            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
                 InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
                 load(reader);
             }else{
@@ -66,7 +66,7 @@ public class YamlConfigurationUTF8 extends YamlConfiguration{
             // Create parent directories
             file.getParentFile().mkdirs();
             
-            if(NewAmazingLuckyBlocks.getMinecraftVersion() == MinecraftVersion.v1_8){
+            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
                 try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))){
                     writer.append(decodeString(saveToString()));
                 }

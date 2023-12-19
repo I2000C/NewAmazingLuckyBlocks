@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.config.ReadWriteConfig;
 import me.i2000c.newalb.utils2.OtherUtils;
@@ -258,7 +259,7 @@ public class TypeManager{
         }
         
         Iterator<Recipe> iter = Bukkit.recipeIterator();
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             while(iter.hasNext()){
                 Recipe recipe = iter.next();
                 if(recipe.getResult().equals(typeRecipe.getResult())){

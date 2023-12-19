@@ -42,7 +42,7 @@ public class ItemBuilder{
     }
     private ItemBuilder(Block block) {
         this.item = new ItemStack(block.getType());
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()) {
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             this.item.setDurability(block.getData());
         }
     }
@@ -406,7 +406,7 @@ public class ItemBuilder{
         if(meta instanceof LeatherArmorMeta){
             return ((LeatherArmorMeta) meta).getColor();
         }else if(meta instanceof PotionMeta){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().compareTo(MinecraftVersion.v1_11) >= 0){
+            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
                 return ((PotionMeta) meta).getColor();
             }else{
                 return null;
@@ -442,7 +442,7 @@ public class ItemBuilder{
     
     public void placeAt(Block block) {
         block.setType(item.getType());
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()) {
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             block.setData((byte) item.getDurability());
         }
     }
@@ -451,7 +451,7 @@ public class ItemBuilder{
     }
     
     public FallingBlock spawnFallingBlock(Location loc) {        
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()) {
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             Material material = item.getType();
             byte data = (byte) item.getDurability();
             return loc.getWorld().spawnFallingBlock(loc, material, data);

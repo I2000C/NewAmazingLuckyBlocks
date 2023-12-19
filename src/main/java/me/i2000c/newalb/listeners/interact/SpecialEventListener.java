@@ -33,7 +33,7 @@ public class SpecialEventListener implements Listener{
         if(stack != null){
             Player player = e.getPlayer();
             
-            if(NewAmazingLuckyBlocks.getMinecraftVersion() != MinecraftVersion.v1_8){
+            if(MinecraftVersion.CURRENT_VERSION != MinecraftVersion.v1_8){
                 if(e.getHand() == EquipmentSlot.OFF_HAND){
                     return;
                 }

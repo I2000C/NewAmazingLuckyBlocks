@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityTowerReward;
 import me.i2000c.newalb.utils.Logger;
@@ -37,7 +37,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
         }
         
         this.icon = new ItemStack(material);
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()
                 && material != Material.POTION){
             this.icon.setDurability(icon.getDurability());
         }

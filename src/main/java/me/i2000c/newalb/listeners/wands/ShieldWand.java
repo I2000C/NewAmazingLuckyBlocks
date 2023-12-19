@@ -3,7 +3,7 @@ package me.i2000c.newalb.listeners.wands;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.HashSet;
 import java.util.Set;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Logger;
@@ -45,7 +45,7 @@ public class ShieldWand extends SpecialItem{
                     Bukkit.getPluginManager().callEvent(e2);
                     if(!e2.isCancelled()){
                         b.setType(shieldItemStack.getType());
-                        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                             b.setData((byte) shieldItemStack.getDurability());
                         }
                     }

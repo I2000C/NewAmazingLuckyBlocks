@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -118,7 +119,7 @@ public class PackManager{
         }
         
         ItemStack newIcon = new ItemStack(material);
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()
                 && material != Material.POTION){
             newIcon.setDurability(icon.getDurability());
         }

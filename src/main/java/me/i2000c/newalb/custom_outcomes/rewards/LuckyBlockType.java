@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
@@ -256,7 +257,7 @@ public class LuckyBlockType implements Displayable, Executable{
                                   recipeMaterialNames.get(2)).split(" ");
         
         type.crafting = new ArrayList<>(9);
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             type.recipe = new ShapedRecipe(type.luckyBlockItem);
         }else{
             type.recipe = new ShapedRecipe(new NamespacedKey(NewAmazingLuckyBlocks.getInstance(), "NewAmazingLuckyBlocks." + type.ID), type.luckyBlockItem);
@@ -280,7 +281,7 @@ public class LuckyBlockType implements Displayable, Executable{
         for(String materialAndData : materialNames){
             ItemStack item = ItemBuilder.newItem(materialAndData).build();
             if(item.getType() != Material.AIR){
-                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                     type.recipe.setIngredient(ingredientChar, item.getType(), item.getDurability());
                 }else{
                     type.recipe.setIngredient(ingredientChar, item.getType());
@@ -391,12 +392,12 @@ public class LuckyBlockType implements Displayable, Executable{
             block.setType(luckyBlockItem.getType());
         }
         
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
             block.setData((byte) luckyBlockItem.getDurability());
         }
         
         if(texture != null){
-            if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                 block.setData((byte) 1);
             }
             

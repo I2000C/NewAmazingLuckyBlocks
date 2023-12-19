@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 public class HookBowAux {
     
     public static Chicken createEntityChicken(Location loc) {
-        if(MinecraftVersion.getCurrentVersion() == MinecraftVersion.v1_8) {
+        if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8) {
             return createEntityChicken_1_8(loc, true, true, false, true);
         } else {
             return createEntityChicken(loc, true, true, false, true);
@@ -100,7 +100,7 @@ public class HookBowAux {
         // Build the packet
         RefClass packetClass = ReflectionManager.getCachedNMSClass("net.minecraft.network.protocol.game", "PacketPlayOutAttachEntity");
         Object packet;
-        if(MinecraftVersion.getCurrentVersion() == MinecraftVersion.v1_8) {
+        if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8) {
             packet = packetClass.callConstructor(1, entityToLeashEntity, leashPlayerEntity);
         } else {
             packet = packetClass.callConstructor(entityToLeashEntity, leashPlayerEntity);
@@ -111,10 +111,10 @@ public class HookBowAux {
             Object targetPlayerEntity = ReflectionManager.callMethod(player, "getHandle");
             
             Object playerConnection;
-            if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_20) >= 0) {
+            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_20) >= 0) {
                 // Since Minecraft 1.20, the field is called "c"
                 playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "c");
-            } else if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_17) >= 0) {
+            } else if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_17) >= 0) {
                 // From Minecraft 1.17 to Minecraft 1.19, the field is called "b"
                 playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "b");
             } else {
@@ -122,10 +122,10 @@ public class HookBowAux {
                 playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "playerConnection");
             }
             
-            if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_20) >= 0) {
+            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_20) >= 0) {
                 // More info here: https://bukkit.org/threads/sending-packets-in-1-20-2.502472/
                 ReflectionManager.callMethod(playerConnection, "a", packet, null);
-            } else if(MinecraftVersion.getCurrentVersion().compareTo(MinecraftVersion.v1_18) >= 0) {
+            } else if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_18) >= 0) {
                 // Since Minecraft 1.18, the method is called "a"
                 ReflectionManager.callMethod(playerConnection, "a", packet);
             } else {

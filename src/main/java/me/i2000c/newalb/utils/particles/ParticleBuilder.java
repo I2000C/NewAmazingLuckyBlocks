@@ -21,7 +21,7 @@ import xyz.xenondevs.particle.data.color.ParticleColor;
 import xyz.xenondevs.particle.data.texture.ParticleTexture;
 
 public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
-    private static final boolean IS_MINECRAFT_1_8 = MinecraftVersion.getCurrentVersion() == MinecraftVersion.v1_8;
+    private static final boolean IS_MINECRAFT_1_8 = MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8;
     
     public static ParticleBuilder newParticle(Particles particles, Location loc) {
         return new ParticleBuilder(particles, loc);
@@ -158,7 +158,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
             } else if(particleData instanceof ParticleTexture) {
                 MaterialData md;
                 Material material = ((ParticleTexture) particleData).getMaterial();
-                if(MinecraftVersion.getCurrentVersion().isLegacyVersion()) {
+                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
                     byte data = ((ParticleTexture) particleData).getData();
                     md = new MaterialData(material, data);
                 } else {
@@ -166,7 +166,7 @@ public class ParticleBuilder extends xyz.xenondevs.particle.ParticleBuilder {
                 }
                 if(super.getParticle().hasProperty(PropertyType.REQUIRES_ITEM)) {
                     ItemStack item = new ItemStack(md.getItemType());
-                    if(MinecraftVersion.getCurrentVersion().isLegacyVersion()) {
+                    if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
                         item.setData(md);
                     }
                     pd.withItem(item);

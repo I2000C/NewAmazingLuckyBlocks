@@ -19,7 +19,12 @@ public enum MinecraftVersion{
     
     private static final MinecraftVersion[] VALUES = values();
     
-    public static MinecraftVersion getCurrentVersion(){
+    public static final String BUKKIT_VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+    public static final MinecraftVersion OLDEST_VERSION  = VALUES[0];
+    public static final MinecraftVersion LATEST_VERSION  = VALUES[VALUES.length-1];
+    public static final MinecraftVersion CURRENT_VERSION = getCurrentVersion();    
+    
+    private static MinecraftVersion getCurrentVersion(){
         String version = Bukkit.getServer().getClass().getPackage().getName();
         version = version.substring(version.lastIndexOf('.') + 1);
         version = version.substring(0, version.lastIndexOf('_'));
@@ -43,13 +48,6 @@ public enum MinecraftVersion{
     }    
     public boolean isNewNMS(){
         return isNewNMS;
-    }
-    
-    public static MinecraftVersion getOldestVersion(){
-        return VALUES[0];
-    }
-    public static MinecraftVersion getLatestVersion(){
-        return VALUES[VALUES.length - 1];
     }
         
     public static MinecraftVersion fromString(String version){

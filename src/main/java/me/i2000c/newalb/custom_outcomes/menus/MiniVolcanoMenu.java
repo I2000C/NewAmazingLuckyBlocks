@@ -1,7 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.MiniVolcanoReward;
@@ -236,7 +236,7 @@ public class MiniVolcanoMenu extends Editor<MiniVolcanoReward>{
             ItemStack stack = e.getCurrentItem();
             if(stack != null && stack.getType().isSolid()){
                 item.setBaseMaterial(new ItemStack(stack.getType()));
-                if(NewAmazingLuckyBlocks.getMinecraftVersion().isLegacyVersion()){
+                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                     item.getBaseMaterial().setDurability(stack.getDurability());
                 }
                 openMiniVolcanoMenu(player);

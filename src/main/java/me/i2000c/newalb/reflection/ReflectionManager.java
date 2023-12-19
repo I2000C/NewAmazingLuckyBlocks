@@ -2,7 +2,7 @@ package me.i2000c.newalb.reflection;
 
 import java.util.HashMap;
 import java.util.Map;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.MinecraftVersion;
 import org.bukkit.Bukkit;
 
 public class ReflectionManager {
@@ -106,7 +106,7 @@ public class ReflectionManager {
     }
     
     public static RefClass getNMSClass(String nmsPackage, String name) {
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isNewNMS()){
+        if(MinecraftVersion.CURRENT_VERSION.isNewNMS()){
             return getClass(nmsPackage + "." + name);
         }else{
             return getClass("net.minecraft.server." + BUKKIT_VERSION + "." + name);
@@ -117,7 +117,7 @@ public class ReflectionManager {
     }
     
     public static RefClass getCachedNMSClass(String nmsPackage, String name) {
-        if(NewAmazingLuckyBlocks.getMinecraftVersion().isNewNMS()){
+        if(MinecraftVersion.CURRENT_VERSION.isNewNMS()){
             return getCachedClass(nmsPackage + "." + name);
         }else{
             return getCachedClass("net.minecraft.server." + BUKKIT_VERSION + "." + name);
