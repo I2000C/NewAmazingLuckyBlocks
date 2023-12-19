@@ -113,6 +113,8 @@ public class BowUtils {
         if(isInfiniteBow) {
             ArrowPickupStatus.CREATIVE_ONLY.setToArrow(arrow);
         }
+        
+        XSound.ENTITY_ARROW_SHOOT.play(player);
 //</editor-fold>
     }
     
