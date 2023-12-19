@@ -44,6 +44,7 @@ public class RefClass {
     public List<RefMethod> getMethods() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         return Arrays.stream(ReflectionUtils.getAllThingsOfClass(actualClass, Method.class))
+                .distinct()
                 .map(method -> {
                     method.setAccessible(true);
                     return RefMethod.of(method);
@@ -54,6 +55,7 @@ public class RefClass {
     public List<RefConstructor> getConstructors() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         return Arrays.stream(ReflectionUtils.getAllThingsOfClass(actualClass, Constructor.class))
+                .distinct()
                 .map(constructor -> {
                     constructor.setAccessible(true);
                     return RefConstructor.of(constructor);
@@ -64,6 +66,7 @@ public class RefClass {
     public List<RefField> getFields() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         return Arrays.stream(ReflectionUtils.getAllThingsOfClass(actualClass, Field.class))
+                .distinct()
                 .map(field -> {
                     field.setAccessible(true);
                     return RefField.of(field);
