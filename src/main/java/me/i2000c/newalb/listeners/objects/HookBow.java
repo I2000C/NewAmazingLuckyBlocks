@@ -15,7 +15,6 @@ import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -246,15 +245,21 @@ public class HookBow extends SpecialItem {
             e.setCancelled(true);
             Vector velocity = player.getLocation().getDirection().multiply(arrowSpeed);
             ItemStack bow = player.getItemInHand();
-            Optional<ItemStack> arrowItem = 
-                    BowUtils.getArrowFromPlayerInventory(player, player.getGameMode() != GameMode.CREATIVE);
+            boolean isInfiniteBow = BowUtils.isInfiniteBow(player, bow);
+            boolean isFireBow = BowUtils.isFireBow(bow);
+            
+            Optional<ItemStack> arrowItem = BowUtils.getArrowFromPlayerInventory(player, !isInfiniteBow);
             if(!arrowItem.isPresent()) {
-                return;
+                if(isInfiniteBow) {
+                    arrowItem = Optional.of(ItemBuilder.newItem(XMaterial.ARROW).build());
+                } else {
+                    return;
+                }
             }
             
             BowUtils.applyDurability(player, bow, 1, 1);
             BowUtils.cancelBowCharging(player);
-            Arrow arrow = BowUtils.launchArrow(player, arrowItem.get(), false, false, velocity);
+            Arrow arrow = BowUtils.launchArrow(player, arrowItem.get(), isFireBow, isInfiniteBow, velocity);
             EntityShootBowEvent event = new EntityShootBowEvent(player, bow, arrow, 0);
             onArrowShooted(event);
             return;
