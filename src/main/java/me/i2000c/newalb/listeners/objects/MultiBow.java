@@ -49,12 +49,14 @@ public class MultiBow extends SpecialItem {
         }
         
         Vector direction = e.getProjectile().getVelocity();
+        double speedMultiplier = direction.length();
+        direction.normalize();
         double angleBetweenArrows = spreadAngle / (arrowItems.size() - 1);
 
         for(int i = 0; i < arrowItems.size(); i++) {
             double currentAngle = i * angleBetweenArrows - (spreadAngle / 2.0);
             Vector newDirection = rotateVector(direction, currentAngle);
-            BowUtils.launchArrow(player, bowStack, isFireBow, isInfiniteBow, newDirection);
+            BowUtils.launchArrow(player, bowStack, isFireBow, isInfiniteBow, newDirection.multiply(speedMultiplier));
         }
         
         BowUtils.applyDurability(player, bowStack);
