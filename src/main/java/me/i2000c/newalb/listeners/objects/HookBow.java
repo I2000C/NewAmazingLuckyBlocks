@@ -271,38 +271,40 @@ public class HookBow extends SpecialItem {
         hookData.state = HookState.WAITING_PLAYER_LAND;
 
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR){
-            Logger.removeTitle(player);
+            Task.runTask(() -> {
+                Logger.removeTitle(player);
             
-            Location loc1 = player.getLocation();
-            Location loc2 = hookData.targetLocation != null ? hookData.targetLocation : hookData.chicken.getLocation();
-            
-            FallingBlock fb = player.getWorld().spawnFallingBlock(player.getLocation(), Material.WATER, (byte) 0);
-            MetadataManager.setClassMetadata(fb, this);
-            Vector v = calculateVelocity(loc1, loc2, heightGain, gravity);
-            fb.setDropItem(false);
-            fb.setVelocity(v);
-            fb.setPassenger(player);
-            hookData.stopLeashingTimeout();
+                Location loc1 = player.getLocation();
+                Location loc2 = hookData.targetLocation != null ? hookData.targetLocation : hookData.chicken.getLocation();
+                
+                FallingBlock fb = player.getWorld().spawnFallingBlock(player.getLocation(), Material.WATER, (byte) 0);
+                MetadataManager.setClassMetadata(fb, this);
+                Vector v = calculateVelocity(loc1, loc2, heightGain, gravity);
+                fb.setDropItem(false);
+                fb.setVelocity(v);
+                fb.setPassenger(player);
+                hookData.stopLeashingTimeout();
 
-            Task task = new Task(){
-                @Override
-                public void run(){
-                    try{
-                        if(!fb.getLocation().getBlock().isEmpty()
-                                || fb.isDead() || fb.isEmpty()){
+                Task task = new Task(){
+                    @Override
+                    public void run(){
+                        try{
+                            if(!fb.getLocation().getBlock().isEmpty()
+                                    || fb.isDead() || fb.isEmpty()){
+                                cancel();
+                                fb.remove();
+                                hookData.removeChicken();
+                                HookBow.super.getPlayerCooldown().updateCooldown(player);
+                                hookData.state = HookState.BEFORE_ARROW_SHOOT;
+                            }
+                        }catch(Exception ex){
+                            ex.printStackTrace();
                             cancel();
-                            fb.remove();
-                            hookData.removeChicken();
-                            HookBow.super.getPlayerCooldown().updateCooldown(player);
-                            hookData.state = HookState.BEFORE_ARROW_SHOOT;
                         }
-                    }catch(Exception ex){
-                        ex.printStackTrace();
-                        cancel();
                     }
-                }
-            };
-            task.runTask(5L, 1L);
+                };
+                task.runTask(5L, 1L);
+            }, 2L);
         }else if(e.getAction() == Action.LEFT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_AIR){
             Logger.removeTitle(e.getPlayer());
             
