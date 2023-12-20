@@ -25,7 +25,6 @@ public class BowUtils {
     
     private static final int DURABILITY_PER_USE = 6;
     private static final int DURABILITY_RECOVERED_PER_LEVEL = -2;
-    private static final int MAX_DURABILITY_LEVEL = 3;
     private static final int MAX_DURABILITY_VALUE_BOW = 384;
     
     private static final int ARROW_FIRE_TICKS = 2000;
@@ -45,21 +44,32 @@ public class BowUtils {
     
     public static boolean applyDurability(Player player, ItemStack bowStack) {
         //<editor-fold defaultstate="collapsed" desc="Code">
+        return applyDurability(player, bowStack, DURABILITY_PER_USE, DURABILITY_RECOVERED_PER_LEVEL);
+//</editor-fold>
+    }
+    public static boolean applyDurability(Player player, ItemStack bowStack, 
+                                          int durabilityPerUse, int durabilityRecoveredPerLevel) {
+        //<editor-fold defaultstate="collapsed" desc="Code">
         if(player.getGameMode() == GameMode.CREATIVE) {
             return true;
         }
         
         int durability = bowStack.getDurability();
+        int level;
         if(bowStack.getEnchantments().containsKey(Enchantment.DURABILITY)) {
-            int level = bowStack.getEnchantments().get(Enchantment.DURABILITY);
-            if(level < MAX_DURABILITY_LEVEL) {
-                durability = durability + DURABILITY_PER_USE - level*DURABILITY_RECOVERED_PER_LEVEL;
-            }
+            level = bowStack.getEnchantments().get(Enchantment.DURABILITY);            
         } else {
-            durability += DURABILITY_PER_USE;
+            level = 0;
         }
         
-        if(MAX_DURABILITY_VALUE_BOW - durability <= 0) {
+        durability = durability + durabilityPerUse - level*durabilityRecoveredPerLevel;
+        
+        // Durability must be greater o equal than previous durability
+        if(durability < bowStack.getDurability()) {
+            durability = bowStack.getDurability();
+        }
+        
+        if(durability >= MAX_DURABILITY_VALUE_BOW) {
             XSound.ENTITY_ITEM_BREAK.play(player);
             player.setItemInHand(null);
             return false;
@@ -70,7 +80,7 @@ public class BowUtils {
 //</editor-fold>
     }
     
-    public static void launchArrow(Player player, 
+    public static Arrow launchArrow(Player player, 
                                     ItemStack arrowStack, 
                                     boolean isFireBow, boolean isInfiniteBow, 
                                     Vector velocity) {
@@ -115,6 +125,8 @@ public class BowUtils {
         }
         
         XSound.ENTITY_ARROW_SHOOT.play(player);
+        
+        return arrow;
 //</editor-fold>
     }
     

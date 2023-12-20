@@ -243,6 +243,9 @@ Objects:
     heightGain: 5
     gravity: 0.155
     stopArrowOnLiquid: true
+    # Set this value to a positive one to instant shoot the hook at a certain speed.
+    # Change it to a negative value to disable instant shoot
+    arrowSpeed: 1.5
     leashPacketRadius: 50
     leashTimeoutSeconds: 10    
     required-permission: false
