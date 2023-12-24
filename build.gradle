@@ -38,6 +38,9 @@ dependencies{
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2'
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:sources'
+    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
+    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0:javadoc'
+    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0:sources'
     
     compileOnly 'org.projectlombok:lombok:1.18.30'
     compileOnly 'org.projectlombok:lombok:1.18.30:javadoc'

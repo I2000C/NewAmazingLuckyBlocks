@@ -8,5 +8,5 @@ commands:
         description: The main command of New Amazing Lucky Blocks.
    nalb:
         description: The main command of New Amazing Lucky Blocks.
-softdepend: [WorldEdit]
+softdepend: [WorldEdit, WorldGuard]
 api-version: 1.13

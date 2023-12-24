@@ -24,6 +24,7 @@ import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.Updater;
 import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -73,9 +74,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         Updater.checkUpdates(name, version);
         
         Logger.log(LangConfig.getMessage("Loading.config"));
-        Logger.log(LangConfig.getMessage("Loading.lang"));        
-        
-        initializeWorldEdit();
+        Logger.log(LangConfig.getMessage("Loading.lang"));
         
         Task.initializeTaskManager(this);
         WorldConfig.initialize(this);
@@ -93,6 +92,13 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         WorldConfig.reloadWorlds();
         LocationManager.loadLocations();
         TrapManager.loadTraps();
+        
+        initializeWorldEdit();        
+        if(WorldGuardManager.WORLDGUARD_ENABLED) {
+            Logger.log("&dWorldGuard support: &aenabled");
+        } else {
+            Logger.log("&dWorldGuard support: &7disabled");
+        }
 
         getCommand("alb").setExecutor(new CommandManager(this));
         getCommand("nalb").setExecutor(new CommandManager(this));
