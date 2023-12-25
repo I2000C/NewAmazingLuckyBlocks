@@ -7,6 +7,7 @@ import java.util.List;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils2.RandomUtils;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -299,11 +300,17 @@ public class RandomBlocks {
     }
     
     private void placeBlock(Block block){
-        if(WorldConfig.isEnabled(block.getWorld().getName())){
-            TypeManager.getRandomLuckyBlockType().replaceBlock(block);
-            blocks_placed++;
-            LocationManager.registerLocation(block.getLocation());
+        if(!WorldConfig.isEnabled(block.getWorld().getName())) {
+            return;
         }
+        
+        if(!WorldGuardManager.canBuild(player, block.getLocation())) {
+            return;
+        }
+        
+        TypeManager.getRandomLuckyBlockType().replaceBlock(block);
+        blocks_placed++;
+        LocationManager.registerLocation(block.getLocation());
     }
     
     
