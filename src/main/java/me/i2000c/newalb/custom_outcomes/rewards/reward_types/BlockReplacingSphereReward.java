@@ -16,6 +16,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -249,6 +250,10 @@ public class BlockReplacingSphereReward extends Reward{
                             }
                             
                             if(TypeManager.getType(block) != null){
+                                continue;
+                            }
+                            
+                            if(!WorldGuardManager.canBuild(player, location)) {
                                 continue;
                             }
                             

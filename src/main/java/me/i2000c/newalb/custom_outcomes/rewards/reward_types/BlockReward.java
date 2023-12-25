@@ -8,6 +8,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.FallingBlock;
@@ -123,6 +124,11 @@ public class BlockReward extends Reward{
     public void execute(Player player, Location location){
         Location loc = usePlayerLoc ? player.getLocation().clone() : location.clone();
         offset.applyToLocation(loc);
+        
+        if(!WorldGuardManager.canBuild(player, location)) {
+            return;
+        }
+        
         if(isFallingBlock){
             byte data;
             if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){

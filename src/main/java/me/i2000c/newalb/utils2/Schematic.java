@@ -6,6 +6,7 @@ import com.sk89q.worldedit.EmptyClipboardException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
@@ -106,19 +107,19 @@ public class Schematic{
 //</editor-fold>
     }
     
-    public void pasteAt(Location location, boolean replaceBlocks, boolean placeAirBlocks) throws WorldEditException {
+    public void pasteAt(Player player, Location location, boolean replaceBlocks, boolean placeAirBlocks) throws WorldEditException {
         //<editor-fold defaultstate="collapsed" desc="Code">
         WorldEdit worldEdit = ReflectionManager.callMethod(WORLDEDIT_PLUGIN, "getWorldEdit");
         EditSession session = worldEdit.getEditSessionFactory().getEditSession(getWorldEditWorld(location.getWorld()), 10000);
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-            pasteClipboardLegacy(session, clipboard, location, replaceBlocks, placeAirBlocks);
+            pasteClipboardLegacy(session, clipboard, player, location, replaceBlocks, placeAirBlocks);
         }else{
-            pasteClipboardNoLegacy(session, clipboard, location, replaceBlocks, placeAirBlocks);
+            pasteClipboardNoLegacy(session, clipboard, player, location, replaceBlocks, placeAirBlocks);
         }
 //</editor-fold>
     }
     
-    private void pasteClipboardLegacy(EditSession editSession, Clipboard clipboard, Location loc, boolean replaceBlocks, boolean placeAirBlocks) {
+    private void pasteClipboardLegacy(EditSession editSession, Clipboard clipboard, Player player, Location loc, boolean replaceBlocks, boolean placeAirBlocks) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         Object origin = ReflectionManager.callMethod(clipboard, "getOrigin");
         Object dimensions = ReflectionManager.callMethod(clipboard, "getDimensions");
@@ -155,6 +156,10 @@ public class Schematic{
                         continue;
                     }
                     
+                    if(!WorldGuardManager.canBuild(player, l)) {
+                        continue;
+                    }
+                    
                     ReflectionManager.callMethod(editSession, "setBlock", targetVector, block);
                 }
             }
@@ -165,7 +170,7 @@ public class Schematic{
     }
     
     //Source: https://matthewmiller.dev/blog/how-to-load-and-save-schematics-with-the-worldedit-api/
-    private void pasteClipboardNoLegacy(EditSession session, Clipboard clipboard, Location location, boolean replaceBlocks, boolean placeAirBlocks) throws WorldEditException{
+    private void pasteClipboardNoLegacy(EditSession session, Clipboard clipboard, Player player, Location location, boolean replaceBlocks, boolean placeAirBlocks) throws WorldEditException{
         //<editor-fold defaultstate="collapsed" desc="Code">        
         final World world = location.getWorld();
         BlockVector3 newOrigin = BlockVector3.at(location.getX(), location.getY(), location.getZ());
@@ -174,12 +179,10 @@ public class Schematic{
                 .maskSource(new Mask() {
                     @Override
                     public boolean test(BlockVector3 bv) {
-                        if(replaceBlocks){
-                            return true;
-                        }else{
-                            BlockVector3 target = bv.add(offset);
-                            return world.getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ()).isEmpty();
-                        }
+                        BlockVector3 target = bv.add(offset);
+                        Location loc = BukkitAdapter.adapt(world, target);                     
+                        return (replaceBlocks || loc.getBlock().isEmpty()) 
+                                    && WorldGuardManager.canBuild(player, loc);
                     }
                     @Override
                     public Mask2D toMask2D() {

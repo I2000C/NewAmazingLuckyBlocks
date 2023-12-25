@@ -5,6 +5,7 @@ import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -76,6 +77,10 @@ public class ExplosionReward extends Reward{
     
     @Override
     public void execute(Player player, Location location){
+        if(!WorldGuardManager.canBreak(player, location)) {
+            return;
+        }
+        
         location.getWorld().createExplosion(location.getX(),
                                             location.getY(),
                                             location.getZ(),

@@ -130,7 +130,7 @@ public class StructureReward extends Reward{
             }
             Task.runTask(() -> {
                 try{
-                    schematic.pasteAt(targetLocation, replaceBlocks, placeAirBlocks);
+                    schematic.pasteAt(player, targetLocation, replaceBlocks, placeAirBlocks);
                 }catch(Exception ex){
                     Logger.err("An error occurred while executing structure reward " + this.filename + ":");
                     ex.printStackTrace();
