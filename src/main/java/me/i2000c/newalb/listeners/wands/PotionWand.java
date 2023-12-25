@@ -3,7 +3,6 @@ package me.i2000c.newalb.listeners.wands;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.List;
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Logger;

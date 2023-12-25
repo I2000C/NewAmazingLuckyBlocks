@@ -6,8 +6,10 @@ import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.MetadataManager;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +24,11 @@ public class ExplosiveBow extends SpecialItem{
         boolean withFire = ConfigManager.getConfig().getBoolean("Objects.ExplosiveBow.createFire");
         boolean breakBlocks = ConfigManager.getConfig().getBoolean("Objects.ExplosiveBow.breakBlocks");
         Location loc = projectile.getLocation();
-        loc.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), power, withFire, breakBlocks);
+        
+        if(WorldGuardManager.canBreak((Player) e.getShooter(), loc)) {
+            loc.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), power, withFire, breakBlocks);
+        }
+        
         projectile.remove();
     }
   

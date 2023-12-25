@@ -8,6 +8,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,6 +16,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
@@ -68,10 +70,10 @@ public class IceBow extends SpecialItem{
                 }
                 
                 hitEntity.setFireTicks(0);
-                execute(hitEntity);
+                execute((Player) e.getShooter(), hitEntity);
             }else if(hitBlock != null) {
                 if(generateSnow) {
-                    simulateSnow(hitBlock.getLocation(), snowRadius);
+                    simulateSnow((Player) e.getShooter(), hitBlock.getLocation(), snowRadius);
                 }
             }
             
@@ -84,12 +86,11 @@ public class IceBow extends SpecialItem{
         MetadataManager.setClassMetadata(e.getProjectile(), this);
     }
     
-    public void execute(Entity entity) {
+    public void execute(Player player, Entity entity) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         final Location baseLocation = entity.getLocation().clone();
         
         Task task = new Task() {
-            final XSound sound = XSound.BLOCK_GLASS_BREAK;
             int currentHeight = 0;
             
             @Override
@@ -110,10 +111,11 @@ public class IceBow extends SpecialItem{
                 
                 for(Location loc : locs) {
                     Block block = loc.getBlock();
-                    if(!protectStructures
-                            || (protectStructures && block.getType() == Material.AIR)) {
-                        sound.play(loc);
-                        iceItem.placeAt(block);
+                    if(!protectStructures && block.getType() == Material.AIR) {
+                        if(WorldGuardManager.canBuild(player, loc)) {
+                            XSound.BLOCK_GLASS_BREAK.play(loc);
+                            iceItem.placeAt(block);
+                        }
                     }
                 }
                 
@@ -126,7 +128,7 @@ public class IceBow extends SpecialItem{
 //</editor-fold>
     }
     
-    private static void simulateSnow(Location loc, int radius){
+    private static void simulateSnow(Player player, Location loc, int radius){
         //<editor-fold defaultstate="collapsed" desc="Code">
         double radiusSq = radius * radius;
         int ox = loc.getBlockX();
@@ -140,6 +142,11 @@ public class IceBow extends SpecialItem{
                     for(int y = oy - radius; y <= oy + radius; y++){
                         l.setY(y);
                         Block b = l.getBlock();
+                        
+                        if(!WorldGuardManager.canBuild(player, l)) {
+                            continue;
+                        }
+                        
                         switch(b.getType()){
                             case AIR:
                                 Material material = b.getRelative(0, -1, 0).getType();

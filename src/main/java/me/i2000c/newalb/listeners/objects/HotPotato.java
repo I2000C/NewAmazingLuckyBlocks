@@ -6,6 +6,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
@@ -41,9 +42,12 @@ public class HotPotato extends SpecialItem{
                 
                 int amount = item.getItemStack().getAmount();
                 Location targetLoc = item.getLocation();
-                for(int i=0; i<amount; i++) {
-                    targetLoc.getWorld().createExplosion(targetLoc.getX(), targetLoc.getBlockY(), targetLoc.getZ(), power, withFire, breakBlocks);
+                if(WorldGuardManager.canBreak(e.getPlayer(), targetLoc)) {
+                    for(int i=0; i<amount; i++) {
+                        targetLoc.getWorld().createExplosion(targetLoc.getX(), targetLoc.getBlockY(), targetLoc.getZ(), power, withFire, breakBlocks);
+                    }
                 }
+                
                 item.remove();
             }, delayTicks);
         }

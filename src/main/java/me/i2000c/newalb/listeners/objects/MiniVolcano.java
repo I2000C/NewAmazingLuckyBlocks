@@ -9,8 +9,10 @@ import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -40,7 +42,7 @@ public class MiniVolcano extends SpecialItem{
             
             super.decreaseAmountOfItem(e);
             
-            this.execute(e.getClickedBlock().getLocation());
+            this.execute(e.getPlayer(), e.getClickedBlock().getLocation());
         }
     }
     
@@ -60,19 +62,18 @@ public class MiniVolcano extends SpecialItem{
         this.throwBlocksMaterial = ItemBuilder.newItem(ConfigManager.getConfig().getString(super.itemPathKey + ".throwBlocks.material"));
         this.throwBlocksTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".throwBlocks.time-between-blocks");
         
-        return ItemBuilder.newItem(XMaterial.LAVA_BUCKET)
-                .build();
+        return ItemBuilder.newItem(XMaterial.LAVA_BUCKET).build();
     }
     
-    public void execute(Location location) {
-        execute(location, 
+    public void execute(Player player, Location location) {
+        execute(player, location, 
                 defaultHeight, 
                 defaultBaseMaterial, defaultLavaMaterial, 
                 defaultTicks, defaultBeforeTicks, 
                 defaultSquared, defaultEnableThrowBlocks);
     }
     
-    public void execute(Location location, 
+    public void execute(Player player, Location location, 
                         int height, 
                         ItemBuilder baseMaterial, ItemBuilder lavaMaterial, 
                         long ticks, long beforeTicks, 
@@ -116,10 +117,12 @@ public class MiniVolcano extends SpecialItem{
                             Location loc = currentCenter.clone().add(bx, 0, bz);
                             double distanceSquared = loc.distanceSquared(currentCenter);
                             if(squared || distanceSquared <= wallRadiusSquared) {
-                                if(distanceSquared <= lavaRadiusSquared) {
-                                    lavaMaterial.placeAt(loc);
-                                } else {
-                                    baseMaterial.placeAt(loc);
+                                if(WorldGuardManager.canBuild(player, loc)) {
+                                    if(distanceSquared <= lavaRadiusSquared) {
+                                        lavaMaterial.placeAt(loc);
+                                    } else {
+                                        baseMaterial.placeAt(loc);
+                                    }
                                 }
                             }
                         }

@@ -8,14 +8,13 @@ import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import org.bukkit.Bukkit;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,9 +40,7 @@ public class ShieldWand extends SpecialItem{
             for(Location l : this.generateSphere(player.getLocation().add(0, 1D, 0), radius, true)){
                 Block b = w.getBlockAt(l);
                 if(!protect || protect && b.getType() == Material.AIR){
-                    BlockPlaceEvent e2 = new BlockPlaceEvent(b, b.getState(), b, e.getItem(), player, true);
-                    Bukkit.getPluginManager().callEvent(e2);
-                    if(!e2.isCancelled()){
+                    if(WorldGuardManager.canBuild(player, b.getLocation())) {
                         b.setType(shieldItemStack.getType());
                         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                             b.setData((byte) shieldItemStack.getDurability());

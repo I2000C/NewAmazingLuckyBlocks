@@ -7,12 +7,13 @@ import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.WorldConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class BlockPlace implements Listener{
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPlaced(BlockPlaceEvent e){
         Player p = e.getPlayer();
         if(!WorldConfig.isEnabled(p.getWorld().getName())){

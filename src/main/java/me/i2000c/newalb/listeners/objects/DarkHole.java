@@ -12,9 +12,11 @@ import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +38,7 @@ public class DarkHole extends SpecialItem {
             
             super.decreaseAmountOfItem(e);
             
-            this.execute(e.getClickedBlock().getLocation());
+            this.execute(e.getPlayer(), e.getClickedBlock().getLocation());
         }
     }
     
@@ -60,18 +62,17 @@ public class DarkHole extends SpecialItem {
             }
         });
         
-        return ItemBuilder.newItem(XMaterial.BUCKET)
-                .build();
+        return ItemBuilder.newItem(XMaterial.BUCKET).build();
     }
     
-    public void execute(Location location) {
-        execute(location, 
+    public void execute(Player player, Location location) {
+        execute(player, location, 
                 defaultDepth, defaultRadius, 
                 defaultTicks, defaultBeforeTicks, 
                 defaultSquared);
     }
     
-    public void execute(Location location, 
+    public void execute(Player player, Location location, 
                         int depth, int radius, 
                         long ticks, long beforeTicks, 
                         boolean squared) {
@@ -107,7 +108,9 @@ public class DarkHole extends SpecialItem {
                                 cancel();
                                 return;
                             } else {
-                                b.setType(XMaterial.AIR.parseMaterial());
+                                if(WorldGuardManager.canBreak(player, loc)) {
+                                    b.setType(XMaterial.AIR.parseMaterial());
+                                }
                             }
                         }
                     }

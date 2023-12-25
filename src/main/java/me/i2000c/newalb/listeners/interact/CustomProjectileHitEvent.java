@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 /**
  * Called when a projectile hits an object
@@ -71,6 +72,10 @@ public class CustomProjectileHitEvent extends Event implements Cancellable {
      */
     public Projectile getProjectile() {
         return projectile;
+    }
+    
+    public ProjectileSource getShooter() {
+        return projectile.getShooter();
     }
     
     @Override

@@ -3,6 +3,7 @@ package me.i2000c.newalb.listeners.wands;
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -24,7 +25,9 @@ public class LightningWand extends SpecialItem{
             
             super.getPlayerCooldown().updateCooldown(player);
             Block block = player.getTargetBlock(null, 120);
-            player.getWorld().strikeLightning(block.getLocation());
+            if(WorldGuardManager.canUse(player, block.getLocation())) {
+                player.getWorld().strikeLightning(block.getLocation());
+            }
         }        
     }
     

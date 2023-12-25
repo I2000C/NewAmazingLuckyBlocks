@@ -89,7 +89,7 @@ public class DarkHoleReward extends Reward{
 
     @Override
     public void execute(Player player, Location location){
-        SpecialItems.dark_hole.execute(location, depth, depth, ticks, 0L, squared);
+        SpecialItems.dark_hole.execute(player, location, depth, depth, ticks, 0L, squared);
     }
     
     @Override

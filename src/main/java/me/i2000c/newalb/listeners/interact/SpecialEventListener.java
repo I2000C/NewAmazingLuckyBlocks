@@ -4,6 +4,7 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -52,13 +53,25 @@ public class SpecialEventListener implements Listener{
                     e.setCancelled(true);
                     return;
                 }
-
+                
                 if(!specialItem.getPlayerCooldown().isCooldownExpired(player)){
                     specialItem.sendRemainingSecondsMessage(player);
                     e.setCancelled(true);
                     return;
                 }
-
+                
+                if(!WorldGuardManager.canUse(player, player.getLocation())) {
+                    e.setCancelled(true);
+                    return;
+                }
+                
+                if(e.getClickedBlock() != null) {
+                    if(!WorldGuardManager.canUse(player, e.getClickedBlock().getLocation())) {
+                        e.setCancelled(true);
+                        return;
+                    }
+                }
+                
                 specialItem.onPlayerInteract(e);
             }
         }
@@ -153,6 +166,11 @@ public class SpecialEventListener implements Listener{
 
             if(!specialItem.getPlayerCooldown().isCooldownExpired(player)){
                 specialItem.sendRemainingSecondsMessage(player);
+                e.setCancelled(true);
+                return;
+            }
+            
+            if(!WorldGuardManager.canUse(player, player.getLocation())) {
                 e.setCancelled(true);
                 return;
             }

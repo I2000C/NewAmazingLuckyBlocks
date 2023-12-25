@@ -8,6 +8,7 @@ import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -105,8 +106,10 @@ public class FrostPathWand extends SpecialItem{
                     Block block = baseLoc.add(direction).getBlock();
                     
                     if(PASSABLE_BLOCKS.contains(block.getType())) {
-                        frostItem.placeAt(baseLoc);
-                        sound.play(baseLoc);
+                        if(WorldGuardManager.canBuild(player, block.getLocation())) {
+                            frostItem.placeAt(block);
+                            sound.play(block.getLocation());
+                        }
                     }
                     
                     for(int k=1; k<=rowHalfWidth; k++) {
@@ -120,12 +123,16 @@ public class FrostPathWand extends SpecialItem{
                         }
                         
                         if(PASSABLE_BLOCKS.contains(b1.getType())) {
-                            frostItem.placeAt(b1);
-                            sound.play(b1.getLocation());
+                            if(WorldGuardManager.canBuild(player, b1.getLocation())) {
+                                frostItem.placeAt(b1);
+                                sound.play(b1.getLocation());
+                            }                            
                         }
                         if(PASSABLE_BLOCKS.contains(b2.getType())) {
-                            frostItem.placeAt(b2);
-                            sound.play(b2.getLocation());
+                            if(WorldGuardManager.canBuild(player, b2.getLocation())) {
+                                frostItem.placeAt(b2);
+                                sound.play(b2.getLocation());
+                            }
                         }
                     }
                 }
