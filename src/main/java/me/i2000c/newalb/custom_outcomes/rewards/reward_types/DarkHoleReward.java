@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class DarkHoleReward extends Reward{
     private int depth;
-    private double radius;
+    private int radius;
     private long ticks;
     private boolean squared;
 
@@ -25,10 +25,10 @@ public class DarkHoleReward extends Reward{
         this.depth = depth;
     }
     
-    public double getRadius(){
+    public int getRadius(){
         return radius;
     }
-    public void setRadius(double radius){
+    public void setRadius(int radius){
         this.radius = radius;
     }
     
@@ -50,7 +50,7 @@ public class DarkHoleReward extends Reward{
     public DarkHoleReward(Outcome outcome){
         super(outcome);
         depth = ConfigManager.getConfig().getInt("Objects.DarkHole.number-of-blocks");
-        radius = ConfigManager.getConfig().getDouble("Objects.DarkHole.radius");
+        radius = ConfigManager.getConfig().getInt("Objects.DarkHole.radius");
         ticks = ConfigManager.getConfig().getLong("Objects.DarkHole.time-between-one-block-and-the-next");
         squared = true;
     }
@@ -82,14 +82,14 @@ public class DarkHoleReward extends Reward{
     @Override
     public void loadRewardFromConfig(FileConfiguration config, String path){
         depth = config.getInt(path + ".depth");
-        radius = config.getDouble(path + ".radius");
+        radius = config.getInt(path + ".radius");
         ticks = config.getLong(path + ".ticks_between_blocks");
         squared = config.getBoolean(path + ".squared");
     }
 
     @Override
     public void execute(Player player, Location location){
-        SpecialItems.dark_hole.execute(player, location, depth, depth, ticks, 0L, squared);
+        SpecialItems.dark_hole.execute(player, location, depth, radius, ticks, 0L, squared);
     }
     
     @Override

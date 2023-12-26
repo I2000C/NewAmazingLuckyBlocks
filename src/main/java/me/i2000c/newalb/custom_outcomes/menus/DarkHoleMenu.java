@@ -88,11 +88,11 @@ public class DarkHoleMenu extends Editor<DarkHoleReward>{
         menu.setItem(13, GUIItem.getPlusLessItem(+1));
         menu.setItem(14, GUIItem.getPlusLessItem(+10));
         
-        menu.setItem(19, GUIItem.getPlusLessItem(-1));
-        menu.setItem(20, GUIItem.getPlusLessItem(-0.5f));
+        menu.setItem(19, GUIItem.getPlusLessItem(-5));
+        menu.setItem(20, GUIItem.getPlusLessItem(-1));
         menu.setItem(21, radiusStack);
-        menu.setItem(22, GUIItem.getPlusLessItem(+0.5f));
-        menu.setItem(23, GUIItem.getPlusLessItem(+1));
+        menu.setItem(22, GUIItem.getPlusLessItem(+1));
+        menu.setItem(23, GUIItem.getPlusLessItem(+5));
         
         menu.setItem(24, squaredStack);
         
@@ -160,20 +160,20 @@ public class DarkHoleMenu extends Editor<DarkHoleReward>{
 //</editor-fold>
                 //<editor-fold defaultstate="collapsed" desc="Radius">
                 case 19:
-                    //Radius -1
-                    double radius = item.getRadius() - 1.0;
-                    if(radius < 1.0){
-                        item.setRadius(1.0);
+                    //Radius -5
+                    int radius = item.getRadius() - 5;
+                    if(radius < 1){
+                        item.setRadius(1);
                     }else{
                         item.setRadius(radius);
                     }
                     openDarkHoleMenu(player);
                     break;                        
                 case 20:
-                    //Radius -0.5
-                    radius = item.getRadius() - 0.5;
-                    if(radius < 1.0){
-                        item.setRadius(1.0);
+                    //Radius -1
+                    radius = item.getRadius() - 1;
+                    if(radius < 1){
+                        item.setRadius(1);
                     }else{
                         item.setRadius(radius);
                     }
@@ -181,17 +181,17 @@ public class DarkHoleMenu extends Editor<DarkHoleReward>{
                     break;
                 case 21:
                     //Radius = 1
-                    item.setRadius(1.0);
+                    item.setRadius(1);
                     openDarkHoleMenu(player);
                     break;
                 case 22:
-                    //Radius +0.5
-                    item.setRadius(item.getRadius() + 0.5);
+                    //Radius +1
+                    item.setRadius(item.getRadius() + 1);
                     openDarkHoleMenu(player);
                     break;
                 case 23:
-                    //Radius +1.0
-                    item.setRadius(item.getRadius() + 1.0);
+                    //Radius +5
+                    item.setRadius(item.getRadius() + 5);
                     openDarkHoleMenu(player);
                     break;
 //</editor-fold>
