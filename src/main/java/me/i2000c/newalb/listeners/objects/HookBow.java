@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.objects.utils.BowUtils;
 import me.i2000c.newalb.listeners.objects.utils.HookBowAux;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -241,6 +243,10 @@ public class HookBow extends SpecialItem {
         
         HookData hookData = players.get(player);
         if(arrowSpeed > 0 && (hookData == null || hookData.state == HookState.BEFORE_ARROW_SHOOT)) {
+            if(e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) {
+                return;
+            }
+            
             // Generate EntityShootBowEvent
             e.setCancelled(true);
             Vector velocity = player.getLocation().getDirection().multiply(arrowSpeed);
@@ -260,7 +266,14 @@ public class HookBow extends SpecialItem {
             BowUtils.applyDurability(player, bow, 1, 1);
             BowUtils.cancelBowCharging(player);
             Arrow arrow = BowUtils.launchArrow(player, arrowItem.get(), isFireBow, isInfiniteBow, velocity);
-            EntityShootBowEvent event = new EntityShootBowEvent(player, bow, arrow, 0);
+            
+            EntityShootBowEvent event;
+            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_16) >= 0) {
+                event = ReflectionManager.callConstructor(EntityShootBowEvent.class, player, bow, null, arrow, null, 0f, !isInfiniteBow);
+            } else {
+                event = new EntityShootBowEvent(player, bow, arrow, 0f);
+            }
+                    
             onArrowShooted(event);
             return;
         } else if(hookData == null || hookData.state != HookState.WAITING_PLAYER_ACTION) {

@@ -82,7 +82,7 @@ public class RefClass {
             refMethod = getMethod(name, params);
             if(refMethod == null) {
                 String paramsToString = Arrays.stream(params)
-                        .map(param -> param.getClass().toGenericString())
+                        .map(param -> param != null ? param.getClass().toGenericString() : "null")
                         .collect(Collectors.joining(", ", "[", "]"));
                 
                 String message = String.format("Could not find method with name %s in class %s with parameters %s",
@@ -110,7 +110,7 @@ public class RefClass {
             refConstructor = getConstructor(params);
             if(refConstructor == null) {
                 String paramsToString = Arrays.stream(params)
-                        .map(param -> param.getClass().toGenericString())
+                        .map(param -> param != null ? param.getClass().toGenericString() : "null")
                         .collect(Collectors.joining(", ", "[", "]"));
                 
                 String message = String.format("Could not find constructor in class %s with parameters %s",
