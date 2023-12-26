@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
@@ -450,13 +449,13 @@ public class ItemBuilder{
         placeAt(loc.getBlock());
     }
     
-    public FallingBlock spawnFallingBlock(Location loc) {        
+    public FallingBlock spawnFallingBlock(Location loc) {
+        Material material = item.getType();
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
-            Material material = item.getType();
             byte data = (byte) item.getDurability();
             return loc.getWorld().spawnFallingBlock(loc, material, data);
         } else {
-            return loc.getWorld().spawnFallingBlock(loc, item.getData());
+            return loc.getWorld().spawnFallingBlock(loc, material, (byte) 0);
         }        
     }
     
