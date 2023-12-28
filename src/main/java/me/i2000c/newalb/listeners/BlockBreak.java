@@ -3,8 +3,10 @@ package me.i2000c.newalb.listeners;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.List;
 import java.util.stream.Collectors;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.Executable;
+import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangConfig;
@@ -93,6 +95,7 @@ public class BlockBreak implements Listener{
             return;
         }
         
+        Player p = e.getPlayer();
         List<String> commandList = ConfigManager.getConfig().getStringList("LuckyBlock.DropOnBlockBreak.commands");
         
         int prob = ConfigManager.getConfig().getInt("LuckyBlock.DropOnBlockBreak.probability");
@@ -107,14 +110,22 @@ public class BlockBreak implements Listener{
                 b.setType(Material.AIR);
             }
             Location targetLocation = b.getLocation().add(0.5, 0, 0.5);
-            ItemStack luckyItem = TypeManager.getRandomLuckyBlockType().getItem();
+            LuckyBlockType randomType = TypeManager.getRandomLuckyBlockType();
+            ItemStack luckyItem = randomType.getItem();
             b.getWorld().dropItemNaturally(targetLocation, luckyItem);
             
             commandList.forEach(command -> {
-                String fullCommand = command.replace("%bx%", b.getLocation().getBlockX() + "")
-                                            .replace("%by%", b.getLocation().getBlockY() + "")
-                                            .replace("%bz%", b.getLocation().getBlockZ() + "")
-                                            .replace("%player%", e.getPlayer().getDisplayName());
+                byte data = MinecraftVersion.CURRENT_VERSION.isLegacyVersion() ? b.getData() : 0;
+                String fullCommand = command.replace("%x%", p.getLocation().getBlockX() + "")
+                                            .replace("%y%", b.getLocation().getBlockY() + "")
+                                            .replace("%z%", b.getLocation().getBlockZ() + "")
+                                            .replace("%bx%", b.getZ() + "")
+                                            .replace("%by%", b.getY() + "")
+                                            .replace("%bz%", b.getZ() + "")
+                                            .replace("%player%", p.getDisplayName())
+                                            .replace("%material%", b.getType().name())
+                                            .replace("%data%", data + "")
+                                            .replace("%luckyblock_type%", randomType.getTypeName());
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), fullCommand);
             });
         }

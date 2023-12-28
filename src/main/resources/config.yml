@@ -336,8 +336,14 @@ LuckyBlock:
     - REDSTONE_ORE
     # List of commands to execute after dropping a LuckyBlock.
     #   You can use %bx%, %by% and %bz% to get the x, y and z coordinates
-    #   of the broken block that dropped that LuckyBlock and %player%
-    #   to get the player's name.
+    #   of the broken block that dropped that LuckyBlock,
+    #   %x%, %y% and %z% to get the coordinates of the player
+    #   and %player% to get the player's name.
+    # Besides, you can use %material% to get the block material name,
+    #   %data% to get the block data and %luckyblock_type% to get the
+    #   dropped LuckyBlock type name.
+    # Note that, block data values will only work in legacy Minecraft versions
+    #   (1.8 to 1.12). In Minecraft 1.13 or above, this value will always be 0.
     # You should enter one command per line without the first '/'
     # For example: - say %player% got a LuckyBlock at %bx% %by% %bz%
     commands: []
