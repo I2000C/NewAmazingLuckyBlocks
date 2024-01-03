@@ -23,7 +23,7 @@ public class FrostPathWand extends SpecialItem{
     private static final Set<Material> PASSABLE_BLOCKS = EnumSet.of(XMaterial.AIR.parseMaterial(), 
                                                                     XMaterial.WATER.parseMaterial(), 
                                                                     XMaterial.LAVA.parseMaterial(), 
-                                                                    XMaterial.GRASS.parseMaterial());
+                                                                    XMaterial.SHORT_GRASS.parseMaterial());
     
     private float minPitch;
     private float maxPitch;

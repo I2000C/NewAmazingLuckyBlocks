@@ -1,6 +1,6 @@
 name: NewAmazingLuckyBlocks
 main: me.i2000c.newalb.NewAmazingLuckyBlocks
-version: 3.4.2_40
+version: 3.4.3_40
 description: A new incredible LuckyBlock plugin
 author: I2000C
 commands:
