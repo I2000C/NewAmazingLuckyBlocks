@@ -7,7 +7,6 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.particles.Particles;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -30,9 +29,8 @@ public class EndermanSoup extends SpecialItem{
             p.setVelocity(v.multiply(multiplier));
             Location l = p.getLocation();
             
-            Sound sound = XSound.ENTITY_FIREWORK_ROCKET_LAUNCH.parseSound();
-            l.getWorld().playSound(l, sound, 20, 1);
-            Particles.VILLAGER_HAPPY.create().setOffset(1, 1, 1).setAmount(100).display(l);
+            XSound.ENTITY_FIREWORK_ROCKET_LAUNCH.play(l, 20, 1);
+            Particles.VILLAGER_HAPPY.create().setCount(100).setPosition(l).display();
         }
     }
     

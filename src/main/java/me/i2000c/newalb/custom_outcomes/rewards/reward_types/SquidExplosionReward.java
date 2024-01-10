@@ -119,7 +119,7 @@ public class SquidExplosionReward extends Reward{
                             });
                     squid.remove();
                     XSound.ENTITY_GENERIC_EXPLODE.play(loc, 5, 1);
-                    Particles.EXPLOSION_HUGE.create().display(loc);
+                    Particles.EXPLOSION_HUGE.create().setPosition(loc).display();
                     return;
                 }
                 

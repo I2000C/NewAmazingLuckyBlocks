@@ -31,11 +31,7 @@ dependencies{
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:javadoc'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:sources'
-    compileOnly 'com.mojang:authlib:1.5.21'
-    implementation 'xyz.xenondevs:particle:1.8.3'
-    compileOnly 'xyz.xenondevs:particle:1.8.3:javadoc'
-    compileOnly 'xyz.xenondevs:particle:1.8.3:sources'
-    
+    compileOnly 'com.mojang:authlib:1.5.21'    
     implementation 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.1.0'
     compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.1.0:javadoc'
     compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.1.0:sources'
