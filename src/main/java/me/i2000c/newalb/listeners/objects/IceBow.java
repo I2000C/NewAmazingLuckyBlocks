@@ -111,7 +111,7 @@ public class IceBow extends SpecialItem{
                 
                 for(Location loc : locs) {
                     Block block = loc.getBlock();
-                    if(!protectStructures && block.getType() == Material.AIR) {
+                    if(!protectStructures || block.getType() == Material.AIR) {
                         if(WorldGuardManager.canBuild(player, loc)) {
                             XSound.BLOCK_GLASS_BREAK.play(loc);
                             iceItem.placeAt(block);
