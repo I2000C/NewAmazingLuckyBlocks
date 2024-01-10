@@ -182,6 +182,7 @@ Objects:
     # The time must be in ticks. 1 second = 20 ticks
     time-between-one-block-and-the-next: 5
     generateSnow: true
+    generateIcePrison: true
     snowRadius: 2
     required-permission: false
     permission: amazinglb.objects.icebow

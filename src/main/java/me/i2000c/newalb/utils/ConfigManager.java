@@ -5,7 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 public class ConfigManager extends ReadOnlyConfig{
-    private static final double CONFIG_VERSION = 1.8;
+    private static final double CONFIG_VERSION = 1.9;
     
     private ConfigManager(Plugin plugin){
         super(plugin, "config.yml", true);

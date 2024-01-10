@@ -31,6 +31,7 @@ public class IceBow extends SpecialItem{
     private long beforeTicks;
     private int snowRadius;
     private boolean generateSnow;
+    private boolean generateIcePrison;
     private boolean disableArrowKnockback;
     
     @Override
@@ -41,6 +42,7 @@ public class IceBow extends SpecialItem{
         this.beforeTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-before-freezing");
         this.snowRadius = ConfigManager.getConfig().getInt(super.itemPathKey + ".snowRadius");
         this.generateSnow = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".generateSnow");
+        this.generateIcePrison = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".generateIcePrison");
         this.disableArrowKnockback = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".disableArrowKnockback");
         
         return ItemBuilder.newItem(XMaterial.BOW)
@@ -70,7 +72,10 @@ public class IceBow extends SpecialItem{
                 }
                 
                 hitEntity.setFireTicks(0);
-                execute((Player) e.getShooter(), hitEntity);
+                
+                if(generateIcePrison) {
+                    execute((Player) e.getShooter(), hitEntity);
+                }
             }else if(hitBlock != null) {
                 if(generateSnow) {
                     simulateSnow((Player) e.getShooter(), hitBlock.getLocation(), snowRadius);
