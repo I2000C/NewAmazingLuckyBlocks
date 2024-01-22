@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.config.YamlConfigurationUTF8;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
@@ -99,6 +98,26 @@ public class OutcomePack implements Displayable, Executable{
         String materialName = outcomeConfig.getString("Icon");
         if(materialName != null){
             icon = ItemBuilder.newItem(materialName).build();
+        }
+        
+        //List with all outcome IDs
+        List<Integer> keyList = new ArrayList<>(outcomes.keySet());
+        Collections.sort(keyList);
+        int max = keyList.get(keyList.size() - 1);
+        int nextCorrectID = 0;
+        
+        //Check if all outcomes' IDs are 1, 2, 3, etc and change the incorrect IDs
+        for(int i=0;i<=max;i++){
+            Outcome aux = outcomes.get(i);
+            if(aux != null){
+                if(aux.getID() != nextCorrectID){
+                    int previousID = aux.getID();
+                    aux.setID(nextCorrectID);
+                    outcomes.remove(previousID);
+                    outcomes.put(nextCorrectID, aux);
+                }
+                nextCorrectID++;
+            }
         }
 //</editor-fold>
     }
