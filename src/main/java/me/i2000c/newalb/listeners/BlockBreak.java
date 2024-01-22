@@ -1,8 +1,10 @@
 package me.i2000c.newalb.listeners;
 
 import com.cryptomorin.xseries.XMaterial;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.Executable;
@@ -12,6 +14,7 @@ import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.WorldConfig;
+import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -19,6 +22,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -68,6 +72,7 @@ public class BlockBreak implements Listener{
         }
     }
     
+    private static final String DEFAULT_MATERIAL = "DEFAULT";
     private void dropLuckyBlock(BlockBreakEvent e){
         boolean drop = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.enable");
         if(!drop){
@@ -87,47 +92,84 @@ public class BlockBreak implements Listener{
             }
         }        
         
-        List<XMaterial> blockList = ConfigManager.getConfig().getStringList("LuckyBlock.DropOnBlockBreak.enabledBlocks")
-                .stream().map(materialName -> XMaterial.matchXMaterial(materialName).get())
-                .collect(Collectors.toList());
+        Map<String, Integer> defaultProbabilities = new HashMap<>();
+        Map<XMaterial, Map<String, Integer>> materialProbabilities = new EnumMap<>(XMaterial.class);
         
-        if(!blockList.isEmpty() && !blockList.contains(XMaterial.matchXMaterial(e.getBlock().getType()))){
+        if(ConfigManager.getConfig().isList("LuckyBlock.DropOnBlockBreak.enabledBlocks")) {
+            Logger.warn("Invalid values detected inside \"LuckyBlock.DropOnBlockBreak.enabledBlocks\" config section");
+            Logger.warn("Expected: map, Found: list");
+            Logger.warn("Delete current config file and reload the server to fix this issue");
+            return;
+        }
+        
+        ConfigurationSection cs = ConfigManager.getConfig().getConfigurationSection("LuckyBlock.DropOnBlockBreak.enabledBlocks");
+        for(String key : cs.getKeys(false)) {
+            ConfigurationSection subSection = cs.getConfigurationSection(key);
+            for(String typeName : subSection.getKeys(false)) {
+                LuckyBlockType type = TypeManager.getType(typeName);
+                int probability = subSection.getInt(typeName);
+                if(type == null) {
+                    Logger.warn(String.format("LuckyBlock type with name \"%s\" doesn't exist", typeName));
+                    continue;
+                }
+                
+                if(key.equals(DEFAULT_MATERIAL)) {
+                    defaultProbabilities.put(typeName, probability);
+                } else {
+                    XMaterial material = ItemBuilder.newItem(key).getXMaterial();
+                    Map<String, Integer> probabilityMap = materialProbabilities.getOrDefault(material, new HashMap<>());
+                    probabilityMap.put(typeName, probability);
+                    materialProbabilities.put(material, probabilityMap);
+                }
+            }
+        }
+        
+        XMaterial blockMaterial = MinecraftVersion.CURRENT_VERSION.isLegacyVersion()
+                ? XMaterial.matchXMaterial(new ItemStack(e.getBlock().getType(), 1, e.getBlock().getData()))
+                : XMaterial.matchXMaterial(e.getBlock().getType());
+        Map<String, Integer> probabilityMap = materialProbabilities.getOrDefault(blockMaterial, defaultProbabilities);
+        if(probabilityMap.isEmpty()) {
             return;
         }
         
         Player p = e.getPlayer();
         List<String> commandList = ConfigManager.getConfig().getStringList("LuckyBlock.DropOnBlockBreak.commands");
         
-        int prob = ConfigManager.getConfig().getInt("LuckyBlock.DropOnBlockBreak.probability");
-        prob = prob > 100 ? 100 : prob;
-        prob = prob < 0 ? 0 : prob;
-        
-        if(RandomUtils.getInt(100) < prob){
-            Block b = e.getBlock();
-            boolean dropOriginalItem = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.dropOriginalItem");
-            if(!dropOriginalItem){
-                e.setCancelled(true);
-                b.setType(Material.AIR);
+        final int totalProbability = 100;
+        int randomValue = RandomUtils.getInt(totalProbability);
+        for(Map.Entry<String, Integer> entry : probabilityMap.entrySet()) {
+            String typeName = entry.getKey();
+            int probability = entry.getValue();
+            randomValue -= probability;
+            if(randomValue < 0) {            
+                Block b = e.getBlock();
+                boolean dropOriginalItem = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.dropOriginalItem");
+                if(!dropOriginalItem){
+                    e.setCancelled(true);
+                    b.setType(Material.AIR);
+                }
+
+                Location targetLocation = b.getLocation().add(0.5, 0, 0.5);
+                LuckyBlockType randomType = TypeManager.getType(typeName);
+                ItemStack luckyItem = randomType.getItem();
+                b.getWorld().dropItemNaturally(targetLocation, luckyItem);
+
+                commandList.forEach(command -> {
+                    byte data = MinecraftVersion.CURRENT_VERSION.isLegacyVersion() ? b.getData() : 0;
+                    String fullCommand = command.replace("%x%", p.getLocation().getBlockX() + "")
+                                                .replace("%y%", b.getLocation().getBlockY() + "")
+                                                .replace("%z%", b.getLocation().getBlockZ() + "")
+                                                .replace("%bx%", b.getZ() + "")
+                                                .replace("%by%", b.getY() + "")
+                                                .replace("%bz%", b.getZ() + "")
+                                                .replace("%player%", p.getDisplayName())
+                                                .replace("%material%", b.getType().name())
+                                                .replace("%data%", data + "")
+                                                .replace("%luckyblock_type%", randomType.getTypeName());
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), fullCommand);
+                });
+                break;
             }
-            Location targetLocation = b.getLocation().add(0.5, 0, 0.5);
-            LuckyBlockType randomType = TypeManager.getRandomLuckyBlockType();
-            ItemStack luckyItem = randomType.getItem();
-            b.getWorld().dropItemNaturally(targetLocation, luckyItem);
-            
-            commandList.forEach(command -> {
-                byte data = MinecraftVersion.CURRENT_VERSION.isLegacyVersion() ? b.getData() : 0;
-                String fullCommand = command.replace("%x%", p.getLocation().getBlockX() + "")
-                                            .replace("%y%", b.getLocation().getBlockY() + "")
-                                            .replace("%z%", b.getLocation().getBlockZ() + "")
-                                            .replace("%bx%", b.getZ() + "")
-                                            .replace("%by%", b.getY() + "")
-                                            .replace("%bz%", b.getZ() + "")
-                                            .replace("%player%", p.getDisplayName())
-                                            .replace("%material%", b.getType().name())
-                                            .replace("%data%", data + "")
-                                            .replace("%luckyblock_type%", randomType.getTypeName());
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), fullCommand);
-            });
         }
     }
 }

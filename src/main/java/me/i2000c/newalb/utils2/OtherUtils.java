@@ -3,7 +3,6 @@ package me.i2000c.newalb.utils2;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -106,7 +105,7 @@ public class OtherUtils{
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(value.compareTo(min) < 0) {
             return min;
-        } else if (value.compareTo(max) > 0) {
+        } else if(value.compareTo(max) > 0) {
             return max;
         } else {
             return value;
