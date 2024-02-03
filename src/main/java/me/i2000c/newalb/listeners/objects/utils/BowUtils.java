@@ -85,6 +85,18 @@ public class BowUtils {
                                     boolean isFireBow, boolean isInfiniteBow, 
                                     Vector velocity) {
         //<editor-fold defaultstate="collapsed" desc="Code">
+        
+        // Check if X, Y or Z in the velocity vector are valid values
+        if(Double.isInfinite(velocity.getX()) || Double.isNaN(velocity.getX())) {
+            velocity.setX(0.0);
+        }        
+        if(Double.isInfinite(velocity.getY()) || Double.isNaN(velocity.getY())) {
+            velocity.setY(0.0);
+        }        
+        if(Double.isInfinite(velocity.getZ()) || Double.isNaN(velocity.getZ())) {
+            velocity.setZ(0.0);
+        }        
+        
         Arrow arrow;
         XMaterial xmaterial = XMaterial.matchXMaterial(arrowStack);
         switch(xmaterial) {
