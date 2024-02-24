@@ -55,9 +55,18 @@ public class LocationManager extends ReadWriteConfig{
         
         int i = 0;
         for(Location loc : locations){
+            String worldName;
+            try {
+                // If the world has been unloaded, 
+                //  this could cause a NullPointerException or an IllegalArgumentException
+                worldName = loc.getWorld().getName();
+            } catch(Exception ex) {
+                continue;
+            }
+            
             String path = LOCATIONS_KEY + "." + i;
             
-            config.set(path + ".world", loc.getWorld().getName());
+            config.set(path + ".world", worldName);
             config.set(path + ".x", loc.getBlockX());
             config.set(path + ".y", loc.getBlockY());
             config.set(path + ".z", loc.getBlockZ());
