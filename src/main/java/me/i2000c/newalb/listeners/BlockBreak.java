@@ -16,6 +16,7 @@ import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.WorldConfig;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.RandomUtils;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -32,12 +33,20 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class BlockBreak implements Listener{
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent e){
         Block b = e.getBlock();
         Location loc = b.getLocation().add(0.5, 0, 0.5);
         Player p = e.getPlayer();
         World w = p.getWorld();
+        
+        if(!WorldConfig.isEnabled(w.getName())) {
+            return;
+        }
+        
+        if(!WorldGuardManager.canBreak(p, loc)) {
+            return;
+        }
         
         Executable exec = RewardListMenu.testRewardsPlayerList.get(p);
         if(exec != null){
@@ -46,29 +55,27 @@ public class BlockBreak implements Listener{
             return;
         }
         
-        if(WorldConfig.isEnabled(w.getName())){
-            TypeManager.Result result = TypeManager.canBreakBlock(p, loc);
-            switch(result.resultCode){
-                case TypeManager.RESULT_NOT_LUCKYBLOCK:
-                    dropLuckyBlock(e);
-                    break;
-                case TypeManager.RESULT_NO_GLOBAL_PERMISSION:
-                case TypeManager.RESULT_NO_LOCAL_PERMISSION:
-                    Logger.sendMessage(LangConfig.getMessage("NoPermission"), p);
+        TypeManager.Result result = TypeManager.canBreakBlock(p, loc);
+        switch(result.resultCode){
+            case TypeManager.RESULT_NOT_LUCKYBLOCK:
+                dropLuckyBlock(e);
+                break;
+            case TypeManager.RESULT_NO_GLOBAL_PERMISSION:
+            case TypeManager.RESULT_NO_LOCAL_PERMISSION:
+                Logger.sendMessage(LangConfig.getMessage("NoPermission"), p);
+                e.setCancelled(true);
+                break;
+            case TypeManager.RESULT_OK:
+                boolean requireLuckyTool = ConfigManager.getConfig().getBoolean("LuckyTool.enable");
+                boolean canOnlyBreakWithLuckyTool = ConfigManager.getConfig().getBoolean("LuckyTool.onlyCanBreakLuckyBlocksWithLuckyTool");
+                if(requireLuckyTool && canOnlyBreakWithLuckyTool){
+                    Logger.sendMessage(LangConfig.getMessage("Objects.LuckyTool.need"), p);
                     e.setCancelled(true);
-                    break;
-                case TypeManager.RESULT_OK:
-                    boolean requireLuckyTool = ConfigManager.getConfig().getBoolean("LuckyTool.enable");
-                    boolean canOnlyBreakWithLuckyTool = ConfigManager.getConfig().getBoolean("LuckyTool.onlyCanBreakLuckyBlocksWithLuckyTool");
-                    if(requireLuckyTool && canOnlyBreakWithLuckyTool){
-                        Logger.sendMessage(LangConfig.getMessage("Objects.LuckyTool.need"), p);
-                        e.setCancelled(true);
-                    }else{
-                        b.setType(Material.AIR);
-                        result.resultType.execute(p, loc);
-                    }
-                    break;
-            }
+                }else{
+                    b.setType(Material.AIR);
+                    result.resultType.execute(p, loc);
+                }
+                break;
         }
     }
     
