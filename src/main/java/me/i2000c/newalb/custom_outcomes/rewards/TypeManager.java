@@ -10,6 +10,7 @@ import java.util.Map;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.config.ReadWriteConfig;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Bukkit;
@@ -259,7 +260,7 @@ public class TypeManager{
         }
         
         Iterator<Recipe> iter = Bukkit.recipeIterator();
-        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             while(iter.hasNext()){
                 Recipe recipe = iter.next();
                 if(recipe.getResult().equals(typeRecipe.getResult())){
@@ -267,7 +268,7 @@ public class TypeManager{
                     break;
                 }
             }
-        }else{
+        } else if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_14) <= 0) {
             while(iter.hasNext()){
                 Recipe recipe = iter.next();
                 if(recipe instanceof ShapedRecipe){
@@ -278,6 +279,10 @@ public class TypeManager{
                     }
                 }
             }
+        } else {
+            // In Minecraft 1.15 the method org.bukkit.Bukkit.removeRecipe(NamespacedKey key) was added.
+            // Source: https://helpch.at/docs/1.15.2/org/bukkit/Bukkit.html
+            ReflectionManager.callStaticMethod(Bukkit.class, "removeRecipe", typeRecipe.getKey());
         }
 //</editor-fold>
     }
