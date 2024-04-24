@@ -253,7 +253,7 @@ public class BlockReplacingSphereReward extends Reward{
                                 continue;
                             }
                             
-                            if(!WorldGuardManager.canBuild(player, location)) {
+                            if(!WorldGuardManager.canBuild(player, block.getLocation())) {
                                 continue;
                             }
                             
