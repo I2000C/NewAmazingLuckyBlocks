@@ -182,9 +182,9 @@ public class LuckyBlockType implements Displayable, Executable{
         luckyBlockItem = new ItemStack(Material.SPONGE);
         
         requireBreakPermission = false;
-        breakPermission = "amazinglb.lucky_block." + typeName + "break";
+        breakPermission = "alb.lucky_block." + typeName + ".break";
         requirePlacePermission = false;
-        placePermission = "amazinglb.lucky_block." + typeName + "place";
+        placePermission = "alb.lucky_block." + typeName + ".place";
         
         texture = null;
         

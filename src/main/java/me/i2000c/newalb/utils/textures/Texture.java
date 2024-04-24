@@ -11,14 +11,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import me.i2000c.newalb.reflection.RefClass;
 import me.i2000c.newalb.reflection.RefMethod;
 import me.i2000c.newalb.utils.ConfigManager;
 
 @Getter
 @EqualsAndHashCode(of = "id")
-@ToString(of = "id")
 public final class Texture{
     private static final RefMethod getValue;
     
@@ -98,5 +96,10 @@ public final class Texture{
         }catch(Exception ex){
             return null;
         }
+    }
+    
+    @Override
+    public String toString() {
+        return this.id;
     }
 }
