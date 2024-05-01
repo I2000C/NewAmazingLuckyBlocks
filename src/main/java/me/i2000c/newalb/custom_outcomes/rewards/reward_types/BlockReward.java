@@ -125,7 +125,7 @@ public class BlockReward extends Reward{
         Location loc = usePlayerLoc ? player.getLocation().clone() : location.clone();
         offset.applyToLocation(loc);
         
-        if(!WorldGuardManager.canBuild(player, location)) {
+        if(!WorldGuardManager.canBuild(player, loc)) {
             return;
         }
         
