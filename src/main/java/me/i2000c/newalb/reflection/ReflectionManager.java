@@ -2,13 +2,11 @@ package me.i2000c.newalb.reflection;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import me.i2000c.newalb.MinecraftVersion;
-import org.bukkit.Bukkit;
 
 public class ReflectionManager {
     // Spigot NMS info: https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/
-    
-    private static final String BUKKIT_VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     
     private static final Map<String, RefClass> CLASS_MAP = new HashMap<>();
     
@@ -109,21 +107,29 @@ public class ReflectionManager {
         if(MinecraftVersion.CURRENT_VERSION.isNewNMS()){
             return getClass(nmsPackage + "." + name);
         }else{
-            return getClass("net.minecraft.server." + BUKKIT_VERSION + "." + name);
+            return getClass("net.minecraft.server." + MinecraftVersion.CURRENT_BUKKIT_VERSION + "." + name);
         }        
     }    
     public static RefClass getCraftClass(String name) {
-        return getClass("org.bukkit.craftbukkit." + BUKKIT_VERSION + "." + name);
+        if(MinecraftVersion.CURRENT_VERSION.isNewCraftBukkit()) {
+            return getClass("org.bukkit.craftbukkit." + name);
+        } else {
+            return getClass("org.bukkit.craftbukkit." + MinecraftVersion.CURRENT_BUKKIT_VERSION + "." + name);
+        }
     }
     
     public static RefClass getCachedNMSClass(String nmsPackage, String name) {
         if(MinecraftVersion.CURRENT_VERSION.isNewNMS()){
             return getCachedClass(nmsPackage + "." + name);
         }else{
-            return getCachedClass("net.minecraft.server." + BUKKIT_VERSION + "." + name);
+            return getCachedClass("net.minecraft.server." + MinecraftVersion.CURRENT_BUKKIT_VERSION + "." + name);
         }        
     }    
     public static RefClass getCachedCraftClass(String name) {
-        return getCachedClass("org.bukkit.craftbukkit." + BUKKIT_VERSION + "." + name);
+        if(MinecraftVersion.CURRENT_VERSION.isNewCraftBukkit()) {
+            return getCachedClass("org.bukkit.craftbukkit." + name);
+        } else {
+            return getCachedClass("org.bukkit.craftbukkit." + MinecraftVersion.CURRENT_BUKKIT_VERSION + "." + name);
+        }
     }
 }

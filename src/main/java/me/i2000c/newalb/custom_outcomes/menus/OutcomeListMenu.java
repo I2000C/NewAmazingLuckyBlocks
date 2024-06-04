@@ -1,7 +1,11 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.cryptomorin.xseries.XMaterial;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
+
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
@@ -16,9 +20,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import me.i2000c.newalb.utils2.NBTUtils;
 
 public class OutcomeListMenu extends Editor<OutcomePack>{
     public OutcomeListMenu(){
@@ -29,7 +31,8 @@ public class OutcomeListMenu extends Editor<OutcomePack>{
                 OUTCOME_LIST_MENU_SIZE,
                 (outcome, index) -> {
                     ItemStack stack = outcome.getItemToDisplay();
-                    return NBTEditor.set(stack, index, OUTCOME_ID_TAG);
+                    NBTUtils.set(stack, OUTCOME_ID_TAG, index);
+                    return stack;
                 }
         );
         outcomeListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
@@ -186,11 +189,11 @@ public class OutcomeListMenu extends Editor<OutcomePack>{
                     default:
                         ItemStack stack = e.getCurrentItem();
                         if(stack == null || stack.getType() == Material.AIR
-                                || !NBTEditor.contains(stack, OUTCOME_ID_TAG)){
+                                || !NBTUtils.contains(stack, OUTCOME_ID_TAG)){
                             return;
                         }
                         
-                        int outcomeID = NBTEditor.getInt(stack, OUTCOME_ID_TAG);
+                        int outcomeID = NBTUtils.getInt(stack, OUTCOME_ID_TAG);
                         Outcome outcome = item.getOutcome(outcomeID);
                         if(cloneMode){
                             //Clone outcome

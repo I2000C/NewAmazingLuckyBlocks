@@ -68,8 +68,8 @@ public abstract class SpecialItem {
         
         this.item = ItemBuilder.fromItem(buildItem())
                         .withDisplayName(displayName)
-                        .setNbtTag(this.id, ITEM_TAG)
-                        .setNbtTag(customModelData, CUSTOM_MODEL_DATA_TAG)
+                        .setNbtTag(ITEM_TAG, this.id)
+                        .setNbtTag(CUSTOM_MODEL_DATA_TAG, customModelData)
                         .build();
         this.playerCooldown.clear();
     }

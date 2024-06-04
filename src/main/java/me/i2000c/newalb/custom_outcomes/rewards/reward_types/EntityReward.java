@@ -331,7 +331,7 @@ public class EntityReward extends Reward{
             ExtendedEntityType targetType = this.type;
             if(this.type.isOcelot() && this.isTamed){
                 // Since Minecraft 1.14 tamed Ocelots are cats
-                if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_14) >= 0){
+                if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_14)){
                     targetType = ExtendedEntityType.valueOf("CAT");
                 }
             }
@@ -375,7 +375,7 @@ public class EntityReward extends Reward{
                             .getInventory()
                             .addItem(XMaterial.SADDLE.parseItem());
                 }else if(this.lastSpawnedEntity instanceof Ocelot){
-                    if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_13) < 0){
+                    if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_13)){
                         int randomType = RandomUtils.getInt(1, 3);
                         Ocelot.Type catType = Ocelot.Type.getType(randomType);
                         ((Ocelot) this.lastSpawnedEntity).setCatType(catType);

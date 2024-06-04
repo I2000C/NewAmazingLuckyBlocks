@@ -1,10 +1,5 @@
 package me.i2000c.newalb.listeners.interact;
 
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.utils.WorldConfig;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -24,6 +19,12 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.utils.WorldConfig;
+import me.i2000c.newalb.utils2.MetadataManager;
+import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
+
 public class SpecialEventListener implements Listener{
     
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -33,7 +34,7 @@ public class SpecialEventListener implements Listener{
         if(stack != null){
             Player player = e.getPlayer();
             
-            if(MinecraftVersion.CURRENT_VERSION != MinecraftVersion.v1_8){
+            if(!MinecraftVersion.CURRENT_VERSION.is_1_8()){
                 if(e.getHand() == EquipmentSlot.OFF_HAND){
                     return;
                 }

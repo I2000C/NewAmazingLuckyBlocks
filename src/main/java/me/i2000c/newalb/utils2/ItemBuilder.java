@@ -1,7 +1,5 @@
 package me.i2000c.newalb.utils2;
 
-import com.cryptomorin.xseries.XMaterial;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,11 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.TextureManager;
+
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,6 +23,14 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
+import me.i2000c.newalb.utils.textures.TextureManager;
 
 public class ItemBuilder{
     private ItemStack item;
@@ -405,7 +407,7 @@ public class ItemBuilder{
         if(meta instanceof LeatherArmorMeta){
             return ((LeatherArmorMeta) meta).getColor();
         }else if(meta instanceof PotionMeta){
-            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
                 return ((PotionMeta) meta).getColor();
             }else{
                 return null;
@@ -434,8 +436,12 @@ public class ItemBuilder{
         return item.getItemMeta().hasItemFlag(itemFlag);
     }
     
-    public ItemBuilder setNbtTag(Object value, Object... tags) {
-        item = NBTEditor.set(item, value, tags);
+    public ItemBuilder setNbtTag(String tag, String value) {
+        NBTUtils.set(item, tag, value);
+        return this;
+    }
+    public ItemBuilder setNbtTag(String tag, Integer value) {
+        NBTUtils.set(item, tag, value);
         return this;
     }
     

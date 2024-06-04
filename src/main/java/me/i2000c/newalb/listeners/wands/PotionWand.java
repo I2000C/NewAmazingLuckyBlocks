@@ -35,7 +35,7 @@ public class PotionWand extends SpecialItem{
             super.getPlayerCooldown().updateCooldown(player);
             Vector vector = player.getLocation().getDirection().multiply(0.5);
             ItemStack iStack;
-            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
+            if(MinecraftVersion.CURRENT_VERSION.is_1_8()){
                 iStack = new ItemStack(Material.POTION);
             }else{
                 iStack = new ItemStack(Material.SPLASH_POTION);

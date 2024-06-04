@@ -2,14 +2,7 @@ package me.i2000c.newalb.utils2;
 
 import java.util.ArrayList;
 import java.util.List;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ItemReward;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.InvalidTextureException;
-import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.URLTextureException;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
@@ -19,6 +12,14 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ItemReward;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.textures.InvalidTextureException;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
+import me.i2000c.newalb.utils.textures.URLTextureException;
 
 public final class Equipment implements Cloneable{
     public static final String[] EQUIPMENT_KEYS = {
@@ -228,7 +229,7 @@ public final class Equipment implements Cloneable{
                             builder.addPotionEffect(new PotionEffect(PotionEffectType.getByName(name), duration, amplifier));
                         });
                     }
-                    if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
+                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)){
                         if(config.contains(fullPath + ".potionColor")){
                             String hexColor = config.getString(fullPath + ".potionColor");
                             CustomColor color = new CustomColor(hexColor);
@@ -291,7 +292,7 @@ public final class Equipment implements Cloneable{
                     if(type != null){
                         config.set(path + ".material" , "POTION");
                         config.set(path + ".potionSplashType", type.name());   
-                        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
+                        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)){
                             if(builder.hasColor()){
                                 String hexColor = new CustomColor(builder.getColor()).getHexColorString();
                                 config.set(fullPath + ".potionColor", hexColor);

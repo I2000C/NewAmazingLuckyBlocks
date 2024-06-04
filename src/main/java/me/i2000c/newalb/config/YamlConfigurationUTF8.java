@@ -11,11 +11,12 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.utils.Logger;
+
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.utils.Logger;
 
 public class YamlConfigurationUTF8 extends YamlConfiguration{
     private static final String UNICODE_REGEX = "\\\\u([0-9a-f]{4})";
@@ -46,7 +47,7 @@ public class YamlConfigurationUTF8 extends YamlConfiguration{
     public void load(File file){
         //<editor-fold defaultstate="collapsed" desc="Code">
         try{
-            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
+            if(MinecraftVersion.CURRENT_VERSION.is_1_8()){
                 InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
                 load(reader);
             }else{
@@ -66,7 +67,7 @@ public class YamlConfigurationUTF8 extends YamlConfiguration{
             // Create parent directories
             file.getParentFile().mkdirs();
             
-            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
+            if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
                 try(BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))){
                     writer.append(decodeString(saveToString()));
                 }

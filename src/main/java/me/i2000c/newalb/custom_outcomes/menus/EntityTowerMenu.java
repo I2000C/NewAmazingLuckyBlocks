@@ -1,7 +1,8 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
+import com.sk89q.jnbt.NBTConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
@@ -18,6 +19,8 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.NBTUtils;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -33,7 +36,8 @@ public class EntityTowerMenu extends Editor<EntityTowerReward>{
                 ENTITY_LIST_MENU_SIZE,
                 (entityReward, index) -> {
                     ItemStack stack = entityReward.getItemToDisplay();
-                    return NBTEditor.set(stack, entityReward.getID(), ENTITY_ID_TAG);
+                    NBTUtils.set(stack, ENTITY_ID_TAG, entityReward.getID());                    
+                    return stack;
                 }
         );
         entityListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
@@ -109,7 +113,7 @@ public class EntityTowerMenu extends Editor<EntityTowerReward>{
             }
             
             if(entityItem != null){
-                menu.setItem(slot, NBTEditor.set(entityItem, entityID, ENTITY_ID_TAG));
+                NBTUtils.set(entityItem, ENTITY_ID_TAG, entityID);
             }
         }
         
@@ -216,14 +220,14 @@ public class EntityTowerMenu extends Editor<EntityTowerReward>{
             int slot = TOWER_SLOTS[i];
             ItemStack stack = towerInv.getItem(slot);
             if((stack == null || stack.getType() == Material.AIR)
-                    || !NBTEditor.contains(stack, ENTITY_ID_TAG)){
+                    || NBTUtils.contains(stack, ENTITY_ID_TAG)) {
                 towerEnd = true;
                 entityIDList.add(EntityTowerReward.INVALID_ENTITY_ID);
             }else{
                 if(towerEnd){
                     towerValid = false;
                 }
-                entityIDList.add(NBTEditor.getInt(stack, ENTITY_ID_TAG));
+                entityIDList.add(NBTUtils.getInt(stack, ENTITY_ID_TAG));
             }
         }
         

@@ -1,9 +1,14 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
-import com.cryptomorin.xseries.XMaterial;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.Executable;
@@ -19,9 +24,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import me.i2000c.newalb.utils2.NBTUtils;
 
 public class RewardListMenu extends Editor<Outcome>{
     public RewardListMenu(){
@@ -37,7 +40,8 @@ public class RewardListMenu extends Editor<Outcome>{
                         builder.addLoreLine("");
                         builder.addLoreLine("&6Reward Delay: &a" + reward.getDelay() + " &dticks");
                     }
-                    return NBTEditor.set(builder.build(), index, REWARD_ID_TAG);
+                    builder.setNbtTag(REWARD_ID_TAG, index);
+                    return builder.build();
                 }
         );
         rewardListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
@@ -275,11 +279,11 @@ public class RewardListMenu extends Editor<Outcome>{
             default:
                 ItemStack stack = e.getCurrentItem();
                 if(stack == null || stack.getType() == Material.AIR 
-                        || !NBTEditor.contains(stack, REWARD_ID_TAG)){
+                        || !NBTUtils.contains(stack, REWARD_ID_TAG)){
                     return;
                 }
                 
-                int rewardID = NBTEditor.getInt(e.getCurrentItem(), REWARD_ID_TAG);
+                int rewardID = NBTUtils.getInt(e.getCurrentItem(), REWARD_ID_TAG);
                 Reward reward = item.getReward(rewardID);
                 if(deleteMode){
                     if(item.removeReward(rewardID)){

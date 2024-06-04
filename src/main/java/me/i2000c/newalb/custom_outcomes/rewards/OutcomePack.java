@@ -78,7 +78,7 @@ public class OutcomePack implements Displayable, Executable{
         }
         
         MinecraftVersion currentVersion = MinecraftVersion.CURRENT_VERSION;
-        if(currentVersion.compareTo(packVersion) < 0){
+        if(currentVersion.isLessThan(packVersion)){
             Logger.warn("Pack \"" + getPackname() + "\" requires at least Minecraft " + packVersion);
             Logger.warn("However, you are using Minecraft " + currentVersion);
             Logger.warn("In order to avoid errors, the outcomes of this pack won't be loaded");

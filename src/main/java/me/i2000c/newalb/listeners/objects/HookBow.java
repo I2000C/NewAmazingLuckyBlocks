@@ -1,22 +1,10 @@
 package me.i2000c.newalb.listeners.objects;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.objects.utils.BowUtils;
-import me.i2000c.newalb.listeners.objects.utils.HookBowAux;
-import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.OtherUtils;
-import me.i2000c.newalb.utils2.Task;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -36,6 +24,21 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.listeners.objects.utils.BowUtils;
+import me.i2000c.newalb.listeners.objects.utils.HookBowAux;
+import me.i2000c.newalb.reflection.ReflectionManager;
+import me.i2000c.newalb.utils.ConfigManager;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.MetadataManager;
+import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.Task;
 
 public class HookBow extends SpecialItem {
     private final HashMap<Player, HookData> players = new HashMap<>();
@@ -268,7 +271,7 @@ public class HookBow extends SpecialItem {
             Arrow arrow = BowUtils.launchArrow(player, arrowItem.get(), isFireBow, isInfiniteBow, velocity);
             
             EntityShootBowEvent event;
-            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_16) >= 0) {
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_16)) {
                 event = ReflectionManager.callConstructor(EntityShootBowEvent.class, player, bow, null, arrow, null, 0f, !isInfiniteBow);
             } else {
                 event = new EntityShootBowEvent(player, bow, arrow, 0f);

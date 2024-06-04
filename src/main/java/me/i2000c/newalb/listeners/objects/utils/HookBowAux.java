@@ -2,10 +2,7 @@ package me.i2000c.newalb.listeners.objects.utils;
 
 import java.util.List;
 import java.util.Objects;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.reflection.RefClass;
-import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils2.Task;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Chicken;
@@ -13,10 +10,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.RefClass;
+import me.i2000c.newalb.reflection.ReflectionManager;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.Task;
+
 public class HookBowAux {
     
     public static Chicken createEntityChicken(Location loc) {
-        if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8) {
+        if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
             return createEntityChicken_1_8(loc, true, true, false, true);
         } else {
             return createEntityChicken(loc, true, true, false, true);
@@ -100,7 +103,7 @@ public class HookBowAux {
         // Build the packet
         RefClass packetClass = ReflectionManager.getCachedNMSClass("net.minecraft.network.protocol.game", "PacketPlayOutAttachEntity");
         Object packet;
-        if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8) {
+        if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
             packet = packetClass.callConstructor(1, entityToLeashEntity, leashPlayerEntity);
         } else {
             packet = packetClass.callConstructor(entityToLeashEntity, leashPlayerEntity);
@@ -111,10 +114,13 @@ public class HookBowAux {
             Object targetPlayerEntity = ReflectionManager.callMethod(player, "getHandle");
             
             Object playerConnection;
-            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_20) >= 0) {
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_5)) {
+                // Since Minecraft 1.20.5, the field is called "connection"
+                playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "connection");
+            } else if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20)) {
                 // Since Minecraft 1.20, the field is called "c"
                 playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "c");
-            } else if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_17) >= 0) {
+            } else if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_17)) {
                 // From Minecraft 1.17 to Minecraft 1.19, the field is called "b"
                 playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "b");
             } else {
@@ -122,10 +128,13 @@ public class HookBowAux {
                 playerConnection = ReflectionManager.getFieldValue(targetPlayerEntity, "playerConnection");
             }
             
-            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_20) >= 0) {
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_5)) {
+                // Since 1.20.5, the method is called "send"
+                ReflectionManager.callMethod(playerConnection, "send", packet, null);
+            } else if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20)) {
                 // More info here: https://bukkit.org/threads/sending-packets-in-1-20-2.502472/
                 ReflectionManager.callMethod(playerConnection, "a", packet, null);
-            } else if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_18) >= 0) {
+            } else if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_18)) {
                 // Since Minecraft 1.18, the method is called "a"
                 ReflectionManager.callMethod(playerConnection, "a", packet);
             } else {

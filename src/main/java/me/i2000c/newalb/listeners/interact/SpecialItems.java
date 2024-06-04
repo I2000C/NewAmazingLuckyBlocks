@@ -1,11 +1,13 @@
 package me.i2000c.newalb.listeners.interact;
 
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.bukkit.inventory.ItemStack;
+
 import me.i2000c.newalb.listeners.objects.AutoBow;
 import me.i2000c.newalb.listeners.objects.DarkHole;
 import me.i2000c.newalb.listeners.objects.EndermanSoup;
@@ -29,7 +31,7 @@ import me.i2000c.newalb.listeners.wands.SlimeWand;
 import me.i2000c.newalb.listeners.wands.TntWand;
 import me.i2000c.newalb.reflection.RefClass;
 import me.i2000c.newalb.reflection.RefField;
-import org.bukkit.inventory.ItemStack;
+import me.i2000c.newalb.utils2.NBTUtils;
 
 public class SpecialItems {
     private static final List<SpecialItem> ITEMS_BY_ID = new ArrayList<>();
@@ -99,8 +101,8 @@ public class SpecialItems {
             return null;
         }
         
-        if(NBTEditor.contains(stack, SpecialItem.ITEM_TAG)) {
-            int itemID = NBTEditor.getInt(stack, SpecialItem.ITEM_TAG);
+        if(NBTUtils.contains(stack, SpecialItem.ITEM_TAG)) {
+            int itemID = NBTUtils.getInt(stack, SpecialItem.ITEM_TAG);
             return getById(itemID);
         } else {
             return null;

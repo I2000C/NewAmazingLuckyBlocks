@@ -3,6 +3,7 @@ package me.i2000c.newalb.utils2;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils.Logger;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -82,18 +83,9 @@ public class OtherUtils{
     private static Method getMinHeightMethod = null;
     public static int getMinWorldHeight(World world){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_18) >= 0){
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_18)){
             // In Minecraft 1.18+ the min height can be negative
-            try{
-                if(getMinHeightMethod == null){
-                    getMinHeightMethod = world.getClass().getMethod("getMinHeight");
-                }
-                return (Integer) getMinHeightMethod.invoke(world);
-            }catch(Exception ex){
-                Logger.err("An error occurred while getting min world height:");
-                Logger.err(ex);
-                return 0;
-            }
+            return ReflectionManager.callMethod(world, "getMinHeight");
         }else{
             // In Minecraft 1.8-1.17 the min height is 0
             return 0;

@@ -7,6 +7,7 @@ ext{
     version='1.0'
     groupId='me.i2000c.newalb'
     artifactId=project.name
+    externalGroupId=groupId + '.external'
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -15,26 +16,26 @@ java.targetCompatibility = '8'
 
 repositories{
     mavenCentral()
-    maven { url 'https://repo.codemc.org/repository/maven-public/' }
+    maven { url 'https://repo.codemc.io/repository/maven-public/' }
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
     maven { url 'https://libraries.minecraft.net' }
     maven { url 'https://maven.enginehub.org/repo/' }
 }
 
 dependencies{
-    implementation 'io.github.bananapuncher714:nbteditor:7.19.2'
-    compileOnly 'io.github.bananapuncher714:nbteditor:7.19.2:javadoc'
-    compileOnly 'io.github.bananapuncher714:nbteditor:7.19.2:sources'
-    implementation 'com.github.cryptomorin:XSeries:9.8.1'
-    compileOnly 'com.github.cryptomorin:XSeries:9.8.1:javadoc'
-    compileOnly 'com.github.cryptomorin:XSeries:9.8.1:sources'
+	implementation 'de.tr7zw:item-nbt-api:2.12.4'
+	compileOnly 'de.tr7zw:item-nbt-api:2.12.4:javadoc'
+	compileOnly 'de.tr7zw:item-nbt-api:2.12.4:sources'
+    implementation 'com.github.cryptomorin:XSeries:10.0.0'
+    compileOnly 'com.github.cryptomorin:XSeries:10.0.0:javadoc'
+    compileOnly 'com.github.cryptomorin:XSeries:10.0.0:sources'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:javadoc'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:sources'
     compileOnly 'com.mojang:authlib:1.5.21'    
-    implementation 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.1.0'
-    compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.1.0:javadoc'
-    compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.1.0:sources'
+    implementation 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.3.0'
+    compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.3.0:javadoc'
+    compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.3.0:sources'
     
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2'
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'
@@ -55,10 +56,10 @@ shadowJar{
     archiveBaseName.set(project.name)
     archiveClassifier.set('')
     archiveVersion.set('')
-    relocate('com.cryptomorin.xseries', project.ext.groupId + '.com.cryptomorin.xseries')
-    relocate('io.github.bananapuncher714', project.ext.groupId + '.io.github.bananapuncher714')
-    relocate('xyz.xenondevs.particle', project.ext.groupId + '.xyz.xenondevs.particle')
-    relocate('com.github.fierioziy.particlenativeapi', project.ext.groupId + '.com.github.fierioziy.particlenativeapi')
+    relocate('com.cryptomorin.xseries', project.ext.externalGroupId + '.com.cryptomorin.xseries')
+    relocate('de.tr7zw.changeme.nbtapi', project.ext.externalGroupId + '.de.tr7zw.changeme.nbtapi')
+    relocate('xyz.xenondevs.particle', project.ext.externalGroupId + '.xyz.xenondevs.particle')
+    relocate('com.github.fierioziy.particlenativeapi', project.ext.externalGroupId + '.com.github.fierioziy.particlenativeapi')
 }
 
 task copyJar(type: Copy){

@@ -1,12 +1,20 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
+
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.SoundReward;
@@ -21,12 +29,6 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemBuilder;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 
 public class SoundMenu extends Editor<SoundReward>{
     public SoundMenu(){
@@ -206,7 +208,7 @@ public class SoundMenu extends Editor<SoundReward>{
         //<editor-fold defaultstate="collapsed" desc="Code">        
         Menu menu = GUIFactory.newMenu(CustomInventoryType.SOUND_TYPE_MENU, 54, "&3&lSound Type");
         
-        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_10) >= 0){
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_10)){
             ItemStack stop = ItemBuilder.newItem(XMaterial.BARRIER)
                     .withDisplayName("&cStop all sounds")
                     .build();
@@ -232,8 +234,8 @@ public class SoundMenu extends Editor<SoundReward>{
                     openSoundMenu(player);
                     break;
                 case 48:
-                    //Stop sounds if minecraft version > 1.9
-                    if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_9) > 0){
+                    //Stop sounds if minecraft version >= 1.10
+                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_10)){
                         for(Sound sound : soundList){
                             player.stopSound(sound);
                         }

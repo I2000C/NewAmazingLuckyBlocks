@@ -40,7 +40,7 @@ public class TextureManager{
         }
         
         GameProfile profile = texture != null ? texture.getProfile() : null;
-        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_20) >= 0) {
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_2)) {
             ReflectionManager.callMethod(meta, "setProfile", profile);
         } else {
             ReflectionManager.setFieldValue(meta, "profile", profile);
@@ -80,7 +80,7 @@ public class TextureManager{
         }
         
         GameProfile profile = texture != null ? texture.getProfile() : null;
-        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_17) >= 0) {
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_17)) {
             Object tileEntitySkull = block.getState();
             ReflectionManager.setFieldValue(tileEntitySkull, "profile", profile);
             ReflectionManager.callMethod(tileEntitySkull, "update", true);

@@ -268,7 +268,7 @@ public class TypeManager{
                     break;
                 }
             }
-        } else if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_14) <= 0) {
+        } else if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_15)) {
             while(iter.hasNext()){
                 Recipe recipe = iter.next();
                 if(recipe instanceof ShapedRecipe){

@@ -1,7 +1,5 @@
 package me.i2000c.newalb.utils.textures;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -9,26 +7,19 @@ import java.util.Base64;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import me.i2000c.newalb.reflection.RefClass;
-import me.i2000c.newalb.reflection.RefMethod;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils.ConfigManager;
 
 @Getter
 @EqualsAndHashCode(of = "id")
 public final class Texture{
-    private static final RefMethod getValue;
-    
-    static {
-        // From Minecraft 1.8 to 1.20.1, the method is called getValue()
-        // Since Minecraft 1.20.2, the method is called value()
-        RefMethod refMethod = RefClass.of(Property.class).getMethod("getValue");
-        if(refMethod == null) {
-            refMethod = RefClass.of(Property.class).getMethod("value");
-        }
-        getValue = refMethod;
-    }
     
     private String id;
     private GameProfile profile;
@@ -65,7 +56,14 @@ public final class Texture{
 
     public String getEncodedTexture(){
         Property property = this.profile.getProperties().get("textures").iterator().next();
-        return getValue.call(property);
+        
+        // From Minecraft 1.8 to 1.20.1, the method is called getValue()
+        // Since Minecraft 1.20.2, the method is called value()
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_2)) {
+            return ReflectionManager.callMethod(property, "value");
+        } else {
+            return ReflectionManager.callMethod(property, "getValue");
+        }
     }
 
     public String getURL(){

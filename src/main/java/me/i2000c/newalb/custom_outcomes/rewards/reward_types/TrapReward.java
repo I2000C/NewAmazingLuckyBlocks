@@ -1,21 +1,24 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import com.cryptomorin.xseries.XMaterial;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.OutcomePack;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.NBTUtils;
 import me.i2000c.newalb.utils2.OtherUtils;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class TrapReward extends Reward{
     public static final String HIDDEN_TAG = "NewAmazingLuckyBlocks.TrapReward";
@@ -127,22 +130,24 @@ public class TrapReward extends Reward{
     
     static ItemStack encryptOutcome(Outcome outcome, ItemStack item){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        return NBTEditor.set(item, outcome.toString(), HIDDEN_TAG);
+        NBTUtils.set(item, HIDDEN_TAG, outcome.toString());
+        return item;
 //</editor-fold>
     }
     static ItemStack encryptOutcome(String packName, int outcomeID, ItemStack item){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        return NBTEditor.set(item, packName + "/" + outcomeID, HIDDEN_TAG);
+        NBTUtils.set(item, HIDDEN_TAG, packName + "/" + outcomeID);
+        return item;
 //</editor-fold>
     }
     static Outcome decryptOutcome(ItemStack item){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!NBTEditor.contains(item, HIDDEN_TAG)){
+        if(!NBTUtils.contains(item, HIDDEN_TAG)){
             return null;
         }
         
         try{
-            return Outcome.fromString(NBTEditor.getString(item, HIDDEN_TAG));
+            return Outcome.fromString(NBTUtils.getString(item, HIDDEN_TAG));
         }catch(Exception ex){
             return null;
         }

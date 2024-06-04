@@ -1,11 +1,8 @@
 package me.i2000c.newalb.utils2;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.reflection.ReflectionManager;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Ageable;
@@ -19,6 +16,11 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.Zombie;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.ReflectionManager;
 
 public class ExtendedEntityType{
     private static enum ExtraEntityType{
@@ -279,8 +281,8 @@ public class ExtendedEntityType{
             for(ExtraEntityType extraEntityType : ExtraEntityType.values()){
                 MinecraftVersion minMinecraftVersion = extraEntityType.minVersion;
                 MinecraftVersion maxMinecraftVersion = extraEntityType.maxVersion;
-                if(minecraftVersion.compareTo(minMinecraftVersion) >= 0
-                        && minecraftVersion.compareTo(maxMinecraftVersion) <= 0){
+                if(minecraftVersion.isGreaterThanOrEqual(minMinecraftVersion)
+                        && minecraftVersion.isLessThanOrEqual(maxMinecraftVersion)){
                     VALUES.add(new ExtendedEntityType(extraEntityType));
                 }
             }
@@ -297,7 +299,7 @@ public class ExtendedEntityType{
         //<editor-fold defaultstate="collapsed" desc="Code">
         ExtendedEntityType eet;
         try{
-            if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_16) >= 0
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_16)
                     && string.equals("PIG_ZOMBIE")){
                 // Since Minecraft 1.16, pig zombies were changed to zombified piglins
                 eet = new ExtendedEntityType(EntityType.valueOf("ZOMBIFIED_PIGLIN"));
@@ -393,7 +395,7 @@ public class ExtendedEntityType{
             if(entity instanceof Wolf) {
                 ((Wolf) entity).setAngry(true);
                 ((Wolf) entity).setTarget(player);
-            } else if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_15) >= 0) {
+            } else if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_15)) {
                 if(!this.name().equals("BEE")) {
                     return;
                 }

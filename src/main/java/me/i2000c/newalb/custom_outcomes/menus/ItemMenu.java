@@ -1,8 +1,19 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionType;
+
 import com.cryptomorin.xseries.XMaterial;
+
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
@@ -26,16 +37,6 @@ import me.i2000c.newalb.utils2.CustomColor;
 import me.i2000c.newalb.utils2.EnchantmentWithLevel;
 import me.i2000c.newalb.utils2.ItemBuilder;
 import me.i2000c.newalb.utils2.Offset;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionType;
 
 public class ItemMenu extends Editor<ItemReward>{
     public ItemMenu(){
@@ -268,7 +269,7 @@ public class ItemMenu extends Editor<ItemReward>{
                         .addLoreLine("&dCurrent type: &e" + PotionSplashType.getFromPotion(item.getItem()))
                         .build();
                 
-                if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
+                if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)){
                     setPotionColor = ItemBuilder.newItem(XMaterial.BLAZE_POWDER)
                             .withDisplayName("&dClick to set potion color")
                             .build();
@@ -374,7 +375,7 @@ public class ItemMenu extends Editor<ItemReward>{
             builder.addLoreLine("&2Slot &b40 &2is &e&lITEM IN HAND");
         }
         
-        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_9) >= 0){
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_9)){
             if(item.getSpawnInvSlot() == ItemReward.ITEM_IN_OFF_HAND_SLOT){
                 builder.addLoreLine("&2Slot &b41 &2is &5&lITEM IN OFF-HAND");
             }else{
@@ -568,7 +569,7 @@ public class ItemMenu extends Editor<ItemReward>{
                 //Open select potion color menu
                 if(e.getCurrentItem() != null){
                     if(e.getCurrentItem().getType() == Material.BLAZE_POWDER){
-                        if(MinecraftVersion.CURRENT_VERSION.compareTo(MinecraftVersion.v1_11) >= 0){
+                        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)){
                             Color itemColor = ItemBuilder.fromItem(item.getItem(), false)
                                     .getColor();
                             Editor<CustomColor> editor3 = EditorType.COLOR.getEditor();
@@ -686,7 +687,7 @@ public class ItemMenu extends Editor<ItemReward>{
                             ItemBuilder.fromItem(item.getItem(), false)
                                     .clearPotionEffects();
                             
-                            if(MinecraftVersion.CURRENT_VERSION == MinecraftVersion.v1_8){
+                            if(MinecraftVersion.CURRENT_VERSION.is_1_8()){
                                 Potion potion = Potion.fromItemStack(item.getItem());
                                 potion.setType(PotionType.WATER);
                                 potion.apply(item.getItem());
