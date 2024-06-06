@@ -20,7 +20,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.FilePicker;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -66,21 +66,21 @@ public class StructureMenu extends Editor<StructureReward>{
         menu.setItem(9, glass);
         menu.setItem(17, glass);
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.NAME_TAG);
         if(item.getSchematicName() == null){
-            builder.withDisplayName("&6Selected file: &cnull");
+            builder.setDisplayName("&6Selected file: &cnull");
         }else{
-            builder.withDisplayName("&6Selected file: &3" + item.getSchematicName());
+            builder.setDisplayName("&6Selected file: &3" + item.getSchematicName());
         }
-        ItemStack pathItem = builder.build();
+        ItemStack pathItem = builder.toItemStack();
         
-        ItemStack selectFromChat = ItemBuilder.newItem(XMaterial.OAK_SIGN)
-                .withDisplayName("&6Select file from chat")
-                .build();
+        ItemStack selectFromChat = ItemStackWrapper.newItem(XMaterial.OAK_SIGN)
+                                                   .setDisplayName("&6Select file from chat")
+                                                   .toItemStack();
         
-        ItemStack selectFromMenu = ItemBuilder.newItem(XMaterial.CHEST)
-                .withDisplayName("&6Select file from menu")
-                .build();
+        ItemStack selectFromMenu = ItemStackWrapper.newItem(XMaterial.CHEST)
+                                                   .setDisplayName("&6Select file from menu")
+                                                   .toItemStack();
         
         ItemStack fromPlayer = GUIItem.getUsePlayerLocItem(item.isFromPlayer());
         

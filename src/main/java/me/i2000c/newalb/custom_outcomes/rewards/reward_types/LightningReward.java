@@ -1,16 +1,22 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
-import me.i2000c.newalb.custom_outcomes.rewards.Reward;
-import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.Reward;
+import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.Offset;
+
+@Getter
+@Setter
 public class LightningReward extends Reward{
     private boolean usePlayerLoc;
     private boolean causeDamage;
@@ -23,31 +29,10 @@ public class LightningReward extends Reward{
         offset = new Offset();
     }
     
-    public void setUsePlayerLoc(boolean usePlayerLoc){
-        this.usePlayerLoc = usePlayerLoc;
-    }
-    public boolean getUsePlayerLoc(){
-        return this.usePlayerLoc;
-    }
-    
-    public void setCauseDamage(boolean causeDamage){
-        this.causeDamage = causeDamage;
-    }
-    public boolean getCauseDamage(){
-        return this.causeDamage;
-    }
-    
-    public void setOffset(Offset offset){
-        this.offset = offset;
-    }
-    public Offset getOffset(){
-        return this.offset;
-    }
-    
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.WHITE_WOOL);
-        builder.withDisplayName("&eLightning");
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.WHITE_WOOL);
+        builder.setDisplayName("&eLightning");
         if(usePlayerLoc){
             builder.addLoreLine("&bTarget location: &2player");
         }else{
@@ -63,18 +48,18 @@ public class LightningReward extends Reward{
         builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
         builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
         
-        return builder.build();
+        return builder.toItemStack();
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         config.set(path + ".usePlayerLoc", usePlayerLoc);
         config.set(path + ".causeDamage", causeDamage);
         offset.saveToConfig(config, path + ".offset");
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
+    public void loadRewardFromConfig(Config config, String path){
         this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
         this.causeDamage = config.getBoolean(path + ".causeDamage");
         this.offset = new Offset(config, path + ".offset");

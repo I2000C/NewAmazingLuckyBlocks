@@ -1,22 +1,9 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
-import me.i2000c.newalb.custom_outcomes.rewards.Reward;
-import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.Equipment;
-import me.i2000c.newalb.utils2.ExtendedEntityType;
-import me.i2000c.newalb.utils2.ExtendedEntityType.Age;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.Offset;
-import me.i2000c.newalb.utils2.RandomUtils;
+
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
@@ -29,6 +16,26 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.Reward;
+import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.Equipment;
+import me.i2000c.newalb.utils2.ExtendedEntityType;
+import me.i2000c.newalb.utils2.ExtendedEntityType.Age;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.Offset;
+import me.i2000c.newalb.utils2.RandomUtils;
+
+@Getter
+@Setter
 public class EntityReward extends Reward{
     private Offset offset;
     private boolean usePlayerLoc;
@@ -47,6 +54,8 @@ public class EntityReward extends Reward{
     
     private Equipment equipment;
     
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     protected Entity lastSpawnedEntity = null;
     
     public EntityReward(Outcome outcome){
@@ -66,94 +75,12 @@ public class EntityReward extends Reward{
         this.usePlayerLoc = false;
     }
     
-    public int getID(){
-        return this.entityID;
-    }
-    public void setID(int entityID){
-        this.entityID = entityID;
-    }
-    
-    public void setOffset(Offset offset){
-        this.offset = offset;
-    }
-    public Offset getOffset(){
-        return this.offset;
-    }
-    
-    public void setUsePlayerLoc(boolean usePlayerLoc){
-        this.usePlayerLoc = usePlayerLoc;
-    }
-    public boolean getUsePlayerLoc(){
-        return this.usePlayerLoc;
-    }
-    
-    public ExtendedEntityType getType(){
-        return this.type;
-    }
-    public void setType(ExtendedEntityType type){
-        this.type = type;
-    }
-    public String getCustomName(){
-        return customName;
-    }
-    public void setCustomName(String customName) {
-        this.customName = customName;
-    }
-    public boolean isCustomNameVisible(){
-        return this.customNameVisible;
-    }
-    public void setCustomNameVisible(boolean customNameVisible){
-        this.customNameVisible = customNameVisible;
-    }
-    public List<String> getEffects(){
-        return effects;
-    }
-    public void setEffects(List<String> effects){
-        this.effects = new ArrayList(effects);
-    }
-    public int getHealth(){
-        return this.health;
-    }
-    public void setHealth(int health){
-        this.health = health;
-    }
-    public Age getAge(){
-        return this.age;
-    }
-    public void setAge(Age age){
-        this.age = age;
-    }
-    public boolean isTamed(){
-        return this.isTamed;
-    }
-    public void setIsTamed(boolean isTamed){
-        this.isTamed = isTamed;
-    }
-    public boolean isAngry() {
-        return this.isAngry;
-    }
-    public void setIsAngry(boolean isAngry) {
-        this.isAngry = isAngry;
-    }
-    public Equipment getEquipment(){
-        return equipment;
-    }
-    public void setEquipment(Equipment equipment){
-        this.equipment = equipment;
-    }
-    public int getSlimeSize(){
-        return this.slimeSize;
-    }
-    public void setSlimeSize(int slimeSize){
-        this.slimeSize = slimeSize;
-    }
-    
     @Override
     public ItemStack getItemToDisplay(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         XMaterial material = type.getMaterial();
-        ItemBuilder builder = ItemBuilder.newItem(material);
-        builder.withDisplayName("&2Entity");
+        ItemStackWrapper builder = ItemStackWrapper.newItem(material);
+        builder.setDisplayName("&2Entity");
         builder.addLoreLine("&bID: &r" + entityID);
         builder.addLoreLine("&btype: &e" + type.name());
         if(customName == null){
@@ -215,7 +142,7 @@ public class EntityReward extends Reward{
                 if(helmet == null){
                     builder.addLoreLine("    &6Helmet: &cnull");
                 }else{
-                    ItemBuilder builder2 = ItemBuilder.fromItem(helmet, false);
+                    ItemStackWrapper builder2 = ItemStackWrapper.fromItem(helmet, false);
                     String name = builder2.toString();
                     int amount = builder2.getAmount();
                     builder.addLoreLine("    &6Helmet: &d" + name + " x" + amount);
@@ -224,7 +151,7 @@ public class EntityReward extends Reward{
                 if(chestplate == null){
                     builder.addLoreLine("    &6Chestplate: &cnull");
                 }else{
-                    ItemBuilder builder2 = ItemBuilder.fromItem(chestplate, false);
+                    ItemStackWrapper builder2 = ItemStackWrapper.fromItem(chestplate, false);
                     String name = builder2.toString();
                     int amount = builder2.getAmount();
                     builder.addLoreLine("    &6Chestplate: &d" + name + " x" + amount);
@@ -233,7 +160,7 @@ public class EntityReward extends Reward{
                 if(leggings == null){
                     builder.addLoreLine("    &6Leggings: &cnull");
                 }else{
-                    ItemBuilder builder2 = ItemBuilder.fromItem(leggings, false);
+                    ItemStackWrapper builder2 = ItemStackWrapper.fromItem(leggings, false);
                     String name = builder2.toString();
                     int amount = builder2.getAmount();
                     builder.addLoreLine("    &6Leggings: &d" + name + " x" + amount);
@@ -242,7 +169,7 @@ public class EntityReward extends Reward{
                 if(boots == null){
                     builder.addLoreLine("    &6Boots: &cnull");
                 }else{
-                    ItemBuilder builder2 = ItemBuilder.fromItem(boots, false);
+                    ItemStackWrapper builder2 = ItemStackWrapper.fromItem(boots, false);
                     String name = builder2.toString();
                     int amount = builder2.getAmount();
                     builder.addLoreLine("    &6Boots: &d" + name + " x" + amount);
@@ -251,7 +178,7 @@ public class EntityReward extends Reward{
                 if(itemInHand == null){
                     builder.addLoreLine("    &6Item in hand: &cnull");
                 }else{
-                    ItemBuilder builder2 = ItemBuilder.fromItem(itemInHand, false);
+                    ItemStackWrapper builder2 = ItemStackWrapper.fromItem(itemInHand, false);
                     String name = builder2.toString();
                     int amount = builder2.getAmount();
                     builder.addLoreLine("    &6Item in hand: &d" + name + " x" + amount);
@@ -270,12 +197,12 @@ public class EntityReward extends Reward{
         builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
         builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
         
-        return builder.build();
+        return builder.toItemStack();
 //</editor-fold>
     }
 
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
         config.set(path + ".type", this.type.name());
         config.set(path + ".custom_name", this.customName);
@@ -301,16 +228,16 @@ public class EntityReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
+    public void loadRewardFromConfig(Config config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.type = ExtendedEntityType.valueOf(config.getString(path + ".type"));
-        this.customName = config.getString(path + ".custom_name");
+        this.customName = config.getString(path + ".custom_name", null);
         this.customNameVisible = config.getBoolean(path + ".custom_name_visible");
         if(this.type.isAlive()){
             this.health = config.getInt(path + ".health", -1);
-            this.age = Age.valueOf(config.getString(path + ".age", Age.ADULT.name()));
-            this.isTamed = config.getBoolean(path + ".isTamed");
-            this.isAngry = config.getBoolean(path + ".isAngry");
+            this.age = config.getEnum(path + ".age", Age.class, Age.ADULT);
+            this.isTamed = config.getBoolean(path + ".isTamed", false);
+            this.isAngry = config.getBoolean(path + ".isAngry", false);
             this.slimeSize = config.getInt(path + ".slimeSize", -1);
             this.effects = config.getStringList(path + ".effects");
             this.equipment = new Equipment(config, path + ".equipment");
@@ -318,7 +245,7 @@ public class EntityReward extends Reward{
             this.equipment = new Equipment();
         }
         this.offset = new Offset(config, path + ".offset");
-        this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
+        this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc", false);
 //</editor-fold>
     }
 

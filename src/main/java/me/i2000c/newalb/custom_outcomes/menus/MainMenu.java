@@ -10,7 +10,7 @@ import me.i2000c.newalb.listeners.inventories.GUIFactory;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,20 +33,17 @@ public class MainMenu extends Editor{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Menu menu = GUIFactory.newMenu(CustomInventoryType.MAIN_MENU, 9, "&a&lMain menu");
         
-        ItemStack exit = ItemBuilder
-                .newItem(XMaterial.IRON_DOOR)
-                .withDisplayName("&cExit")
-                .build();
+        ItemStack exit = ItemStackWrapper.newItem(XMaterial.IRON_DOOR)
+                                         .setDisplayName("&cExit")
+                                         .toItemStack();
         
-        ItemStack packsItem = ItemBuilder
-                .newItem(XMaterial.CRAFTING_TABLE)
-                .withDisplayName("&3Manage outcome packs")
-                .build();
+        ItemStack packsItem = ItemStackWrapper.newItem(XMaterial.CRAFTING_TABLE)
+                                              .setDisplayName("&3Manage outcome packs")
+                                              .toItemStack();
         
-        ItemStack typesItem = ItemBuilder
-                .fromItem(TypeManager.getMenuItemStack())
-                .withDisplayName("&6Manage lucky block types")
-                .build();
+        ItemStack typesItem = ItemStackWrapper.fromItem(TypeManager.getMenuItemStack())
+                                              .setDisplayName("&6Manage lucky block types")
+                                              .toItemStack();
         
         menu.setItem(3, packsItem);
         menu.setItem(5, typesItem);

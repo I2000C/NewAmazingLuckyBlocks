@@ -12,7 +12,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -50,34 +50,34 @@ public class DarkHoleMenu extends Editor<DarkHoleReward>{
         menu.setItem(27, glass);
         menu.setItem(35, glass);
         
-        ItemBuilder builder;
+        ItemStackWrapper builder;
         if(item.isSquared()){
-            builder = ItemBuilder.newItem(XMaterial.SNOW_BLOCK);
-            builder.withDisplayName("&bSquared: &atrue");
+            builder = ItemStackWrapper.newItem(XMaterial.SNOW_BLOCK);
+            builder.setDisplayName("&bSquared: &atrue");
         }else{
-            builder = ItemBuilder.newItem(XMaterial.SNOWBALL);
-            builder.withDisplayName("&bSquared: &7false");
+            builder = ItemStackWrapper.newItem(XMaterial.SNOWBALL);
+            builder.setDisplayName("&bSquared: &7false");
         }
         builder.addLoreLine("&3Click to toggle");
-        ItemStack squaredStack = builder.build();
+        ItemStack squaredStack = builder.toItemStack();
         
-        builder = ItemBuilder.newItem(XMaterial.BEDROCK);
+        builder = ItemStackWrapper.newItem(XMaterial.BEDROCK);
         if(item.getDepth() < 0){
-            builder.withDisplayName("&3Depth: &binfinite");
+            builder.setDisplayName("&3Depth: &binfinite");
         }else{
-            builder.withDisplayName("&3Depth: &b" + item.getDepth());
+            builder.setDisplayName("&3Depth: &b" + item.getDepth());
         }
-        ItemStack depthStack = builder.build();
+        ItemStack depthStack = builder.toItemStack();
         
-        ItemStack radiusStack = ItemBuilder.newItem(XMaterial.HOPPER)
-                .withDisplayName("&6Radius: &2" + item.getRadius())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack radiusStack = ItemStackWrapper.newItem(XMaterial.HOPPER)
+                                                .setDisplayName("&6Radius: &2" + item.getRadius())
+                                                .addLoreLine("&3Click to reset")
+                                                .toItemStack();
         
-        ItemStack ticksStack = ItemBuilder.newItem(XMaterial.CLOCK)
-                .withDisplayName("&5Ticks between blocks: &6" + item.getTicks())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack ticksStack = ItemStackWrapper.newItem(XMaterial.CLOCK)
+                                               .setDisplayName("&5Ticks between blocks: &6" + item.getTicks())
+                                               .addLoreLine("&3Click to reset")
+                                               .toItemStack();
         
         menu.setItem(18, GUIItem.getBackItem());
         menu.setItem(26, GUIItem.getNextItem());

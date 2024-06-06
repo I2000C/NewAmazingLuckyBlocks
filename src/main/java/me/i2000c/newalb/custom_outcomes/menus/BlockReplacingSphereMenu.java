@@ -13,7 +13,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -49,34 +49,34 @@ public class BlockReplacingSphereMenu extends Editor<BlockReplacingSphereReward>
                 XMaterial.WATER_BUCKET, 
                 XMaterial.BUCKET);
         
-        ItemStack removeMaterialsItem = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cClick to remove all materials")
-                .build();
+        ItemStack removeMaterialsItem = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                        .setDisplayName("&cClick to remove all materials")
+                                                        .toItemStack();
         
-        ItemStack materialsItem = ItemBuilder.newItem(XMaterial.DIAMOND_ORE)
-                .withDisplayName("&6Sphere materials")
-                .addLoreLine("&bLeft click on an item of your inventory")
-                .addLoreLine("&b   to add it to the list")
-                .addLoreLine("&cRight click on an item of your inventory")
-                .addLoreLine("&c   to remove it from the list")
-                .addLoreLine("&2Current materials:")
-                .addLore(item.getOrderedMaterialList())
-                .build();
+        ItemStack materialsItem = ItemStackWrapper.newItem(XMaterial.DIAMOND_ORE)
+                                                  .setDisplayName("&6Sphere materials")
+                                                  .addLoreLine("&bLeft click on an item of your inventory")
+                                                  .addLoreLine("&b   to add it to the list")
+                                                  .addLoreLine("&cRight click on an item of your inventory")
+                                                  .addLoreLine("&c   to remove it from the list")
+                                                  .addLoreLine("&2Current materials:")
+                                                  .addLore(item.getOrderedMaterialList())
+                                                  .toItemStack();
         
-        ItemStack minRadiusItem = ItemBuilder.newItem(XMaterial.SNOWBALL)
-                .withDisplayName("&bMin radius: &6" + item.getMinRadius())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack minRadiusItem = ItemStackWrapper.newItem(XMaterial.SNOWBALL)
+                                                  .setDisplayName("&bMin radius: &6" + item.getMinRadius())
+                                                  .addLoreLine("&3Click to reset")
+                                                  .toItemStack();
         
-        ItemStack maxRadiusItem = ItemBuilder.newItem(XMaterial.SLIME_BALL)
-                .withDisplayName("&bMax radius: &6" + item.getMaxRadius())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack maxRadiusItem = ItemStackWrapper.newItem(XMaterial.SLIME_BALL)
+                                                  .setDisplayName("&bMax radius: &6" + item.getMaxRadius())
+                                                  .addLoreLine("&3Click to reset")
+                                                  .toItemStack();
         
-        ItemStack ticksBetweenLayersItem = ItemBuilder.newItem(XMaterial.CLOCK)
-                .withDisplayName("&bTicks between layer: &6" + item.getTicksBetweenLayers())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack ticksBetweenLayersItem = ItemStackWrapper.newItem(XMaterial.CLOCK)
+                                                           .setDisplayName("&bTicks between layer: &6" + item.getTicksBetweenLayers())
+                                                           .addLoreLine("&3Click to reset")
+                                                           .toItemStack();
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);

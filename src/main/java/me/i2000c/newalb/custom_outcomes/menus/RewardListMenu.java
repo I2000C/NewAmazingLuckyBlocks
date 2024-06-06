@@ -23,7 +23,7 @@ import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.NBTUtils;
 
 public class RewardListMenu extends Editor<Outcome>{
@@ -34,14 +34,14 @@ public class RewardListMenu extends Editor<Outcome>{
         rewardListAdapter = new GUIPagesAdapter<>(
                 REWARD_LIST_MENU_SIZE,
                 (reward, index) -> {
-                    ItemBuilder builder = ItemBuilder
+                    ItemStackWrapper builder = ItemStackWrapper
                             .fromItem(reward.getItemToDisplay(), false);
                     if(delayMode){
                         builder.addLoreLine("");
                         builder.addLoreLine("&6Reward Delay: &a" + reward.getDelay() + " &dticks");
                     }
                     builder.setNbtTag(REWARD_ID_TAG, index);
-                    return builder.build();
+                    return builder.toItemStack();
                 }
         );
         rewardListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
@@ -105,19 +105,19 @@ public class RewardListMenu extends Editor<Outcome>{
         rewardListAdapter.setItemList(item.getRewards());
         rewardListAdapter.updateMenu(menu);
         
-        ItemStack saveAndExit = ItemBuilder.newItem(XMaterial.DARK_OAK_DOOR)
-                .withDisplayName("&dSave and exit")
-                .addLoreLine("&6The plugin will reload the custom outcomes list")
-                .addLoreLine("&6after you click this option")
-                .build();
+        ItemStack saveAndExit = ItemStackWrapper.newItem(XMaterial.DARK_OAK_DOOR)
+                                                .setDisplayName("&dSave and exit")
+                                                .addLoreLine("&6The plugin will reload the custom outcomes list")
+                                                .addLoreLine("&6after you click this option")
+                                                .toItemStack();
         
-        ItemStack add = ItemBuilder.newItem(XMaterial.SLIME_BALL)
-                .withDisplayName("&aCreate new reward")
-                .build();
+        ItemStack add = ItemStackWrapper.newItem(XMaterial.SLIME_BALL)
+                                        .setDisplayName("&aCreate new reward")
+                                        .toItemStack();
         
-        ItemStack testOutcome = ItemBuilder.newItem(XMaterial.BEACON)
-                .withDisplayName("&bTest the outcome")
-                .build();
+        ItemStack testOutcome = ItemStackWrapper.newItem(XMaterial.BEACON)
+                                                .setDisplayName("&bTest the outcome")
+                                                .toItemStack();
         
         ItemStack testReward = GUIItem.getEnabledDisabledItem(
                 testMode, 
@@ -132,7 +132,7 @@ public class RewardListMenu extends Editor<Outcome>{
                 "&4DeleteMode", 
                 XMaterial.BARRIER, 
                 XMaterial.BARRIER);
-        ItemBuilder.fromItem(delete, false)
+        ItemStackWrapper.fromItem(delete, false)
                 .addLoreLine("")
                 .addLoreLine("&5If this mode is enabled, you will be able")
                 .addLoreLine("&5to delete the reward which you click");
@@ -143,7 +143,7 @@ public class RewardListMenu extends Editor<Outcome>{
                 "&eCloneMode",
                 XMaterial.REPEATER,
                 XMaterial.REPEATER);
-        ItemBuilder.fromItem(clone, false)
+        ItemStackWrapper.fromItem(clone, false)
                 .addLoreLine("")
                 .addLoreLine("&6You can clone rewards using this option");
         
@@ -153,7 +153,7 @@ public class RewardListMenu extends Editor<Outcome>{
                 "&5DelayMode",
                 XMaterial.CLOCK,
                 XMaterial.CLOCK);
-        ItemBuilder.fromItem(delay, false)
+        ItemStackWrapper.fromItem(delay, false)
                 .addLoreLine("")
                 .addLoreLine("&eClick here to configure the delay of a reward");
         
@@ -213,7 +213,7 @@ public class RewardListMenu extends Editor<Outcome>{
                         (p, reward) -> {
                             if(reward instanceof EntityReward){
                                 int entityID = item.getEntityRewardsNumber();
-                                ((EntityReward) reward).setID(entityID);
+                                ((EntityReward) reward).setEntityID(entityID);
                             }
                             
                             item.addReward(reward);
@@ -303,7 +303,7 @@ public class RewardListMenu extends Editor<Outcome>{
                     Reward reward2 = reward.clone();
                     if(reward2 instanceof EntityReward){
                         EntityReward entityReward = (EntityReward) reward2;
-                        entityReward.setID(item.getEntityRewardsNumber());
+                        entityReward.setEntityID(item.getEntityRewardsNumber());
                     }
                     item.addReward(reward2);
                     openRewardListMenu(player);

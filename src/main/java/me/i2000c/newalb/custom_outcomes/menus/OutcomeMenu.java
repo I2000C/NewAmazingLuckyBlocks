@@ -14,7 +14,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -70,30 +70,30 @@ public class OutcomeMenu extends Editor<Outcome>{
         menu.setItem(9, glass);
         menu.setItem(17, glass);
         
-        ItemStack name = ItemBuilder.newItem(XMaterial.OAK_SIGN)
-                .withDisplayName("&7Outcome name: &r" + item.getName())
-                .withLore("&3Click to change")
-                .build();
+        ItemStack name = ItemStackWrapper.newItem(XMaterial.OAK_SIGN)
+                                         .setDisplayName("&7Outcome name: &r" + item.getName())
+                                         .setLore("&3Click to change")
+                                         .toItemStack();
         
-        ItemStack icon = ItemBuilder.fromItem(item.getIcon())
-                .withDisplayName("&dOutcome icon")
-                .withLore("&bClick on an item of your inventory",
-                          "&b   to select the icon of the outcome.",
-                          "&bBy default it's CHEST"
-                ).build();
+        ItemStack icon = ItemStackWrapper.fromItem(item.getIcon())
+                                         .setDisplayName("&dOutcome icon")
+                                         .setLore("&bClick on an item of your inventory",
+                                                   "&b   to select the icon of the outcome.",
+                                                   "&bBy default it's CHEST")
+                                         .toItemStack();
         
-        ItemStack creative = ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
-                .withDisplayName("&3Close menu to pick items from creative mode")
-                .build();
+        ItemStack creative = ItemStackWrapper.newItem(XMaterial.CRAFTING_TABLE)
+                                              .setDisplayName("&3Close menu to pick items from creative mode")
+                                              .toItemStack();
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.GLOWSTONE_DUST);
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.GLOWSTONE_DUST);
         if(item.getProbability() < 0){
-            builder.withDisplayName("&cProbability must be a positive integer or 0");
+            builder.setDisplayName("&cProbability must be a positive integer or 0");
         }else{
-            builder.withDisplayName("&6Outcome probability: &r" + item.getProbability());
+            builder.setDisplayName("&6Outcome probability: &r" + item.getProbability());
         }
-        builder.withLore("&3Click to change");
-        ItemStack prob = builder.build();
+        builder.setLore("&3Click to change");
+        ItemStack prob = builder.toItemStack();
         
         menu.setItem(10, GUIItem.getBackItem());
         menu.setItem(16, GUIItem.getNextItem());

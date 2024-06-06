@@ -1,16 +1,22 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
-import me.i2000c.newalb.custom_outcomes.rewards.Reward;
-import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.Reward;
+import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.WorldGuardManager;
+
+@Getter
+@Setter
 public class ExplosionReward extends Reward{
     private int power;
     private boolean withFire;
@@ -22,30 +28,11 @@ public class ExplosionReward extends Reward{
         withFire = true;
         breakBlocks = true;
     }
-
-    public int getPower(){
-        return power;
-    }
-    public void setPower(int power){
-        this.power = power;
-    }
-    public boolean isWithFire(){
-        return withFire;
-    }
-    public void setWithFire(boolean withFire){
-        this.withFire = withFire;
-    }
-    public boolean isBreakBlocks(){
-        return breakBlocks;
-    }
-    public void setBreakBlocks(boolean breakBlocks){
-        this.breakBlocks = breakBlocks;
-    }
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.TNT);
-        builder.withDisplayName("&4Explosion");
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.TNT);
+        builder.setDisplayName("&4Explosion");
         builder.addLoreLine("&6Power: &e" + this.power);
         if(breakBlocks){
             builder.addLoreLine("&6Generate fire: &atrue");
@@ -58,18 +45,18 @@ public class ExplosionReward extends Reward{
             builder.addLoreLine("&6Break blocks: &cfalse");
         }
         
-        return builder.build();
+        return builder.toItemStack();
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         config.set(path + ".power", this.power);
         config.set(path + ".withFire", this.withFire);
         config.set(path + ".breakBlocks", this.breakBlocks);
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
+    public void loadRewardFromConfig(Config config, String path){
         this.power = config.getInt(path + ".power");
         this.withFire = config.getBoolean(path + ".withFire");
         this.breakBlocks = config.getBoolean(path + ".breakBlocks");

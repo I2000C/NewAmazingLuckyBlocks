@@ -1,56 +1,49 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
-import me.i2000c.newalb.custom_outcomes.rewards.Reward;
-import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.Reward;
+import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+
+@Getter
+@Setter
 public class CommandReward extends Reward{
-    private boolean senderIsPlayer;
-    private String cmd;
+    private boolean sendFromPlayer;
+    private String command;
     
     public CommandReward(Outcome outcome){
         super(outcome);
-        senderIsPlayer = false;
-        cmd = null;
-    }
-    
-    public boolean getSenderIsPlayer(){
-        return this.senderIsPlayer;
-    }
-    public void setSenderIsPlayer(boolean senderIsPlayer){
-        this.senderIsPlayer = senderIsPlayer;
-    }
-    public String getCommand(){
-        return this.cmd;
-    }
-    public void setCommand(String cmd){
-        this.cmd = cmd;
+        sendFromPlayer = false;
+        command = null;
     }
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
-        builder.withDisplayName("&6Command: &b/" + cmd);
-        if(senderIsPlayer){
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.NAME_TAG);
+        builder.setDisplayName("&6Command: &b/" + command);
+        if(sendFromPlayer){
             builder.addLoreLine("&5Sender: &2Player");
         }else{
             builder.addLoreLine("&5Sender: &8Console");
         }
         
-        return builder.build();
+        return builder.toItemStack();
     }
 
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
-        config.set(path + ".cmd", this.cmd);
-        if(this.senderIsPlayer){
+    public void saveRewardIntoConfig(Config config, String path){
+        config.set(path + ".cmd", this.command);
+        if(this.sendFromPlayer){
             config.set(path + ".sender", "Player");
         }else{
             config.set(path + ".sender", "Console");
@@ -58,10 +51,10 @@ public class CommandReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
-        this.cmd = config.getString(path + ".cmd");
+    public void loadRewardFromConfig(Config config, String path){
+        this.command = config.getString(path + ".cmd");
         String sender = config.getString(path + ".sender");
-        this.senderIsPlayer = !sender.equals("Console");
+        this.sendFromPlayer = !sender.equals("Console");
     }
     
     @Override
@@ -73,11 +66,11 @@ public class CommandReward extends Reward{
         String by = String.valueOf(location.getBlockY());
         String bz = String.valueOf(location.getBlockZ());
         
-        String command = cmd.replace("%player%", player.getName())
-                .replace("%x%", x).replace("%y%", y).replace("%z%", z)
-                .replace("%bx%", bx).replace("%by%", by).replace("%bz%", bz);
+        String command = this.command.replace("%player%", player.getName())
+                                     .replace("%x%", x).replace("%y%", y).replace("%z%", z)
+                                     .replace("%bx%", bx).replace("%by%", by).replace("%bz%", bz);
         
-        if(senderIsPlayer){
+        if(sendFromPlayer){
             Bukkit.dispatchCommand(player, command);
         }else{
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);

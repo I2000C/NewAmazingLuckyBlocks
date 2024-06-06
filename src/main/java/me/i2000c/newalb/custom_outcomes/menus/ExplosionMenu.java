@@ -12,7 +12,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,10 +39,10 @@ public class ExplosionMenu extends Editor<ExplosionReward>{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.ORANGE);
         
-        ItemStack tntItem = ItemBuilder.newItem(XMaterial.TNT)
-                .withDisplayName("&6Explosion power: &e" + item.getPower())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack tntItem = ItemStackWrapper.newItem(XMaterial.TNT)
+                                            .setDisplayName("&6Explosion power: &e" + item.getPower())
+                                            .addLoreLine("&3Click to reset")
+                                            .toItemStack();
         
         ItemStack fireItem = GUIItem.getBooleanItem(
                 item.isWithFire(), 

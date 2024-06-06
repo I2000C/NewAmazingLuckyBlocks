@@ -13,7 +13,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -48,17 +48,17 @@ public class LightningMenu extends Editor<LightningReward>{
             menu.setItem(i, glass);
         }
 
-        ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(item.getUsePlayerLoc());
+        ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(item.isUsePlayerLoc());
         
-        ItemBuilder builder;
-        if(item.getCauseDamage()){
-            builder = ItemBuilder.newItem(XMaterial.LAVA_BUCKET);
-            builder.withDisplayName("&cCause damage");
+        ItemStackWrapper builder;
+        if(item.isCauseDamage()){
+            builder = ItemStackWrapper.newItem(XMaterial.LAVA_BUCKET);
+            builder.setDisplayName("&cCause damage");
         }else{
-            builder = ItemBuilder.newItem(XMaterial.WATER_BUCKET);
-            builder.withDisplayName("&bDon't cause damage");            
+            builder = ItemStackWrapper.newItem(XMaterial.WATER_BUCKET);
+            builder.setDisplayName("&bDon't cause damage");            
         }
-        ItemStack damagePlayerStack = builder.build();
+        ItemStack damagePlayerStack = builder.toItemStack();
 
         ItemStack offsetStack = item.getOffset().getItemToDisplay();
 
@@ -89,11 +89,11 @@ public class LightningMenu extends Editor<LightningReward>{
                     onNext.accept(player, item);
                     break;
                 case 12:
-                    item.setUsePlayerLoc(!item.getUsePlayerLoc());
+                    item.setUsePlayerLoc(!item.isUsePlayerLoc());
                     openLightningMenu(player);
                     break;
                 case 13:
-                    item.setCauseDamage(!item.getCauseDamage());
+                    item.setCauseDamage(!item.isCauseDamage());
                     openLightningMenu(player);
                     break;
                 case 14:

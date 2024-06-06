@@ -19,7 +19,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.NBTUtils;
 
 public class OutcomeListMenu extends Editor<OutcomePack>{
@@ -81,9 +81,9 @@ public class OutcomeListMenu extends Editor<OutcomePack>{
         
         outcomeListAdapter.updateMenu(menu);
         
-        ItemStack createOutcome = ItemBuilder.newItem(XMaterial.SLIME_BALL)
-                .withDisplayName("&aCreate new outcome")
-                .build();
+        ItemStack createOutcome = ItemStackWrapper.newItem(XMaterial.SLIME_BALL)
+                                                  .setDisplayName("&aCreate new outcome")
+                                                  .toItemStack();
         
         ItemStack cloneOutcome = GUIItem.getEnabledDisabledItem(
                 cloneMode, 
@@ -98,7 +98,7 @@ public class OutcomeListMenu extends Editor<OutcomePack>{
                 "&dDelete mode", 
                 XMaterial.BARRIER,
                 XMaterial.BARRIER);
-        ItemBuilder.fromItem(deleteOutcome, false)
+        ItemStackWrapper.fromItem(deleteOutcome, false)
                 .addLoreLine("")
                 .addLoreLine("&4&lWARNING: &cIf this mode is enabled,")
                 .addLoreLine("&cwhen you click on an outcome,")

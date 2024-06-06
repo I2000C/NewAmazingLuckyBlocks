@@ -1,6 +1,3 @@
-# Version of the config. Don't modify it
-ConfigVersion: 0
-
 Wands:
   RegenWand:
     name: "&dRegen wand &7- &6Right Click"

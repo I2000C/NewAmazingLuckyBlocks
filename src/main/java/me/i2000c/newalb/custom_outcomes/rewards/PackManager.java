@@ -8,7 +8,7 @@ import java.util.Map;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -126,7 +126,7 @@ public class PackManager{
         
         OutcomePack pack = getPack(OtherUtils.removeExtension(name));
         pack.setIcon(newIcon);
-        String iconString = ItemBuilder.fromItem(newIcon, false).toString();
+        String iconString = ItemStackWrapper.fromItem(newIcon, false).toString();
         pack.saveOutcomes();
         Logger.sendMessage("&aIcon of pack &6\"" + name + "\" &ahas been changed to &b" + iconString, sender);
 //</editor-fold>

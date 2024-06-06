@@ -28,7 +28,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 
 public class SoundMenu extends Editor<SoundReward>{
     public SoundMenu(){
@@ -39,13 +39,13 @@ public class SoundMenu extends Editor<SoundReward>{
         soundListAdapter = new GUIPagesAdapter<>(
                 SOUND_LIST_MENU_SIZE,
                 (sound, index) -> {
-                    ItemBuilder builder = ItemBuilder.newItem(XMaterial.NOTE_BLOCK);
-                    builder.withDisplayName("&3" + sound.name());
+                    ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.NOTE_BLOCK);
+                    builder.setDisplayName("&3" + sound.name());
                     if(item.getType() != null && sound == item.getType()){
                         builder.addEnchantment(Enchantment.DURABILITY, 1);
                         builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     }
-                    return builder.build();
+                    return builder.toItemStack();
                 }
         );
         soundListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
@@ -102,28 +102,28 @@ public class SoundMenu extends Editor<SoundReward>{
         menu.setItem(9, glass);
         menu.setItem(17, glass);
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.NOTE_BLOCK);
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.NOTE_BLOCK);
         if(item.getType() == null){
-            builder.withDisplayName("&6Select sound type");
+            builder.setDisplayName("&6Select sound type");
         }else{
-            builder.withDisplayName("&6Selected type: &3" + item.getType().name());
+            builder.setDisplayName("&6Selected type: &3" + item.getType().name());
         }
-        ItemStack sound = builder.build();
+        ItemStack sound = builder.toItemStack();
         
         double value = BigDecimal.valueOf(item.getVolume())
-                .setScale(3, RoundingMode.HALF_UP)
-                .doubleValue();
-        ItemStack volume = ItemBuilder.newItem(XMaterial.EMERALD)
-                .withDisplayName("&aSound volume: &5" + value)
-                .addLoreLine("&3Click to reset")
-                .build();
+                                 .setScale(3, RoundingMode.HALF_UP)
+                                 .doubleValue();
+        ItemStack volume = ItemStackWrapper.newItem(XMaterial.EMERALD)
+                                           .setDisplayName("&aSound volume: &5" + value)
+                                           .addLoreLine("&3Click to reset")
+                                           .toItemStack();
         
         
         value = BigDecimal.valueOf(item.getPitch()).setScale(3, RoundingMode.HALF_UP).doubleValue();
-        ItemStack pitch = ItemBuilder.newItem(XMaterial.GOLD_NUGGET)
-                .withDisplayName("&eSound pitch: &5" + value)
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack pitch = ItemStackWrapper.newItem(XMaterial.GOLD_NUGGET)
+                                          .setDisplayName("&eSound pitch: &5" + value)
+                                          .addLoreLine("&3Click to reset")
+                                          .toItemStack();
         
         menu.setItem(10, GUIItem.getBackItem());
         menu.setItem(16, GUIItem.getNextItem());
@@ -209,9 +209,9 @@ public class SoundMenu extends Editor<SoundReward>{
         Menu menu = GUIFactory.newMenu(CustomInventoryType.SOUND_TYPE_MENU, 54, "&3&lSound Type");
         
         if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_10)){
-            ItemStack stop = ItemBuilder.newItem(XMaterial.BARRIER)
-                    .withDisplayName("&cStop all sounds")
-                    .build();
+            ItemStack stop = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                             .setDisplayName("&cStop all sounds")
+                                             .toItemStack();
             
             menu.setItem(48, stop);
         }
@@ -258,7 +258,7 @@ public class SoundMenu extends Editor<SoundReward>{
                     break;
                 default:
                     if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                        String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                        String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
                                 .getDisplayName();
                         if(displayName != null){
                             item.setType(Sound.valueOf(Logger.stripColor(displayName)));

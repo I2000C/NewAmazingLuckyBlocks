@@ -9,7 +9,7 @@ import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -54,35 +54,35 @@ public class OffsetMenu extends Editor<Offset>{
             menu.setItem(i, GUIItem.getPlusLessItem(+100));
         }
         
-        ItemStack minX = ItemBuilder.newItem(XMaterial.GRASS_BLOCK)
-                .withDisplayName("&cMin X: &6" + item.getOffsetX().getMin())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack minX = ItemStackWrapper.newItem(XMaterial.GRASS_BLOCK)
+                                         .setDisplayName("&cMin X: &6" + item.getOffsetX().getMin())
+                                         .addLoreLine("&3Click to reset")
+                                         .toItemStack();
         
-        ItemStack maxX = ItemBuilder.newItem(XMaterial.GRASS_BLOCK)
-                .withDisplayName("&cMax X: &6" + item.getOffsetX().getMax())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack maxX = ItemStackWrapper.newItem(XMaterial.GRASS_BLOCK)
+                                         .setDisplayName("&cMax X: &6" + item.getOffsetX().getMax())
+                                         .addLoreLine("&3Click to reset")
+                                         .toItemStack();
         
-        ItemStack minY = ItemBuilder.newItem(XMaterial.DIRT)
-                .withDisplayName("&aMin Y: &6" + item.getOffsetY().getMin())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack minY = ItemStackWrapper.newItem(XMaterial.DIRT)
+                                         .setDisplayName("&aMin Y: &6" + item.getOffsetY().getMin())
+                                         .addLoreLine("&3Click to reset")
+                                         .toItemStack();
         
-        ItemStack maxY = ItemBuilder.newItem(XMaterial.DIRT)
-                .withDisplayName("&aMax Y: &6" + item.getOffsetY().getMax())
-                .addLoreLine("&3Click to reset")
-                .build();        
+        ItemStack maxY = ItemStackWrapper.newItem(XMaterial.DIRT)
+                                         .setDisplayName("&aMax Y: &6" + item.getOffsetY().getMax())
+                                         .addLoreLine("&3Click to reset")
+                                         .toItemStack();        
         
-        ItemStack minZ = ItemBuilder.newItem(XMaterial.STONE)
-                .withDisplayName("&bMin Z: &6" + item.getOffsetZ().getMin())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack minZ = ItemStackWrapper.newItem(XMaterial.STONE)
+                                         .setDisplayName("&bMin Z: &6" + item.getOffsetZ().getMin())
+                                         .addLoreLine("&3Click to reset")
+                                         .toItemStack();
         
-        ItemStack maxZ = ItemBuilder.newItem(XMaterial.STONE)
-                .withDisplayName("&bMax Z: &6" + item.getOffsetZ().getMax())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack maxZ = ItemStackWrapper.newItem(XMaterial.STONE)
+                                         .setDisplayName("&bMax Z: &6" + item.getOffsetZ().getMax())
+                                         .addLoreLine("&3Click to reset")
+                                         .toItemStack();
         
         menu.setItem(4, minX);
         menu.setItem(13, maxX);

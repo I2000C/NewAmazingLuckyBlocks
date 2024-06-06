@@ -1,7 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,7 +20,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.TextureManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -76,80 +75,74 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
         menu.setItem(33, glass);
         menu.setItem(42, glass);
         
-        ItemStack crafting = ItemBuilder
-                .newItem(XMaterial.CRAFTING_TABLE)
-                .withDisplayName("&aLuckyType crafting")
-                .addLoreLine("&3Drag and drop items from your inventory")
-                .addLoreLine("  &3into the crafting area")
-                .build();
+        ItemStack crafting = ItemStackWrapper.newItem(XMaterial.CRAFTING_TABLE)
+                                             .setDisplayName("&aLuckyType crafting")
+                                             .addLoreLine("&3Drag and drop items from your inventory")
+                                             .addLoreLine("  &3into the crafting area")
+                                             .toItemStack();
         
-        ItemStack typeItem = ItemBuilder
-                .fromItem(item.getItem())
-                .withDisplayName("&5LuckyBlock item")
-                .withLore("&3Click with an item to change material/texture")
-                .build();
+        ItemStack typeItem = item.getItem()
+                                 .setDisplayName("&5LuckyBlock item")
+                                 .setLore("&3Click with an item to change material/texture")
+                                 .toItemStack();
         
-        ItemBuilder builder = ItemBuilder.fromItem(item.getItem(), false);
-        String displayName = builder.getDisplayName();
-        List<String> lore = builder.getLore();
+        ItemStackWrapper wrapper = item.getItem();
+        String displayName = wrapper.getDisplayName();
+        List<String> lore = wrapper.getLore();
         
-        builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
+        wrapper = ItemStackWrapper.newItem(XMaterial.NAME_TAG);
         if(displayName == null){
-            builder.withDisplayName("&bCurrent item name:");
+            wrapper.setDisplayName("&bCurrent item name:");
         }else{
-            builder.withDisplayName("&bCurrent item name: &r" + displayName);
+            wrapper.setDisplayName("&bCurrent item name: &r" + displayName);
         }
-        builder.addLoreLine("&3Click to change");
-        ItemStack typeItemName = builder.build();
+        wrapper.addLoreLine("&3Click to change");
+        ItemStack typeItemName = wrapper.toItemStack();
         
-        builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
-        builder.withDisplayName("&bClick to add lore line");
-        builder.addLoreLine("&2Current item lore:");
-        builder.addLoreLine("");
+        wrapper = ItemStackWrapper.newItem(XMaterial.OAK_SIGN);
+        wrapper.setDisplayName("&bClick to add lore line");
+        wrapper.addLoreLine("&2Current item lore:");
+        wrapper.addLoreLine("");
         if(lore != null){
-            builder.addLore(lore);
+            wrapper.addLore(lore);
         }
-        ItemStack typeItemLore = builder.build();
+        ItemStack typeItemLore = wrapper.toItemStack();
         
-        ItemStack removeItemLore = ItemBuilder
-                .newItem(XMaterial.BARRIER)
-                .withDisplayName("&cClick to remove item lore")
-                .build();
+        ItemStack removeItemLore = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                   .setDisplayName("&cClick to remove item lore")
+                                                   .toItemStack();
         
-        ItemBuilder builder2 = ItemBuilder
-                .newItem(XMaterial.BOOKSHELF)
-                .withDisplayName("&bCurrent pack list:");
+        ItemStackWrapper wrapper2 = ItemStackWrapper.newItem(XMaterial.BOOKSHELF)
+                                                    .setDisplayName("&bCurrent pack list:");
         item.getPacks().forEach((pack, probability) -> 
-                builder2.addLoreLine("  &2" + pack.getPackname() + ";" + probability));
-        builder2.addLoreLine("");
-        builder2.addLoreLine("&3Click to change");
-        ItemStack typePacks = builder2.build();
+                wrapper2.addLoreLine("  &2" + pack.getPackname() + ";" + probability));
+        wrapper2.addLoreLine("");
+        wrapper2.addLoreLine("&3Click to change");
+        ItemStack typePacks = wrapper2.toItemStack();
         
         
-        ItemStack placePermissionItem = ItemBuilder
-                .newItem(XMaterial.STONE)
-                .withDisplayName("&dCurrent place permission:")
-                .addLoreLine("   &b" + item.getPlacePermission())
-                .addLoreLine(" ")
-                .addLoreLine("&3Click to change")
-                .build();
+        ItemStack placePermissionItem = ItemStackWrapper.newItem(XMaterial.STONE)
+                                                        .setDisplayName("&dCurrent place permission:")
+                                                        .addLoreLine("   &b" + item.getPlacePermission())
+                                                        .addLoreLine(" ")
+                                                        .addLoreLine("&3Click to change")
+                                                        .toItemStack();
         
-        ItemStack breakPermissionItem = ItemBuilder
-                .newItem(XMaterial.IRON_PICKAXE)
-                .withDisplayName("&dCurrent break permission:")
-                .addLoreLine("   &b" + item.getBreakPermission())
-                .addLoreLine(" ")
-                .addLoreLine("&3Click to change")
-                .build();
+        ItemStack breakPermissionItem = ItemStackWrapper.newItem(XMaterial.IRON_PICKAXE)
+                                                        .setDisplayName("&dCurrent break permission:")
+                                                        .addLoreLine("   &b" + item.getBreakPermission())
+                                                        .addLoreLine(" ")
+                                                        .addLoreLine("&3Click to change")
+                                                        .toItemStack();
         
         ItemStack requirePlacePermission = GUIItem.getBooleanItem(
-                item.requirePlacePermission(), 
+                item.isRequirePlacePermission(), 
                 "&dRequire place permission", 
                 XMaterial.LIME_DYE, 
                 XMaterial.GRAY_DYE);
         
         ItemStack requireBreakPermission = GUIItem.getBooleanItem(
-                item.requireBreakPermission(), 
+                item.isRequireBreakPermission(), 
                 "&dRequire break permission", 
                 XMaterial.LIME_DYE, 
                 XMaterial.GRAY_DYE);
@@ -209,22 +202,20 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                         ItemStack cursor = e.getCursor();
                         if(cursor.getType() != Material.AIR && 
                                 (cursor.getType().isBlock() || TextureManager.isSkull(cursor.getType()))){
-                            ItemBuilder builder = ItemBuilder.fromItem(item.getItem(), false);
-                            String displayName = builder.getDisplayName();
-                            List<String> lore = builder.getLore();
+                            ItemStackWrapper wrapper = item.getItem();
+                            String displayName = wrapper.getDisplayName();
+                            List<String> lore = wrapper.getLore();
                             
-                            item.setItem(ItemBuilder.fromItem(cursor.clone())
-                                .withAmount(1)
-                                .withDisplayName(displayName)
-                                .withLore(lore)
-                                .withEnchantments(Collections.EMPTY_MAP)
-                                .build());
+                            item.setItem(ItemStackWrapper.fromItem(cursor)
+                                                         .setAmount(1)
+                                                         .setDisplayName(displayName)
+                                                         .setLore(lore)
+                                                         .clearEnchantments());
                             
-                            ItemStack typeItem = ItemBuilder
-                                .fromItem(item.getItem())
-                                .withDisplayName("&5LuckyBlock item")
-                                .withLore("&3Click with an item to change material/texture")
-                                .build();
+                            ItemStack typeItem = item.getItem()
+                                                     .setDisplayName("&5LuckyBlock item")
+                                                     .setLore("&3Click with an item to change material/texture")
+                                                     .toItemStack();
                             
                             e.getClickedInventory().setItem(e.getSlot(), typeItem);
                         }
@@ -239,10 +230,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                     Logger.sendMessage("  &3To remove the display name, type &cnull&3.", player, false);
                     Logger.sendMessage("  &3If you don't want to change it, use &a/alb return", player, false);
                     ChatListener.registerPlayer(player, message -> {
-                        item.setItem(ItemBuilder
-                                .fromItem(item.getItem())
-                                .withDisplayName(message.equals("null") ? null : message)
-                                .build());
+                        item.setItem(item.getItem().setDisplayName(message.equals("null") ? null : message));
                         openEditMenu(player);
                     });
                     break;
@@ -254,20 +242,14 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                     Logger.sendMessage("  &3You can use color codes.", player, false);
                     Logger.sendMessage("  &3If you don't want add it, use &a/alb return", player, false);
                     ChatListener.registerPlayer(player, message -> {
-                        item.setItem(ItemBuilder
-                                .fromItem(item.getItem())
-                                .addLoreLine(message)
-                                .build());
+                        item.setItem(item.getItem().addLoreLine(message));
                         openEditMenu(player);
                     });
                     break;
                 case 6:
                     //Remove type item lore
                     saveCrafting(e.getClickedInventory());
-                    item.setItem(ItemBuilder
-                            .fromItem(item.getItem())
-                            .withLore()
-                            .build());
+                    item.setItem(item.getItem().setLore());
                     openEditMenu(player);
                     break;
                 case 8:
@@ -302,13 +284,13 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                 case 52:
                     //Toggle place permission
                     saveCrafting(e.getClickedInventory());
-                    item.setRequirePlacePermission(!item.requirePlacePermission());
+                    item.setRequirePlacePermission(!item.isRequirePlacePermission());
                     openEditMenu(player);
                     break;
                 case 53:
                     //Toggle break permission
                     saveCrafting(e.getClickedInventory());
-                    item.setRequireBreakPermission(!item.requireBreakPermission());
+                    item.setRequireBreakPermission(!item.isRequireBreakPermission());
                     openEditMenu(player);
                     break;
                 case 21:
@@ -344,11 +326,11 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
             OutcomePack pack = entry.getKey();
             int probability = entry.getValue();
             
-            ItemStack packItem = ItemBuilder
+            ItemStack packItem = ItemStackWrapper
                     .fromItem(pack.getItemToDisplay())
                     .addLoreLine("")
                     .addLoreLine("&eProbability: &2" + probability)
-                    .build();
+                    .toItemStack();
             
             menu.setItem(i, packItem);            
             i++;
@@ -360,10 +342,9 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
             menu.setItem(i, glass);
         }
         
-        ItemStack addPack = ItemBuilder
-                .newItem(XMaterial.SLIME_BALL)
-                .withDisplayName("&aAdd outcome pack")
-                .build();
+        ItemStack addPack = ItemStackWrapper.newItem(XMaterial.SLIME_BALL)
+                                            .setDisplayName("&aAdd outcome pack")
+                                            .toItemStack();
         
         ItemStack editPack = GUIItem.getEnabledDisabledItem(
                 editPackMode, 
@@ -371,7 +352,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                 "&6Edit probability mode", 
                 XMaterial.GLOWSTONE_DUST, 
                 XMaterial.GLOWSTONE_DUST);
-        ItemBuilder.fromItem(editPack, false)
+        ItemStackWrapper.fromItem(editPack, false)
                 .addLoreLine("")
                 .addLoreLine("&3If this mode is enabled,")
                 .addLoreLine("&3you will be able to change")
@@ -384,7 +365,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                 "&6Delete mode", 
                 XMaterial.BARRIER, 
                 XMaterial.BARRIER);
-        ItemBuilder.fromItem(deletePack, false)
+        ItemStackWrapper.fromItem(deletePack, false)
                 .addLoreLine("")
                 .addLoreLine("&4&lWARNING: &cIf this mode is enabled,")
                 .addLoreLine("&cwhen you click on a pack,")
@@ -528,7 +509,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                 // Add selected pack if it wasn't present in auxPacks
                 ItemStack sk = e.getCurrentItem();
                 if(sk != null && sk.getType() != Material.AIR){
-                    String displayName = ItemBuilder.fromItem(sk).getDisplayName();
+                    String displayName = ItemStackWrapper.fromItem(sk).getDisplayName();
                     if(displayName != null){
                         String packName = Logger.stripColor(displayName);
                         OutcomePack pack = PackManager.getPack(packName);

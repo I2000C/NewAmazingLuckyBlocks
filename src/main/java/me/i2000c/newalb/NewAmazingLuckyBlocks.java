@@ -5,10 +5,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapManager;
 import me.i2000c.newalb.listeners.BlockBreak;
 import me.i2000c.newalb.listeners.BlockPlace;
 import me.i2000c.newalb.listeners.ChunkEvent;
@@ -17,20 +25,13 @@ import me.i2000c.newalb.listeners.interact.SpecialEventListener;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.utils.BlockProtect;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.TrapManager;
 import me.i2000c.newalb.utils.Updater;
-import me.i2000c.newalb.utils.WorldConfig;
+import me.i2000c.newalb.utils.WorldManager;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
 
 public class NewAmazingLuckyBlocks extends JavaPlugin {
@@ -62,34 +63,29 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         }
         
         ConfigManager.initialize(this);
-        ConfigManager.getManager().loadConfig();
-        LangConfig.initialize(this);
-        LangConfig.loadConfig();
+        ConfigManager.loadConfigs();
         
-        prefix = Logger.color(LangConfig.getMessage("InGamePrefix"));
-        boolean coloredLogger = ConfigManager.getConfig().getBoolean("ColoredLogger");
+        prefix = Logger.color(ConfigManager.getLangMessage("InGamePrefix"));
+        boolean coloredLogger = ConfigManager.getMainConfig().getBoolean("ColoredLogger");
         Logger.initializeLogger(prefix, coloredLogger);
         
-        Logger.log(LangConfig.getMessage("Loading.plugin"));
+        Logger.log(ConfigManager.getLangMessage("Loading.plugin"));
         Updater.checkUpdates(name, version);
         
-        Logger.log(LangConfig.getMessage("Loading.config"));
-        Logger.log(LangConfig.getMessage("Loading.lang"));
+        Logger.log(ConfigManager.getLangMessage("Loading.config"));
+        Logger.log(ConfigManager.getLangMessage("Loading.lang"));
         
         Task.initializeTaskManager(this);
-        WorldConfig.initialize(this);
-        LocationManager.initialize(this);
-        TrapManager.initialize(this);
         
         SpecialItems.loadItems();
         
-        Logger.log(LangConfig.getMessage("Loading.packs"));
+        Logger.log(ConfigManager.getLangMessage("Loading.packs"));
         PackManager.loadPacks();        
         TypeManager.loadTypes();
         
-        Logger.log(LangConfig.getMessage("Loading.worlds"));
+        Logger.log(ConfigManager.getLangMessage("Loading.worlds"));
 
-        WorldConfig.reloadWorlds();
+        WorldManager.reloadWorlds();
         LocationManager.loadLocations();
         TrapManager.loadTraps();
         
@@ -104,7 +100,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         getCommand("nalb").setExecutor(new CommandManager(this));
         registerEvents();
 
-        Logger.log(LangConfig.getMessage("Enable.line1").replace("%version%", version));
+        Logger.log(ConfigManager.getLangMessage("Enable.line1").replace("%version%", version));
     }
     
     private void registerEvents(){
@@ -132,7 +128,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         } else {
             RewardListMenu.testRewardsPlayerList.clear();
             LocationManager.saveLocations();
-            Logger.log(LangConfig.getMessage("Disable.line1").replace("%prefix%", ""));
+            Logger.log(ConfigManager.getLangMessage("Disable.line1").replace("%prefix%", ""));
         }        
     }
     

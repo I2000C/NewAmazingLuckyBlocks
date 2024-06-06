@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.menus.GUIManager;
@@ -12,18 +14,16 @@ import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapManager;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.GiveMenu;
-import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.LocationManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.RandomBlocks;
-import me.i2000c.newalb.utils.WorldConfig;
+import me.i2000c.newalb.utils.TrapManager;
+import me.i2000c.newalb.utils.WorldManager;
 import me.i2000c.newalb.utils.WorldMenu;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
@@ -55,8 +55,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     
     private static boolean checkHasPermission(CommandSender sender, String permissionPath){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String noPermissionMessage = LangConfig.getMessage("NoPermission");
-        String permission = ConfigManager.getConfig().getString(permissionPath);
+        String noPermissionMessage = ConfigManager.getLangMessage("NoPermission");
+        String permission = ConfigManager.getMainConfig().getString(permissionPath);
         if(sender.hasPermission(permission)){
             return true;
         }else{
@@ -94,7 +94,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         
         if(args.length == 0){
             Logger.sendMessage(plugin.name + " &a" + plugin.version, sender);
-            Logger.sendMessage(LangConfig.getMessage("HelpMessage"), sender);
+            Logger.sendMessage(ConfigManager.getLangMessage("HelpMessage"), sender);
             return true;
         }else switch(args[0]){
             case "help":
@@ -134,7 +134,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             case "debug":
                 return executeDebug(sender, args);
             default:
-                Logger.sendMessage(LangConfig.getMessage("UnknownCommand"), sender);
+                Logger.sendMessage(ConfigManager.getLangMessage("UnknownCommand"), sender);
                 return false;
         }
     }
@@ -191,7 +191,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         
         int maxPages = 1;
         for(int i=2;;i++){
-            if(!LangConfig.getMessages().isConfigurationSection(key + i)){
+            if(!ConfigManager.getLangConfig().existsPath(key + i)){
                 maxPages = i-1;
                 break;
             }
@@ -200,12 +200,12 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         if(help_n > 1){
             key += help_n;
         }
-        if(!LangConfig.getMessages().isConfigurationSection(key)){
+        if(!ConfigManager.getLangConfig().existsPath(key)){
             Logger.sendMessage("&cThat page doesn't exist", sender);
             return false;
         }
-        for(String str : LangConfig.getMessages().getConfigurationSection(key).getKeys(false)){
-            String text = LangConfig.getMessage(key + "." + str);
+        for(String str : ConfigManager.getLangConfig().getConfigurationSection(key).getKeys(false)){
+            String text = ConfigManager.getLangMessage(key + "." + str);
             Logger.sendMessage(text
                     .replace("%prefix%", NewAmazingLuckyBlocks.getInstance().prefix)
                     .replace("%maxPages%", String.valueOf(maxPages)), sender, false);
@@ -280,7 +280,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         return false;
                     }
                     
-                    String loadwands = LangConfig.getMessage("LoadingWands");
+                    String loadwands = ConfigManager.getLangMessage("LoadingWands");
                     Logger.sendMessage(loadwands, sender);
                     for(SpecialItem wand : SpecialItems.getWands()){
                         ItemStack stack = wand.getItem();
@@ -293,7 +293,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         return false;
                     }
                     
-                    String loadobjects = LangConfig.getMessage("LoadingObjects");                    
+                    String loadobjects = ConfigManager.getLangMessage("LoadingObjects");                    
                     Logger.sendMessage(loadobjects, sender);
                     for(SpecialItem object : SpecialItems.getObjects()){
                         ItemStack stack = object.getItem();
@@ -306,10 +306,10 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         return false;
                     }
                     
-                    String loadblocks = LangConfig.getMessage("LoadingBlocks");
+                    String loadblocks = ConfigManager.getLangMessage("LoadingBlocks");
                     Logger.sendMessage(loadblocks, sender);
                     for(LuckyBlockType type : TypeManager.getTypes()){
-                        ItemStack stack = type.getItem();
+                        ItemStack stack = type.getItem().toItemStack();
                         stack.setAmount(amount);
                         target.getInventory().addItem(stack);
                     }
@@ -328,7 +328,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     if(specialItem == null){
                         for(LuckyBlockType type : TypeManager.getTypes()){
                             if(type.getTypeName().equals(selectedItem)){
-                                stack = type.getItem();
+                                stack = type.getItem().toItemStack();
                                 break;
                             }
                         }
@@ -341,7 +341,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                         stack = specialItem.getItem();
                     }
                     
-                    String loadSpecialItem = LangConfig.getMessage("LoadingSpecialItem");
+                    String loadSpecialItem = ConfigManager.getLangMessage("LoadingSpecialItem");
                     Logger.sendMessage(loadSpecialItem, sender);                    
                     stack.setAmount(amount);
                     target.getInventory().addItem(stack);
@@ -496,28 +496,27 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         GUIManager.setCurrentMenu(null);
         RewardListMenu.testRewardsPlayerList.clear();
         
-        Logger.logAndMessage(LangConfig.getMessage("Reload.config"), sender);
-        ConfigManager.getManager().loadConfig();
-        boolean coloredLogger = ConfigManager.getConfig().getBoolean("ColoredLogger");
-        Logger.initializeLogger(plugin.prefix, coloredLogger);
+        Logger.logAndMessage(ConfigManager.getLangMessage("Reload.config"), sender);
+        Logger.logAndMessage(ConfigManager.getLangMessage("Reload.lang"), sender);
+        ConfigManager.loadConfigs();
         
-        Logger.logAndMessage(LangConfig.getMessage("Reload.lang"), sender);
-        LangConfig.loadConfig();
-        plugin.prefix = LangConfig.getMessage("InGamePrefix");
+        boolean coloredLogger = ConfigManager.getMainConfig().getBoolean("ColoredLogger");
+        Logger.initializeLogger(plugin.prefix, coloredLogger);        
+        plugin.prefix = ConfigManager.getLangMessage("InGamePrefix");
         
-        Logger.logAndMessage(LangConfig.getMessage("Reload.worlds"), sender);
-        WorldConfig.reloadWorlds();
+        Logger.logAndMessage(ConfigManager.getLangMessage("Reload.worlds"), sender);
+        WorldManager.reloadWorlds();
 
         SpecialItems.loadItems();
         
-        Logger.logAndMessage(LangConfig.getMessage("Reload.packs"), sender);
+        Logger.logAndMessage(ConfigManager.getLangMessage("Reload.packs"), sender);
         PackManager.loadPacks();
         TrapManager.loadTraps();
         TypeManager.loadTypes();
 
         LocationManager.saveLocations();
         
-        Logger.logAndMessage(LangConfig.getMessage("Reload.reload-finished"), sender);
+        Logger.logAndMessage(ConfigManager.getLangMessage("Reload.reload-finished"), sender);
         return true;
 //</editor-fold>
     }
@@ -553,7 +552,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                 return false;
             }
         }else{
-            Logger.sendMessage("&7Usage: " + LangConfig.getMessage("Helpmenu.line3"), sender);
+            Logger.sendMessage("&7Usage: " + ConfigManager.getLangMessage("Helpmenu.line3"), sender);
             return false;
         }
 
@@ -609,7 +608,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     return false;
             }
 
-            String placeblocks = LangConfig.getMessage("PlacingBlocks");
+            String placeblocks = ConfigManager.getLangMessage("PlacingBlocks");
             Logger.sendMessage(placeblocks, sender);
 
             boolean isPlayer = sender instanceof Player;
@@ -617,7 +616,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 
             String world = player.getWorld().getName();
 
-            if(WorldConfig.isEnabled(world)){
+            if(WorldManager.isEnabled(world)){
                 RandomBlocks rb = new RandomBlocks(radx,rady,radz,blocks,floating_blocks,forceMode,player,isPlayer,sender);
                 rb.generatePackets();
                 return true;
@@ -644,10 +643,10 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         Player player = (Player) sender;
-        if(confirmMenu && ConfigManager.getConfig().getBoolean("Enable-openMenu-confirmation")){
-            Logger.sendMessage(LangConfig.getMessage("MenuConfirmation.line1"), sender);
-            Logger.sendMessage(LangConfig.getMessage("MenuConfirmation.line2"), sender, false);
-            Logger.sendMessage(LangConfig.getMessage("MenuConfirmation.line3"), sender, false);
+        if(confirmMenu && ConfigManager.getMainConfig().getBoolean("Enable-openMenu-confirmation")){
+            Logger.sendMessage(ConfigManager.getLangMessage("MenuConfirmation.line1"), sender);
+            Logger.sendMessage(ConfigManager.getLangMessage("MenuConfirmation.line2"), sender, false);
+            Logger.sendMessage(ConfigManager.getLangMessage("MenuConfirmation.line3"), sender, false);
             confirmMenu = false;
             return false;
         }else{
@@ -713,22 +712,22 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             case 2:
                 // /alb worlds list
                 if(args[1].equals("list")){
-                    WorldConfig.WorldListMode currentMode = WorldConfig.getWorldListMode();
-                    String currentModeMessage = LangConfig.getMessage("World-management1.currentMode")
+                    WorldManager.WorldListMode currentMode = WorldManager.getWorldListMode();
+                    String currentModeMessage = ConfigManager.getLangMessage("World-management1.currentMode")
                             .replace("%worldListMode%", currentMode.toString());
                     Logger.sendMessage(currentModeMessage, sender);
-                    Logger.sendMessage(LangConfig.getMessage("World-management1.title"), sender);
-                    Logger.sendMessage(LangConfig.getMessage("World-management1.separator"), sender);
-                    WorldConfig.getWorlds().forEach(worldName -> {
-                        String message = LangConfig.getMessage("World-management1.worldName").replace("%world%", worldName);
+                    Logger.sendMessage(ConfigManager.getLangMessage("World-management1.title"), sender);
+                    Logger.sendMessage(ConfigManager.getLangMessage("World-management1.separator"), sender);
+                    WorldManager.getWorlds().forEach(worldName -> {
+                        String message = ConfigManager.getLangMessage("World-management1.worldName").replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                     });
                     return true;
                 // /alb worlds changeListMode
                 }else if(args[1].equals("changeListMode")) {
-                    WorldConfig.WorldListMode nextMode = WorldConfig.getWorldListMode().next();
-                    WorldConfig.setWorldListMode(nextMode);
-                    String message = LangConfig.getMessage("World-management2.worldListModeChanged")
+                    WorldManager.WorldListMode nextMode = WorldManager.getWorldListMode().next();
+                    WorldManager.setWorldListMode(nextMode);
+                    String message = ConfigManager.getLangMessage("World-management2.worldListModeChanged")
                             .replace("%worldListMode%", nextMode.toString());
                     Logger.sendMessage(message, sender);
                     return true;
@@ -748,19 +747,19 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     String worldName = args[2];                    
                     String message;
                     if(Bukkit.getWorld(worldName) == null) {
-                        message = LangConfig.getMessage("World-management2.worldNotExists")
+                        message = ConfigManager.getLangMessage("World-management2.worldNotExists")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return false;
                     }
                     
-                    if(WorldConfig.addWorld(worldName)) {
-                        message = LangConfig.getMessage("World-management2.worldAdded")
+                    if(WorldManager.addWorld(worldName)) {
+                        message = ConfigManager.getLangMessage("World-management2.worldAdded")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return true;
                     } else {
-                        message = LangConfig.getMessage("World-management2.worldAlreadyAdded")
+                        message = ConfigManager.getLangMessage("World-management2.worldAlreadyAdded")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return false;
@@ -769,19 +768,19 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     String worldName = args[2];                    
                     String message;
                     if(Bukkit.getWorld(worldName) == null) {
-                        message = LangConfig.getMessage("World-management2.worldNotExists")
+                        message = ConfigManager.getLangMessage("World-management2.worldNotExists")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return false;
                     }
                     
-                    if(WorldConfig.deleteWorld(worldName)) {
-                        message = LangConfig.getMessage("World-management2.worldDeleted")
+                    if(WorldManager.deleteWorld(worldName)) {
+                        message = ConfigManager.getLangMessage("World-management2.worldDeleted")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return true;
                     } else {
-                        message = LangConfig.getMessage("World-management2.worldAlreadyDeleted")
+                        message = ConfigManager.getLangMessage("World-management2.worldAlreadyDeleted")
                                 .replace("%world%", worldName);
                         Logger.sendMessage(message, sender);
                         return false;
@@ -943,7 +942,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return true;
         }
         String world = args[1];
-        if(WorldConfig.isEnabled(world)){
+        if(WorldManager.isEnabled(world)){
             LocationManager.removeLocations(Bukkit.getWorld(world));
             Logger.sendMessage("&aAll LuckyBlocks of the world &b" + world + " &awere removed", sender);
             return true;
@@ -1064,7 +1063,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!sender.hasPermission(ConfigManager.getConfig().getString("Commands.Tab-completer"))){
+        if(!sender.hasPermission(ConfigManager.getMainConfig().getString("Commands.Tab-completer"))){
             return null;
         }
         
@@ -1148,7 +1147,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
                     break;
                 case "clear":
                     List<String> aux = ls;
-                    WorldConfig.getWorlds().forEach(world -> aux.add(world));
+                    WorldManager.getWorlds().forEach(world -> aux.add(world));
                     break;
                 case "luckyEvent":
                     for(LuckyBlockType type : TypeManager.getTypes()){
@@ -1166,12 +1165,12 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             if(args[0].equalsIgnoreCase("worlds")) {
                 if(args[1].equalsIgnoreCase("add")) {
                     for(World world : Bukkit.getWorlds()) {
-                        if(!WorldConfig.isContained(world.getName())) {
+                        if(!WorldManager.isContained(world.getName())) {
                             ls.add(world.getName());
                         }
                     }
                 } else if(args[1].equalsIgnoreCase("delete")) {
-                    ls.addAll(WorldConfig.getWorlds());
+                    ls.addAll(WorldManager.getWorlds());
                 }
                 return ls;
             }

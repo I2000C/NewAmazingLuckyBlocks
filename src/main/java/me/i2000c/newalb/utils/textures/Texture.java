@@ -14,8 +14,8 @@ import com.mojang.authlib.properties.Property;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils.ConfigManager;
 
 @Getter
 @EqualsAndHashCode(of = "id")
@@ -27,7 +27,7 @@ public final class Texture{
     public Texture(String ID) throws TextureException{
         try{
             String textureURL = "http://textures.minecraft.net/texture/" + ID;
-            if(ConfigManager.getConfig().getBoolean("CheckIfTexturesAreValid")){                
+            if(ConfigManager.getMainConfig().getBoolean("CheckIfTexturesAreValid")){                
                 URL url = new URL(textureURL);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setConnectTimeout(1000);

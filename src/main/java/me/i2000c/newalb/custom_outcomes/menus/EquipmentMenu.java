@@ -14,7 +14,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.Equipment;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -71,20 +71,20 @@ public class EquipmentMenu extends Editor<Equipment>{
             menu.setItem(i, glass);
         }
         
-        ItemStack creative = ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
-                .withDisplayName("&aHow to edit equipment")
-                .addLoreLine("&bYou can drag and drop items")
-                .addLoreLine("&b  from your inventory into")
-                .addLoreLine("&b  the equipment slots and")
-                .addLoreLine("&b  vice versa.")
-                .addLoreLine("")
-                .addLoreLine("&3Click here to close this menu")
-                .addLoreLine("&3  if you want to pick items")
-                .addLoreLine("&3  from creative mode")
-                .build();
+        ItemStack creative = ItemStackWrapper.newItem(XMaterial.CRAFTING_TABLE)
+                                             .setDisplayName("&aHow to edit equipment")
+                                             .addLoreLine("&bYou can drag and drop items")
+                                             .addLoreLine("&b  from your inventory into")
+                                             .addLoreLine("&b  the equipment slots and")
+                                             .addLoreLine("&b  vice versa.")
+                                             .addLoreLine("")
+                                             .addLoreLine("&3Click here to close this menu")
+                                             .addLoreLine("&3  if you want to pick items")
+                                             .addLoreLine("&3  from creative mode")
+                                             .toItemStack();
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.IRON_BOOTS);
-        builder.withDisplayName("&6Current drop chances");
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.IRON_BOOTS);
+        builder.setDisplayName("&6Current drop chances");
         for(int i=0; i<Equipment.EQUIPMENT_KEYS.length; i++){
             String spaces = " ";
             switch(i){
@@ -100,7 +100,7 @@ public class EquipmentMenu extends Editor<Equipment>{
         }
         builder.addLoreLine("");
         builder.addLoreLine("&3Click to reset all drop chances");
-        ItemStack dropChances = builder.build();
+        ItemStack dropChances = builder.toItemStack();
         
         for(int slot : EQUIPMENT_SLOTS){
             ItemStack equipmentItem = item.getEquipmentItem(SLOT_MAP.get(slot));

@@ -1,6 +1,3 @@
-# Version of the config. Don't modify it
-ConfigVersion: 0
-
 Wands:
   RegenWand:
     name: "&dRegeneráció Pálca &7- &6Job Click"

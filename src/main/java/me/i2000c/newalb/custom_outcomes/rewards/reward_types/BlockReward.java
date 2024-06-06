@@ -1,127 +1,96 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
-import me.i2000c.newalb.custom_outcomes.rewards.Reward;
-import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.Offset;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.Reward;
+import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.Offset;
+import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
+
+@Getter
+@Setter
 public class BlockReward extends Reward{
     private boolean usePlayerLoc;
     private boolean isFallingBlock;
-    private ItemStack blockItem;
+    private XMaterial blockMaterial;
     private Offset offset;
     
     public BlockReward(Outcome outcome){
         super(outcome);
         usePlayerLoc = false;
         isFallingBlock = false;
-        blockItem = null;
+        blockMaterial = null;
         offset = new Offset();
-    }
-    
-    public void setUsePlayerLoc(boolean usePlayerLoc){
-        this.usePlayerLoc = usePlayerLoc;
-    }
-    public boolean getUsePlayerLoc(){
-        return this.usePlayerLoc;
-    }
-    
-    public void setIsFallingBlock(boolean isFallingBlock){
-        this.isFallingBlock = isFallingBlock;
-    }
-    public boolean getIsFallingBlock(){
-        return this.isFallingBlock;
-    }
-    
-    public void setItemBlock(ItemStack itemBlock){
-        this.blockItem = new ItemStack(itemBlock.getType());
-        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-            this.blockItem.setData(itemBlock.getData());
-        }
-    }
-    public ItemStack getItemBlock(){
-        return blockItem;
-    }
-    
-    public void setOffset(Offset offset){
-        this.offset = offset;
-    }
-    public Offset getOffset(){
-        return this.offset;
     }
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.fromItem(blockItem);
-        switch(builder.getXMaterial()){
-            case WATER:
-                builder.withMaterial(XMaterial.WATER_BUCKET);
-                break;
-            case LAVA:
-                builder.withMaterial(XMaterial.LAVA_BUCKET);
-                break;
-            case FIRE:
-                builder.withMaterial(XMaterial.FIRE_CHARGE);
-                break;
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(blockMaterial);
+        switch(wrapper.getMaterial()){
+            case WATER: wrapper.setMaterial(XMaterial.WATER_BUCKET); break;
+            case LAVA:  wrapper.setMaterial(XMaterial.LAVA_BUCKET);  break;
+            case FIRE:  wrapper.setMaterial(XMaterial.FIRE_CHARGE);  break;
         }
         
-        builder.withDisplayName("&9Block");
+        wrapper.setDisplayName("&9Block");
         
         if(usePlayerLoc){
-            builder.addLoreLine("&bTarget location: &2player");
+            wrapper.addLoreLine("&bTarget location: &2player");
         }else{
-            builder.addLoreLine("&bTarget location: &6lucky block");
+            wrapper.addLoreLine("&bTarget location: &6lucky block");
         }
         
         if(isFallingBlock){
-            builder.addLoreLine("&6IsFallingBlock: &atrue");
+            wrapper.addLoreLine("&6IsFallingBlock: &atrue");
         }else{
-            builder.addLoreLine("&6IsFallingBlock: &7false");
+            wrapper.addLoreLine("&6IsFallingBlock: &7false");
         }
         
-        builder.addLoreLine("&dOffset:");
-        builder.addLoreLine("   &5X: &3" + offset.getOffsetX());
-        builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
-        builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
+        wrapper.addLoreLine("&dOffset:");
+        wrapper.addLoreLine("   &5X: &3" + offset.getOffsetX());
+        wrapper.addLoreLine("   &5Y: &3" + offset.getOffsetY());
+        wrapper.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
         
-        return builder.build();
+        return wrapper.toItemStack();
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         config.set(path + ".usePlayerLoc", usePlayerLoc);
         config.set(path + ".isFallingBlock", isFallingBlock);
-        config.set(path + ".material", ItemBuilder.fromItem(blockItem, false).toString());
+        config.set(path + ".material", blockMaterial);
         offset.saveToConfig(config, path + ".offset");
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
+    public void loadRewardFromConfig(Config config, String path){
         this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
         this.isFallingBlock = config.getBoolean(path + ".isFallingBlock");
-        String materialName = config.getString(path + ".material");
+        String materialName = config.getString(path + ".material", null);
         if(materialName == null){
             // Support for old system
             materialName = config.getString(path + ".blockItem.material");
             int durability = config.getInt(path + ".blockItem.durability");
             materialName += ":" + durability;
         }
-        this.blockItem = ItemBuilder.newItem(materialName).build();
+        this.blockMaterial = OtherUtils.parseXMaterial(materialName);
         this.offset = new Offset(config, path + ".offset");
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         Location loc = usePlayerLoc ? player.getLocation().clone() : location.clone();
         offset.applyToLocation(loc);
         
@@ -129,22 +98,12 @@ public class BlockReward extends Reward{
             return;
         }
         
-        if(isFallingBlock){
-            byte data;
-            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-                data = (byte) blockItem.getDurability();
-            }else{
-                data = 0;
-            }
-            FallingBlock fb = loc.getWorld().spawnFallingBlock(loc, blockItem.getType(), data);
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(blockMaterial);
+        if(isFallingBlock) {
+            FallingBlock fb = wrapper.spawnFallingBlock(loc);
             fb.setDropItem(false);
-        }else{
-            Task.runTask(() -> {
-                loc.getWorld().getBlockAt(loc).setType(blockItem.getType());
-                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-                    loc.getWorld().getBlockAt(loc).setData(blockItem.getData().getData());
-                }
-            }, 1L);             
+        } else {
+            Task.runTask(() -> wrapper.placeAt(loc), 1L);             
         }        
     }
     
@@ -156,7 +115,6 @@ public class BlockReward extends Reward{
     @Override
     public Reward clone(){
         BlockReward copy = (BlockReward) super.clone();
-        copy.blockItem = this.blockItem.clone();
         copy.offset = this.offset.clone();
         return copy;
     }

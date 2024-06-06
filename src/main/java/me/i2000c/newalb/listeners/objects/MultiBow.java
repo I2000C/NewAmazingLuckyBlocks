@@ -1,17 +1,20 @@
 package me.i2000c.newalb.listeners.objects;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.List;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.objects.utils.BowUtils;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.OtherUtils;
+
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.listeners.objects.utils.BowUtils;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.OtherUtils;
 
 public class MultiBow extends SpecialItem {
     
@@ -38,7 +41,7 @@ public class MultiBow extends SpecialItem {
         List<ItemStack> arrowItems = BowUtils.getArrowsFromPlayerInventory(player, numberOfArrows, !isInfiniteBow);
         if(isInfiniteBow) {
             int requiredArrows = numberOfArrows - arrowItems.size();
-            ItemStack arrowItem = ItemBuilder.newItem(XMaterial.ARROW).build();
+            ItemStack arrowItem = ItemStackWrapper.newItem(XMaterial.ARROW).toItemStack();
             for(int i=0; i<requiredArrows; i++) {
                 arrowItems.add(arrowItem);
             }
@@ -74,13 +77,13 @@ public class MultiBow extends SpecialItem {
     
     @Override
     public ItemStack buildItem(){
-        double angleDegrees = ConfigManager.getConfig().getDouble(super.itemPathKey + ".spreadAngle");
+        double angleDegrees = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".spreadAngle");
         this.spreadAngle = Math.toRadians(OtherUtils.clamp(angleDegrees, MIN_SPREAD_ANGLE, MAX_SPREAD_ANGLE));
-        this.numberOfArrows = ConfigManager.getConfig().getInt(super.itemPathKey + ".numberOfArrows");
+        this.numberOfArrows = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".numberOfArrows");
         
-        return ItemBuilder.newItem(XMaterial.BOW)
+        return ItemStackWrapper.newItem(XMaterial.BOW)
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
-                .build();
+                .toItemStack();
     }
 }
 

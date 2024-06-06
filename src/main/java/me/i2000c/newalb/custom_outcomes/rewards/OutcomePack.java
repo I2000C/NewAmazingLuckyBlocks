@@ -14,19 +14,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.config.YamlConfigurationUTF8;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.RandomUtils;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class OutcomePack implements Displayable, Executable{
     private final Map<Integer, Outcome> outcomes;
-    private FileConfiguration outcomeConfig;
+    private final Config outcomeConfig;
     private File outcomeFile;
     private ItemStack icon;
     
@@ -49,6 +49,7 @@ public class OutcomePack implements Displayable, Executable{
         //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypesToNotify = new HashSet<>();
         outcomeFile = file;
+        outcomeConfig = new Config();
         outcomes = new HashMap<>();
         icon = XMaterial.CRAFTING_TABLE.parseItem();
         loadPack();
@@ -57,18 +58,10 @@ public class OutcomePack implements Displayable, Executable{
     
     public final void loadPack(){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        outcomeConfig.loadConfig(outcomeFile);
+        
         totalProbability = 0;
         luckyBlockTypesToNotify.clear();
-        
-        if(!outcomeFile.exists()){
-            try{
-                outcomeFile.createNewFile();
-            }catch(IOException ex){
-                ex.printStackTrace();
-            }
-        }
-        
-        outcomeConfig = YamlConfigurationUTF8.loadConfiguration(outcomeFile);
         outcomes.clear();
         
         String packVersionName = outcomeConfig.getString("MinMinecraftVersion");
@@ -85,8 +78,9 @@ public class OutcomePack implements Displayable, Executable{
             return;
         }
         
-        if(outcomeConfig.isConfigurationSection("Outcomes")){
-            List<String> keys = new ArrayList(outcomeConfig.getConfigurationSection("Outcomes").getKeys(false));
+        ConfigurationSection section = outcomeConfig.getConfigurationSection("Outcomes", null);
+        if(section != null){
+            List<String> keys = new ArrayList<>(section.getKeys(false));
             Collections.sort(keys, COMPARATOR);
             for(String key : keys){
                 Outcome outcome = new Outcome(outcomeConfig, "Outcomes." + key, Integer.parseInt(key), this);
@@ -97,7 +91,7 @@ public class OutcomePack implements Displayable, Executable{
         
         String materialName = outcomeConfig.getString("Icon");
         if(materialName != null){
-            icon = ItemBuilder.newItem(materialName).build();
+            icon = ItemStackWrapper.newItem(materialName).toItemStack();
         }
         
         if(!outcomes.isEmpty()) {
@@ -121,12 +115,6 @@ public class OutcomePack implements Displayable, Executable{
                 }
             }
         }
-//</editor-fold>
-    }
-    
-    private void saveConfig() throws IOException{
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        this.outcomeConfig.save(outcomeFile);
 //</editor-fold>
     }
     
@@ -239,19 +227,15 @@ public class OutcomePack implements Displayable, Executable{
     
     public void saveOutcomes(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        outcomeConfig = new YamlConfigurationUTF8();
+        outcomeConfig.clearConfig();
         
         outcomeConfig.set("MinMinecraftVersion", MinecraftVersion.CURRENT_VERSION.toString());
-        outcomeConfig.set("Icon", ItemBuilder.fromItem(icon, false).toString());
+        outcomeConfig.set("Icon", ItemStackWrapper.fromItem(icon, false).getMaterial());
         outcomes.values().stream()
-                .sorted((outcome1, outcome2) -> outcome1.getID() - outcome2.getID())
-                .forEachOrdered((outcome) -> outcome.saveOutcome(outcomeConfig, "Outcomes." + outcome.getID())
-                );
-        try{
-            saveConfig();
-        }catch(IOException ex){
-            ex.printStackTrace();
-        }
+                         .sorted((outcome1, outcome2) -> outcome1.getID() - outcome2.getID())
+                         .forEachOrdered((outcome) -> outcome.saveOutcome(outcomeConfig, "Outcomes." + outcome.getID()));
+        
+        outcomeConfig.saveConfig(outcomeFile);
 //</editor-fold>
     }
     
@@ -307,10 +291,10 @@ public class OutcomePack implements Displayable, Executable{
     @Override
     public ItemStack getItemToDisplay(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        return ItemBuilder.fromItem(icon)
-                .withDisplayName("&6" + getPackname())
-                .addLoreLine("&aOutcome number: &d" + getOutcomes().size())
-                .build();
+        return ItemStackWrapper.fromItem(icon)
+                               .setDisplayName("&6" + getPackname())
+                               .addLoreLine("&aOutcome number: &d" + getOutcomes().size())
+                               .toItemStack();
 //</editor-fold>
     }
 }

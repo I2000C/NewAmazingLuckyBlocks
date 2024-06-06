@@ -15,7 +15,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.EnchantmentWithLevel;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -55,24 +55,24 @@ public class EnchantmentMenu extends Editor<EnchantmentWithLevel>{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.PURPLE);
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.ENCHANTED_BOOK);
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.ENCHANTED_BOOK);
         if(item.enchantment == null){
-            builder.withDisplayName("&5Select enchantment");
+            builder.setDisplayName("&5Select enchantment");
         }else{
-            builder.withDisplayName("&5Selected enchantment: &b" + item.enchantment.getName());
+            builder.setDisplayName("&5Selected enchantment: &b" + item.enchantment.getName());
             if(item.level > 0){
                 builder.addEnchantment(item.enchantment, item.level);
             }else{
                 builder.addEnchantment(item.enchantment, 1);
             }
         }
-        ItemStack enchantment = builder.build();
+        ItemStack enchantment = builder.toItemStack();
         
-        ItemStack level = ItemBuilder.newItem(XMaterial.EXPERIENCE_BOTTLE)
-                .withAmount(item.level)
-                .withDisplayName("&aSelected level: &b" + item.level)
-                .addLoreLine("&3Click to select")
-                .build();        
+        ItemStack level = ItemStackWrapper.newItem(XMaterial.EXPERIENCE_BOTTLE)
+                                          .setAmount(item.level)
+                                          .setDisplayName("&aSelected level: &b" + item.level)
+                                          .addLoreLine("&3Click to select")
+                                          .toItemStack();        
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);
@@ -157,10 +157,10 @@ public class EnchantmentMenu extends Editor<EnchantmentWithLevel>{
         Iterator<Enchantment> iterator = ENCHANMENT_LIST.iterator();
         for(int i=0; i<45 && iterator.hasNext(); i++){
             Enchantment enchantment = iterator.next();
-            ItemStack enchantItem = ItemBuilder.newItem(XMaterial.ENCHANTED_BOOK)
-                    .withDisplayName("&d" + enchantment.getName())
-                    .addEnchantment(enchantment, 1)
-                    .build();
+            ItemStack enchantItem = ItemStackWrapper.newItem(XMaterial.ENCHANTED_BOOK)
+                                                    .setDisplayName("&d" + enchantment.getName())
+                                                    .addEnchantment(enchantment, 1)
+                                                    .toItemStack();
             
             menu.setItem(i, enchantItem);
         }
@@ -179,7 +179,7 @@ public class EnchantmentMenu extends Editor<EnchantmentWithLevel>{
             if(e.getSlot() == 53){
                 openEnchantmentsMenu(player);
             }else{
-                String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
                         .getDisplayName();
                 item.enchantment = Enchantment.getByName(Logger.stripColor(displayName));
                 openEnchantmentsMenu(player);

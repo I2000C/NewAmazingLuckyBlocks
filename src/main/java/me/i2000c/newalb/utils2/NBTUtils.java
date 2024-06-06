@@ -18,7 +18,7 @@ public class NBTUtils {
         NBT.modify(stack, nbt -> {nbt.setString(tag, value);});
     }
     public static void set(@NonNull ItemStack stack, @NonNull String tag, @NonNull Integer value) {
-        NBT.modify(stack, nbt -> {nbt.setInteger(tag, (Integer) value);});
+        NBT.modify(stack, nbt -> {nbt.setInteger(tag, value);});
     }
     
     public static String getString(@NonNull ItemStack stack, @NonNull String tag) {

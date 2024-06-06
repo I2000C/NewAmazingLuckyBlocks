@@ -1,20 +1,25 @@
 package me.i2000c.newalb.utils2;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.Objects;
-import me.i2000c.newalb.custom_outcomes.rewards.Displayable;
+
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.Displayable;
 
 public class Offset implements Displayable, Cloneable{
     private Range offsetX;
     private Range offsetY;
     private Range offsetZ;
     
-    public Offset(FileConfiguration config, String path){
+    public Offset(Config config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(config.isConfigurationSection(path)){
+        ConfigurationSection section = config.getConfigurationSection(path, null);
+        if(section != null){
             Range rangeX = Range.fromString(config.getString(path + ".offsetX"));
             Range rangeY = Range.fromString(config.getString(path + ".offsetY"));
             Range rangeZ = Range.fromString(config.getString(path + ".offsetZ"));
@@ -29,7 +34,7 @@ public class Offset implements Displayable, Cloneable{
         }
 //</editor-fold>
     }
-    public void saveToConfig(FileConfiguration config, String path){
+    public void saveToConfig(Config config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(this.offsetX.isZero() && this.offsetY.isZero() && this.offsetZ.isZero()){
             config.set(path, null);
@@ -105,13 +110,13 @@ public class Offset implements Displayable, Cloneable{
     @Override
     public ItemStack getItemToDisplay(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        return ItemBuilder.newItem(XMaterial.PISTON)
-                .withDisplayName("&3Configure offset")
-                .addLoreLine("&dCurrent offset:")
-                .addLoreLine("   &5X: &3" + offsetX)
-                .addLoreLine("   &5Y: &3" + offsetY)
-                .addLoreLine("   &5Z: &3" + offsetZ)
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.PISTON)
+                               .setDisplayName("&3Configure offset")
+                               .addLoreLine("&dCurrent offset:")
+                               .addLoreLine("   &5X: &3" + offsetX)
+                               .addLoreLine("   &5Y: &3" + offsetY)
+                               .addLoreLine("   &5Z: &3" + offsetZ)
+                               .toItemStack();
 //</editor-fold>
     }
     

@@ -1,6 +1,9 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
 import com.cryptomorin.xseries.XMaterial;
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.menus.EffectMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
@@ -8,14 +11,15 @@ import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.functions.EditorBackFunction;
 import me.i2000c.newalb.functions.EditorNextFunction;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Getter
+@Setter
 public class EffectReward extends Reward{
     public static final String CLEAR_EFFECTS_TAG = "CLEAR_EFFECTS";
     
@@ -36,47 +40,10 @@ public class EffectReward extends Reward{
         clearEffects = false;
     }
     
-    public PotionEffectType getPotionEffect(){
-        return potionEffect;
-    }
-    public void setPotionEffect(PotionEffectType potionEffect){
-        this.potionEffect = potionEffect;
-    }
-    public int getDuration(){
-        return duration;
-    }
-    public void setDuration(int duration){
-        this.duration = duration;
-    }
-    public int getAmplifier(){
-        return amplifier;
-    }
-    public void setAmplifier(int amplifier){
-        this.amplifier = amplifier;
-    }
-    public boolean isAmbient(){
-        return ambient;
-    }
-    public void setAmbient(boolean ambient){
-        this.ambient = ambient;
-    }
-    public boolean isShowParticles(){
-        return showParticles;
-    }
-    public void setShowParticles(boolean showParticles){
-        this.showParticles = showParticles;
-    }
-    public boolean isClearEffects(){
-        return this.clearEffects;
-    }
-    public void setClearEffects(boolean clearEffects){
-        this.clearEffects = clearEffects;
-    }
-    
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.POTION);
-        builder.withDisplayName("&5Effect");
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.POTION);
+        builder.setDisplayName("&5Effect");
         if(this.clearEffects){
             builder.addLoreLine("&dEffect name: &b" + CLEAR_EFFECTS_TAG);
         }else{
@@ -91,11 +58,11 @@ public class EffectReward extends Reward{
             builder.addLoreLine("&dShowParticles: &b" + this.showParticles);
         }
         
-        return builder.build();
+        return builder.toItemStack();
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         if(this.clearEffects){
             config.set(path + ".effectName", CLEAR_EFFECTS_TAG);
             config.set(path + ".duration", null);
@@ -112,7 +79,7 @@ public class EffectReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
+    public void loadRewardFromConfig(Config config, String path){
         String effectName = config.getString(path + ".effectName");
         if(effectName.equals(CLEAR_EFFECTS_TAG)){
             this.clearEffects = true;
@@ -126,8 +93,8 @@ public class EffectReward extends Reward{
             this.potionEffect = PotionEffectType.getByName(effectName);
             this.duration = config.getInt(path + ".duration");
             this.amplifier = config.getInt(path + ".amplifier");
-            this.ambient = config.getBoolean("ambient");
-            this.showParticles = config.getBoolean("showParticles");
+            this.ambient = config.getBoolean(path + ".ambient");
+            this.showParticles = config.getBoolean(path + ".showParticles");
         }
     }
     

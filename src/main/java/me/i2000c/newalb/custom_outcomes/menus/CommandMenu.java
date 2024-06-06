@@ -13,7 +13,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -38,11 +38,11 @@ public class CommandMenu extends Editor<CommandReward>{
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.OAK_SIGN);
         if(item.getCommand() == null){
-            builder.withDisplayName("&6Command selected: &cnull");
+            builder.setDisplayName("&6Command selected: &cnull");
         }else{
-            builder.withDisplayName("&6Command selected: &r/" + item.getCommand());
+            builder.setDisplayName("&6Command selected: &r/" + item.getCommand());
         }
         builder.addLoreLine("&7Click here and then, write the command");
         builder.addLoreLine("");
@@ -52,17 +52,17 @@ public class CommandMenu extends Editor<CommandReward>{
         builder.addLoreLine("&7  to use the player's coordinates");
         builder.addLoreLine("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want");
         builder.addLoreLine("&7  to use the LuckyBlock's coordinates");
-        ItemStack cmd_item = builder.build();
+        ItemStack cmd_item = builder.toItemStack();
                 
-        if(item.getSenderIsPlayer()){
-            builder = ItemBuilder.newItem(XMaterial.PLAYER_HEAD);
-            builder.withDisplayName("&dSender: &2Player");
+        if(item.isSendFromPlayer()){
+            builder = ItemStackWrapper.newItem(XMaterial.PLAYER_HEAD);
+            builder.setDisplayName("&dSender: &2Player");
         }else{
-            builder = ItemBuilder.newItem(XMaterial.COMMAND_BLOCK);
-            builder.withDisplayName("&dSender: &8Console");
+            builder = ItemStackWrapper.newItem(XMaterial.COMMAND_BLOCK);
+            builder.setDisplayName("&dSender: &8Console");
         }
         builder.addLoreLine("&3Click to toggle");
-        ItemStack sender_item = builder.build();
+        ItemStack sender_item = builder.toItemStack();
         
         Menu menu = GUIFactory.newMenu(CustomInventoryType.COMMAND_MENU, 27, "&7&lCommand Reward");
         for(int i=0;i<9;i++){
@@ -94,7 +94,7 @@ public class CommandMenu extends Editor<CommandReward>{
                     onBack.accept(player);
                     break;
                 case 11:
-                    item.setSenderIsPlayer(!item.getSenderIsPlayer());
+                    item.setSendFromPlayer(!item.isSendFromPlayer());
                     openCommandMenu(player);
                     break;
                 case 13:

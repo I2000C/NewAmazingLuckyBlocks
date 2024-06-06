@@ -1,7 +1,10 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.MinecraftVersion;
+
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
@@ -14,10 +17,8 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class BlockMenu extends Editor<BlockReward>{
     public BlockMenu(){
@@ -53,36 +54,32 @@ public class BlockMenu extends Editor<BlockReward>{
         menu.setItem(26, glass);
         menu.setItem(27, glass);
         
-        ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(item.getUsePlayerLoc());
+        ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(item.isUsePlayerLoc());
 
         ItemStack isFallingBlockStack = GUIItem.getBooleanItem(
-                item.getIsFallingBlock(), 
+                item.isFallingBlock(), 
                 "&5Is falling block", 
                 XMaterial.SAND, 
                 XMaterial.COBBLESTONE);
         
         ItemStack offsetStack = item.getOffset().getItemToDisplay();
         
-        ItemBuilder builder;
-        if(item.getItemBlock() != null){
-            builder = ItemBuilder.fromItem(item.getItemBlock());
-            switch(builder.getXMaterial()){
-                case WATER:
-                    builder.withMaterial(XMaterial.WATER_BUCKET);
-                    break;
-                case LAVA:
-                    builder.withMaterial(XMaterial.LAVA_BUCKET);
-                    break;
-                case FIRE:
-                    builder.withMaterial(XMaterial.FIRE_CHARGE);
-                    break;
+        ItemStackWrapper wrapper;
+        if(item.getBlockMaterial() != null){
+            XMaterial blockMaterial = item.getBlockMaterial();
+            switch(blockMaterial){
+                case WATER: blockMaterial = XMaterial.WATER_BUCKET; break;
+                case LAVA:  blockMaterial = XMaterial.LAVA_BUCKET;  break;
+                case FIRE:  blockMaterial = XMaterial.FIRE_CHARGE;  break;
             }
-            builder.withDisplayName("&3Selected block");
+            wrapper = ItemStackWrapper.newItem(blockMaterial);
+            wrapper.setDisplayName("&3Selected block");
         }else{
-            builder = ItemBuilder.newItem(XMaterial.BLACK_STAINED_GLASS_PANE)
-                    .withDisplayName("&3Select a &6&lblock &3from your inventory");
+            wrapper = ItemStackWrapper.newItem(XMaterial.BLACK_STAINED_GLASS_PANE)
+                                      .setDisplayName("&3Select a &6&lblock &3from your inventory");
         }
-        ItemStack blockItem = builder.build();
+        
+        ItemStack blockItem = wrapper.toItemStack();
 
         menu.setItem(10, GUIItem.getBackItem());
         menu.setItem(16, GUIItem.getNextItem());
@@ -108,16 +105,16 @@ public class BlockMenu extends Editor<BlockReward>{
                     onBack.accept(player);
                     break;
                 case 16:
-                    if(item.getItemBlock() != null){
+                    if(item.getBlockMaterial() != null){
                         onNext.accept(player, item);
                     }
                     break;
                 case 12:
-                    item.setUsePlayerLoc(!item.getUsePlayerLoc());
+                    item.setUsePlayerLoc(!item.isUsePlayerLoc());
                     openBlockMenu(player);
                     break;
                 case 13:
-                    item.setIsFallingBlock(!item.getIsFallingBlock());
+                    item.setFallingBlock(!item.isFallingBlock());
                     openBlockMenu(player);
                     break;
                 case 14:
@@ -139,22 +136,19 @@ public class BlockMenu extends Editor<BlockReward>{
             }
             
             if(stack.getType().isBlock()){
-                item.setItemBlock(new ItemStack(stack.getType()));
-                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-                    item.getItemBlock().setDurability(stack.getDurability());
-                }
+                item.setBlockMaterial(XMaterial.matchXMaterial(stack));
                 openBlockMenu(player);
             }else switch(XMaterial.matchXMaterial(stack.getType())){
                 case WATER_BUCKET:
-                    item.setItemBlock(XMaterial.WATER.parseItem());
+                    item.setBlockMaterial(XMaterial.WATER);
                     openBlockMenu(player);
                     break;
                 case LAVA_BUCKET:
-                    item.setItemBlock(XMaterial.LAVA.parseItem());
+                    item.setBlockMaterial(XMaterial.LAVA);
                     openBlockMenu(player);
                     break;
                 case FIRE_CHARGE:
-                    item.setItemBlock(XMaterial.FIRE.parseItem());
+                    item.setBlockMaterial(XMaterial.FIRE);
                     openBlockMenu(player);
                     break;
             }

@@ -1,18 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionType;
-
 import com.cryptomorin.xseries.XMaterial;
-
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
@@ -35,8 +23,18 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.CustomColor;
 import me.i2000c.newalb.utils2.EnchantmentWithLevel;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionType;
 
 public class ItemMenu extends Editor<ItemReward>{
     public ItemMenu(){
@@ -85,21 +83,21 @@ public class ItemMenu extends Editor<ItemReward>{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
-        ItemStack select_from_inventory_item = ItemBuilder.newItem(XMaterial.BRICKS)
-                .withDisplayName("&7Select an item from your inventory")
-                .build();
+        ItemStack select_from_inventory_item = ItemStackWrapper.newItem(XMaterial.BRICKS)
+                                                               .setDisplayName("&7Select an item from your inventory")
+                                                               .toItemStack();
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.BLACK_STAINED_GLASS_PANE);
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(XMaterial.BLACK_STAINED_GLASS_PANE);
         if(item.getItem() == null){
-            builder.withDisplayName("&bAmount: &r?");
+            wrapper.setDisplayName("&bAmount: &r?");
         }else{
-            builder.withDisplayName("&bAmount: &r" + item.getItem().getAmount());
+            wrapper.setDisplayName("&bAmount: &r" + item.getItem().getAmount());
         }
-        ItemStack amount_item = builder.build();
+        ItemStack amount_item = wrapper.toItemStack();
         
-        ItemStack creative = ItemBuilder.newItem(XMaterial.CRAFTING_TABLE)
-                .withDisplayName("&3Close menu to pick items from creative mode")
-                .build();
+        ItemStack creative = ItemStackWrapper.newItem(XMaterial.CRAFTING_TABLE)
+                                             .setDisplayName("&3Close menu to pick items from creative mode")
+                                             .toItemStack();
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);
@@ -193,37 +191,40 @@ public class ItemMenu extends Editor<ItemReward>{
             menu.setItem(i, glass);
         }
         
-        ItemStack name = ItemBuilder.newItem(XMaterial.NAME_TAG)
-                .withDisplayName("&aClick to set custom name")
-                .build();
+        ItemStack name = ItemStackWrapper.newItem(XMaterial.NAME_TAG)
+                                         .setDisplayName("&aClick to set custom name")
+                                         .toItemStack();
         
-        ItemStack lore = ItemBuilder.newItem(XMaterial.OAK_SIGN)
-                .withDisplayName("&6Click to add lore line")
-                .build();
+        ItemStack lore = ItemStackWrapper.newItem(XMaterial.OAK_SIGN)
+                                         .setDisplayName("&6Click to add lore line")
+                                         .toItemStack();
         
         short currentDurability = item.getItem().getDurability();
         short maxDurability = item.getItem().getType().getMaxDurability();
-        ItemStack durability = ItemBuilder.newItem(XMaterial.IRON_PICKAXE)
-                .withDisplayName("&7Current durability: &a" + currentDurability + " &6/ &a" + maxDurability)
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(XMaterial.IRON_PICKAXE).addLoreLine("&3Click to reset");
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+            wrapper.setDisplayName("&7Current durability: &a" + currentDurability);
+        } else {
+            wrapper.setDisplayName("&7Current durability: &a" + currentDurability + " &6/ &a" + maxDurability);
+        }
+        ItemStack durability = wrapper.toItemStack();
         
-        ItemStack enchantments = ItemBuilder.newItem(XMaterial.ENCHANTING_TABLE)
-                .withDisplayName("&dClick to add enchantment")
-                .build();
+        ItemStack enchantments = ItemStackWrapper.newItem(XMaterial.ENCHANTING_TABLE)
+                                                 .setDisplayName("&dClick to add enchantment")
+                                                 .toItemStack();
         
         //Reset items        
-        ItemStack resetName = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cClick to reset custom name")
-                .build();
+        ItemStack resetName = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                              .setDisplayName("&cClick to reset custom name")
+                                              .toItemStack();
         
-        ItemStack resetLore = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cClick to reset lore")
-                .build();
+        ItemStack resetLore = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                              .setDisplayName("&cClick to reset lore")
+                                              .toItemStack();
         
-        ItemStack resetEnchantments = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cClick to reset enchantments")
-                .build();
+        ItemStack resetEnchantments = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                      .setDisplayName("&cClick to reset enchantments")
+                                                      .toItemStack();
         
         //Special items
         ItemStack specialItem = null;
@@ -232,47 +233,47 @@ public class ItemMenu extends Editor<ItemReward>{
         ItemStack setPotionColor = null;
         if(TextureManager.isSkull(item.getItem().getType())){
             //TextureMeta
-            specialItem = ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
-                    .withDisplayName("&5Click to set custom texture")
-                    .addLoreLine("&3You can write 'null'")
-                    .addLoreLine("&3  if you want to remove the texture")
-                    .build();
+            specialItem = ItemStackWrapper.newItem(XMaterial.PLAYER_HEAD)
+                                          .setDisplayName("&5Click to set custom texture")
+                                          .addLoreLine("&3You can write 'null'")
+                                          .addLoreLine("&3  if you want to remove the texture")
+                                          .toItemStack();
             
-            removeSpecialData = ItemBuilder.newItem(XMaterial.BARRIER)
-                    .withDisplayName("&cClick to remove custom texture")
-                    .build();
+            removeSpecialData = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                .setDisplayName("&cClick to remove custom texture")
+                                                .toItemStack();
         }else switch(XMaterial.matchXMaterial(item.getItem().getType())){
             case ENCHANTED_BOOK:
                 // EnchantmentStorageMeta
-                specialItem = ItemBuilder.newItem(XMaterial.ENCHANTED_BOOK)
-                        .withDisplayName("&5Click to add custom enchantments to this book")
-                        .build();
+                specialItem = ItemStackWrapper.newItem(XMaterial.ENCHANTED_BOOK)
+                                              .setDisplayName("&5Click to add custom enchantments to this book")
+                                              .toItemStack();
                 
-                removeSpecialData = ItemBuilder.newItem(XMaterial.BARRIER)
-                        .withDisplayName("&cClick to remove all book enchantments")
-                        .build();
+                removeSpecialData = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                    .setDisplayName("&cClick to remove all book enchantments")
+                                                    .toItemStack();
                 break;
             case POTION:
             case SPLASH_POTION:
             case LINGERING_POTION:
                 //PotionMeta
-                specialItem = ItemBuilder.newItem(XMaterial.POTION)
-                        .withDisplayName("&5Click to add custom potion effects")
-                        .build();
+                specialItem = ItemStackWrapper.newItem(XMaterial.POTION)
+                                              .setDisplayName("&5Click to add custom potion effects")
+                                              .toItemStack();
                 
-                removeSpecialData = ItemBuilder.newItem(XMaterial.BARRIER)
-                        .withDisplayName("&cClick to remove all potion effects")
-                        .build();
+                removeSpecialData = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                    .setDisplayName("&cClick to remove all potion effects")
+                                                    .toItemStack();
                 
-                changePotionType = ItemBuilder.newItem(XMaterial.BREWING_STAND)
-                        .withDisplayName("&bClick to change potion type")
-                        .addLoreLine("&dCurrent type: &e" + PotionSplashType.getFromPotion(item.getItem()))
-                        .build();
+                changePotionType = ItemStackWrapper.newItem(XMaterial.BREWING_STAND)
+                                                   .setDisplayName("&bClick to change potion type")
+                                                   .addLoreLine("&dCurrent type: &e" + PotionSplashType.getFromPotion(item.getItem()))
+                                                   .toItemStack();
                 
                 if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)){
-                    setPotionColor = ItemBuilder.newItem(XMaterial.BLAZE_POWDER)
-                            .withDisplayName("&dClick to set potion color")
-                            .build();
+                    setPotionColor = ItemStackWrapper.newItem(XMaterial.BLAZE_POWDER)
+                                                     .setDisplayName("&dClick to set potion color")
+                                                     .toItemStack();
                 }
                 
                 break;
@@ -281,26 +282,26 @@ public class ItemMenu extends Editor<ItemReward>{
             case LEATHER_LEGGINGS:
             case LEATHER_BOOTS:
                 //LeatherArmorMeta
-                specialItem = ItemBuilder.newItem(XMaterial.LEATHER)
-                        .withDisplayName("&5Click to set custom armor color")
-                        .build();
+                specialItem = ItemStackWrapper.newItem(XMaterial.LEATHER)
+                                              .setDisplayName("&5Click to set custom armor color")
+                                              .toItemStack();
                 
-                removeSpecialData = ItemBuilder.newItem(XMaterial.BARRIER)
-                        .withDisplayName("&cClick to reset armor color")
-                        .build();
+                removeSpecialData = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                    .setDisplayName("&cClick to reset armor color")
+                                                    .toItemStack();
                 break;
         }
         
         //Spawn mode items
-        ItemBuilder builder;
+        ItemStackWrapper builder;
         switch(item.getSpawnMode()){
             case DEFAULT:
-                builder = ItemBuilder.newItem(XMaterial.GRASS_BLOCK);
+                builder = ItemStackWrapper.newItem(XMaterial.GRASS_BLOCK);
                 builder.addLoreLine("&dIn this mode, the item will spawn");
                 builder.addLoreLine("&d  on the ground");
                 break;
             case ADD_TO_INV:
-                builder = ItemBuilder.newItem(XMaterial.CRAFTING_TABLE);
+                builder = ItemStackWrapper.newItem(XMaterial.CRAFTING_TABLE);
                 builder.addLoreLine("&dIn this mode, the item will be");
                 builder.addLoreLine("&d  added to player's inventory");
                 builder.addLoreLine("&d  if there is some free space");
@@ -308,7 +309,7 @@ public class ItemMenu extends Editor<ItemReward>{
                 builder.addLoreLine("&d  on the ground");
                 break;
             case SET_TO_INV:
-                builder = ItemBuilder.newItem(XMaterial.CHEST);
+                builder = ItemStackWrapper.newItem(XMaterial.CHEST);
                 builder.addLoreLine("&dIn this mode, the item will be");
                 builder.addLoreLine("&d  stored in a specific slot of");
                 builder.addLoreLine("&d  player's inventory");
@@ -317,7 +318,7 @@ public class ItemMenu extends Editor<ItemReward>{
                 builder.addLoreLine("&d  on the ground");
                 break;
             default: //FORCE_SET_TO_INV
-                builder = ItemBuilder.newItem(XMaterial.ENDER_CHEST);
+                builder = ItemStackWrapper.newItem(XMaterial.ENDER_CHEST);
                 builder.addLoreLine("&dIn this mode, the item will be");
                 builder.addLoreLine("&d  stored in a specific slot of");
                 builder.addLoreLine("&d  player's inventory");
@@ -328,12 +329,12 @@ public class ItemMenu extends Editor<ItemReward>{
         }
         builder.addLoreLine("");
         builder.addLoreLine("&3Click to change");
-        builder.withDisplayName("&bSpawn mode: &a" + item.getSpawnMode().name());
-        ItemStack spawnModeItem = builder.build();
+        builder.setDisplayName("&bSpawn mode: &a" + item.getSpawnMode().name());
+        ItemStack spawnModeItem = builder.toItemStack();
         
-        builder = ItemBuilder.newItem(XMaterial.CHAINMAIL_CHESTPLATE);
-        builder.withAmount(item.getSpawnInvSlot());
-        builder.withDisplayName("&6Current inv slot: &e" + item.getSpawnInvSlot() + " &6/ &e" + ItemReward.getMaxSlot());
+        builder = ItemStackWrapper.newItem(XMaterial.CHAINMAIL_CHESTPLATE);
+        builder.setAmount(item.getSpawnInvSlot());
+        builder.setDisplayName("&6Current inv slot: &e" + item.getSpawnInvSlot() + " &6/ &e" + ItemReward.getMaxSlot());
         builder.addLoreLine("&2This slot is only used when");
         if(item.getSpawnMode() == ItemReward.ItemSpawnMode.SET_TO_INV){
             builder.addLoreLine("&2  spawnMode is &5&lSET_TO_INV");
@@ -384,10 +385,10 @@ public class ItemMenu extends Editor<ItemReward>{
         }
         builder.addLoreLine("");
         builder.addLoreLine("&3Click to reset");
-        ItemStack spawnInvSlotItem = builder.build();        
+        ItemStack spawnInvSlotItem = builder.toItemStack();        
         
         ItemStack offsetStack = item.getOffset().getItemToDisplay();
-        builder = ItemBuilder.fromItem(offsetStack, false);
+        builder = ItemStackWrapper.fromItem(offsetStack, false);
         builder.addLoreLine("");
         builder.addLoreLine("&2Offset is only used if");
         if(item.getSpawnMode() == ItemReward.ItemSpawnMode.DEFAULT){
@@ -463,8 +464,7 @@ public class ItemMenu extends Editor<ItemReward>{
             case NAME_SLOT:
                 //Set custom name
                 ChatListener.registerPlayer(player, message -> {
-                    ItemBuilder.fromItem(item.getItem(), false)
-                            .withDisplayName(message);
+                    ItemStackWrapper.fromItem(item.getItem(), false).setDisplayName(message);
                     openItemMenu2(player);
                 });
                 player.closeInventory();
@@ -472,7 +472,7 @@ public class ItemMenu extends Editor<ItemReward>{
             case LORE_SLOT:
                 //Add lore line
                 ChatListener.registerPlayer(player, message -> {
-                    ItemBuilder.fromItem(item.getItem(), false)
+                    ItemStackWrapper.fromItem(item.getItem(), false)
                             .addLoreLine(message);                    
                     openItemMenu2(player);
                 });
@@ -485,27 +485,24 @@ public class ItemMenu extends Editor<ItemReward>{
                         player, 
                         p -> openItemMenu2(p), 
                         (p, enchantmentWithLevel) -> {
-                            ItemBuilder.fromItem(item.getItem(), false)
+                            ItemStackWrapper.fromItem(item.getItem(), false)
                                     .addEnchantment(enchantmentWithLevel.enchantment, enchantmentWithLevel.level);
                             openItemMenu2(p);
                         });
                 break;            
             case RESET_NAME_SLOT:
                 //Reset custom name
-                ItemBuilder.fromItem(item.getItem(), false)
-                        .withDisplayName(null);
+                ItemStackWrapper.fromItem(item.getItem(), false).setDisplayName(null);
                 openItemMenu2(player);
                 break;
             case RESET_LORE_SLOT:
                 //Reset custom lore
-                ItemBuilder.fromItem(item.getItem(), false)
-                        .withLore();
+                ItemStackWrapper.fromItem(item.getItem(), false).setLore();
                 openItemMenu2(player);
                 break;
             case RESET_ENCHANTMENTS_SLOT:
                 //Reset enchantments
-                ItemBuilder.fromItem(item.getItem(), false)
-                        .clearEnchantments();
+                ItemStackWrapper.fromItem(item.getItem(), false).clearEnchantments();
                 openItemMenu2(player);
                 break;
             case DURABILITY_SLOT:
@@ -516,52 +513,52 @@ public class ItemMenu extends Editor<ItemReward>{
                 //<editor-fold defaultstate="collapsed" desc="Decrease durability slots">
             case DURABILITY_SLOT-1:
                 //Durability-1
-                ItemBuilder builder = ItemBuilder.fromItem(item.getItem(), false);
-                builder.withDurability(builder.getDurability() - 1);
+                ItemStackWrapper wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setDurability(wrapper.getDurability() - 1);
                 openItemMenu2(player);
                 break;
             case DURABILITY_SLOT-2:
                 //Durability-10
-                builder = ItemBuilder.fromItem(item.getItem(), false);
-                builder.withDurability(builder.getDurability() - 10);
+                wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setDurability(wrapper.getDurability() - 10);
                 openItemMenu2(player);
                 break;
             case DURABILITY_SLOT-3:
                 //Durability-100
-                builder = ItemBuilder.fromItem(item.getItem(), false);
-                builder.withDurability(builder.getDurability() - 100);
+                wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setDurability(wrapper.getDurability() - 100);
                 openItemMenu2(player);
                 break;
             case DURABILITY_SLOT-4:
                 //Durability-1000
-                builder = ItemBuilder.fromItem(item.getItem(), false);
-                builder.withDurability(builder.getDurability() - 1000);
+                wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setDurability(wrapper.getDurability() - 1000);
                 openItemMenu2(player);
                 break;
 //</editor-fold>
                 //<editor-fold defaultstate="collapsed" desc="Increase durability slots">
             case DURABILITY_SLOT+1:
                 //Durability+1
-                builder = ItemBuilder.fromItem(item.getItem(), false);
-                builder.withDurability(builder.getDurability() + 1);
+                wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setDurability(wrapper.getDurability() + 1);
                 openItemMenu2(player);
                 break;
             case DURABILITY_SLOT+2:
                 //Durability+10
-                builder = ItemBuilder.fromItem(item.getItem(), false);
-                builder.withDurability(builder.getDurability() + 10);
+                wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setDurability(wrapper.getDurability() + 10);
                 openItemMenu2(player);
                 break;
             case DURABILITY_SLOT+3:
                 //Durability+100
-                builder = ItemBuilder.fromItem(item.getItem(), false);
-                builder.withDurability(builder.getDurability() + 100);
+                wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setDurability(wrapper.getDurability() + 100);
                 openItemMenu2(player);
                 break;
             case DURABILITY_SLOT+4:
                 //Durability+1000
-                builder = ItemBuilder.fromItem(item.getItem(), false);
-                builder.withDurability(builder.getDurability() + 1000);
+                wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setDurability(wrapper.getDurability() + 1000);
                 openItemMenu2(player);
                 break;
 //</editor-fold>
@@ -570,7 +567,7 @@ public class ItemMenu extends Editor<ItemReward>{
                 if(e.getCurrentItem() != null){
                     if(e.getCurrentItem().getType() == Material.BLAZE_POWDER){
                         if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)){
-                            Color itemColor = ItemBuilder.fromItem(item.getItem(), false)
+                            Color itemColor = ItemStackWrapper.fromItem(item.getItem(), false)
                                     .getColor();
                             Editor<CustomColor> editor3 = EditorType.COLOR.getEditor();
                             editor3.editExistingItem(
@@ -578,8 +575,7 @@ public class ItemMenu extends Editor<ItemReward>{
                                     player, 
                                     p -> openItemMenu2(p), 
                                     (p, color) -> {
-                                        ItemBuilder.fromItem(item.getItem(), false)
-                                                .withColor(color.getBukkitColor());
+                                        ItemStackWrapper.fromItem(item.getItem(), false).setColor(color.getBukkitColor());
                                         openItemMenu2(p);
                                     });
                         }
@@ -616,7 +612,7 @@ public class ItemMenu extends Editor<ItemReward>{
                                     player, 
                                     p -> openItemMenu2(p), 
                                     (p, enchantmentWithLevel) -> {
-                                        ItemBuilder.fromItem(item.getItem(), false)
+                                        ItemStackWrapper.fromItem(item.getItem(), false)
                                                 .addBookEnchantment(enchantmentWithLevel.enchantment, enchantmentWithLevel.level);
                                         openItemMenu2(p);
                                     });
@@ -633,14 +629,14 @@ public class ItemMenu extends Editor<ItemReward>{
                                                 effectReward.getPotionEffect(), 
                                                 effectReward.getDuration()*20, 
                                                 effectReward.getAmplifier());
-                                        ItemBuilder.fromItem(item.getItem(), false)
+                                        ItemStackWrapper.fromItem(item.getItem(), false)
                                                 .addPotionEffect(potionEffect);
                                         openItemMenu2(p);
                                     });
                             break;
                         case LEATHER:
                             //Open armor color menu
-                            Color itemColor = ItemBuilder.fromItem(item.getItem(), false)
+                            Color itemColor = ItemStackWrapper.fromItem(item.getItem(), false)
                                     .getColor();
                             Editor<CustomColor> editor3 = EditorType.COLOR.getEditor();
                             editor3.editExistingItem(
@@ -648,8 +644,7 @@ public class ItemMenu extends Editor<ItemReward>{
                                     player, 
                                     p -> openItemMenu2(p), 
                                     (p, color) -> {
-                                        ItemBuilder.fromItem(item.getItem(), false)
-                                                .withColor(color.getBukkitColor());
+                                        ItemStackWrapper.fromItem(item.getItem(), false).setColor(color.getBukkitColor());
                                         openItemMenu2(p);
                                     });
                             break;
@@ -676,7 +671,7 @@ public class ItemMenu extends Editor<ItemReward>{
                     }else switch(XMaterial.matchXMaterial(item.getItem().getType())){
                         case ENCHANTED_BOOK:
                             // Remove all book enchantments
-                            ItemBuilder.fromItem(item.getItem(), false)
+                            ItemStackWrapper.fromItem(item.getItem(), false)
                                     .clearBookEnchantments();
                             openItemMenu2(player);
                             break;
@@ -684,7 +679,7 @@ public class ItemMenu extends Editor<ItemReward>{
                         case SPLASH_POTION:
                         case LINGERING_POTION:
                             //Remove all effects
-                            ItemBuilder.fromItem(item.getItem(), false)
+                            ItemStackWrapper.fromItem(item.getItem(), false)
                                     .clearPotionEffects();
                             
                             if(MinecraftVersion.CURRENT_VERSION.is_1_8()){
@@ -705,7 +700,7 @@ public class ItemMenu extends Editor<ItemReward>{
                         case LEATHER_CHESTPLATE:
                         case LEATHER_LEGGINGS:
                         case LEATHER_BOOTS:
-                            ItemBuilder.fromItem(item.getItem(), false).withColor(null);
+                            ItemStackWrapper.fromItem(item.getItem(), false).setColor(null);
                             openItemMenu2(player);
                             break;
                     }

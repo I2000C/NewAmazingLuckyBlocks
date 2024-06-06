@@ -1,15 +1,17 @@
 package me.i2000c.newalb.listeners.wands;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 
 public class RegenWand extends SpecialItem{
     
@@ -25,15 +27,15 @@ public class RegenWand extends SpecialItem{
             }
             
             super.getPlayerCooldown().updateCooldown(player);
-            int effectTime = ConfigManager.getConfig().getInt("Wands.RegenWand.effect-time") * 20;
+            int effectTime = ConfigManager.getMainConfig().getInt("Wands.RegenWand.effect-time") * 20;
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, effectTime, 0), true);
         }
     }
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.MUSIC_DISC_STAL)
-                .withLore(super.getLoreOfWand())
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.MUSIC_DISC_STAL)
+                               .setLore(super.getLoreOfWand())
+                               .toItemStack();
     }
 }

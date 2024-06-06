@@ -1,10 +1,5 @@
 package me.i2000c.newalb.listeners.objects;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.Task;
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -14,6 +9,13 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.Task;
 
 public class HomingBow extends SpecialItem{
   
@@ -26,11 +28,11 @@ public class HomingBow extends SpecialItem{
     
     private static void executeTask(Player player, Entity projectile){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        double radius = ConfigManager.getConfig().getDouble("Objects.HomingBow.arrowRadius");
+        double radius = ConfigManager.getMainConfig().getDouble("Objects.HomingBow.arrowRadius");
         double radiusS = radius * radius;
-        double multiplier = ConfigManager.getConfig().getDouble("Objects.HomingBow.velocityMultiplier");
-        boolean playersOnly = ConfigManager.getConfig().getBoolean("Objects.HomingBow.followPlayersOnly");
-        boolean followInvisibleEntities = ConfigManager.getConfig().getBoolean("Objects.HomingBow.followInvisibleEntities");
+        double multiplier = ConfigManager.getMainConfig().getDouble("Objects.HomingBow.velocityMultiplier");
+        boolean playersOnly = ConfigManager.getMainConfig().getBoolean("Objects.HomingBow.followPlayersOnly");
+        boolean followInvisibleEntities = ConfigManager.getMainConfig().getBoolean("Objects.HomingBow.followInvisibleEntities");
         
         Task task = new Task(){
             private double minDistanceSquared = -1.0;
@@ -116,8 +118,8 @@ public class HomingBow extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.BOW)
+        return ItemStackWrapper.newItem(XMaterial.BOW)
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
-                .build();
+                .toItemStack();
     }
 }

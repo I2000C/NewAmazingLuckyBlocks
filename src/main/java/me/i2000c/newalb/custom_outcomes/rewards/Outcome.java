@@ -5,14 +5,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EntityTowerReward;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -121,7 +122,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
             Reward reward = this.rewardList.get(i);
             if(reward instanceof EntityReward){
                 EntityReward entityReward = (EntityReward) reward;
-                int entityID = entityReward.getID();
+                int entityID = entityReward.getEntityID();
                 for(Reward r : this.rewardList){
                     if(r instanceof EntityTowerReward){
                         EntityTowerReward entityTowerReward = (EntityTowerReward) r;
@@ -133,8 +134,8 @@ public class Outcome implements Displayable, Executable, Cloneable{
                 }
                 
                 getEntityRewards().stream()
-                        .filter(r -> r.getID() > entityID)
-                        .forEach(r -> r.setID(r.getID() - 1));
+                        .filter(r -> r.getEntityID() > entityID)
+                        .forEach(r -> r.setEntityID(r.getEntityID() - 1));
             }
             
             this.rewardList.remove(i);
@@ -181,7 +182,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
             
             for(Reward reward : this.rewardList){
                 if(reward instanceof EntityReward){
-                    int entityID = ((EntityReward) reward).getID();
+                    int entityID = ((EntityReward) reward).getEntityID();
                     if(entitiesInTowerRewards.contains(entityID)){
                         continue;
                     }
@@ -194,7 +195,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
                     Task.runTask(() -> {
                         try {
                             reward.execute(player, location);
-                        } catch(Exception ex) {
+                        } catch(Throwable ex) {
                             Logger.err("An error occurred while executing outcome: " + this.ID + " of pack " + this.pack.getPackname());
                             ex.printStackTrace();
                         }
@@ -208,19 +209,21 @@ public class Outcome implements Displayable, Executable, Cloneable{
 //</editor-fold>
     }
     
-    public Outcome(FileConfiguration config, String path, int ID, OutcomePack pack){
+    public Outcome(Config config, String path, int ID, OutcomePack pack){
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.pack = pack;
         this.ID = ID;
         this.name = config.getString(path + ".outcome-name");
         this.probability = config.getInt(path + ".probability");
         String itemName = config.getString(path + ".icon", getDefaultIcon().getType().name());
-        this.icon = ItemBuilder.newItem(itemName).build();
+        this.icon = ItemStackWrapper.newItem(itemName).toItemStack();
         this.rewardList = new ArrayList<>();
         
-        if(config.isConfigurationSection(path + ".rewards")){
-            for(String mainKey : config.getConfigurationSection(path + ".rewards").getKeys(false)){
-                for(String key : config.getConfigurationSection(path + ".rewards." + mainKey).getKeys(false)){
+        ConfigurationSection section = config.getConfigurationSection(path + ".rewards", null);
+        if(section != null){
+            for(String mainKey : section.getKeys(false)){
+                ConfigurationSection subsection = config.getConfigurationSection(path + ".rewards." + mainKey);
+                for(String key : subsection.getKeys(false)){
                     String fullPath = path + ".rewards." + mainKey + "." + key;
                     try{
                         RewardType rewardType = RewardType.valueOf(mainKey);
@@ -230,7 +233,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
                         reward.loadRewardFromConfig(config, fullPath);
                         if(reward instanceof EntityReward){
                             int entityID = Integer.parseInt(key);
-                            ((EntityReward) reward).setID(entityID);
+                            ((EntityReward) reward).setEntityID(entityID);
                         }
                         this.rewardList.add(reward);
                     }catch(Throwable ex){
@@ -240,8 +243,8 @@ public class Outcome implements Displayable, Executable, Cloneable{
                 }
             }
             
-            if(config.isList(path + ".delayer")){
-                List<String> delays = config.getStringList(path + ".delayer");
+            List<String> delays = config.getStringList(path + ".delayer", null);
+            if(delays != null){
                 for(String str : delays){
                     int rewardID = Integer.parseInt(str.split(";")[0]);
                     int delay = Integer.parseInt(str.split(";")[1]);
@@ -257,20 +260,21 @@ public class Outcome implements Displayable, Executable, Cloneable{
     public void saveOutcome(){
         pack.addOutcome(this, false);
     }
-    protected void saveOutcome(FileConfiguration config, String path){
+    protected void saveOutcome(Config config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
         config.set(path, null);
         
         config.set(path + ".outcome-name", this.name);
         config.set(path + ".probability", this.probability);
-        config.set(path + ".icon", ItemBuilder.fromItem(this.icon, false).toString());
+        config.set(path + ".icon", ItemStackWrapper.fromItem(this.icon, false).getMaterial());
         
-        List<String> delays = new ArrayList();
+        List<String> delays = new ArrayList<>();
         int i=0;
         for(Reward reward : this.rewardList){
             int rewardID = 0;
-            if(config.isConfigurationSection(path + ".rewards." + reward.getRewardType().name())){
-                rewardID = config.getConfigurationSection(path + ".rewards." + reward.getRewardType().name()).getKeys(false).size();
+            ConfigurationSection section = config.getConfigurationSection(path + ".rewards." + reward.getRewardType().name(), null);
+            if(section != null) {
+                rewardID = section.getKeys(false).size();
             }
             reward.saveRewardIntoConfig(config, path + ".rewards." + reward.getRewardType().name() + "." + rewardID);
             
@@ -286,11 +290,11 @@ public class Outcome implements Displayable, Executable, Cloneable{
     
     @Override
     public ItemStack getItemToDisplay(){
-        return ItemBuilder.fromItem(icon)
-                .withDisplayName("&3Outcome " + ID)
-                .addLoreLine("&aName: &d" + this.name)
-                .addLoreLine("&6Probability: &b" + this.probability)
-                .build();
+        return ItemStackWrapper.fromItem(icon)
+                               .setDisplayName("&3Outcome " + ID)
+                               .addLoreLine("&aName: &d" + this.name)
+                               .addLoreLine("&6Probability: &b" + this.probability)
+                               .toItemStack();
     }
     
     @Override

@@ -1,6 +1,3 @@
-# Version of the config. Don't modify it
-ConfigVersion: 0
-
 Wands:
   RegenWand:
     name: "&d再生魔仗 &7- &6拿在手上右鍵使用"

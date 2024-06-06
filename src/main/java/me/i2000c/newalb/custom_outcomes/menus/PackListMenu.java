@@ -15,7 +15,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -55,9 +55,9 @@ public class PackListMenu extends Editor{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Menu menu = GUIFactory.newMenu(CustomInventoryType.GUI_PACK_MANAGER_MENU, 54, "&3&lPack menu");
         
-        ItemStack createPack = ItemBuilder.newItem(XMaterial.SLIME_BALL)
-                .withDisplayName("&aCreate new pack")
-                .build();
+        ItemStack createPack = ItemStackWrapper.newItem(XMaterial.SLIME_BALL)
+                                               .setDisplayName("&aCreate new pack")
+                                               .toItemStack();
         
         ItemStack renamePack = GUIItem.getEnabledDisabledItem(
                 renameMode, 
@@ -79,7 +79,7 @@ public class PackListMenu extends Editor{
                 "&6Delete mode", 
                 XMaterial.BARRIER, 
                 XMaterial.BARRIER);
-        ItemBuilder.fromItem(deletePack, false)
+        ItemStackWrapper.fromItem(deletePack, false)
                 .addLoreLine("")
                 .addLoreLine("&4&lWARNING: &cIf this mode is enabled,")
                 .addLoreLine("&cwhen you click on a pack,")
@@ -91,7 +91,7 @@ public class PackListMenu extends Editor{
                 "&6Change icon mode", 
                 XMaterial.CHEST, 
                 XMaterial.CHEST);
-        ItemBuilder.fromItem(changeIcon, false)
+        ItemStackWrapper.fromItem(changeIcon, false)
                 .addLoreLine("")
                 .addLoreLine("&bIf this mode is enabled,")
                 .addLoreLine("&byou can click on an item of")
@@ -197,7 +197,7 @@ public class PackListMenu extends Editor{
                 default:
                     ItemStack sk = e.getCurrentItem();
                     if(sk != null && sk.getType() != Material.AIR){
-                        String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                        String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
                                 .getDisplayName();
                         if(displayName == null){
                             return;

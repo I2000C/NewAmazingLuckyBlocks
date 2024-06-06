@@ -11,7 +11,7 @@ import me.i2000c.newalb.listeners.inventories.GUIItem;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,85 +34,85 @@ public class RewardTypesMenu extends Editor<Editor>{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Menu menu = GUIFactory.newMenu(CustomInventoryType.REWARD_TYPES_MENU, 27, "&2&lSelect reward type");
         
-        ItemStack stack = ItemBuilder.newItem(XMaterial.IRON_INGOT)
-                .withDisplayName("&aCreate Item rewards")
-                .build();
+        ItemStack stack = ItemStackWrapper.newItem(XMaterial.IRON_INGOT)
+                                          .setDisplayName("&aCreate Item rewards")
+                                          .toItemStack();
         
-        ItemStack stack2 = ItemBuilder.newItem(XMaterial.NAME_TAG)
-                .withDisplayName("&7Create Command Rewards")
-                .build();
+        ItemStack stack2 = ItemStackWrapper.newItem(XMaterial.NAME_TAG)
+                                           .setDisplayName("&7Create Command Rewards")
+                                           .toItemStack();
         
-        ItemStack stack3 = ItemBuilder.newItem(XMaterial.BONE)
-                .withDisplayName("&5Create Entity Rewards")
-                .build();
+        ItemStack stack3 = ItemStackWrapper.newItem(XMaterial.BONE)
+                                           .setDisplayName("&5Create Entity Rewards")
+                                           .toItemStack();
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.ARMOR_STAND);
-        builder.withDisplayName("&eCreate EntityTower Rewards");
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(XMaterial.ARMOR_STAND);
+        wrapper.setDisplayName("&eCreate EntityTower Rewards");
         
         if(RewardListMenu.getCurrentOutcome().getEntityRewardsNumber() < 1){
-            builder.addLoreLine("&cYou need to have created at least 1 entity");
-            builder.addLoreLine("  &cin order to use this reward");
+            wrapper.addLoreLine("&cYou need to have created at least 1 entity");
+            wrapper.addLoreLine("  &cin order to use this reward");
         }
-        ItemStack stack4 = builder.build();
+        ItemStack stack4 = wrapper.toItemStack();
         
-        ItemStack stack5 = ItemBuilder.newItem(XMaterial.FIREWORK_ROCKET)
-                .withDisplayName("&bCreate Firework Rewards")
-                .build();
+        ItemStack stack5 = ItemStackWrapper.newItem(XMaterial.FIREWORK_ROCKET)
+                                           .setDisplayName("&bCreate Firework Rewards")
+                                           .toItemStack();
         
-        ItemStack stack6 = ItemBuilder.newItem(XMaterial.JUKEBOX)
-                .withDisplayName("&dCreate Sound Rewards")
-                .build();
+        ItemStack stack6 = ItemStackWrapper.newItem(XMaterial.JUKEBOX)
+                                           .setDisplayName("&dCreate Sound Rewards")
+                                           .toItemStack();
         
-        builder = ItemBuilder.newItem(XMaterial.BRICKS);
-        builder.withDisplayName("&3Create Structure Rewards");
+        wrapper = ItemStackWrapper.newItem(XMaterial.BRICKS);
+        wrapper.setDisplayName("&3Create Structure Rewards");
         if(NewAmazingLuckyBlocks.getWorldEditPlugin() == null){
-            builder.addLoreLine("&cYou need WorldEdit in order to use this reward");
+            wrapper.addLoreLine("&cYou need WorldEdit in order to use this reward");
         }
-        ItemStack stack7 = builder.build();
+        ItemStack stack7 = wrapper.toItemStack();
         
-        ItemStack stack8 = ItemBuilder.newItem(XMaterial.BRICK)
-                .withDisplayName("&dCreate block rewards")
-                .build();
+        ItemStack stack8 = ItemStackWrapper.newItem(XMaterial.BRICK)
+                                           .setDisplayName("&dCreate block rewards")
+                                           .toItemStack();
         
-        ItemStack stack9 = ItemBuilder.newItem(XMaterial.WHITE_WOOL)
-                .withDisplayName("&eCreate lightning rewards")
-                .build();
+        ItemStack stack9 = ItemStackWrapper.newItem(XMaterial.WHITE_WOOL)
+                                           .setDisplayName("&eCreate lightning rewards")
+                                           .toItemStack();
         
-        ItemStack stack10 = ItemBuilder.newItem(XMaterial.BUCKET)
-                .withDisplayName("&8Create dark hole rewards")
-                .build();
+        ItemStack stack10 = ItemStackWrapper.newItem(XMaterial.BUCKET)
+                                            .setDisplayName("&8Create dark hole rewards")
+                                            .toItemStack();
         
-        ItemStack stack11 = ItemBuilder.newItem(XMaterial.LAVA_BUCKET)
-                .withDisplayName("&cCreate mini volcano rewards")
-                .build();
+        ItemStack stack11 = ItemStackWrapper.newItem(XMaterial.LAVA_BUCKET)
+                                            .setDisplayName("&cCreate mini volcano rewards")
+                                            .toItemStack();
         
-        ItemStack stack12 = ItemBuilder.newItem(XMaterial.BOOK)
-                .withDisplayName("&7Create message rewards")
-                .build();
+        ItemStack stack12 = ItemStackWrapper.newItem(XMaterial.BOOK)
+                                            .setDisplayName("&7Create message rewards")
+                                            .toItemStack();
         
-        ItemStack stack13 = ItemBuilder.newItem(XMaterial.POTION)
-                .withDisplayName("&5Create effect rewards")
-                .build();
+        ItemStack stack13 = ItemStackWrapper.newItem(XMaterial.POTION)
+                                            .setDisplayName("&5Create effect rewards")
+                                            .toItemStack();
         
-        ItemStack stack14 = ItemBuilder.newItem(XMaterial.TNT)
-                .withDisplayName("&4Create explosion rewards")
-                .build();
+        ItemStack stack14 = ItemStackWrapper.newItem(XMaterial.TNT)
+                                            .setDisplayName("&4Create explosion rewards")
+                                            .toItemStack();
         
-        ItemStack stack15 = ItemBuilder.newItem(XMaterial.DIAMOND_ORE)
-                .withDisplayName("&bCreate block replacing sphere (BRS) rewards")
-                .build();
+        ItemStack stack15 = ItemStackWrapper.newItem(XMaterial.DIAMOND_ORE)
+                                            .setDisplayName("&bCreate block replacing sphere (BRS) rewards")
+                                            .toItemStack();
         
-        ItemStack stack16 = ItemBuilder.newItem(XMaterial.OAK_PRESSURE_PLATE)
-                .withDisplayName("&5Create trap rewards")
-                .build();
+        ItemStack stack16 = ItemStackWrapper.newItem(XMaterial.OAK_PRESSURE_PLATE)
+                                            .setDisplayName("&5Create trap rewards")
+                                            .toItemStack();
         
-        ItemStack stack17 = ItemBuilder.newItem(XMaterial.COMPASS)
-                .withDisplayName("&eCreate teleport rewards")
-                .build();
+        ItemStack stack17 = ItemStackWrapper.newItem(XMaterial.COMPASS)
+                                            .setDisplayName("&eCreate teleport rewards")
+                                            .toItemStack();
         
-        ItemStack stack18 = ItemBuilder.newItem(XMaterial.INK_SAC)
-                .withDisplayName("&7Create squid explosion rewards")
-                .build();
+        ItemStack stack18 = ItemStackWrapper.newItem(XMaterial.INK_SAC)
+                                            .setDisplayName("&7Create squid explosion rewards")
+                                            .toItemStack();
         
         menu.setItem(0, stack);
         menu.setItem(1, stack2);

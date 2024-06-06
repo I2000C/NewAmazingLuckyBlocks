@@ -68,14 +68,17 @@ public class TextureManager{
     }
     public static boolean setTexture(Block block, Texture texture, boolean force){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!isSkull(block.getType())){
-            if(force) {
+        boolean isSkull = isSkull(block.getType());
+        if(!isSkull) {
+            if(texture == null) {
+                return false;
+            } else if(!force) {
+                return false;
+            } else {
                 block.setType(getBlockSkullMaterial());
                 if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                     block.setData((byte) 1);
                 }
-            } else {
-                return false;
             }
         }
         

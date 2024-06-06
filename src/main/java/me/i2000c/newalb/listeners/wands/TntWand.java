@@ -2,7 +2,7 @@ package me.i2000c.newalb.listeners.wands;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -34,8 +34,8 @@ public class TntWand extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.MUSIC_DISC_BLOCKS)
-                .withLore(super.getLoreOfWand())
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.MUSIC_DISC_BLOCKS)
+                               .setLore(super.getLoreOfWand())
+                               .toItemStack();
     }
 }

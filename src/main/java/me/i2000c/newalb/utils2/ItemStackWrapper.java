@@ -1,13 +1,20 @@
 package me.i2000c.newalb.utils2;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
-
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureException;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,130 +31,100 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 
-import com.cryptomorin.xseries.XMaterial;
-
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.TextureManager;
-
-public class ItemBuilder{
-    private ItemStack item;
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class ItemStackWrapper {
+    private final ItemStack item;
     
-    private ItemBuilder(XMaterial material){
-        this.item = material.parseItem();
+    
+    
+    public static ItemStackWrapper newItem(@NonNull XMaterial material) {
+        return new ItemStackWrapper(material.parseItem());
     }
-    private ItemBuilder(ItemStack item){
-        this.item = item;
+    public static ItemStackWrapper newItem(@NonNull String materialNameAndDurability) {
+        return newItem(OtherUtils.parseXMaterial(materialNameAndDurability));
     }
-    private ItemBuilder(Block block) {
-        this.item = new ItemStack(block.getType());
+    public static ItemStackWrapper newItem(@NonNull Block block) {
+        XMaterial material = XMaterial.matchXMaterial(block.getType());
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(material);
+        
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
-            this.item.setDurability(block.getData());
-        }
-    }
-    
-    public static ItemBuilder newItem(XMaterial material){
-        return new ItemBuilder(material);
-    }
-    public static ItemBuilder newItem(String materialNameAndDurability){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        String[] splitted = materialNameAndDurability.split(":");
-        String materialName = splitted[0];
-        int materialID = -1;
-        
-        try{
-            materialID = Integer.parseInt(materialName);
-            Logger.warn("Using material IDs is deprecated and not recommended (materialID: " + materialID + ")");
-        }catch(Exception ex){}
-        
-        Optional<XMaterial> optionalXMaterial;
-        if(materialID == -1){
-            optionalXMaterial = XMaterial.matchXMaterial(materialNameAndDurability);
-        }else{
-            if(splitted.length == 1){
-                optionalXMaterial = XMaterial.matchXMaterial(materialID, (byte) 0);
-            }else{
-                optionalXMaterial = XMaterial.matchXMaterial(materialID, Byte.parseByte(splitted[1]));
+            try {
+                wrapper.setDurability(block.getData());
+                XMaterial aux = wrapper.getMaterial();
+            } catch(IllegalArgumentException ex) {
+                wrapper.setDurability(0);
             }
         }
         
-        if(optionalXMaterial.isPresent()){
-            return ItemBuilder.newItem(optionalXMaterial.get());
-        }else{
-            throw new IllegalArgumentException("Invalid ItemStack detected: " + materialNameAndDurability);
-        }
-//</editor-fold>
+        Texture texture = TextureManager.getTexture(block);
+        wrapper.setTexture(texture);
+        return wrapper;
     }
-    public static ItemBuilder fromItem(ItemStack item, boolean clone){
-        return new ItemBuilder(clone ? item.clone() : item);
+    public static ItemStackWrapper fromItem(@NonNull ItemStack stack, boolean clone) {
+        return new ItemStackWrapper(clone ? stack.clone() : stack);
     }
-    public static ItemBuilder fromItem(ItemStack item){
-        return ItemBuilder.fromItem(item, true);
-    }
-    public static ItemBuilder fromBlock(Block block) {
-        return new ItemBuilder(block);
-    }
-    public static ItemBuilder fromBlock(Location loc) {
-        return new ItemBuilder(loc.getBlock());
+    public static ItemStackWrapper fromItem(@NonNull ItemStack stack) {
+        return fromItem(stack, true);
     }
     
-    public ItemBuilder withMaterial(XMaterial material){
+    
+    
+    public ItemStackWrapper setMaterial(XMaterial material) {
         material.setType(item);
         return this;
     }
-    public XMaterial getXMaterial(){
+    public XMaterial getMaterial() {
         return XMaterial.matchXMaterial(item);
     }
     
-    public ItemBuilder withAmount(int amount){
+    public ItemStackWrapper setAmount(int amount) {
         item.setAmount(amount);
         return this;
     }
-    public int getAmount(){
+    public int getAmount() {
         return item.getAmount();
     }
     
-    public ItemBuilder withDurability(int durability){
-        if(durability >= 0 && durability <= item.getType().getMaxDurability()){
-            item.setDurability((short) durability);
+    public ItemStackWrapper setDurability(int durability) {
+        if(durability >= 0) {
+            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion() || durability <= item.getType().getMaxDurability()) {
+                item.setDurability((short) durability);
+            }
         }
-        
         return this;
     }
-    public short getDurability(){
+    public short getDurability() {
         return item.getDurability();
     }
     
-    public ItemBuilder withDisplayName(String displayName){
+    public ItemStackWrapper setDisplayName(String displayName) {
         ItemMeta meta = item.getItemMeta();
-        if(displayName == null || displayName.isEmpty()){
+        if(displayName == null || displayName.isEmpty()) {
             meta.setDisplayName(null);
-        }else{
+        } else {
             meta.setDisplayName(Logger.color(displayName));
-        }        
+        }
         item.setItemMeta(meta);
         return this;
     }
-    public String getDisplayName(){
+    public String getDisplayName() {
         ItemMeta meta = item.getItemMeta();
-        if(meta.hasDisplayName()){
+        if(meta.hasDisplayName()) {
             return meta.getDisplayName();
-        }else{
+        } else {
             return null;
         }
     }
-    public boolean hasDisplayName(){
+    public boolean hasDisplayName() {
         return item.getItemMeta().hasDisplayName();
     }
     
-    public ItemBuilder addLoreLine(String loreLine){
+    public ItemStackWrapper addLoreLine(String loreLine) {
         ItemMeta meta = item.getItemMeta();
         List<String> lore;
-        if(meta.hasLore()){
+        if(meta.hasLore()) {
             lore = meta.getLore();
-        }else{
+        } else {
             lore = new ArrayList<>();
         }
         lore.add(Logger.color(loreLine));
@@ -155,12 +132,12 @@ public class ItemBuilder{
         item.setItemMeta(meta);
         return this;
     }
-    public ItemBuilder addLore(List<String> loreLines){
+    public ItemStackWrapper addLore(List<String> loreLines) {
         ItemMeta meta = item.getItemMeta();
         List<String> lore;
-        if(meta.hasLore()){
+        if(meta.hasLore()) {
             lore = meta.getLore();
-        }else{
+        } else {
             lore = new ArrayList<>();
         }
         lore.addAll(Logger.color(loreLines));
@@ -168,47 +145,41 @@ public class ItemBuilder{
         item.setItemMeta(meta);
         return this;
     }
-    public ItemBuilder withLore(String... lore){
-        if(lore == null || lore.length == 0){
-            return withLore((List<String>) null);
-        }else{
-            return withLore(Arrays.asList(lore));
-        }        
+    public ItemStackWrapper setLore(String... lore) {
+        if(lore == null || lore.length == 0) {
+            return setLore((List<String>) null);
+        } else {
+            return setLore(Arrays.asList(lore));
+        }
     }
-    public ItemBuilder withLore(List<String> lore){
+    public ItemStackWrapper setLore(List<String> lore) {
         ItemMeta meta = item.getItemMeta();
-        if(lore == null || lore.isEmpty()){
+        if(lore == null || lore.isEmpty()) {
             meta.setLore(null);
-        }else{
+        } else {
             meta.setLore(Logger.color(lore));
-        }        
+        }
         item.setItemMeta(meta);
         return this;
     }
-    public List<String> getLore(){
+    public List<String> getLore() {
         ItemMeta meta = item.getItemMeta();
-        if(meta.hasLore()){
-            return meta.getLore();
-        }else{
-            return null;
-        }
+        return meta.hasLore() ? meta.getLore() : null;
     }
-    public boolean hasLore(){
+    public boolean hasLore() {
         return item.getItemMeta().hasLore();
     }
     
-    public ItemBuilder addEnchantment(Enchantment enchantment, int level){
-        Objects.requireNonNull(enchantment);
-        
+    public ItemStackWrapper addEnchantment(@NonNull Enchantment enchantment, int level) {
         item.addUnsafeEnchantment(enchantment, level);
         return this;
     }
-    public ItemBuilder withEnchantments(Map<Enchantment, Integer> enchantments){
+    public ItemStackWrapper setEnchantments(@NonNull Map<Enchantment, Integer> enchantments) {
         clearEnchantments();
         item.addUnsafeEnchantments(enchantments);
         return this;
     }
-    public ItemBuilder withEnchantments(List<String> enchantments){
+    public ItemStackWrapper setEnchantments(List<String> enchantments) {
         clearEnchantments();
         enchantments.forEach(enchant -> {
             String[] splitted = enchant.split(";");
@@ -220,25 +191,25 @@ public class ItemBuilder{
         });
         return this;
     }
-    public Map<Enchantment, Integer> getEnchantments(){
+    public Map<Enchantment, Integer> getEnchantments() {
         return item.getEnchantments();
     }
-    public List<String> getEnchantmentsIntoStringList(){
+    public List<String> getEnchantmentsIntoStringList() {
         List<String> enchantments = new ArrayList<>();
         item.getEnchantments().forEach((enchantment, level) -> {
             enchantments.add(enchantment.getName() + ";" + level);
         });
         return enchantments;
     }
-    public boolean hasEnchantments(){
+    public boolean hasEnchantments() {
         return item.getItemMeta().hasEnchants();
     }
-    public ItemBuilder clearEnchantments(){
+    public ItemStackWrapper clearEnchantments() {
         item.getEnchantments().forEach((enchantment, level) -> item.removeEnchantment(enchantment));
         return this;
     }
-    
-    public ItemBuilder addBookEnchantment(Enchantment enchantment, int level){
+
+    public ItemStackWrapper addBookEnchantment(Enchantment enchantment, int level) {
         Objects.requireNonNull(enchantment);
         
         ItemMeta meta = item.getItemMeta();
@@ -250,25 +221,25 @@ public class ItemBuilder{
         
         return this;
     }
-    public ItemBuilder withBookEnchantments(Map<Enchantment, Integer> enchantments){
+    public ItemStackWrapper setBookEnchantments(Map<Enchantment, Integer> enchantments) {
         Objects.requireNonNull(enchantments);
         clearBookEnchantments();
         
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof EnchantmentStorageMeta) {
             EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
-            enchantments.forEach((enchantment, level) -> 
+            enchantments.forEach((enchantment, level) ->
                     esm.addStoredEnchant(enchantment, level, true));
             item.setItemMeta(esm);
         }
         
         return this;
     }
-    public ItemBuilder withBookEnchantments(List<String> enchantments){
-        clearBookEnchantments();
-        
+    public ItemStackWrapper setBookEnchantments(List<String> enchantments) {
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof EnchantmentStorageMeta) {
+            clearBookEnchantments();
+            
             EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
             enchantments.forEach(enchant -> {
                 String[] splitted = enchant.split(";");
@@ -283,16 +254,16 @@ public class ItemBuilder{
         
         return this;
     }
-    public Map<Enchantment, Integer> getBookEnchantments(){
+    public Map<Enchantment, Integer> getBookEnchantments() {
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof EnchantmentStorageMeta) {
             EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
             return esm.getStoredEnchants();
         } else {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
     }
-    public List<String> getBookEnchantmentsIntoStringList(){
+    public List<String> getBookEnchantmentsIntoStringList() {
         List<String> enchantments = new ArrayList<>();
         
         ItemMeta meta = item.getItemMeta();
@@ -305,7 +276,7 @@ public class ItemBuilder{
         
         return enchantments;
     }
-    public boolean hasBookEnchantments(){
+    public boolean hasBookEnchantments() {
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof EnchantmentStorageMeta) {
             EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
@@ -314,7 +285,7 @@ public class ItemBuilder{
             return false;
         }
     }
-    public ItemBuilder clearBookEnchantments(){
+    public ItemStackWrapper clearBookEnchantments() {
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof EnchantmentStorageMeta) {
             EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
@@ -325,78 +296,78 @@ public class ItemBuilder{
         return this;
     }
     
-    public ItemBuilder withOwner(String playerName){
+    public ItemStackWrapper setOwner(String playerName) {
         ItemMeta meta = item.getItemMeta();
-        if(meta instanceof SkullMeta){
+        if(meta instanceof SkullMeta) {
             ((SkullMeta) meta).setOwner(playerName);
             item.setItemMeta(meta);
         }
         return this;
     }
-    public ItemBuilder withOwner(Player player){
+    public ItemStackWrapper setOwner(Player player) {
         ItemMeta meta = item.getItemMeta();
-        if(meta instanceof SkullMeta){
+        if(meta instanceof SkullMeta) {
             try {
                 ((SkullMeta) meta).setOwningPlayer(player);
             } catch(NoSuchMethodError ex) {
                 ((SkullMeta) meta).setOwner(player.getName());
             }
-            
             item.setItemMeta(meta);
         }
         return this;
     }
-    public ItemBuilder withTextureID(String textureID){
+    
+    public ItemStackWrapper setTextureID(String textureID) {
         try{
             Texture texture = new Texture(textureID);
-            return withTexture(texture);
-        }catch(TextureException ex){
+            return setTexture(texture);
+        }catch(TextureException ex) {
             Logger.err("An error occurred while setting texture of item:");
             Logger.err(ex);
             return this;
         }
     }
-    public ItemBuilder withTexture(Texture texture){
+    public ItemStackWrapper setTexture(Texture texture) {
         TextureManager.setTexture(item, texture);
         return this;
     }
-    public Texture getTexture(){
+    public Texture getTexture() {
         return TextureManager.getTexture(item);
     }
-    public boolean hasTexture(){
+    public boolean hasTexture() {
         return getTexture() != null;
     }
     
-    public ItemBuilder addPotionEffect(PotionEffect potionEffect){
+    public ItemStackWrapper addPotionEffect(PotionEffect potionEffect) {
         ItemMeta meta = item.getItemMeta();
-        if(meta instanceof PotionMeta){
+        if(meta instanceof PotionMeta) {
             ((PotionMeta) meta).addCustomEffect(potionEffect, true);
             item.setItemMeta(meta);
         }
         return this;
     }
-    public List<PotionEffect> getPotionEffects(){
+    public List<PotionEffect> getPotionEffects() {
         ItemMeta meta = item.getItemMeta();
-        if(meta instanceof PotionMeta){
+        if(meta instanceof PotionMeta) {
             return ((PotionMeta) meta).getCustomEffects();
-        }else{
+        } else {
             return null;
         }
     }
-    public ItemBuilder clearPotionEffects(){
+    public ItemStackWrapper clearPotionEffects() {
         ItemMeta meta = item.getItemMeta();
-        if(meta instanceof PotionMeta){
+        if(meta instanceof PotionMeta) {
             ((PotionMeta) meta).clearCustomEffects();
             item.setItemMeta(meta);
         }
         return this;
     }
     
-    public ItemBuilder withColor(Color color){
+    public ItemStackWrapper setColor(Color color){
         ItemMeta meta = item.getItemMeta();
-        if(meta instanceof LeatherArmorMeta){
+        if(meta instanceof LeatherArmorMeta) {
             ((LeatherArmorMeta) meta).setColor(color);
-        }else if(meta instanceof PotionMeta){
+        } else if(meta instanceof PotionMeta && MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
             ((PotionMeta) meta).setColor(color);
         }
         item.setItemMeta(meta);
@@ -404,45 +375,60 @@ public class ItemBuilder{
     }
     public Color getColor(){
         ItemMeta meta = item.getItemMeta();
-        if(meta instanceof LeatherArmorMeta){
+        if(meta instanceof LeatherArmorMeta) {
             return ((LeatherArmorMeta) meta).getColor();
-        }else if(meta instanceof PotionMeta){
-            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
-                return ((PotionMeta) meta).getColor();
-            }else{
-                return null;
-            }            
-        }else{
-            return null;
-        }
+        } else if(meta instanceof PotionMeta && MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
+            return ((PotionMeta) meta).getColor();
+        }        
+        return null;
     }
     public boolean hasColor(){
         return getColor() != null;
     }
     
-    public ItemBuilder addItemFlags(ItemFlag... itemFlags){
+    public ItemStackWrapper addItemFlags(ItemFlag... itemFlags) {
         ItemMeta meta = item.getItemMeta();
         meta.addItemFlags(itemFlags);
         item.setItemMeta(meta);
         return this;
     }
-    public ItemBuilder removeItemFlags(ItemFlag... itemFlags){
+    public ItemStackWrapper removeItemFlags(ItemFlag... itemFlags){
         ItemMeta meta = item.getItemMeta();
         meta.removeItemFlags(itemFlags);
         item.setItemMeta(meta);
         return this;
     }
-    public boolean hasItemFlag(ItemFlag itemFlag){
+    public boolean hasItemFlag(ItemFlag itemFlag) {
         return item.getItemMeta().hasItemFlag(itemFlag);
     }
     
-    public ItemBuilder setNbtTag(String tag, String value) {
+    public ItemStackWrapper setNbtTag(String tag, String value) {
         NBTUtils.set(item, tag, value);
         return this;
     }
-    public ItemBuilder setNbtTag(String tag, Integer value) {
+    public ItemStackWrapper setNbtTag(String tag, Integer value) {
         NBTUtils.set(item, tag, value);
         return this;
+    }
+    public String getStringNbtTag(String tag) {
+        return NBTUtils.getString(item, tag);
+    }
+    public Integer getIntNbtTag(String tag) {
+        return NBTUtils.getInt(item, tag);
+    }
+    public boolean hasNbtTag(String tag) {
+        return NBTUtils.contains(item, tag);
+    }
+    
+    public void dropAtLocation(Location loc) {
+        dropAtLocation(loc, true);
+    }
+    public void dropAtLocation(Location loc, boolean dropNaturally) {
+        if(dropNaturally) {
+            loc.getWorld().dropItemNaturally(loc, item.clone());
+        } else {
+            loc.getWorld().dropItem(loc, item.clone());
+        }
     }
     
     public void placeAt(Block block) {
@@ -450,6 +436,8 @@ public class ItemBuilder{
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             block.setData((byte) item.getDurability());
         }
+        Texture texture = getTexture();
+        TextureManager.setTexture(block, texture, true);
     }
     public void placeAt(Location loc) {
         placeAt(loc.getBlock());
@@ -465,12 +453,17 @@ public class ItemBuilder{
         }        
     }
     
-    public ItemStack build(){
-        return item;
+    public ItemStack toItemStack() {
+        return this.item;
     }
     
     @Override
-    public String toString(){
-        return this.getXMaterial().name();
+    public ItemStackWrapper clone() {
+        return ItemStackWrapper.fromItem(this.item, true);
+    }
+    
+    @Override
+    public String toString() {
+        return this.getMaterial().name();
     }
 }

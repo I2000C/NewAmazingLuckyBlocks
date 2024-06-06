@@ -1,17 +1,18 @@
 package me.i2000c.newalb.listeners.objects;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.messages.ActionBar;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.LangConfig;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.messages.ActionBar;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 
 public class PlayerTracker extends SpecialItem{
     
@@ -29,11 +30,11 @@ public class PlayerTracker extends SpecialItem{
             case RIGHT_CLICK_BLOCK:
                 super.getPlayerCooldown().updateCooldown(player);
                 
-                int radius = ConfigManager.getConfig().getInt("Objects.PlayerTracker.radius");
+                int radius = ConfigManager.getMainConfig().getInt("Objects.PlayerTracker.radius");
                 double minDistanceS = radius*radius;
                 Entity nearestEntity = null;
 
-                if(ConfigManager.getConfig().getBoolean("Objects.PlayerTracker.detect-players-only")){
+                if(ConfigManager.getMainConfig().getBoolean("Objects.PlayerTracker.detect-players-only")){
                     for(Player p : player.getWorld().getPlayers()){
                         if(p.equals(player) || p.getGameMode() == GameMode.SPECTATOR){
                             continue;
@@ -59,7 +60,7 @@ public class PlayerTracker extends SpecialItem{
 
                 String message;
                 if(nearestEntity == null){
-                    message = LangConfig.getMessage("Objects.PlayerTracker.message3");
+                    message = ConfigManager.getLangMessage("Objects.PlayerTracker.message3");
                     ActionBar.sendActionBar(player, Logger.color(message));
                 }else{
                     player.setCompassTarget(nearestEntity.getLocation());
@@ -67,12 +68,12 @@ public class PlayerTracker extends SpecialItem{
                     double distance = Math.sqrt(minDistanceS);
 
                     if(nearestEntity instanceof Player){
-                        message = LangConfig.getMessage("Objects.PlayerTracker.message1")
+                        message = ConfigManager.getLangMessage("Objects.PlayerTracker.message1")
                                 .replace("%player%", ((Player)nearestEntity).getName())
                                 .replace("%distance%", String.format("%.2f", distance));
                         ActionBar.sendActionBar(player, Logger.color(message));
                     }else{
-                        message = LangConfig.getMessage("Objects.PlayerTracker.message2")
+                        message = ConfigManager.getLangMessage("Objects.PlayerTracker.message2")
                                 .replace("%entity%", nearestEntity.getName())
                                 .replace("%distance%", String.format("%.2f", distance));
                         ActionBar.sendActionBar(player, Logger.color(message));
@@ -84,7 +85,7 @@ public class PlayerTracker extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.COMPASS)
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.COMPASS)
+                .toItemStack();
     }
 }

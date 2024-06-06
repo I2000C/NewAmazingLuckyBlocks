@@ -1,6 +1,5 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -8,29 +7,44 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
+@Getter
+@Setter
 public class BlockReplacingSphereReward extends Reward{
     private int minRadius;
     private int maxRadius;
     private int ticksBetweenLayers;
     private boolean usePlayerLoc;
     private boolean replaceLiquids;
+    
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private Map<ItemStack, Integer> materials;
+    
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private int totalProbability;
     
     public BlockReplacingSphereReward(Outcome outcome){
@@ -42,37 +56,6 @@ public class BlockReplacingSphereReward extends Reward{
         replaceLiquids = false;
         materials = new LinkedHashMap<>();
         totalProbability = 0;
-    }
-
-    public int getMinRadius(){
-        return minRadius;
-    }
-    public void setMinRadius(int minRadius){
-        this.minRadius = minRadius;
-    }
-    public int getMaxRadius(){
-        return maxRadius;
-    }
-    public void setMaxRadius(int maxRadius){
-        this.maxRadius = maxRadius;
-    }
-    public int getTicksBetweenLayers(){
-        return ticksBetweenLayers;
-    }
-    public void setTicksBetweenLayers(int ticksBetweenLayers){
-        this.ticksBetweenLayers = ticksBetweenLayers;
-    }
-    public boolean isUsePlayerLoc(){
-        return usePlayerLoc;
-    }
-    public void setUsePlayerLoc(boolean usePlayerLoc){
-        this.usePlayerLoc = usePlayerLoc;
-    }
-    public boolean isReplaceLiquids(){
-        return this.replaceLiquids;
-    }
-    public void setReplaceLiquids(boolean replaceLiquids){
-        this.replaceLiquids = replaceLiquids;
     }
     
     public void addItemStack(ItemStack stack){
@@ -134,36 +117,36 @@ public class BlockReplacingSphereReward extends Reward{
         this.materials.keySet().stream()
                 .sorted(COMPARATOR)
                 .forEachOrdered(item -> orderedMaterials.add("   &3" + 
-                        ItemBuilder.fromItem(item, false).toString() + 
+                        ItemStackWrapper.fromItem(item, false).toString() + 
                         " x" + this.materials.get(item)));
         return orderedMaterials;
     }
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.DIAMOND_ORE);
-        builder.withDisplayName("&bBlock Replacing Sphere");
-        builder.addLoreLine("&dMin radius: &3" + this.minRadius);
-        builder.addLoreLine("&dMax radius: &3" + this.maxRadius);
-        builder.addLoreLine("&dTicks between layers: &3" + this.ticksBetweenLayers);
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(XMaterial.DIAMOND_ORE);
+        wrapper.setDisplayName("&bBlock Replacing Sphere");
+        wrapper.addLoreLine("&dMin radius: &3" + this.minRadius);
+        wrapper.addLoreLine("&dMax radius: &3" + this.maxRadius);
+        wrapper.addLoreLine("&dTicks between layers: &3" + this.ticksBetweenLayers);
         if(this.usePlayerLoc){
-            builder.addLoreLine("&dReplace liquids: &atrue");
+            wrapper.addLoreLine("&dReplace liquids: &atrue");
         }else{
-            builder.addLoreLine("&dReplace liquids: &cfalse");
+            wrapper.addLoreLine("&dReplace liquids: &cfalse");
         }
         if(this.replaceLiquids){
-            builder.addLoreLine("&dUse player location: &atrue");
+            wrapper.addLoreLine("&dUse player location: &atrue");
         }else{
-            builder.addLoreLine("&dUse player location: &cfalse");
+            wrapper.addLoreLine("&dUse player location: &cfalse");
         }
-        builder.addLoreLine("&dMaterials:");
-        builder.addLore(getOrderedMaterialList());
+        wrapper.addLoreLine("&dMaterials:");
+        wrapper.addLore(getOrderedMaterialList());
         
-        return builder.build();
+        return wrapper.toItemStack();
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         config.set(path + ".minRadius", this.minRadius);
         config.set(path + ".maxRadius", this.maxRadius);
         config.set(path + ".ticksBetweenLayers", this.ticksBetweenLayers);
@@ -173,12 +156,12 @@ public class BlockReplacingSphereReward extends Reward{
         List<String> aux = new ArrayList<>();
         materials.keySet().stream()
                 .sorted(COMPARATOR)
-                .forEachOrdered(item -> aux.add(ItemBuilder.fromItem(item, false).toString() + ";" + materials.get(item)));
+                .forEachOrdered(item -> aux.add(ItemStackWrapper.fromItem(item, false).toString() + ";" + materials.get(item)));
         config.set(path + ".materials", aux);
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
+    public void loadRewardFromConfig(Config config, String path){
         this.minRadius = config.getInt(path + ".minRadius");
         this.maxRadius = config.getInt(path + ".maxRadius");
         this.ticksBetweenLayers = config.getInt(path + ".ticksBetweenLayers");
@@ -193,7 +176,7 @@ public class BlockReplacingSphereReward extends Reward{
         }
         List<String> aux = config.getStringList(path + ".materials");
         aux.stream().map(materialData -> materialData.split(";")).forEach(splitted -> {
-            ItemStack item = ItemBuilder.newItem(splitted[0]).build();
+            ItemStack item = ItemStackWrapper.newItem(splitted[0]).toItemStack();
             int amount;
             try{
                 amount = Integer.parseInt(splitted[1]);

@@ -17,7 +17,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -65,54 +65,54 @@ public class EffectMenu extends Editor<EffectReward>{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.CLOCK);
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(XMaterial.CLOCK);
         if(item.getDuration() < 0){
-            builder.withDisplayName("&6Effect time (seconds): &ainfinite");
+            wrapper.setDisplayName("&6Effect time (seconds): &ainfinite");
         }else{
-            builder.withDisplayName("&6Effect time (seconds): &a" + item.getDuration());
+            wrapper.setDisplayName("&6Effect time (seconds): &a" + item.getDuration());
         }
-        builder.addLoreLine("&3Click to reset");
-        ItemStack time_item = builder.build();
+        wrapper.addLoreLine("&3Click to reset");
+        ItemStack time_item = wrapper.toItemStack();
         
-        ItemStack amplifier = ItemBuilder.newItem(XMaterial.BEACON)
-                .withDisplayName("&6Effect amplifier: &a" + item.getAmplifier())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack amplifier = ItemStackWrapper.newItem(XMaterial.BEACON)
+                                              .setDisplayName("&6Effect amplifier: &a" + item.getAmplifier())
+                                              .addLoreLine("&3Click to reset")
+                                              .toItemStack();
         
         if(item.isClearEffects()){
-            builder = ItemBuilder.newItem(XMaterial.MILK_BUCKET);
-            builder.withDisplayName("&bSelected effect: &d" + EffectReward.CLEAR_EFFECTS_TAG);
+            wrapper = ItemStackWrapper.newItem(XMaterial.MILK_BUCKET);
+            wrapper.setDisplayName("&bSelected effect: &d" + EffectReward.CLEAR_EFFECTS_TAG);
         }else{
-            builder = ItemBuilder.newItem(XMaterial.POTION);
+            wrapper = ItemStackWrapper.newItem(XMaterial.POTION);
             if(item.getPotionEffect() == null){
-                builder.withDisplayName("&bSelected effect: &dnull");
+                wrapper.setDisplayName("&bSelected effect: &dnull");
             }else{
-                builder.withDisplayName("&bSelected effect: &d" + item.getPotionEffect().getName());
-                builder.addPotionEffect(new PotionEffect(item.getPotionEffect(), 0, 0));
+                wrapper.setDisplayName("&bSelected effect: &d" + item.getPotionEffect().getName());
+                wrapper.addPotionEffect(new PotionEffect(item.getPotionEffect(), 0, 0));
             }
         }
-        builder.addLoreLine("&3Click to select");
-        ItemStack effectStack = builder.build();
+        wrapper.addLoreLine("&3Click to select");
+        ItemStack effectStack = wrapper.toItemStack();
         
         if(item.isAmbient()){
-            builder = ItemBuilder.newItem(XMaterial.GLASS_PANE);
-            builder.withDisplayName("&bIs ambient: &atrue");
+            wrapper = ItemStackWrapper.newItem(XMaterial.GLASS_PANE);
+            wrapper.setDisplayName("&bIs ambient: &atrue");
         }else{
-            builder = ItemBuilder.newItem(XMaterial.WHITE_STAINED_GLASS_PANE);
-            builder.withDisplayName("&bIs ambient: &cfalse");
+            wrapper = ItemStackWrapper.newItem(XMaterial.WHITE_STAINED_GLASS_PANE);
+            wrapper.setDisplayName("&bIs ambient: &cfalse");
         }        
-        builder.addLoreLine("&3Click to toggle");
-        ItemStack ambientItem = builder.build();
+        wrapper.addLoreLine("&3Click to toggle");
+        ItemStack ambientItem = wrapper.toItemStack();
                 
         if(item.isShowParticles()){
-            builder = ItemBuilder.newItem(XMaterial.MELON_SEEDS);
-            builder.withDisplayName("&bShow particles: &atrue");
+            wrapper = ItemStackWrapper.newItem(XMaterial.MELON_SEEDS);
+            wrapper.setDisplayName("&bShow particles: &atrue");
         }else{
-            builder = ItemBuilder.newItem(XMaterial.GLASS_PANE);
-            builder.withDisplayName("&bShow particles: &cfalse");
+            wrapper = ItemStackWrapper.newItem(XMaterial.GLASS_PANE);
+            wrapper.setDisplayName("&bShow particles: &cfalse");
         }
-        builder.addLoreLine("&3Click to toggle");
-        ItemStack showParticlesItem = builder.build();
+        wrapper.addLoreLine("&3Click to toggle");
+        ItemStack showParticlesItem = wrapper.toItemStack();
         
         
         for(int i=0;i<9;i++){
@@ -332,9 +332,9 @@ public class EffectMenu extends Editor<EffectReward>{
         
         int initialSlot;
         if(showClearEffectsItem){
-            ItemStack clearEffects = ItemBuilder.newItem(XMaterial.MILK_BUCKET)
-                .withDisplayName("&d" + EffectReward.CLEAR_EFFECTS_TAG)
-                .build();
+            ItemStack clearEffects = ItemStackWrapper.newItem(XMaterial.MILK_BUCKET)
+                                                     .setDisplayName("&d" + EffectReward.CLEAR_EFFECTS_TAG)
+                                                     .toItemStack();
             menu.setItem(0, clearEffects);
             initialSlot = 1;
         }else{
@@ -345,10 +345,10 @@ public class EffectMenu extends Editor<EffectReward>{
         for(int i=initialSlot; iterator.hasNext() && i<45; i++){
             PotionEffectType effectType = iterator.next();
             PotionEffect potionEffect = new PotionEffect(effectType, 0, 0);
-            ItemStack effectItem = ItemBuilder.newItem(XMaterial.POTION)
-                    .withDisplayName("&d" + effectType.getName())
-                    .addPotionEffect(potionEffect)
-                    .build();
+            ItemStack effectItem = ItemStackWrapper.newItem(XMaterial.POTION)
+                                                   .setDisplayName("&d" + effectType.getName())
+                                                   .addPotionEffect(potionEffect)
+                                                   .toItemStack();
             menu.setItem(i, effectItem);
         }
         
@@ -370,7 +370,7 @@ public class EffectMenu extends Editor<EffectReward>{
             }
             
             if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
                         .getDisplayName();
                 if(displayName != null){
                     String effect_name = Logger.stripColor(displayName);

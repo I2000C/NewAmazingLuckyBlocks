@@ -13,7 +13,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.CustomColor;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -120,22 +120,22 @@ public class ColorMenu extends Editor<CustomColor>{
             menu.setItem(COLOR_ITEM_SLOTS[i], sk);
         }
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.LEATHER_CHESTPLATE);
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(XMaterial.LEATHER_CHESTPLATE);
         if(item == null){
-            builder.withDisplayName("&dChosen color: &b" + "null");
+            wrapper.setDisplayName("&dChosen color: &b" + "null");
         }else{
-            builder.withDisplayName("&dChosen color: &b" + item);
-            builder.withColor(item.getBukkitColor());
+            wrapper.setDisplayName("&dChosen color: &b" + item);
+            wrapper.setColor(item.getBukkitColor());
         }
-        ItemStack leather = builder.build();
+        ItemStack leather = wrapper.toItemStack();
         
-        ItemStack chooseCustomColor = ItemBuilder.newItem(XMaterial.OAK_SIGN)
-                .withDisplayName("&3Choose custom color")
-                .build();
+        ItemStack chooseCustomColor = ItemStackWrapper.newItem(XMaterial.OAK_SIGN)
+                                                      .setDisplayName("&3Choose custom color")
+                                                      .toItemStack();
         
-        ItemStack chooseRandomColor = ItemBuilder.newItem(XMaterial.BOOKSHELF)
-                .withDisplayName("&3Choose custom color")
-                .build();
+        ItemStack chooseRandomColor = ItemStackWrapper.newItem(XMaterial.BOOKSHELF)
+                                                      .setDisplayName("&3Choose random color")
+                                                      .toItemStack();
         
         menu.setItem(16, leather);
         menu.setItem(15, chooseCustomColor);
@@ -213,9 +213,9 @@ public class ColorMenu extends Editor<CustomColor>{
             return null;
         }
         
-        return ItemBuilder.newItem(COLOR_MATERIALS[i])
-                .withDisplayName("&d" + COLOR_NAMES[i] + ": &b" + COLOR_HEX_VALUES[i])
-                .build();
+        return ItemStackWrapper.newItem(COLOR_MATERIALS[i])
+                               .setDisplayName("&d" + COLOR_NAMES[i] + ": &b" + COLOR_HEX_VALUES[i])
+                               .toItemStack();
 //</editor-fold>
     }
 }

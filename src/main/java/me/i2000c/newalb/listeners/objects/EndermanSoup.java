@@ -1,17 +1,19 @@
 package me.i2000c.newalb.listeners.objects;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.particles.Particles;
-import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils.particles.Particles;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 
 public class EndermanSoup extends SpecialItem{
     
@@ -24,7 +26,7 @@ public class EndermanSoup extends SpecialItem{
             
             Player p = e.getPlayer();
             Vector v = p.getEyeLocation().getDirection();
-            double multiplier = ConfigManager.getConfig().getDouble("Objects.EndermanSoup.speedMultiplier");
+            double multiplier = ConfigManager.getMainConfig().getDouble("Objects.EndermanSoup.speedMultiplier");
             p.setFallDistance(0.0f);
             p.setVelocity(v.multiply(multiplier));
             Location l = p.getLocation();
@@ -36,7 +38,7 @@ public class EndermanSoup extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.RABBIT_STEW)
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.RABBIT_STEW)
+                               .toItemStack();
     }
 }

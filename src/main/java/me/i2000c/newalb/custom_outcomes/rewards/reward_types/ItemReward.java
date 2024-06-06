@@ -1,33 +1,28 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+
+import lombok.Getter;
+import lombok.Setter;
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.InvalidTextureException;
-import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.URLTextureException;
-import me.i2000c.newalb.utils2.CustomColor;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
+@Getter
+@Setter
 public class ItemReward extends Reward{
     public static final int SURVIVAL_INV_SIZE = 36;    
     
@@ -59,38 +54,10 @@ public class ItemReward extends Reward{
         offset = new Offset();
     }
     
-    public ItemStack getItem(){
-        return this.item;
-    }
-    public void setItem(ItemStack sk){
-        this.item = sk;
-    }
-    
-    public ItemSpawnMode getSpawnMode(){
-        return this.spawnMode;
-    }
-    public void setSpawnMode(ItemSpawnMode spawnMode){
-        this.spawnMode = spawnMode;
-    }
-    
-    public int getSpawnInvSlot(){
-        return this.spawnInvSlot;
-    }
-    public void setSpawnInvSlot(int spawnInvSlot){
-        this.spawnInvSlot = spawnInvSlot;
-    }
-    
-    public Offset getOffset(){
-        return this.offset;
-    }
-    public void setOffset(Offset offset){
-        this.offset = offset;
-    }
-    
     @Override
     public ItemStack getItemToDisplay(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        ItemBuilder builder = ItemBuilder.fromItem(item);
+        ItemStackWrapper builder = ItemStackWrapper.fromItem(item);
         
         builder.addLoreLine("");
         builder.addLoreLine("&bSpawn mode: &a" + spawnMode.name());
@@ -100,183 +67,27 @@ public class ItemReward extends Reward{
         builder.addLoreLine("   &5Y: &3" + offset.getOffsetY());
         builder.addLoreLine("   &5Z: &3" + offset.getOffsetZ());
         
-        return builder.build();
+        return builder.toItemStack();
 //</editor-fold>
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
+    public void loadRewardFromConfig(Config config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String spawnModeString = config.getString(path + ".spawnMode");
-        spawnMode = spawnModeString != null ? 
-                ItemSpawnMode.valueOf(spawnModeString) : 
-                ItemSpawnMode.DEFAULT;
+        item = config.getItemStackWrapper(path).toItemStack();
+        spawnMode = config.getEnum(path + ".spawnMode", ItemSpawnMode.class, ItemSpawnMode.DEFAULT);
         spawnInvSlot = config.getInt(path + ".spawnInvSlot", 0);
         offset = new Offset(config, path + ".offset");
-        
-        ItemBuilder builder = ItemBuilder.newItem(config.getString(path + ".material"));
-        
-        int amount = config.getInt(path + ".amount", 1);
-        short durability = (short) config.getInt(path + ".durability", 0);
-        
-        builder.withAmount(amount);
-        builder.withDurability(durability);
-        
-        if(config.contains(path + ".name")){
-            String displayName = config.getString(path + ".name");
-            builder.withDisplayName(displayName);
-        }
-        if(config.contains(path + ".lore")){
-            List<String> lore = config.getStringList(path + ".lore");
-            builder.withLore(lore);
-        }
-        if(config.contains(path + ".enchantments")){
-            List<String> enchantments = config.getStringList(path + ".enchantments");
-            builder.withEnchantments(enchantments);
-        }
-        if(config.contains(path + ".bookEnchantments")){
-            List<String> enchantments = config.getStringList(path + ".bookEnchantments");
-            builder.withBookEnchantments(enchantments);
-        }
-        
-        //Load armor color
-        switch(builder.getXMaterial()){
-            case LEATHER_HELMET:
-            case LEATHER_CHESTPLATE:
-            case LEATHER_LEGGINGS:
-            case LEATHER_BOOTS:
-                if(config.contains(path + ".armorColor")){
-                    String hexColor = config.getString(path + ".armorColor");
-                    CustomColor color = new CustomColor(hexColor);
-                    builder.withColor(color.getBukkitColor());
-                }
-                break;
-        }
-        
-        //Load potion meta
-        PotionSplashType type = PotionSplashType.getFromPotion(builder.build());
-        if(type != null){
-            if(config.contains(path + ".potionSplashType")){
-                type = PotionSplashType.valueOf(config.getString(path + ".potionSplashType"));
-                type.setToPotion(builder.build());
-            }
-            if(config.contains(path + ".potionEffects")){
-                List<String> potionEffects = config.getStringList(path + ".potionEffects");
-                potionEffects.forEach(string -> {
-                    String[] splitted = string.split(";");
-                    String name = splitted[0];
-                    int duration = Integer.parseInt(splitted[1]) * 20;
-                    int amplifier = Integer.parseInt(splitted[2]);
-                    
-                    if(duration < 0){
-                        duration = Integer.MAX_VALUE;
-                    }
-                    if(amplifier < 0){
-                        amplifier = 0;
-                    }
-                    
-                    builder.addPotionEffect(new PotionEffect(PotionEffectType.getByName(name), duration, amplifier));
-                });
-            }
-            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
-                if(config.contains(path + ".potionColor")){
-                    String hexColor = config.getString(path + ".potionColor");
-                    CustomColor color = new CustomColor(hexColor);
-                    builder.withColor(color.getBukkitColor());
-                }
-            }
-        }
-        
-        //Load texture ID
-        if(config.contains(path + ".textureID")){
-            String textureID = config.getString(path + ".textureID");
-            try{
-                Texture texture = new Texture(textureID);
-                builder.withTexture(texture);
-            }catch(InvalidTextureException ex){
-                Logger.err("ItemReward at \"" + path + "\" contains an invalid HeadTexture");
-            }catch(URLTextureException ex){
-                Logger.err("An error occurred while loading texture for ItemReward at \"" + path + "\":");
-                Logger.err(ex);
-            }catch(TextureException ex){}
-        }
-        
-        this.item = builder.build();
 //</editor-fold>
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        ItemBuilder builder = ItemBuilder.fromItem(item, false);
-        
-        config.set(path + ".material" , builder.toString());
-        
-        config.set(path + ".spawnMode", spawnMode.name());
+        ItemStackWrapper wrapper = ItemStackWrapper.fromItem(item, false);
+        config.set(path, wrapper);
+        config.set(path + ".spawnMode", spawnMode);
         config.set(path + ".spawnInvSlot", spawnInvSlot);
-        
-        config.set(path + ".amount" , builder.getAmount());
-        config.set(path + ".durability" , builder.getDurability());
-        
-        if(builder.hasDisplayName()){
-            config.set(path + ".name", Logger.deColor(builder.getDisplayName()));
-        }
-        if(builder.hasLore()){
-            config.set(path + ".lore", Logger.deColor(builder.getLore()));
-        }
-        if(builder.hasEnchantments()){
-            config.set(path + ".enchantments", builder.getEnchantmentsIntoStringList());
-        }
-        if(builder.hasBookEnchantments()){
-            config.set(path + ".bookEnchantments", builder.getBookEnchantmentsIntoStringList());
-        }
-
-        //Save texture
-        Texture texture = builder.getTexture();
-        if(texture != null){
-            config.set(path + ".textureID", texture.getId());
-        }
-
-        //Save leather armor color
-        switch(this.item.getType()){
-            case LEATHER_HELMET:
-            case LEATHER_CHESTPLATE:
-            case LEATHER_LEGGINGS:
-            case LEATHER_BOOTS:
-                String hexColor = new CustomColor(builder.getColor()).getHexColorString();
-                config.set(path + ".armorColor", hexColor);
-        }
-        
-        //Save potion effects
-        PotionSplashType type = PotionSplashType.getFromPotion(this.item);
-        if(type != null){
-            config.set(path + ".material" , "POTION");
-            config.set(path + ".potionSplashType", type.name());   
-            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
-                if(builder.hasColor()){
-                    String hexColor = new CustomColor(builder.getColor()).getHexColorString();
-                    config.set(path + ".potionColor", hexColor);
-                }
-            }
-            List<String> effectList = new ArrayList<>();
-            builder.getPotionEffects().forEach(potionEffect -> {
-                String name = potionEffect.getType().getName();
-                int duration = potionEffect.getDuration() / 20;
-                int amplifier = potionEffect.getAmplifier();
-
-                if(duration < 0){
-                    duration = 0;
-                }
-                if(amplifier < 0){
-                    amplifier = 0;
-                }
-
-                effectList.add(name + ";" + duration + ";" + amplifier);
-            });
-
-            config.set(path + ".potionEffects", effectList);
-        }
-        
         offset.saveToConfig(config, path + ".offset");
 //</editor-fold>
     }
@@ -285,7 +96,7 @@ public class ItemReward extends Reward{
     public void execute(Player player, Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack stack = null;
-        String displayName = ItemBuilder.fromItem(item, false).getDisplayName();
+        String displayName = ItemStackWrapper.fromItem(item, false).getDisplayName();
         if(displayName != null){
             String name = Logger.stripColor(displayName);
             if(name.charAt(0) == '%' && name.charAt(name.length()-1) == '%'){

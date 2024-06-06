@@ -17,7 +17,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -35,14 +35,14 @@ public class TrapMenu extends Editor<TrapReward>{
         packListAdapter = new GUIPagesAdapter<>(
                 PACK_LIST_MENU_SIZE,
                 (outcome, index) -> {
-                    ItemBuilder builder = ItemBuilder.fromItem(outcome.getItemToDisplay(), false);
+                    ItemStackWrapper builder = ItemStackWrapper.fromItem(outcome.getItemToDisplay(), false);
                     
                     if(item.getTrapOutcome() != null && item.getTrapOutcome().equals(outcome)){
                         builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
                         builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     }
                     
-                    return builder.build();
+                    return builder.toItemStack();
                 }
         );
         packListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
@@ -83,31 +83,30 @@ public class TrapMenu extends Editor<TrapReward>{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.PURPLE);
         
-        ItemStack trapMaterialItem = ItemBuilder
-                .newItem(item.getTrapMaterial())
-                .withDisplayName("&2Selected pressure plate material: &a" + item.getTrapMaterial().name())
-                .addLoreLine("&3Click to change")
-                .build();
+        ItemStack trapMaterialItem = ItemStackWrapper.newItem(item.getTrapMaterial())
+                                                     .setDisplayName("&2Selected pressure plate material: &a" + item.getTrapMaterial().name())
+                                                     .addLoreLine("&3Click to change")
+                                                     .toItemStack();
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.NAME_TAG);        
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.NAME_TAG);        
         if(item.getTrapName() == null){
-            builder.withDisplayName("&2Trap name: &cnull");
+            builder.setDisplayName("&2Trap name: &cnull");
         }else{
-            builder.withDisplayName("&2Trap name: &r" + item.getTrapName());
+            builder.setDisplayName("&2Trap name: &r" + item.getTrapName());
         }        
         builder.addLoreLine("&3Click to change");
-        ItemStack trapNameItem = builder.build();
+        ItemStack trapNameItem = builder.toItemStack();
         
         Outcome outcome = item.getTrapOutcome();
         if(outcome == null){
-            builder = ItemBuilder.newItem(XMaterial.CHEST);
-            builder.withDisplayName("&2Selected trap outcome: &cnull");
+            builder = ItemStackWrapper.newItem(XMaterial.CHEST);
+            builder.setDisplayName("&2Selected trap outcome: &cnull");
         }else{
-            builder = ItemBuilder.newItem(XMaterial.matchXMaterial(outcome.getIcon()));
-            builder.withDisplayName("&2Selected trap outcome: &a" + item.getTrapOutcome());
+            builder = ItemStackWrapper.newItem(XMaterial.matchXMaterial(outcome.getIcon()));
+            builder.setDisplayName("&2Selected trap outcome: &a" + item.getTrapOutcome());
         }
         builder.addLoreLine("&3Click to select");
-        ItemStack trapOutcomeItem = builder.build();
+        ItemStack trapOutcomeItem = builder.toItemStack();
         
         for(int i=0;i<=9;i++){
             menu.setItem(i, glass);
@@ -175,12 +174,12 @@ public class TrapMenu extends Editor<TrapReward>{
         
         for(int i=0;i<TrapReward.getPressurePlateMaterials().size();i++){
             XMaterial xmaterial = TrapReward.getPressurePlateMaterials().get(i);
-            ItemBuilder builder = ItemBuilder.newItem(xmaterial);
+            ItemStackWrapper builder = ItemStackWrapper.newItem(xmaterial);
             if(xmaterial == item.getTrapMaterial()){                
                 builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
                 builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            menu.setItem(i+2, builder.build());
+            menu.setItem(i+2, builder.toItemStack());
         }
         
         menu.openToPlayer(player);
@@ -198,7 +197,7 @@ public class TrapMenu extends Editor<TrapReward>{
                 openTrapMenu(player);
             }else if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 //Open trap inventory
-                item.setTrapMaterial(ItemBuilder.fromItem(e.getCurrentItem(), false).getXMaterial());
+                item.setTrapMaterial(XMaterial.matchXMaterial(e.getCurrentItem()));
                 openTrapMenu(player);
             }
         }
@@ -218,12 +217,12 @@ public class TrapMenu extends Editor<TrapReward>{
                 break;
             }
             
-            ItemBuilder builder = ItemBuilder.fromItem(pack.getItemToDisplay(), false);
+            ItemStackWrapper builder = ItemStackWrapper.fromItem(pack.getItemToDisplay(), false);
             if(item.getTrapOutcome() != null && item.getTrapOutcome().getPack().equals(pack)){
                 builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
                 builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            menu.setItem(++i, builder.build());
+            menu.setItem(++i, builder.toItemStack());
         }
         
         menu.openToPlayer(player);
@@ -241,7 +240,7 @@ public class TrapMenu extends Editor<TrapReward>{
                 openTrapMenu(player);
             }else if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                 //Open select outcome menu
-                String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
                         .getDisplayName();
                 String packName = Logger.stripColor(displayName);
                 auxPack = PackManager.getPack(packName);
@@ -298,7 +297,7 @@ public class TrapMenu extends Editor<TrapReward>{
             default:
                 if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
                     //Open trap menu
-                    String displayName = ItemBuilder.fromItem(e.getCurrentItem(), false)
+                    String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
                             .getDisplayName();
                     String itemName = Logger.stripColor(displayName);
                     int outcomeID = Integer.parseInt(itemName.split(" ")[1]);

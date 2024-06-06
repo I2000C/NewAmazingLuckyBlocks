@@ -1,5 +1,10 @@
 package me.i2000c.newalb.listeners.interact;
 
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.utils.WorldManager;
+import me.i2000c.newalb.utils2.MetadataManager;
+import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -18,12 +23,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.utils.WorldConfig;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
 
 public class SpecialEventListener implements Listener{
     
@@ -44,7 +43,7 @@ public class SpecialEventListener implements Listener{
                 return;
             }
             
-            if(!WorldConfig.isEnabled(player.getWorld().getName())){
+            if(!WorldManager.isEnabled(player.getWorld().getName())){
                 return;
             }
             
@@ -84,7 +83,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Item item = e.getItem();
         
-        if(!WorldConfig.isEnabled(item.getWorld().getName())) {
+        if(!WorldManager.isEnabled(item.getWorld().getName())) {
             return;
         }
         
@@ -100,7 +99,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity damager = e.getDamager();
         
-        if(!WorldConfig.isEnabled(damager.getWorld().getName())) {
+        if(!WorldManager.isEnabled(damager.getWorld().getName())) {
             return;
         }
 
@@ -124,7 +123,7 @@ public class SpecialEventListener implements Listener{
         if(projectile instanceof Arrow){
             Arrow arrow = (Arrow) projectile;
             
-            if(!WorldConfig.isEnabled(arrow.getWorld().getName())) {
+            if(!WorldManager.isEnabled(arrow.getWorld().getName())) {
                 return;
             }
             
@@ -154,7 +153,7 @@ public class SpecialEventListener implements Listener{
         
         Player player = (Player) e.getEntity();
         
-        if(!WorldConfig.isEnabled(player.getWorld().getName())){
+        if(!WorldManager.isEnabled(player.getWorld().getName())){
             return;
         }
         
@@ -186,7 +185,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getRightClicked();
         
-        if(!WorldConfig.isEnabled(entity.getWorld().getName())) {
+        if(!WorldManager.isEnabled(entity.getWorld().getName())) {
             return;
         }
         
@@ -202,7 +201,7 @@ public class SpecialEventListener implements Listener{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getEntity();
         
-        if(!WorldConfig.isEnabled(entity.getWorld().getName())) {
+        if(!WorldManager.isEnabled(entity.getWorld().getName())) {
             return;
         }
         

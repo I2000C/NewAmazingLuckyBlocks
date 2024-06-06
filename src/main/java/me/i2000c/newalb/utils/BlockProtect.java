@@ -1,10 +1,11 @@
 package me.i2000c.newalb.utils;
 
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -23,7 +24,7 @@ public class BlockProtect implements Listener{
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void noSkullCrash(BlockFromToEvent event){
-        if(!WorldConfig.isEnabled(event.getToBlock().getWorld().getName())) {
+        if(!WorldManager.isEnabled(event.getToBlock().getWorld().getName())) {
             return;
         }
         
@@ -33,20 +34,20 @@ public class BlockProtect implements Listener{
         }
         
         event.setCancelled(true);
-        if(!ConfigManager.getConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {
+        if(!ConfigManager.getMainConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {
             event.getToBlock().setType(Material.AIR);
             Location loc = event.getToBlock().getLocation();
-            loc.getWorld().dropItemNaturally(loc, type.getItem());
+            type.getItem().dropAtLocation(loc);
         }
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void noSkullCrash2(EntityExplodeEvent event){
-        if(!WorldConfig.isEnabled(event.getLocation().getWorld().getName())) {
+        if(!WorldManager.isEnabled(event.getLocation().getWorld().getName())) {
             return;
         }
         
-        if(ConfigManager.getConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {
+        if(ConfigManager.getMainConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {
             event.blockList().removeIf(block -> TypeManager.getType(block) != null);
         } else {
             event.blockList().removeIf(block -> {
@@ -54,7 +55,7 @@ public class BlockProtect implements Listener{
                 if(type != null) {
                     block.setType(Material.AIR);
                     Location loc = block.getLocation();
-                    loc.getWorld().dropItemNaturally(loc, type.getItem());
+                    type.getItem().dropAtLocation(loc);
                     return true;
                 } else {
                     return false;
@@ -65,11 +66,11 @@ public class BlockProtect implements Listener{
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void noSkullCrash3(BlockExplodeEvent event){
-        if(!WorldConfig.isEnabled(event.getBlock().getLocation().getWorld().getName())) {
+        if(!WorldManager.isEnabled(event.getBlock().getLocation().getWorld().getName())) {
             return;
         }
         
-        if(ConfigManager.getConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {
+        if(ConfigManager.getMainConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {
             event.blockList().removeIf(block -> TypeManager.getType(block) != null);
         } else {
             event.blockList().removeIf(block -> {
@@ -77,7 +78,7 @@ public class BlockProtect implements Listener{
                 if(type != null) {
                     block.setType(Material.AIR);
                     Location loc = block.getLocation();
-                    loc.getWorld().dropItemNaturally(loc, type.getItem());
+                    type.getItem().dropAtLocation(loc);
                     return true;
                 } else {
                     return false;
@@ -116,10 +117,10 @@ public class BlockProtect implements Listener{
         
         SpecialItem specialItem = SpecialItems.getByItemStack(sk0);
         if(specialItem == SpecialItems.auto_bow || specialItem == SpecialItems.multi_bow){            
-            String displayName = ItemBuilder.fromItem(sk0, false)
-                    .getDisplayName();            
-            ItemBuilder.fromItem(sk2, false)
-                    .withDisplayName(displayName);
+            String displayName = ItemStackWrapper.fromItem(sk0, false)
+                                                 .getDisplayName();
+            ItemStackWrapper.fromItem(sk2, false)
+                            .setDisplayName(displayName);
             event.getView().setItem(2, sk2);
         }
     }
@@ -150,8 +151,8 @@ public class BlockProtect implements Listener{
         }
         
         if(sk1.getType() == Material.ENCHANTED_BOOK) {
-            ItemBuilder builder = ItemBuilder.fromItem(sk2, false);
-            ItemBuilder.fromItem(sk1, false).getBookEnchantments()
+            ItemStackWrapper builder = ItemStackWrapper.fromItem(sk2, false);
+            ItemStackWrapper.fromItem(sk1, false).getBookEnchantments()
                     .forEach((enchantment, level) -> builder.addEnchantment(enchantment, level));
         }
     }

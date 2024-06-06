@@ -1,19 +1,22 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
-import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
-import me.i2000c.newalb.custom_outcomes.rewards.Reward;
-import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils2.ExtendedEntityType;
-import me.i2000c.newalb.utils2.ItemBuilder;
+
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.Reward;
+import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
+import me.i2000c.newalb.utils2.ExtendedEntityType;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 
 public class EntityTowerReward extends Reward{
     public static final int PLAYER_ENTITY_ID = -1;
@@ -22,20 +25,20 @@ public class EntityTowerReward extends Reward{
     
     public EntityTowerReward(Outcome outcome){
         super(outcome);
-        this.entityList = new ArrayList();
+        this.entityList = new ArrayList<>();
     }
     
     public List<Integer> getEntityList(){
         return this.entityList;
     }
     public void setEntityList(List<Integer> entityList){
-        this.entityList = new ArrayList(entityList);
+        this.entityList = new ArrayList<>(entityList);
     }
     
     public static ItemStack getPlayerItem(){
-        return ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
-                .withDisplayName("&2Player")
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.PLAYER_HEAD)
+                               .setDisplayName("&2Player")
+                               .toItemStack();
     }
     public static EntityReward getPlayerEntityReward(){
         EntityReward playerEntityReward = new EntityReward(null){
@@ -44,7 +47,7 @@ public class EntityTowerReward extends Reward{
                 return getPlayerItem();
             }
         };
-        playerEntityReward.setID(PLAYER_ENTITY_ID);
+        playerEntityReward.setEntityID(PLAYER_ENTITY_ID);
         playerEntityReward.setType(new ExtendedEntityType(EntityType.PLAYER));
         
         return playerEntityReward;
@@ -52,8 +55,8 @@ public class EntityTowerReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.ARMOR_STAND);
-        builder.withDisplayName("&eEntityTower");
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.ARMOR_STAND);
+        builder.setDisplayName("&eEntityTower");
         
         StringBuilder stringBuilder = new StringBuilder();
         if(!entityList.isEmpty()){        
@@ -71,11 +74,11 @@ public class EntityTowerReward extends Reward{
         
         builder.addLoreLine("&3Entities: &r" + stringBuilder.toString());
         
-        return builder.build();
+        return builder.toItemStack();
     }
 
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         StringBuilder stringBuilder = new StringBuilder();
         this.entityList.forEach(entityID -> {
             stringBuilder.append(entityID).append(",");
@@ -88,8 +91,8 @@ public class EntityTowerReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
-        this.entityList = new ArrayList();
+    public void loadRewardFromConfig(Config config, String path){
+        this.entityList = new ArrayList<>();
         
         String[] data = config.getString(path).split(",");
         for(String id : data){

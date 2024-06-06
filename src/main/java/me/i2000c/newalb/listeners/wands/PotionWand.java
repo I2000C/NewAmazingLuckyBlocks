@@ -1,13 +1,7 @@
 package me.i2000c.newalb.listeners.wands;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.List;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.RandomUtils;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownPotion;
@@ -18,6 +12,15 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.RandomUtils;
 
 public class PotionWand extends SpecialItem{
     
@@ -54,7 +57,7 @@ public class PotionWand extends SpecialItem{
   
     private static void addRandomEffects(PotionMeta pm){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        List<String> effects = ConfigManager.getConfig().getStringList("Wands.PotionWand.effects");
+        List<String> effects = ConfigManager.getMainConfig().getStringList("Wands.PotionWand.effects");
         int weightSum = 0;
         int r;
         for(int i=0;i<effects.size();i++){
@@ -94,8 +97,8 @@ public class PotionWand extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.MUSIC_DISC_11)
-                .withLore(super.getLoreOfWand())
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.MUSIC_DISC_11)
+                               .setLore(super.getLoreOfWand())
+                               .toItemStack();
     }
 }

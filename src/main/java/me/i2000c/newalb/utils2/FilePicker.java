@@ -30,23 +30,23 @@ public class FilePicker extends Editor<File>{
                 MENU_SIZE,
                 (file, index) -> {
                     XMaterial material = extensionToMaterial(file);
-                    ItemBuilder builder = ItemBuilder.newItem(material);
+                    ItemStackWrapper wrapper = ItemStackWrapper.newItem(material);
                     if(file.getName().equals("..")){
-                        builder.withDisplayName("&6Name: &b..");
+                        wrapper.setDisplayName("&6Name: &b..");
                     }else if(file.isDirectory()){
-                        builder.withDisplayName("&6Name: &b" + file.getName());
-                        builder.addLoreLine("&6id: &b" + index);
+                        wrapper.setDisplayName("&6Name: &b" + file.getName());
+                        wrapper.addLoreLine("&6id: &b" + index);
                         if(file.list() == null){
-                            builder.addLoreLine("&6Directory elements: &b?");
+                            wrapper.addLoreLine("&6Directory elements: &b?");
                         }else{
-                            builder.addLoreLine("&6Directory elements: &b" + file.list().length);
+                            wrapper.addLoreLine("&6Directory elements: &b" + file.list().length);
                         }
                     }else{
-                        builder.withDisplayName("&6Name: &b" + file.getName());
-                        builder.addLoreLine("&6id: &b" + index);
-                        builder.addLoreLine("&6File size: " + getFormatedSize(file.length()));
+                        wrapper.setDisplayName("&6Name: &b" + file.getName());
+                        wrapper.addLoreLine("&6id: &b" + index);
+                        wrapper.addLoreLine("&6File size: " + getFormatedSize(file.length()));
                     }
-                    return builder.build();
+                    return wrapper.toItemStack();
                 }
         );
         fileAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
@@ -142,9 +142,9 @@ public class FilePicker extends Editor<File>{
             
             Menu menu = GUIFactory.newMenu(CustomInventoryType.FILE_PICKER, 54, title);
             
-            ItemStack refresh = ItemBuilder.newItem(XMaterial.WATER_BUCKET)
-                    .withDisplayName("&bRefresh data")
-                    .build();
+            ItemStack refresh = ItemStackWrapper.newItem(XMaterial.WATER_BUCKET)
+                                                .setDisplayName("&bRefresh data")
+                                                .toItemStack();
             
             menu.setItem(45, GUIItem.getBackItem());
             menu.setItem(53, refresh);
@@ -223,7 +223,7 @@ public class FilePicker extends Editor<File>{
                     openFileMenu(player, rootDirectory, currentDirectory);
                     break;
                 default:
-                    String displayName = ItemBuilder.fromItem(e.getCurrentItem())
+                    String displayName = ItemStackWrapper.fromItem(e.getCurrentItem())
                             .getDisplayName();
                     String itemName = Logger.stripColor(displayName);
                     String path = itemName.split(":")[1].trim();

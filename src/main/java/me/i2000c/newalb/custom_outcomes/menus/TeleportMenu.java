@@ -16,7 +16,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -52,30 +52,30 @@ public class TeleportMenu extends Editor<TeleportReward>{
             menu.setItem(i, glass);
         }
         
-        ItemBuilder builder;
+        ItemStackWrapper builder;
         switch(item.getTeleportSource()){
             case RELATIVE_TO_PLAYER:
-                builder = ItemBuilder.newItem(XMaterial.PLAYER_HEAD);
+                builder = ItemStackWrapper.newItem(XMaterial.PLAYER_HEAD);
                 break;
             case RELATIVE_TO_LUCKY_BLOCK:
-                builder = ItemBuilder.fromItem(TypeManager.getMenuItemStack(), false);
+                builder = ItemStackWrapper.fromItem(TypeManager.getMenuItemStack(), false);
                 break;
             default:
-                builder = ItemBuilder.newItem(XMaterial.GRASS_BLOCK);
+                builder = ItemStackWrapper.newItem(XMaterial.GRASS_BLOCK);
         }
-        builder.withDisplayName("&bTeleport source: &a" + item.getTeleportSource().name());
+        builder.setDisplayName("&bTeleport source: &a" + item.getTeleportSource().name());
         builder.addLoreLine("&3Click to change");
-        ItemStack teleportSourceStack = builder.build();
+        ItemStack teleportSourceStack = builder.toItemStack();
         
-        ItemStack worldNameStack = ItemBuilder.newItem(XMaterial.OAK_SIGN)
-                .withDisplayName("&bSelected world: &a" + item.getWorldName())
-                .addLoreLine("&3Click to change")
-                .addLoreLine("")
-                .addLoreLine("&6This world is only used")
-                .addLoreLine("&6  if teleport source is &b&lABSOLUTE&6.")
-                .addLoreLine("&6You can use &a%world% &6to select")
-                .addLoreLine("&6  the world of the player")
-                .build();
+        ItemStack worldNameStack = ItemStackWrapper.newItem(XMaterial.OAK_SIGN)
+                                                   .setDisplayName("&bSelected world: &a" + item.getWorldName())
+                                                   .addLoreLine("&3Click to change")
+                                                   .addLoreLine("")
+                                                   .addLoreLine("&6This world is only used")
+                                                   .addLoreLine("&6  if teleport source is &b&lABSOLUTE&6.")
+                                                   .addLoreLine("&6You can use &a%world% &6to select")
+                                                   .addLoreLine("&6  the world of the player")
+                                                   .toItemStack();
         
         menu.setItem(12, teleportSourceStack);
         menu.setItem(13, worldNameStack);

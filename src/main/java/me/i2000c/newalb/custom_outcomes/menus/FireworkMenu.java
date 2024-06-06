@@ -13,7 +13,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.CustomColor;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.FireworkEffect;
 import org.bukkit.entity.Player;
@@ -57,67 +57,67 @@ public class FireworkMenu extends Editor<FireworkReward>{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Menu menu = GUIFactory.newMenu(CustomInventoryType.FIREWORK_MENU, 27, "&b&lFirework Reward");
         
-        ItemStack amount = ItemBuilder.newItem(XMaterial.FIREWORK_ROCKET)
-                .withAmount(item.getAmount())
-                .withDisplayName("&3Amount")
-                .build();
+        ItemStack amount = ItemStackWrapper.newItem(XMaterial.FIREWORK_ROCKET)
+                                           .setAmount(item.getAmount())
+                                           .setDisplayName("&3Amount")
+                                           .toItemStack();
         
-        ItemStack power = ItemBuilder.newItem(XMaterial.BLAZE_POWDER)
-                .withAmount(item.getPower())
-                .withDisplayName("&6Power")
-                .build();
+        ItemStack power = ItemStackWrapper.newItem(XMaterial.BLAZE_POWDER)
+                                          .setAmount(item.getPower())
+                                          .setDisplayName("&6Power")
+                                          .toItemStack();
         
         ItemStack withTrail = GUIItem.getBooleanItem(
-                item.withTrail(), 
+                item.isWithTrail(), 
                 "&5Trail", 
                 XMaterial.BLAZE_ROD, 
                 XMaterial.BLAZE_ROD);
         
         ItemStack withFlicker = GUIItem.getBooleanItem(
-                item.withFlicker(), 
+                item.isWithFlicker(), 
                 "&5Flicker", 
                 XMaterial.TNT, 
                 XMaterial.TNT);
         
         ItemStack offsetStack = item.getOffset().getItemToDisplay();
         
-        ItemStack fireworkType = ItemBuilder.newItem(TYPE_MATERIALS[selectedType])
-                .withDisplayName("&aFirework type: &b" + FIREWORK_EFFECTS[selectedType])
-                .build();
+        ItemStack fireworkType = ItemStackWrapper.newItem(TYPE_MATERIALS[selectedType])
+                                                 .setDisplayName("&aFirework type: &b" + FIREWORK_EFFECTS[selectedType])
+                                                 .toItemStack();
         
         //Main color list ItemStacks
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.LIME_BANNER);
-        builder.withDisplayName("&aMain color list");
-        if(!item.getHEXMainColors().isEmpty()){
-            builder.withLore(item.getHEXMainColors());
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(XMaterial.LIME_BANNER);
+        wrapper.setDisplayName("&aMain color list");
+        if(!item.getColorsHEX().isEmpty()){
+            wrapper.setLore(item.getColorsHEX());
         }
-        ItemStack mainColorBanner = builder.build();
+        ItemStack mainColorBanner = wrapper.toItemStack();
         
-        ItemStack addMainColor = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
-                .withDisplayName("&aAdd main color")
-                .build();
+        ItemStack addMainColor = ItemStackWrapper.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+                                                 .setDisplayName("&aAdd main color")
+                                                 .toItemStack();
         
-        ItemStack resetMainColors = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReset main color list")
-                .build();   
+        ItemStack resetMainColors = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                    .setDisplayName("&cReset main color list")
+                                                    .toItemStack();   
         
         //Fade color list ItemStacks
         
-        builder = ItemBuilder.newItem(XMaterial.RED_BANNER);
-        builder.withDisplayName("&cFade color list");
-        if(!item.getHEXFadeColors().isEmpty()){
-            builder.withLore(item.getHEXFadeColors());
+        wrapper = ItemStackWrapper.newItem(XMaterial.RED_BANNER);
+        wrapper.setDisplayName("&cFade color list");
+        if(!item.getFadeColorsHEX().isEmpty()){
+            wrapper.setLore(item.getFadeColorsHEX());
         }
-        ItemStack fadeColorBanner = builder.build();
+        ItemStack fadeColorBanner = wrapper.toItemStack();
         
-        ItemStack addFadeColor = ItemBuilder.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
-                .withDisplayName("&aAdd fade color (optional)")
-                .build();
+        ItemStack addFadeColor = ItemStackWrapper.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+                                                 .setDisplayName("&aAdd fade color (optional)")
+                                                 .toItemStack();
         
-        ItemStack resetFadeColors = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReset fade color list")
-                .build();    
+        ItemStack resetFadeColors = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                    .setDisplayName("&cReset fade color list")
+                                                    .toItemStack();    
         
         menu.setItem(1, GUIItem.getPlusLessItem(+1));
         menu.setItem(2, GUIItem.getPlusLessItem(+1));
@@ -159,7 +159,7 @@ public class FireworkMenu extends Editor<FireworkReward>{
                     break;
                 case 17:
                     // Go to next menu
-                    if(!item.getHEXMainColors().isEmpty()){
+                    if(!item.getColorsHEX().isEmpty()){
                         onNext.accept(player, item);
                     }
                     break;
@@ -196,11 +196,11 @@ public class FireworkMenu extends Editor<FireworkReward>{
                     openFireworkMenu(player);
                     break;
                 case 12:
-                    item.setWithTrail(!item.withTrail());
+                    item.setWithTrail(!item.isWithTrail());
                     openFireworkMenu(player);
                     break;
                 case 13:
-                    item.setWithFlicker(!item.withFlicker());
+                    item.setWithFlicker(!item.isWithFlicker());
                     openFireworkMenu(player);
                     break;
                 case 4:
@@ -230,7 +230,7 @@ public class FireworkMenu extends Editor<FireworkReward>{
                             player, 
                             p -> openFireworkMenu(p), 
                             (p, color) -> {
-                                item.getHEXMainColors().add(color.getHexColorString());
+                                item.getColorsHEX().add(color.getHexColorString());
                                 openFireworkMenu(p);
                             });
                     break;
@@ -241,18 +241,18 @@ public class FireworkMenu extends Editor<FireworkReward>{
                             player, 
                             p -> openFireworkMenu(p), 
                             (p, color) -> {
-                                item.getHEXFadeColors().add(color.getHexColorString());
+                                item.getFadeColorsHEX().add(color.getHexColorString());
                                 openFireworkMenu(p);
                             });
                     break;
                 case 24:
                     //Reset colorList
-                    item.getHEXMainColors().clear();
+                    item.getColorsHEX().clear();
                     openFireworkMenu(player);
                     break;
                 case 25:
                     //Reset fadeList
-                    item.getHEXFadeColors().clear();
+                    item.getFadeColorsHEX().clear();
                     openFireworkMenu(player);
                     break;
             }

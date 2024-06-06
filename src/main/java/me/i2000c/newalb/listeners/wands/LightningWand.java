@@ -2,7 +2,7 @@ package me.i2000c.newalb.listeners.wands;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -33,8 +33,8 @@ public class LightningWand extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.MUSIC_DISC_FAR)
-                .withLore(super.getLoreOfWand())
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.MUSIC_DISC_FAR)
+                               .setLore(super.getLoreOfWand())
+                               .toItemStack();
     }
 }

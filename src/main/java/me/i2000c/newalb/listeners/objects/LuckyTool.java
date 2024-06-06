@@ -1,19 +1,20 @@
 package me.i2000c.newalb.listeners.objects;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
-import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.LangConfig;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
+import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 
 public class LuckyTool extends SpecialItem{
     
@@ -30,15 +31,15 @@ public class LuckyTool extends SpecialItem{
                     return;
                 case TypeManager.RESULT_NO_GLOBAL_PERMISSION:
                 case TypeManager.RESULT_NO_LOCAL_PERMISSION:
-                    Logger.sendMessage(LangConfig.getMessage("NoPermission"), player);
+                    Logger.sendMessage(ConfigManager.getLangMessage("NoPermission"), player);
                     return;
                 default:
                     e.setCancelled(true);
                     type = result.resultType;
             }
             
-            if(!ConfigManager.getConfig().getBoolean("Objects.LuckyTool.enable")){
-                Logger.sendMessage(LangConfig.getMessage("Objects.LuckyTool.disabled"), player);
+            if(!ConfigManager.getMainConfig().getBoolean("Objects.LuckyTool.enable")){
+                Logger.sendMessage(ConfigManager.getLangMessage("Objects.LuckyTool.disabled"), player);
                 return;
             }
             
@@ -56,8 +57,8 @@ public class LuckyTool extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.STICK)
-                .withLore(LangConfig.getMessageList("Objects.LuckyTool.lore"))
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.STICK)
+                               .setLore(ConfigManager.getLangConfig().getStringList("Objects.LuckyTool.lore"))
+                               .toItemStack();
     }
 }

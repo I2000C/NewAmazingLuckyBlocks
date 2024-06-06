@@ -9,13 +9,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import me.i2000c.newalb.config.ConfigManager;
+
 
 public class Updater implements Listener{
     private static String latestversion;
     private static Boolean update;
     
     public static void checkUpdates(String name, String version){
-        if(ConfigManager.getConfig().getBoolean("Update-checker")){
+        if(ConfigManager.getMainConfig().getBoolean("Update-checker")){
             Logger.log("&6Checking latest version...");
             try{
                 HttpURLConnection con = (HttpURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=62644").openConnection();
@@ -50,7 +52,7 @@ public class Updater implements Listener{
         }
         
         Player player = event.getPlayer();
-        if(update && player.hasPermission(ConfigManager.getConfig().getString("Commands.Update-message-permission"))){
+        if(update && player.hasPermission(ConfigManager.getMainConfig().getString("Commands.Update-message-permission"))){
             
             Logger.sendMessage("&a========================================", player);
             Logger.sendMessage("&6New Amazing Lucky Blocks", player);

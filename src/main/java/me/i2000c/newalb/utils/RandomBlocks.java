@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.WorldGuardManager;
@@ -77,17 +78,17 @@ public class RandomBlocks {
             targetLocation = player.getLocation();
         }
         
-        if(!WorldConfig.isEnabled(targetLocation.getWorld().getName())){
+        if(!WorldManager.isEnabled(targetLocation.getWorld().getName())){
             return;
         }
         
         RandomBlocks.blocks_placed = 0;
         
         int size;
-        if(ConfigManager.getConfig().getInt("RandomBlocks-PacketSize") < 1){
+        if(ConfigManager.getMainConfig().getInt("RandomBlocks-PacketSize") < 1){
            size = 1;
         }else{
-            size = ConfigManager.getConfig().getInt("RandomBlocks-PacketSize");
+            size = ConfigManager.getMainConfig().getInt("RandomBlocks-PacketSize");
         }
         
         int packets = blocks / size;
@@ -110,7 +111,7 @@ public class RandomBlocks {
                 @Override
                 public void run(){
 
-                    if(ConfigManager.getConfig().getBoolean("Enable-randomBlocks-percentaje")){
+                    if(ConfigManager.getMainConfig().getBoolean("Enable-randomBlocks-percentaje")){
                         try{
                             String percentaje = getProgressBar((totalBlocks-restBlocks), totalBlocks, 40, '|', ChatColor.GREEN, ChatColor.GRAY);
 
@@ -160,7 +161,7 @@ public class RandomBlocks {
                 @Override
                 public void run(){
 
-                    if(ConfigManager.getConfig().getBoolean("Enable-randomBlocks-percentaje")){
+                    if(ConfigManager.getMainConfig().getBoolean("Enable-randomBlocks-percentaje")){
                         try{
                             String percentaje = getProgressBar((totalBlocks-restBlocks), totalBlocks, 40, '|', ChatColor.GREEN, ChatColor.GRAY);
 
@@ -300,7 +301,7 @@ public class RandomBlocks {
     }
     
     private void placeBlock(Block block){
-        if(!WorldConfig.isEnabled(block.getWorld().getName())) {
+        if(!WorldManager.isEnabled(block.getWorld().getName())) {
             return;
         }
         
@@ -308,7 +309,7 @@ public class RandomBlocks {
             return;
         }
         
-        TypeManager.getRandomLuckyBlockType().replaceBlock(block);
+        TypeManager.getRandomLuckyBlockType().getItem().placeAt(block);
         blocks_placed++;
         LocationManager.registerLocation(block.getLocation());
     }

@@ -2,11 +2,7 @@ package me.i2000c.newalb.listeners.interact;
 
 import java.util.ArrayList;
 import java.util.List;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.LangConfig;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.PlayerCooldown;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -16,6 +12,11 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.PlayerCooldown;
 
 public abstract class SpecialItem {
     static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";    
@@ -42,7 +43,7 @@ public abstract class SpecialItem {
             itemPathKey = "Objects." + className;
         }
         
-        int cooldownTime = ConfigManager.getConfig().getInt(itemPathKey + ".cooldown-time");
+        int cooldownTime = ConfigManager.getMainConfig().getInt(itemPathKey + ".cooldown-time", -1);
         playerCooldown = new PlayerCooldown(cooldownTime);
     }
     
@@ -63,14 +64,14 @@ public abstract class SpecialItem {
     }
     
     public final void loadItem(){
-        int customModelData = ConfigManager.getConfig().getInt(this.itemPathKey + ".custom-model-data");
-        String displayName = LangConfig.getMessage(this.itemPathKey + ".name");
+        int customModelData = ConfigManager.getMainConfig().getInt(this.itemPathKey + ".custom-model-data");
+        String displayName = ConfigManager.getLangMessage(this.itemPathKey + ".name");
         
-        this.item = ItemBuilder.fromItem(buildItem())
-                        .withDisplayName(displayName)
-                        .setNbtTag(ITEM_TAG, this.id)
-                        .setNbtTag(CUSTOM_MODEL_DATA_TAG, customModelData)
-                        .build();
+        this.item = ItemStackWrapper.fromItem(buildItem())
+                                    .setDisplayName(displayName)
+                                    .setNbtTag(ITEM_TAG, this.id)
+                                    .setNbtTag(CUSTOM_MODEL_DATA_TAG, customModelData)
+                                    .toItemStack();
         this.playerCooldown.clear();
     }
     
@@ -79,11 +80,11 @@ public abstract class SpecialItem {
     }
     
     public final boolean checkPermission(Player player){
-        boolean requiredPermission = ConfigManager.getConfig().getBoolean(itemPathKey + ".required-permission");
-        String permission = ConfigManager.getConfig().getString(itemPathKey + ".permission");
+        boolean requiredPermission = ConfigManager.getMainConfig().getBoolean(itemPathKey + ".required-permission");
+        String permission = ConfigManager.getMainConfig().getString(itemPathKey + ".permission");
         
         if(requiredPermission && !player.hasPermission(permission)){
-            Logger.sendMessage(LangConfig.getMessage("need-permission"), player, false);
+            Logger.sendMessage(ConfigManager.getLangMessage("need-permission"), player, false);
             return false;
         }else{
             return true;
@@ -91,7 +92,7 @@ public abstract class SpecialItem {
     }
     
     protected void sendRemainingSecondsMessage(Player player){
-        String message = LangConfig.getMessage("Cooldown-message");
+        String message = ConfigManager.getLangMessage("Cooldown-message");
         message = message.replace("%time%", String.format("%.2f", playerCooldown.getRemainingSeconds(player)));
         Logger.sendMessage(message, player, false);
     }
@@ -125,8 +126,8 @@ public abstract class SpecialItem {
     }
     protected List<String> getLoreOfWand(){
         List<String> lore = new ArrayList<>();        
-        if(ConfigManager.getConfig().getBoolean(itemPathKey + ".limited-uses.enable")){
-            int uses = ConfigManager.getConfig().getInt(itemPathKey + ".limited-uses.uses");
+        if(ConfigManager.getMainConfig().getBoolean(itemPathKey + ".limited-uses.enable")){
+            int uses = ConfigManager.getMainConfig().getInt(itemPathKey + ".limited-uses.uses");
             lore.add("&5Uses left:");
             lore.add(getChatcolorString(uses) + uses);
         }        
@@ -134,11 +135,11 @@ public abstract class SpecialItem {
     }
     // Decrease uses of wands
     protected boolean decreaseWandUses(ItemStack stack, Player player){
-        ItemBuilder builder = ItemBuilder.fromItem(stack, false);
-        if(ConfigManager.getConfig().getBoolean(itemPathKey + ".limited-uses.enable")){
-            List<String> lore = builder.getLore();
+        ItemStackWrapper wrapper = ItemStackWrapper.fromItem(stack, false);
+        if(ConfigManager.getMainConfig().getBoolean(itemPathKey + ".limited-uses.enable")){
+            List<String> lore = wrapper.getLore();
             if(lore == null){
-                builder.withLore(getLoreOfWand());
+                wrapper.setLore(getLoreOfWand());
                 return true;
             }else{
                 GameMode gamemode = player.getGameMode();
@@ -146,7 +147,7 @@ public abstract class SpecialItem {
                     int usesLeft = Integer.parseInt(Logger.stripColor(lore.get(1))) - 1;
                     if(usesLeft >= 0){
                         lore.set(1, getChatcolorString(usesLeft) + usesLeft);
-                        builder.withLore(lore);
+                        wrapper.setLore(lore);
                         return true;
                     }else{
                         Logger.sendMessage("&cThis wand has expired", player, false);
@@ -157,7 +158,7 @@ public abstract class SpecialItem {
                 }
             }
         }else{
-            builder.withLore();
+            wrapper.setLore();
             return true;
         }
     }

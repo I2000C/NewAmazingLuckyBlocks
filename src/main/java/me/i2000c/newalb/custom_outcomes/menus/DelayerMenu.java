@@ -10,7 +10,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,11 +36,11 @@ public class DelayerMenu extends Editor<Integer>{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.BLUE);
         
-        ItemStack delay = ItemBuilder.newItem(XMaterial.CLOCK)
-                .withDisplayName("&6Delay: &b" + item + " &dtick(s)")
-                .addLoreLine("        &a" + item/20.0 + " &dsecond(s)")
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack delay = ItemStackWrapper.newItem(XMaterial.CLOCK)
+                                          .setDisplayName("&6Delay: &b" + item + " &dtick(s)")
+                                          .addLoreLine("        &a" + item/20.0 + " &dsecond(s)")
+                                          .addLoreLine("&3Click to reset")
+                                          .toItemStack();
         
         for(int i=0;i<=9;i++){
             menu.setItem(i, glass);

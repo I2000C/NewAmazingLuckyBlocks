@@ -20,7 +20,7 @@ import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.Equipment;
 import me.i2000c.newalb.utils2.ExtendedEntityType;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -36,8 +36,8 @@ public class EntityMenu extends Editor<EntityReward>{
                 ENTITY_LIST_MENU_SIZE,
                 (extendedEntityType, index) -> {
                     XMaterial material = extendedEntityType.getMaterial();
-                    ItemBuilder builder = ItemBuilder.newItem(material);
-                    builder.withDisplayName("&3" + extendedEntityType.name());
+                    ItemStackWrapper builder = ItemStackWrapper.newItem(material);
+                    builder.setDisplayName("&3" + extendedEntityType.name());
                     if(extendedEntityType.isAlive()){
                         builder.addLoreLine("&6Is living entity: &atrue");
                     }else{
@@ -58,7 +58,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     }else{
                         builder.addLoreLine("&6Is angryable entity: &7false");
                     }
-                    return builder.build();
+                    return builder.toItemStack();
                 }
         );
         entityListAdapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
@@ -106,11 +106,11 @@ public class EntityMenu extends Editor<EntityReward>{
         }else{
             material = XMaterial.GHAST_SPAWN_EGG;
         }        
-        ItemBuilder builder = ItemBuilder.newItem(material);        
+        ItemStackWrapper builder = ItemStackWrapper.newItem(material);        
         if(entityType == null){
-            builder.withDisplayName("&6Select entity type");
+            builder.setDisplayName("&6Select entity type");
         }else{
-            builder.withDisplayName("&6Entity type: &r" + item.getType());
+            builder.setDisplayName("&6Entity type: &r" + item.getType());
             if(entityType.isAlive()){
                 builder.addLoreLine("&3Is living entity: &atrue");
             }else{
@@ -132,18 +132,18 @@ public class EntityMenu extends Editor<EntityReward>{
                 builder.addLoreLine("&3Is angryable entity: &7false");
             }
         }
-        ItemStack ent_type = builder.build();
+        ItemStack ent_type = builder.toItemStack();
         
-        builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
+        builder = ItemStackWrapper.newItem(XMaterial.NAME_TAG);
         if(item.getCustomName() == null){
-            builder.withDisplayName("&aSelect entity custom name (optional)");
+            builder.setDisplayName("&aSelect entity custom name (optional)");
         }else{
-            builder.withDisplayName("&aEntity custom name: &r" + item.getCustomName());
+            builder.setDisplayName("&aEntity custom name: &r" + item.getCustomName());
         }
         builder.addLoreLine("");
         builder.addLoreLine("&7Use &a%player% &7if you want to use");
         builder.addLoreLine("&7  the player's name in the entity name");
-        ItemStack ent_name = builder.build();
+        ItemStack ent_name = builder.toItemStack();
         
         ItemStack ent_name_visible = GUIItem.getBooleanItem(
                 item.isCustomNameVisible(), 
@@ -151,8 +151,8 @@ public class EntityMenu extends Editor<EntityReward>{
                 XMaterial.CYAN_STAINED_GLASS_PANE, 
                 XMaterial.GLASS_PANE);
         
-        builder = ItemBuilder.newItem(XMaterial.POTION);
-        builder.withDisplayName("&3Select entity effects (optional)");
+        builder = ItemStackWrapper.newItem(XMaterial.POTION);
+        builder.setDisplayName("&3Select entity effects (optional)");
         if(item.getType() == null){
             builder.addLoreLine("&cYou must select an entity first");
         }else if(!item.getType().isAlive()){
@@ -162,10 +162,10 @@ public class EntityMenu extends Editor<EntityReward>{
                 builder.addLoreLine("  &d" + effect);
             }
         }
-        ItemStack ent_effects = builder.build();
+        ItemStack ent_effects = builder.toItemStack();
         
-        builder = ItemBuilder.newItem(XMaterial.DIAMOND_CHESTPLATE);
-        builder.withDisplayName("&eSelect entity equipment (optional)");
+        builder = ItemStackWrapper.newItem(XMaterial.DIAMOND_CHESTPLATE);
+        builder.setDisplayName("&eSelect entity equipment (optional)");
         if(item.getType() == null){
             builder.addLoreLine("&cYou must select an entity first");
         }else if(!item.getType().isAlive()){
@@ -182,7 +182,7 @@ public class EntityMenu extends Editor<EntityReward>{
             if(helmet == null){
                 builder.addLoreLine("    &6Helmet: &cnull");
             }else{
-                ItemBuilder builder2 = ItemBuilder.fromItem(helmet, false);
+                ItemStackWrapper builder2 = ItemStackWrapper.fromItem(helmet, false);
                 String name = builder2.toString();
                 int amount = builder2.getAmount();
                 builder.addLoreLine("    &6Helmet: &d" + name + " x" + amount);
@@ -191,7 +191,7 @@ public class EntityMenu extends Editor<EntityReward>{
             if(chestplate == null){
                 builder.addLoreLine("    &6Chestplate: &cnull");
             }else{
-                ItemBuilder builder2 = ItemBuilder.fromItem(chestplate, false);
+                ItemStackWrapper builder2 = ItemStackWrapper.fromItem(chestplate, false);
                 String name = builder2.toString();
                 int amount = builder2.getAmount();
                 builder.addLoreLine("    &6Chestplate: &d" + name + " x" + amount);
@@ -200,7 +200,7 @@ public class EntityMenu extends Editor<EntityReward>{
             if(leggings == null){
                 builder.addLoreLine("    &6Leggings: &cnull");
             }else{
-                ItemBuilder builder2 = ItemBuilder.fromItem(leggings, false);
+                ItemStackWrapper builder2 = ItemStackWrapper.fromItem(leggings, false);
                 String name = builder2.toString();
                 int amount = builder2.getAmount();
                 builder.addLoreLine("    &6Leggings: &d" + name + " x" + amount);
@@ -209,7 +209,7 @@ public class EntityMenu extends Editor<EntityReward>{
             if(boots == null){
                 builder.addLoreLine("    &6Boots: &cnull");
             }else{
-                ItemBuilder builder2 = ItemBuilder.fromItem(boots, false);
+                ItemStackWrapper builder2 = ItemStackWrapper.fromItem(boots, false);
                 String name = builder2.toString();
                 int amount = builder2.getAmount();
                 builder.addLoreLine("    &6Boots: &d" + name + " x" + amount);
@@ -218,94 +218,94 @@ public class EntityMenu extends Editor<EntityReward>{
             if(itemInHand == null){
                 builder.addLoreLine("    &6Item in hand: &cnull");
             }else{
-                ItemBuilder builder2 = ItemBuilder.fromItem(itemInHand, false);
+                ItemStackWrapper builder2 = ItemStackWrapper.fromItem(itemInHand, false);
                 String name = builder2.toString();
                 int amount = builder2.getAmount();
                 builder.addLoreLine("    &6Item in hand: &d" + name + " x" + amount);
             }
         }
-        ItemStack ent_equipment = builder.build();
+        ItemStack ent_equipment = builder.toItemStack();
         
         ItemStack offsetStack = item.getOffset().getItemToDisplay();
         
-        ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(item.getUsePlayerLoc());
+        ItemStack usePlayerLocStack = GUIItem.getUsePlayerLocItem(item.isUsePlayerLoc());
         
-        ItemStack resetName = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReset custom name")
-                .build();
+        ItemStack resetName = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                              .setDisplayName("&cReset custom name")
+                                              .toItemStack();
         
-        ItemStack resetEffects = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReset effects")
-                .build();
+        ItemStack resetEffects = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                 .setDisplayName("&cReset effects")
+                                                 .toItemStack();
         
-        ItemStack resetEquipment = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReset equipment")
-                .build();
+        ItemStack resetEquipment = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                   .setDisplayName("&cReset equipment")
+                                                   .toItemStack();
         
         if(item.isTamed()){
-            builder = ItemBuilder.newItem(XMaterial.LEAD);
-            builder.withDisplayName("&eIs tamed: &atrue");
+            builder = ItemStackWrapper.newItem(XMaterial.LEAD);
+            builder.setDisplayName("&eIs tamed: &atrue");
         }else{
-            builder = ItemBuilder.newItem(XMaterial.ZOMBIE_HEAD);
-            builder.withDisplayName("&eIs tamed: &cfalse");
+            builder = ItemStackWrapper.newItem(XMaterial.ZOMBIE_HEAD);
+            builder.setDisplayName("&eIs tamed: &cfalse");
         }
         builder.addLoreLine("&3Click to toggle");
         builder.addLoreLine("");
         builder.addLoreLine("&6Note that this is only used");
         builder.addLoreLine("&6  if the entity is tameable");
-        ItemStack isTamedStack = builder.build();
+        ItemStack isTamedStack = builder.toItemStack();
         
         if(item.isAngry()) {
-            builder = ItemBuilder.newItem(XMaterial.LAVA_BUCKET);
-            builder.withDisplayName("&eIs angry: &atrue");
+            builder = ItemStackWrapper.newItem(XMaterial.LAVA_BUCKET);
+            builder.setDisplayName("&eIs angry: &atrue");
         } else {
-            builder = ItemBuilder.newItem(XMaterial.WATER_BUCKET);
-            builder.withDisplayName("&eIs angry: &cfalse");
+            builder = ItemStackWrapper.newItem(XMaterial.WATER_BUCKET);
+            builder.setDisplayName("&eIs angry: &cfalse");
         }
         builder.addLoreLine("&3Click to toggle");
         builder.addLoreLine("");
         builder.addLoreLine("&6Note that this is only used");
         builder.addLoreLine("&6  if the entity is angryable");
-        ItemStack isAngryStack = builder.build();
+        ItemStack isAngryStack = builder.toItemStack();
         
         switch(item.getAge()){
             case BABY:
-                builder = ItemBuilder.newItem(XMaterial.LEATHER_HELMET);
+                builder = ItemStackWrapper.newItem(XMaterial.LEATHER_HELMET);
                 break;
             case ADULT:
-                builder = ItemBuilder.newItem(XMaterial.IRON_HELMET);
+                builder = ItemStackWrapper.newItem(XMaterial.IRON_HELMET);
                 break;
             default: //case RANDOM
-                builder = ItemBuilder.newItem(XMaterial.GOLDEN_HELMET);
+                builder = ItemStackWrapper.newItem(XMaterial.GOLDEN_HELMET);
                 break;
         }
-        builder.withDisplayName("&dCurrent age: &e" + item.getAge().name());
+        builder.setDisplayName("&dCurrent age: &e" + item.getAge().name());
         builder.addLoreLine("&3Click to toggle");
         builder.addLoreLine("");
         builder.addLoreLine("&6Note that this is only used");
         builder.addLoreLine("&6  if the entity is ageable");
-        ItemStack ageStack = builder.build();
+        ItemStack ageStack = builder.toItemStack();
         
-        builder = ItemBuilder.newItem(XMaterial.APPLE);
+        builder = ItemStackWrapper.newItem(XMaterial.APPLE);
         if(item.getHealth() >= 0){
-            builder.withDisplayName("&bCurrent health: &d" + item.getHealth());
+            builder.setDisplayName("&bCurrent health: &d" + item.getHealth());
         }else{
-            builder.withDisplayName("&bCurrent health: &d&lDEFAULT");
+            builder.setDisplayName("&bCurrent health: &d&lDEFAULT");
         }
         builder.addLoreLine("&3Click to reset");
-        ItemStack healthItem = builder.build();
+        ItemStack healthItem = builder.toItemStack();
         
-        builder = ItemBuilder.newItem(XMaterial.SLIME_BLOCK);
+        builder = ItemStackWrapper.newItem(XMaterial.SLIME_BLOCK);
         if(item.getSlimeSize() >= 0){
-            builder.withDisplayName("&aCurrent slime size: &d" + item.getSlimeSize());
+            builder.setDisplayName("&aCurrent slime size: &d" + item.getSlimeSize());
         }else{
-            builder.withDisplayName("&aCurrent slime size: &d&lDEFAULT");
+            builder.setDisplayName("&aCurrent slime size: &d&lDEFAULT");
         }
         builder.addLoreLine("&3Click to reset");
         builder.addLoreLine("");
         builder.addLoreLine("&cIf slime size is greater than 15,");
         builder.addLoreLine("&c  the generated slime will be so big");
-        ItemStack slimeSizeItem = builder.build();
+        ItemStack slimeSizeItem = builder.toItemStack();
         
         
         for(int i=0;i<9;i++){
@@ -387,7 +387,7 @@ public class EntityMenu extends Editor<EntityReward>{
                     }
                     
                     if(!item.getType().isAlive()){
-                        item.setEffects(new ArrayList());
+                        item.setEffects(new ArrayList<>());
                         item.getEquipment().reset();
                     }
                     
@@ -463,7 +463,7 @@ public class EntityMenu extends Editor<EntityReward>{
                             });
                     break;
                 case 25:
-                    item.setUsePlayerLoc(!item.getUsePlayerLoc());
+                    item.setUsePlayerLoc(!item.isUsePlayerLoc());
                     openEntityMenu(player);
                     break;
                 case 2:
@@ -471,7 +471,7 @@ public class EntityMenu extends Editor<EntityReward>{
                         break;
                     }
                     
-                    item.setIsTamed(!item.isTamed());
+                    item.setTamed(!item.isTamed());
                     openEntityMenu(player);
                     break;
                 case 19:
@@ -479,7 +479,7 @@ public class EntityMenu extends Editor<EntityReward>{
                         break;
                     }
                     
-                    item.setIsAngry(!item.isAngry());
+                    item.setAngry(!item.isAngry());
                     openEntityMenu(player);
                     break;
                 case 20:
@@ -690,7 +690,7 @@ public class EntityMenu extends Editor<EntityReward>{
                 default:
                     ItemStack stack = e.getCurrentItem();
                     if(stack != null && stack.getType() != Material.AIR){
-                        String displayName = ItemBuilder.fromItem(stack, false)
+                        String displayName = ItemStackWrapper.fromItem(stack, false)
                                 .getDisplayName();
                         if(displayName != null){
                             String typeName = Logger.stripColor(displayName);

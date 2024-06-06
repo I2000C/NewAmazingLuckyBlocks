@@ -2,62 +2,62 @@ package me.i2000c.newalb.listeners.inventories;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.inventory.ItemStack;
 
 public class GUIItem{
     public static ItemStack getGlassItem(GlassColor glassColor){
-        return ItemBuilder.newItem(glassColor.toMaterial())
-                .withDisplayName(" ")
-                .build();
+        return ItemStackWrapper.newItem(glassColor.toMaterial())
+                               .setDisplayName(" ")
+                               .toItemStack();
     }
     
     public static ItemStack getBackItem(){
-        return ItemBuilder.newItem(XMaterial.ENDER_PEARL)
-                .withDisplayName("&2Back")
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.ENDER_PEARL)
+                               .setDisplayName("&2Back")
+                               .toItemStack();
     }
     
     public static ItemStack getNextItem(){
-        return ItemBuilder.newItem(XMaterial.ANVIL)
-                .withDisplayName("&bNext")
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.ANVIL)
+                               .setDisplayName("&bNext")
+                               .toItemStack();
     }
     
     public static ItemStack getUsePlayerLocItem(boolean isPlayerLoc){
         if(isPlayerLoc){
-            return ItemBuilder.newItem(XMaterial.PLAYER_HEAD)
-                    .withDisplayName("&aUse player location")
-                    .addLoreLine("&3Click to toggle")
-                    .build();
+            return ItemStackWrapper.newItem(XMaterial.PLAYER_HEAD)
+                                   .setDisplayName("&aUse player location")
+                                   .addLoreLine("&3Click to toggle")
+                                   .toItemStack();
         }else{
-            return ItemBuilder.fromItem(TypeManager.getMenuItemStack(), false)
-                    .withDisplayName("&eUse LuckyBlock location")
-                    .addLoreLine("&3Click to toggle")
-                    .build();
+            return ItemStackWrapper.fromItem(TypeManager.getMenuItemStack(), false)
+                                   .setDisplayName("&eUse LuckyBlock location")
+                                   .addLoreLine("&3Click to toggle")
+                                   .toItemStack();
         }
     }
     
     public static ItemStack getPlusLessItem(float amount){
         if(amount >= 0){
             if(amount % 1 == 0){
-                return ItemBuilder.newItem(GlassColor.LIME.toMaterial())
-                    .withDisplayName(String.format("&a&l+%.0f", amount))
-                    .build();
+                return ItemStackWrapper.newItem(GlassColor.LIME.toMaterial())
+                                       .setDisplayName(String.format("&a&l+%.0f", amount))
+                                       .toItemStack();
             }else{
-                return ItemBuilder.newItem(GlassColor.LIME.toMaterial())
-                    .withDisplayName(String.format("&a&l+%.2f", amount))
-                    .build();
+                return ItemStackWrapper.newItem(GlassColor.LIME.toMaterial())
+                                       .setDisplayName(String.format("&a&l+%.2f", amount))
+                                       .toItemStack();
             }            
         }else{
             if((-amount) % 1 == 0){
-                return ItemBuilder.newItem(GlassColor.RED.toMaterial())
-                    .withDisplayName(String.format("&c&l%.0f", amount))
-                    .build();
+                return ItemStackWrapper.newItem(GlassColor.RED.toMaterial())
+                                       .setDisplayName(String.format("&c&l%.0f", amount))
+                                       .toItemStack();
             }else{
-                return ItemBuilder.newItem(GlassColor.RED.toMaterial())
-                    .withDisplayName(String.format("&c&l%.2f", amount))
-                    .build();
+                return ItemStackWrapper.newItem(GlassColor.RED.toMaterial())
+                                       .setDisplayName(String.format("&c&l%.2f", amount))
+                                       .toItemStack();
             } 
         }
     }
@@ -68,16 +68,16 @@ public class GUIItem{
             XMaterial materialIfTrue,
             XMaterial materialIfFalse){
         
-        ItemBuilder builder;
+        ItemStackWrapper wrapper;
         if(value){
-            builder = ItemBuilder.newItem(materialIfTrue);
-            builder.withDisplayName(displayText + ": &atrue");
+            wrapper = ItemStackWrapper.newItem(materialIfTrue);
+            wrapper.setDisplayName(displayText + ": &atrue");
         }else{
-            builder = ItemBuilder.newItem(materialIfFalse);
-            builder.withDisplayName(displayText + ": &cfalse");
+            wrapper = ItemStackWrapper.newItem(materialIfFalse);
+            wrapper.setDisplayName(displayText + ": &cfalse");
         }
-        builder.addLoreLine("&3Click to toggle");
-        return builder.build();
+        wrapper.addLoreLine("&3Click to toggle");
+        return wrapper.toItemStack();
     }
     public static ItemStack getEnabledDisabledItem(
             boolean value, 
@@ -86,36 +86,36 @@ public class GUIItem{
             XMaterial materialIfTrue,
             XMaterial materialIfFalse){
         
-        ItemBuilder builder;
+        ItemStackWrapper builder;
         if(value){
-            builder = ItemBuilder.newItem(materialIfTrue);
+            builder = ItemStackWrapper.newItem(materialIfTrue);
             builder.addLoreLine("");
             builder.addLoreLine(modeText + ": &aenabled");
         }else{
-            builder = ItemBuilder.newItem(materialIfFalse);
+            builder = ItemStackWrapper.newItem(materialIfFalse);
             builder.addLoreLine("");
             builder.addLoreLine(modeText + ": &7disabled");
         }
         builder.addLoreLine("&3Click to toggle");
-        builder.withDisplayName(displayText);
-        return builder.build();
+        builder.setDisplayName(displayText);
+        return builder.toItemStack();
     }
     
     public static ItemStack getPreviousPageItem(){
-        return ItemBuilder.newItem(XMaterial.ENDER_EYE)
-                .withDisplayName("&2Previous page")
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.ENDER_EYE)
+                               .setDisplayName("&2Previous page")
+                               .toItemStack();
     }
     public static ItemStack getNextPageItem(){
-        return ItemBuilder.newItem(XMaterial.MAGMA_CREAM)
-                .withDisplayName("&2Next page")
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.MAGMA_CREAM)
+                               .setDisplayName("&2Next page")
+                               .toItemStack();
     }
     public static ItemStack getCurrentPageItem(int currentPage, int maxPages){
-        return ItemBuilder.newItem(XMaterial.BOOK)
-                .withAmount(currentPage)
-                .withDisplayName("&6Page &3" + currentPage + " &a/ &3" + maxPages)
-                .addLoreLine("&bClick to go to page 1")
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.BOOK)
+                               .setAmount(currentPage)
+                               .setDisplayName("&6Page &3" + currentPage + " &a/ &3" + maxPages)
+                               .addLoreLine("&bClick to go to page 1")
+                               .toItemStack();
     }
 }

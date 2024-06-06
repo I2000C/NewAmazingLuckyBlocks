@@ -1,15 +1,16 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
+import org.bukkit.entity.Player;
+
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.functions.EditorBackFunction;
 import me.i2000c.newalb.functions.EditorNextFunction;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 public abstract class Reward implements Displayable, Executable, Cloneable{
     public abstract RewardType getRewardType();
-    public abstract void loadRewardFromConfig(FileConfiguration config, String path);
-    public abstract void saveRewardIntoConfig(FileConfiguration config, String path);
+    public abstract void loadRewardFromConfig(Config config, String path);
+    public abstract void saveRewardIntoConfig(Config config, String path);
 
     private Outcome outcome;
     private int delay;

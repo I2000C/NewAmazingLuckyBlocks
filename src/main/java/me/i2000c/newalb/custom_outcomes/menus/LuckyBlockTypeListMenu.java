@@ -15,7 +15,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -64,10 +64,9 @@ public class LuckyBlockTypeListMenu extends Editor{
             menu.setItem(i, glass);
         }
         
-        ItemStack createType = ItemBuilder
-                .newItem(XMaterial.SLIME_BALL)
-                .withDisplayName("&aCreate new lucky block type")
-                .build();
+        ItemStack createType = ItemStackWrapper.newItem(XMaterial.SLIME_BALL)
+                                               .setDisplayName("&aCreate new lucky block type")
+                                               .toItemStack();
         
         ItemStack renameType = GUIItem.getEnabledDisabledItem(
                 renameMode, 
@@ -82,27 +81,25 @@ public class LuckyBlockTypeListMenu extends Editor{
                 "&6Delete mode", 
                 XMaterial.BARRIER, 
                 XMaterial.BARRIER);
-        ItemBuilder.fromItem(deleteType, false)
+        ItemStackWrapper.fromItem(deleteType, false)
                 .addLoreLine("")
                 .addLoreLine("&4&lWARNING: &cIf this mode is enabled,")
                 .addLoreLine("&cwhen you click on a LuckyBlock type,")
                 .addLoreLine("&cit will be deleted permanently");
         
-        ItemStack placePermissionItem = ItemBuilder
-                .newItem(XMaterial.STONE)
-                .withDisplayName("&dCurrent global place permission:")
-                .addLoreLine("   &b" + placePermission)
-                .addLoreLine(" ")
-                .addLoreLine("&3Click to change")
-                .build();
+        ItemStack placePermissionItem = ItemStackWrapper.newItem(XMaterial.STONE)
+                                                        .setDisplayName("&dCurrent global place permission:")
+                                                        .addLoreLine("   &b" + placePermission)
+                                                        .addLoreLine(" ")
+                                                        .addLoreLine("&3Click to change")
+                                                        .toItemStack();
         
-        ItemStack breakPermissionItem = ItemBuilder
-                .newItem(XMaterial.IRON_PICKAXE)
-                .withDisplayName("&dCurrent global break permission:")
-                .addLoreLine("   &b" + breakPermission)
-                .addLoreLine(" ")
-                .addLoreLine("&3Click to change")
-                .build();
+        ItemStack breakPermissionItem = ItemStackWrapper.newItem(XMaterial.IRON_PICKAXE)
+                                                        .setDisplayName("&dCurrent global break permission:")
+                                                        .addLoreLine("   &b" + breakPermission)
+                                                        .addLoreLine(" ")
+                                                        .addLoreLine("&3Click to change")
+                                                        .toItemStack();
         
         ItemStack requirePlacePermission = GUIItem.getBooleanItem(
                 placePermissionEnabled, 

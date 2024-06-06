@@ -1,14 +1,8 @@
 package me.i2000c.newalb.listeners.wands;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
 import java.util.EnumSet;
 import java.util.Set;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,6 +11,15 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 
 public class FrostPathWand extends SpecialItem{
     
@@ -27,7 +30,7 @@ public class FrostPathWand extends SpecialItem{
     
     private float minPitch;
     private float maxPitch;
-    private ItemBuilder frostItem;
+    private ItemStackWrapper frostItem;
     private int rowsOfBlocksEachTime;
     private int maxBlocks;
     private int rowWidth;
@@ -37,14 +40,14 @@ public class FrostPathWand extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        this.minPitch = (float) ConfigManager.getConfig().getDouble(super.itemPathKey + ".minPitch");
-        this.maxPitch = (float) ConfigManager.getConfig().getDouble(super.itemPathKey + ".maxPitch");
-        this.frostItem = ItemBuilder.newItem(ConfigManager.getConfig().getString(super.itemPathKey + ".frostMaterial"));
-        this.rowsOfBlocksEachTime = ConfigManager.getConfig().getInt(super.itemPathKey + ".rows-of-blocks-each-time");
-        this.maxBlocks = ConfigManager.getConfig().getInt(super.itemPathKey + ".maxBlocks");
-        this.rowWidth = ConfigManager.getConfig().getInt(super.itemPathKey + ".row-width");
-        this.ticks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
-        this.beforeTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-before-frostpath");
+        this.minPitch = ConfigManager.getMainConfig().getFloat(super.itemPathKey + ".minPitch");
+        this.maxPitch = ConfigManager.getMainConfig().getFloat(super.itemPathKey + ".maxPitch");
+        this.frostItem = ItemStackWrapper.newItem(ConfigManager.getMainConfig().getMaterial(super.itemPathKey + ".frostMaterial"));
+        this.rowsOfBlocksEachTime = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".rows-of-blocks-each-time");
+        this.maxBlocks = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".maxBlocks");
+        this.rowWidth = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".row-width");
+        this.ticks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
+        this.beforeTicks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-before-frostpath");
         
         if(this.rowWidth < 2) {
             this.rowHalfWidth = 1;
@@ -52,9 +55,9 @@ public class FrostPathWand extends SpecialItem{
             this.rowHalfWidth = (this.rowWidth-1) / 2;
         }
         
-        return ItemBuilder.newItem(XMaterial.MUSIC_DISC_WAIT)
-                .withLore(super.getLoreOfWand())
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.MUSIC_DISC_WAIT)
+                               .setLore(super.getLoreOfWand())
+                               .toItemStack();
     }
     
     @Override

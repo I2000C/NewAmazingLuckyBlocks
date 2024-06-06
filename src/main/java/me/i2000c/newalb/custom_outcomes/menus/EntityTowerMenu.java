@@ -18,7 +18,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.NBTUtils;
 
 import org.bukkit.Material;
@@ -36,7 +36,7 @@ public class EntityTowerMenu extends Editor<EntityTowerReward>{
                 ENTITY_LIST_MENU_SIZE,
                 (entityReward, index) -> {
                     ItemStack stack = entityReward.getItemToDisplay();
-                    NBTUtils.set(stack, ENTITY_ID_TAG, entityReward.getID());                    
+                    NBTUtils.set(stack, ENTITY_ID_TAG, entityReward.getEntityID());                    
                     return stack;
                 }
         );
@@ -80,9 +80,9 @@ public class EntityTowerMenu extends Editor<EntityTowerReward>{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
-        ItemStack reset = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cReload entity list")
-                .build();
+        ItemStack reset = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                          .setDisplayName("&cReload entity list")
+                                          .toItemStack();
         
         for(int i=7;i<54;i+=9){
             menu.setItem(i, glass);

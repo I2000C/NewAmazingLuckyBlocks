@@ -1,70 +1,57 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.messages.ActionBar;
+
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 
+@Getter
+@Setter
 public class MessageReward extends Reward{
     private String title;
     private String subtitle;
-    private MessageType type;
+    private MessageType messageType;
     
     public MessageReward(Outcome outcome){
         super(outcome);
         title = "";
         subtitle = "";
-        type = MessageType.TITLE;
-    }
-    
-    public String getTitle(){
-        return this.title;
-    }
-    public void setTitle(String title){
-        this.title = title;
-    }
-    public String getSubtitle(){
-        return this.subtitle;
-    }
-    public void setSubtitle(String subtitle){
-        this.subtitle = subtitle;
-    }
-    public MessageType getMessageType(){
-        return this.type;
-    }
-    public void setMessageType(MessageType type){
-        this.type = type;
+        messageType = MessageType.TITLE;
     }
     
     @Override
     public ItemStack getItemToDisplay(){
-        return ItemBuilder.newItem(XMaterial.BOOK)
-                .withDisplayName("&6Message")
-                .addLoreLine("&3MessageType: &b" + type.name())
-                .addLoreLine("&3Title: &r\"" + title + "&r\"")
-                .addLoreLine("&3Subtitle: &r\"" + subtitle + "&r\"")
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.BOOK)
+                               .setDisplayName("&6Message")
+                               .addLoreLine("&3MessageType: &b" + messageType.name())
+                               .addLoreLine("&3Title: &r\"" + title + "&r\"")
+                               .addLoreLine("&3Subtitle: &r\"" + subtitle + "&r\"")
+                               .toItemStack();
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         config.set(path + ".title", this.title);
         config.set(path + ".subtitle", this.subtitle);
-        config.set(path + ".messageType", type.name());
+        config.set(path + ".messageType", messageType);
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
+    public void loadRewardFromConfig(Config config, String path){
         this.title = config.getString(path + ".title");
         this.subtitle = config.getString(path + ".subtitle");
-        this.type = MessageType.valueOf(config.getString(path + ".messageType"));
+        this.messageType = config.getEnum(path + ".messageType", MessageType.class);
     }
     
     @Override
@@ -86,7 +73,7 @@ public class MessageReward extends Reward{
                 .replace("%x%", x).replace("%y%", y).replace("%z%", z)
                 .replace("%bx%", bx).replace("%by%", by).replace("%bz%", bz);
         
-        switch(type){
+        switch(messageType){
             case TITLE:
                 Logger.sendTitle(replacedTitle, replacedSubtitle, player);
                 break;

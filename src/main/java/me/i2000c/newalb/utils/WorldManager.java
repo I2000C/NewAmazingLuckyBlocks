@@ -1,54 +1,51 @@
 package me.i2000c.newalb.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
-import me.i2000c.newalb.config.ReadWriteConfig;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 
-public class WorldConfig extends ReadWriteConfig{
+import org.bukkit.Bukkit;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.config.ConfigManager;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class WorldManager {
+    private static final String CONFIG_FILENAME = "data/worlds.yml";
     private static final String WORLD_LIST_KEY = "Worlds-list";
     private static final String WORLD_LIST_MODE_KEY = "WorldListMode";
-    private WorldConfig(Plugin plugin){
-        super(plugin, null, "data/worlds.yml", false);
-    }
     
-    private static WorldConfig worldConfig;
-    private static HashSet<String> worlds;
-    private static TreeSet<String> sortedWorlds;
+    private static Set<String> worlds = new HashSet<>();
     private static WorldListMode worldListMode;
-    public static void initialize(Plugin plugin){
-        worldConfig = new WorldConfig(plugin);
-        worlds = new HashSet<>();
-        sortedWorlds = new TreeSet<>();
-    }
+    
+    private static Config config = new Config();
     
     private static void saveWorlds(){
-        List<String> worldsList = new LinkedList<>(sortedWorlds);
-        worldConfig.getBukkitConfig().set(WORLD_LIST_MODE_KEY, worldListMode.name());
-        worldConfig.getBukkitConfig().set(WORLD_LIST_KEY, worldsList);        
-        worldConfig.saveConfig();
+        List<String> worldsList = new ArrayList<>(worlds);
+        Collections.sort(worldsList);
+        config.set(WORLD_LIST_MODE_KEY, worldListMode);
+        config.set(WORLD_LIST_KEY, worldsList);        
+        config.saveConfig(CONFIG_FILENAME);
     }
     
     public static WorldListMode getWorldListMode() {
         return worldListMode;
     }
     public static void setWorldListMode(WorldListMode worldListMode) {
-        WorldConfig.worldListMode = worldListMode;
+        WorldManager.worldListMode = worldListMode;
         saveWorlds();
     }
     
     public static Set<String> getWorlds(){
-        return sortedWorlds;
+        return worlds;
     }
     
     public static boolean addWorld(String worldName) {
         if(worlds.add(worldName)) {
-            sortedWorlds.add(worldName);
             saveWorlds();        
             return true;
         } else {
@@ -58,7 +55,6 @@ public class WorldConfig extends ReadWriteConfig{
     
     public static boolean deleteWorld(String worldName) {
         if(worlds.remove(worldName)) {
-            sortedWorlds.remove(worldName);
             saveWorlds();
             return true;
         } else {
@@ -67,16 +63,12 @@ public class WorldConfig extends ReadWriteConfig{
     }
     
     public static void addAllWorlds() {
-        Bukkit.getWorlds().forEach(world -> {
-            worlds.add(world.getName());
-            sortedWorlds.add(world.getName());
-        });
+        Bukkit.getWorlds().forEach(world -> worlds.add(world.getName()));
         saveWorlds();
     }
     
     public static void deleteAllWorlds() {
         worlds.clear();
-        sortedWorlds.clear();
         saveWorlds();
     }
     
@@ -89,9 +81,7 @@ public class WorldConfig extends ReadWriteConfig{
         });
         
         worlds.clear();
-        sortedWorlds.clear();
         worlds.addAll(serverWorlds);
-        sortedWorlds.addAll(serverWorlds);
         
         saveWorlds();
     }
@@ -110,18 +100,16 @@ public class WorldConfig extends ReadWriteConfig{
    
     public static void reloadWorlds(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        worldConfig.loadConfig();
+        config.loadConfig(CONFIG_FILENAME);
         
-        String worldListTypeString = worldConfig.getBukkitConfig().getString(WORLD_LIST_MODE_KEY);
         try {
-            worldListMode = WorldListMode.valueOf(worldListTypeString);
+            worldListMode = config.getEnum(WORLD_LIST_MODE_KEY, WorldListMode.class);
         } catch(Exception ex) {
             worldListMode = WorldListMode.DISABLED;
         }
         
         worlds.clear();
-        sortedWorlds.clear();
-        List<String> worldsList = worldConfig.getBukkitConfig().getStringList(WORLD_LIST_KEY);
+        List<String> worldsList = config.getStringList(WORLD_LIST_KEY, Collections.emptyList());
         worldsList.forEach(worldName -> {
             int semicolonIndex = worldName.indexOf(';');
             if(semicolonIndex > 0) {
@@ -129,11 +117,10 @@ public class WorldConfig extends ReadWriteConfig{
             }
             
             worlds.add(worldName);
-            sortedWorlds.add(worldName);
         });
         
-        String message = LangConfig.getMessage("World-loading")
-                .replace("%worlds%", worlds.size() + "");
+        String message = ConfigManager.getLangMessage("World-loading")
+                                      .replace("%worlds%", worlds.size() + "");
         Logger.log(message);
 //</editor-fold>
     }

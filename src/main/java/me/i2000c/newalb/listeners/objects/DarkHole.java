@@ -6,10 +6,11 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import lombok.Getter;
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
@@ -21,6 +22,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+@Getter
 public class DarkHole extends SpecialItem {
     
     private final Set<XMaterial> noBreakBlockMaterials = EnumSet.noneOf(XMaterial.class);
@@ -44,15 +46,15 @@ public class DarkHole extends SpecialItem {
     
     @Override
     public ItemStack buildItem(){
-        this.defaultDepth = ConfigManager.getConfig().getInt(super.itemPathKey + ".depth");
-        this.defaultRadius = ConfigManager.getConfig().getInt(super.itemPathKey + ".radius");
-        this.defaultTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
-        this.defaultBeforeTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-before-darkhole");
-        this.defaultSquared = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".squared");
+        this.defaultDepth = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".depth");
+        this.defaultRadius = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".radius");
+        this.defaultTicks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
+        this.defaultBeforeTicks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-before-darkhole");
+        this.defaultSquared = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".squared");
         
-        this.enableBlockStopMode = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".block-stop-mode.enable");
+        this.enableBlockStopMode = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".block-stop-mode.enable");
         this.noBreakBlockMaterials.clear();
-        List<String> materials = ConfigManager.getConfig().getStringList(super.itemPathKey + ".block-stop-mode.block-list");
+        List<String> materials = ConfigManager.getMainConfig().getStringList(super.itemPathKey + ".block-stop-mode.block-list");
         materials.forEach(material -> {
             Optional<XMaterial> xmaterial = XMaterial.matchXMaterial(material);
             if(xmaterial.isPresent()) {
@@ -62,7 +64,7 @@ public class DarkHole extends SpecialItem {
             }
         });
         
-        return ItemBuilder.newItem(XMaterial.BUCKET).build();
+        return ItemStackWrapper.newItem(XMaterial.BUCKET).toItemStack();
     }
     
     public void execute(Player player, Location location) {

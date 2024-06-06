@@ -1,0 +1,175 @@
+package me.i2000c.newalb.config.serializators;
+
+import com.cryptomorin.xseries.XMaterial;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ItemReward.PotionSplashType;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.textures.InvalidTextureException;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils2.CustomColor;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import org.bukkit.Color;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ItemStackWrapperSerializator implements ConfigSerializerDeserializer<ItemStackWrapper> {
+    
+    @Getter private static final ItemStackWrapperSerializator instance = new ItemStackWrapperSerializator();
+    
+    @Override
+    public void serialize(Config config, String path, ItemStackWrapper value) {
+        config.set(path + ".material", value.getMaterial());
+        config.set(path + ".amount", value.getAmount());
+        config.set(path + ".durability", value.getDurability());
+        if(value.hasDisplayName()) {
+            config.set(path + ".name", Logger.deColor(value.getDisplayName()));
+        }
+        if(value.hasLore()) {
+            config.set(path + ".lore", Logger.deColor(value.getLore()));
+        }
+        if(value.hasEnchantments()) {
+            config.set(path + ".enchantments", value.getEnchantmentsIntoStringList());
+        }
+        if(value.hasBookEnchantments()) {
+            config.set(path + ".bookEnchantments", value.getBookEnchantmentsIntoStringList());
+        }
+        
+        // Save texture
+        Texture texture = value.getTexture();
+        if(texture != null) {
+            config.set(path + ".textureID", texture.getId());
+        }
+        
+        // Save leather armor meta
+        switch(value.getMaterial()) {
+            case LEATHER_HELMET:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_LEGGINGS:
+            case LEATHER_BOOTS:
+                String hexColor = new CustomColor(value.getColor()).getHexColorString();
+                config.set(path + ".armorColor", hexColor);
+        }
+        
+        // Save potion effects
+        PotionSplashType type = PotionSplashType.getFromPotion(value.toItemStack());
+        if(type != null) {
+            config.set(path + ".material" , XMaterial.POTION);
+            config.set(path + ".potionSplashType", type.name());
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
+                if(value.hasColor()){
+                    String hexColor = new CustomColor(value.getColor()).getHexColorString();
+                    config.set(path + ".potionColor", hexColor);
+                }
+            }
+            
+            List<String> effectList = new ArrayList<>();
+            value.getPotionEffects().forEach(potionEffect -> {
+                String name = potionEffect.getType().getName();
+                int duration = potionEffect.getDuration() / 20;
+                int amplifier = potionEffect.getAmplifier();
+
+                if(duration < 0){
+                    duration = 0;
+                }
+                if(amplifier < 0){
+                    amplifier = 0;
+                }
+
+                effectList.add(name + ";" + duration + ";" + amplifier);
+            });
+
+            config.set(path + ".potionEffects", effectList);
+        }
+    }
+    
+    @Override
+    public ItemStackWrapper deserialize(Config config, String path) {
+        XMaterial material = config.getMaterial(path + ".material");
+        ItemStackWrapper value = ItemStackWrapper.newItem(material);
+        
+        int amount = config.getInt(path + ".amount", 1);
+        value.setAmount(amount);
+        
+        short durability = config.getShort(path + ".durability", (short)0);
+        value.setDurability(durability);
+        
+        String displayName = config.getString(path + ".name", null);
+        value.setDisplayName(displayName);
+        
+        List<String> lore = config.getStringList(path + ".lore", null);
+        value.setLore(lore);
+        
+        List<String> enchantments = config.getStringList(path + ".enchantments", Collections.emptyList());
+        value.setEnchantments(enchantments);
+        List<String> bookEnchantments = config.getStringList(path + ".bookEnchantments", Collections.emptyList());
+        value.setBookEnchantments(bookEnchantments);
+        
+        // Load armor color
+        switch(material){
+            case LEATHER_HELMET:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_LEGGINGS:
+            case LEATHER_BOOTS:
+                String hexColor = config.getString(path + ".armorColor", null);
+                CustomColor color = hexColor != null ? new CustomColor(hexColor) : new CustomColor((Color) null);
+                value.setColor(color.getBukkitColor());
+                break;
+        }
+        
+        // Load potion meta
+        PotionSplashType type = PotionSplashType.getFromPotion(value.toItemStack());
+        if(type != null) {
+            if(config.existsPath(path + ".potionSplashType")) {
+                type = config.getEnum(path + ".potionSplashType", PotionSplashType.class);
+                type.setToPotion(value.toItemStack());
+            }
+            if(config.existsPath(path + ".potionEffects")) {
+                List<String> potionEffects = config.getStringList(path + ".potionEffects");
+                potionEffects.forEach(string -> {
+                    String[] splitted = string.split(";");
+                    String name = splitted[0];
+                    int duration = Integer.parseInt(splitted[1]) * 20;
+                    int amplifier = Integer.parseInt(splitted[2]);
+                    
+                    if(duration < 0) {
+                        duration = Integer.MAX_VALUE;
+                    }
+                    if(amplifier < 0) {
+                        amplifier = 0;
+                    }
+                    
+                    value.addPotionEffect(new PotionEffect(PotionEffectType.getByName(name), duration, amplifier));
+                });
+            }
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
+                String hexColor = config.getString(path + ".armorColor", null);
+                CustomColor color = hexColor != null ? new CustomColor(hexColor) : new CustomColor((Color) null);
+                value.setColor(color.getBukkitColor());
+            }
+        }
+        
+        // Load texture ID
+        if(config.existsPath(path + ".textureID")) {
+            String textureID = config.getString(path + ".textureID");
+            try {
+                Texture texture = new Texture(textureID);
+                value.setTexture(texture);
+            } catch(InvalidTextureException ex) {
+                Logger.err("ItemStack at \"" + path + "\" contains an invalid HeadTexture");
+            } catch(Exception ex) {
+                Logger.err("An error  occurred while loading texture of ItemStack at \"" + path + "\":");
+                ex.printStackTrace();
+            }
+        }
+        
+        return value;
+    }
+}

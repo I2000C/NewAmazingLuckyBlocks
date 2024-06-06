@@ -1,64 +1,40 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.cryptomorin.xseries.XMaterial;
+
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 
+@Getter
+@Setter
 public class DarkHoleReward extends Reward{
     private int depth;
     private int radius;
     private long ticks;
-    private boolean squared;
-
-    public int getDepth(){
-        return depth;
-    }
-    public void setDepth(int depth){
-        this.depth = depth;
-    }
-    
-    public int getRadius(){
-        return radius;
-    }
-    public void setRadius(int radius){
-        this.radius = radius;
-    }
-    
-    public long getTicks(){
-        return ticks;
-    }
-    public void setTicks(long ticks){
-        this.ticks = ticks;
-    }
-    
-    public boolean isSquared(){
-        return squared;
-    }
-    public void setSquared(boolean squared){
-        this.squared = squared;
-    }    
-    
+    private boolean squared;    
     
     public DarkHoleReward(Outcome outcome){
         super(outcome);
-        depth = ConfigManager.getConfig().getInt("Objects.DarkHole.number-of-blocks");
-        radius = ConfigManager.getConfig().getInt("Objects.DarkHole.radius");
-        ticks = ConfigManager.getConfig().getLong("Objects.DarkHole.time-between-one-block-and-the-next");
-        squared = true;
+        depth = SpecialItems.dark_hole.getDefaultDepth();
+        radius = SpecialItems.dark_hole.getDefaultRadius();
+        ticks = SpecialItems.dark_hole.getDefaultTicks();
+        squared = SpecialItems.dark_hole.isDefaultSquared();
     }
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.BUCKET);
-        builder.withDisplayName("&7DarkHole");
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.BUCKET);
+        builder.setDisplayName("&7DarkHole");
         if(this.depth < 0){
             builder.addLoreLine("&3Depth: &6infinite");
         }else{
@@ -68,11 +44,11 @@ public class DarkHoleReward extends Reward{
         builder.addLoreLine("&3Ticks between blocks: &6" + this.ticks);
         builder.addLoreLine("&3Is squared: &6" + this.squared);
         
-        return builder.build();
+        return builder.toItemStack();
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         config.set(path + ".depth", depth);
         config.set(path + ".radius", radius);
         config.set(path + ".ticks_between_blocks", ticks);
@@ -80,11 +56,11 @@ public class DarkHoleReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
-        depth = config.getInt(path + ".depth");
-        radius = config.getInt(path + ".radius");
-        ticks = config.getLong(path + ".ticks_between_blocks");
-        squared = config.getBoolean(path + ".squared");
+    public void loadRewardFromConfig(Config config, String path){
+        depth = config.getInt(path + ".depth", SpecialItems.dark_hole.getDefaultDepth());
+        radius = config.getInt(path + ".radius", SpecialItems.dark_hole.getDefaultRadius());
+        ticks = config.getLong(path + ".ticks_between_blocks", SpecialItems.dark_hole.getDefaultTicks());
+        squared = config.getBoolean(path + ".squared", SpecialItems.dark_hole.isDefaultSquared());
     }
 
     @Override

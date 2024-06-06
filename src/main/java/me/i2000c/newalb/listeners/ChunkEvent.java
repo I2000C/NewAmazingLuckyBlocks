@@ -1,28 +1,28 @@
 package me.i2000c.newalb.listeners;
 
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.RandomBlocks;
-import me.i2000c.newalb.utils.WorldConfig;
-
-import org.bukkit.event.world.ChunkPopulateEvent;
-import org.bukkit.event.Listener;
-import org.bukkit.event.EventHandler;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkPopulateEvent;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.utils.RandomBlocks;
+import me.i2000c.newalb.utils.WorldManager;
 
 public class ChunkEvent implements Listener{
     
     @EventHandler
     private void onChunkCreated(ChunkPopulateEvent e){
-        if(ConfigManager.getConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.enable")){
-            if(WorldConfig.isEnabled(e.getWorld().getName())){
-                int x = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.radx");
-                int y = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.rady");
-                int z = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");
-                int blocks = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.blocks");
-                boolean floating_blocks = ConfigManager.getConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.floating-blocks");
-                boolean send_finish_message = ConfigManager.getConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.send-finish-message");
+        if(ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.enable")){
+            if(WorldManager.isEnabled(e.getWorld().getName())){
+                int x = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radx");
+                int y = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.rady");
+                int z = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");
+                int blocks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.blocks");
+                boolean floating_blocks = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.floating-blocks");
+                boolean send_finish_message = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.send-finish-message");
                 
-                int maxTasks = ConfigManager.getConfig().getInt("GenerateRandomblocks-OnChunkCreated.maxTasks");
+                int maxTasks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.maxTasks");
                 
                 if(RandomBlocks.numTasks < maxTasks){
                     if(!e.getChunk().isLoaded()){

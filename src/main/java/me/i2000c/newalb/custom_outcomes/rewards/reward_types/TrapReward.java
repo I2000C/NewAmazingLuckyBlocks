@@ -5,29 +5,41 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.cryptomorin.xseries.XMaterial;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.OutcomePack;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.NBTUtils;
+import me.i2000c.newalb.utils.TrapManager;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
 
+@Getter
+@Setter
 public class TrapReward extends Reward{
-    public static final String HIDDEN_TAG = "NewAmazingLuckyBlocks.TrapReward";
     
     private XMaterial trapMaterial;
     private String trapName;
     
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private Outcome trapOutcome;
+    
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private String trapOutcomePackName;
+    
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private int trapOutcomeID;
     
     public TrapReward(Outcome outcome){
@@ -40,18 +52,6 @@ public class TrapReward extends Reward{
         trapOutcome = null;
     }
     
-    public XMaterial getTrapMaterial(){
-        return this.trapMaterial;
-    }
-    public void setTrapMaterial(XMaterial xmaterial){
-        this.trapMaterial = xmaterial;
-    }
-    public String getTrapName(){
-        return this.trapName;
-    }
-    public void setTrapName(String trapName){
-        this.trapName = trapName;
-    }
     public Outcome getTrapOutcome(){
         if(this.trapOutcome == null && this.trapOutcomePackName != null){
             OutcomePack pack = PackManager.getPack(trapOutcomePackName);
@@ -67,13 +67,13 @@ public class TrapReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemBuilder builder = ItemBuilder.newItem(trapMaterial);
-        builder.withDisplayName("&5Trap");
+        ItemStackWrapper builder = ItemStackWrapper.newItem(trapMaterial);
+        builder.setDisplayName("&5Trap");
         builder.addLoreLine("&3Name: &r" + trapName);
         builder.addLoreLine("&3Pressure Plate Material: &b" + builder.toString());
         builder.addLoreLine("&3Trap Outcome: &b" + this.trapOutcomePackName + "/" + this.trapOutcomeID);
         
-        return builder.build();
+        return builder.toItemStack();
     }
     
     private static List<XMaterial> TRAP_MATERIALS;
@@ -94,7 +94,7 @@ public class TrapReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
+    public void saveRewardIntoConfig(Config config, String path){
         if(trapOutcomePackName.endsWith(".yml")) {
             trapOutcomePackName = OtherUtils.removeExtension(trapOutcomePackName);
         }
@@ -105,12 +105,12 @@ public class TrapReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
-        String trapMaterialName = config.getString(path + ".trapMaterial");
+    public void loadRewardFromConfig(Config config, String path){
+        String trapMaterialName = config.getString(path + ".trapMaterial", null);
         if(trapMaterialName == null){
             trapMaterialName = config.getString(path + ".pressurePlateMaterial");
         }
-        this.trapMaterial = ItemBuilder.newItem(trapMaterialName).getXMaterial();
+        this.trapMaterial = OtherUtils.parseXMaterial(trapMaterialName);
         
         this.trapName = config.getString(path + ".trapName");
         String[] aux = config.getString(path + ".trapOutcome").split("\\/");
@@ -120,38 +120,11 @@ public class TrapReward extends Reward{
     }
     
     private ItemStack getItemToDrop(){
-        ItemStack stack = ItemBuilder
-                .newItem(trapMaterial)
-                .withDisplayName(trapName)
-                .build();
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(trapMaterial)
+                                                   .setDisplayName(trapName);
         
-        return encryptOutcome(trapOutcomePackName, trapOutcomeID, stack);
-    }
-    
-    static ItemStack encryptOutcome(Outcome outcome, ItemStack item){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        NBTUtils.set(item, HIDDEN_TAG, outcome.toString());
-        return item;
-//</editor-fold>
-    }
-    static ItemStack encryptOutcome(String packName, int outcomeID, ItemStack item){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        NBTUtils.set(item, HIDDEN_TAG, packName + "/" + outcomeID);
-        return item;
-//</editor-fold>
-    }
-    static Outcome decryptOutcome(ItemStack item){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!NBTUtils.contains(item, HIDDEN_TAG)){
-            return null;
-        }
-        
-        try{
-            return Outcome.fromString(NBTUtils.getString(item, HIDDEN_TAG));
-        }catch(Exception ex){
-            return null;
-        }
-//</editor-fold>
+        TrapManager.encryptOutcome(trapOutcomePackName, trapOutcomeID, wrapper);
+        return wrapper.toItemStack();
     }
     
     @Override

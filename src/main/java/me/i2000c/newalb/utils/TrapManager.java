@@ -1,21 +1,13 @@
-package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
+package me.i2000c.newalb.utils;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import me.i2000c.newalb.config.ReadWriteConfig;
-import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.WorldConfig;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.Task;
-import org.bukkit.Bukkit;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,50 +18,50 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
-public class TrapManager extends ReadWriteConfig implements Listener{
-    private TrapManager(Plugin plugin){
-        super(plugin, null, "data/traps.yml", false);
-    }
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapReward;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.NBTUtils;
+import me.i2000c.newalb.utils2.Task;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class TrapManager implements Listener {
     
-    private static TrapManager trapManager;
-    public static TrapManager getManager(){
-        return trapManager;
-    }
-    public static void initialize(Plugin plugin){
-        trapManager = new TrapManager(plugin);
-    }
+    @Getter private static final TrapManager manager = new TrapManager();
     
-    private static class Trap{
-        public Outcome trapOutcome;
-        public ItemStack trapItemStack;
-    }
+    private static final String HIDDEN_TAG = "NewAmazingLuckyBlocks.TrapReward";
     
+    private static final String CONFIG_FILENAME = "data/traps.yml";
+    private static final String TRAPS_KEY = "Traps";
     private static final Map<Location, Trap> traps = new HashMap<>();
+    
+    private static Config config = new Config();    
     
     public static void loadTraps(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        traps.clear();
+        config.loadConfig(CONFIG_FILENAME);
         
-        trapManager.loadConfig();
-        FileConfiguration config = trapManager.getBukkitConfig();
-        if(!config.isConfigurationSection("Traps")){
+        traps.clear();        
+        ConfigurationSection section = config.getConfigurationSection(TRAPS_KEY, null);
+        if(section == null){
             return;
         }
         
-        for(String key : config.getConfigurationSection("Traps").getKeys(false)){
-            String path = "Traps." + key;
+        for(String key : section.getKeys(false)){
+            String path = TRAPS_KEY + "." + key;
+            
             //Load trap Location
-            World world = Bukkit.getWorld(config.getString(path + ".location.world"));
-            if(world == null){
+            Location trapLocation = config.getLocation(path + ".location");
+            if(trapLocation == null) {
                 continue;
             }
-            
-            int x = config.getInt(path + ".location.x");
-            int y = config.getInt(path + ".location.y");
-            int z = config.getInt(path + ".location.z");
-            Location trapLocation = new Location(world, x, y, z);
             
             XMaterial xmaterial = XMaterial.matchXMaterial(trapLocation.getBlock().getType());
             if(!TrapReward.getPressurePlateMaterials().contains(xmaterial)){
@@ -77,7 +69,7 @@ public class TrapManager extends ReadWriteConfig implements Listener{
             }
             
             //Load trap ItemStack
-            String materialName = config.getString(path + ".item.material");
+            XMaterial material = config.getMaterial(path + ".item.material");
             String name = config.getString(path + ".item.name");
             
             Outcome outcome;
@@ -88,16 +80,13 @@ public class TrapManager extends ReadWriteConfig implements Listener{
                 continue;
             }
             
-            Material stackMaterial = Material.valueOf(materialName);
-            ItemStack stack = ItemBuilder
-                    .newItem(XMaterial.matchXMaterial(stackMaterial))
-                    .withDisplayName(name)
-                    .build();
-            TrapReward.encryptOutcome(outcome, stack);
+            ItemStackWrapper wrapper = ItemStackWrapper.newItem(material)
+                                                       .setDisplayName(name);
+            encryptOutcome(outcome, wrapper);
             
             Trap trap = new Trap();
             trap.trapOutcome = outcome;
-            trap.trapItemStack = stack;
+            trap.trapItemStack = wrapper;
             
             traps.put(trapLocation, trap);
         }
@@ -106,41 +95,37 @@ public class TrapManager extends ReadWriteConfig implements Listener{
     
     public static void saveTraps(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        trapManager.clearConfig();
-        FileConfiguration config = trapManager.getBukkitConfig();
+        config.clearConfig();
         
         int i = 0;
         for(Map.Entry<Location, Trap> entry : traps.entrySet()){
             Location trapLocation = entry.getKey();
             Trap trap = entry.getValue();
             
-            String path = "Traps." + i;
-            //save Location
-            config.set(path + ".location.world", trapLocation.getWorld().getName());
-            config.set(path + ".location.x", trapLocation.getBlockX());
-            config.set(path + ".location.y", trapLocation.getBlockY());
-            config.set(path + ".location.z", trapLocation.getBlockZ());
+            String path = TRAPS_KEY + "." + i;
             
-            //save ItemStack
-            config.set(path + ".item.material", trap.trapItemStack.getType().name());
-            String displayName = ItemBuilder.fromItem(trap.trapItemStack, false)
-                    .getDisplayName();
+            // Save Location
+            config.set(path + ".location", trapLocation);
+            
+            // Save ItemStack
+            config.set(path + ".item.material", trap.trapItemStack.getMaterial());
+            String displayName = trap.trapItemStack.getDisplayName();
             String name = Logger.deColor(displayName);
             
             config.set(path + ".item.name", name);
-            config.set(path + ".trapOutcome", TrapReward.decryptOutcome(trap.trapItemStack) + "");
+            config.set(path + ".trapOutcome", decryptOutcome(trap.trapItemStack.toItemStack()).toString());
             
             i++;
         }
         
-        trapManager.saveConfig();
+        config.saveConfig(CONFIG_FILENAME);
 //</editor-fold>
     }
     
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     private static void onTrapActivated(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!WorldConfig.isEnabled(e.getPlayer().getWorld().getName())){
+        if(!WorldManager.isEnabled(e.getPlayer().getWorld().getName())){
             return;
         }
         
@@ -155,7 +140,7 @@ public class TrapManager extends ReadWriteConfig implements Listener{
         }
         
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK
-                && !trap.trapItemStack.getType().name().contains("CHEST")){
+                && !trap.trapItemStack.getMaterial().name().contains("CHEST")){
             return;
         }
         
@@ -176,11 +161,11 @@ public class TrapManager extends ReadWriteConfig implements Listener{
             return;
         }
         
-        Outcome outcome = TrapReward.decryptOutcome(stack);
+        Outcome outcome = decryptOutcome(stack);
         if(outcome != null){
             //Add location to traps
             Trap trap = new Trap();
-            trap.trapItemStack = stack.clone();
+            trap.trapItemStack = ItemStackWrapper.fromItem(stack, true);
             trap.trapItemStack.setAmount(1);
             trap.trapOutcome = outcome;
             traps.put(e.getBlock().getLocation(), trap);
@@ -198,14 +183,14 @@ public class TrapManager extends ReadWriteConfig implements Listener{
             e.setCancelled(true);
             e.getBlock().setType(Material.AIR);
             traps.remove(loc);
-            loc.getWorld().dropItemNaturally(loc, trap.trapItemStack.clone());
+            trap.trapItemStack.dropAtLocation(loc);
             saveTraps();
         }else if((trap = traps.get(loc.add(0, 1, 0))) != null){
-            Material material = trap.trapItemStack.getType();
+            XMaterial material = trap.trapItemStack.getMaterial();
             if(!material.name().contains("CHEST")){
                 loc.getBlock().setType(Material.AIR);
                 traps.remove(loc);
-                loc.getWorld().dropItemNaturally(loc, trap.trapItemStack.clone());
+                trap.trapItemStack.dropAtLocation(loc);
                 saveTraps();
             }
         }
@@ -224,7 +209,7 @@ public class TrapManager extends ReadWriteConfig implements Listener{
                 traps.remove(loc);
                 iterator.remove();
                 block.setType(Material.AIR);
-                loc.getWorld().dropItemNaturally(loc, trap.trapItemStack.clone());
+                trap.trapItemStack.dropAtLocation(loc);
                 changedTraps = true;
             }
         }
@@ -246,7 +231,7 @@ public class TrapManager extends ReadWriteConfig implements Listener{
                 traps.remove(loc);
                 iterator.remove();
                 block.setType(Material.AIR);
-                loc.getWorld().dropItemNaturally(loc, trap.trapItemStack.clone());
+                trap.trapItemStack.dropAtLocation(loc);
                 changedTraps = true;
             }
         }
@@ -254,5 +239,34 @@ public class TrapManager extends ReadWriteConfig implements Listener{
             saveTraps();
         }
 //</editor-fold>
+    }
+    
+    public static void encryptOutcome(Outcome outcome, ItemStackWrapper wrapper){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        wrapper.setNbtTag(HIDDEN_TAG, outcome.toString());
+//</editor-fold>
+    }
+    public static void encryptOutcome(String packName, int outcomeID, ItemStackWrapper wrapper){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        wrapper.setNbtTag(HIDDEN_TAG, packName + "/" + outcomeID);
+//</editor-fold>
+    }
+    public static Outcome decryptOutcome(ItemStack item){
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        if(!NBTUtils.contains(item, HIDDEN_TAG)){
+            return null;
+        }
+        
+        try{
+            return Outcome.fromString(NBTUtils.getString(item, HIDDEN_TAG));
+        }catch(Exception ex){
+            return null;
+        }
+//</editor-fold>
+    }
+    
+    private static class Trap {
+        public Outcome trapOutcome;
+        public ItemStackWrapper trapItemStack;
     }
 }

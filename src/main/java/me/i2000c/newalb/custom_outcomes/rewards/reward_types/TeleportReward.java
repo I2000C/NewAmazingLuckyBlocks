@@ -1,23 +1,29 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.cryptomorin.xseries.XMaterial;
+
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
+@Getter
+@Setter
 public class TeleportReward extends Reward{
     public static final String PLAYER_WORLD_PATTERN = "%world%";
     
-    private TeleportSource source;
+    private TeleportSource teleportSource;
     private String worldName;
     private Offset offset;    
     
@@ -34,55 +40,34 @@ public class TeleportReward extends Reward{
     
     public TeleportReward(Outcome outcome){
         super(outcome);
-        source = TeleportSource.RELATIVE_TO_PLAYER;
+        teleportSource = TeleportSource.RELATIVE_TO_PLAYER;
         worldName = PLAYER_WORLD_PATTERN;
         offset = new Offset();        
     }
-        
-    public void setTeleportSource(TeleportSource source){
-        this.source = source;
-    }
-    public TeleportSource getTeleportSource(){
-        return this.source;
-    }
-    
-    public void setWorldName(String worldName){
-        this.worldName = worldName;
-    }
-    public String getWorldName(){
-        return this.worldName;
-    }
-    
-    public void setOffset(Offset offset){
-        this.offset = offset;
-    }
-    public Offset getOffset(){
-        return this.offset;
-    }    
     
     @Override
     public ItemStack getItemToDisplay(){
-        return ItemBuilder.newItem(XMaterial.COMPASS)
-                .withDisplayName("&eTeleport")
-                .addLoreLine("&bSource: &3" + source.name())
+        return ItemStackWrapper.newItem(XMaterial.COMPASS)
+                .setDisplayName("&eTeleport")
+                .addLoreLine("&bSource: &3" + teleportSource.name())
                 .addLoreLine("&bWorld name: &3" + worldName)
                 .addLoreLine("&dOffset:")
                 .addLoreLine("   &5X: &3" + offset.getOffsetX())
                 .addLoreLine("   &5Y: &3" + offset.getOffsetY())
                 .addLoreLine("   &5Z: &3" + offset.getOffsetZ())
-                .build();
+                .toItemStack();
     }
     
     @Override
-    public void saveRewardIntoConfig(FileConfiguration config, String path){
-        config.set(path + ".source", source.name());
+    public void saveRewardIntoConfig(Config config, String path){
+        config.set(path + ".source", teleportSource.name());
         config.set(path + ".worldName", worldName);
         offset.saveToConfig(config, path + ".offset");        
     }
     
     @Override
-    public void loadRewardFromConfig(FileConfiguration config, String path){
-        this.source = TeleportSource.valueOf(config.getString(path + ".source"));
+    public void loadRewardFromConfig(Config config, String path){
+        this.teleportSource = config.getEnum(path + ".source", TeleportSource.class);
         this.worldName = config.getString(path + ".worldName");
         this.offset = new Offset(config, path + ".offset");        
     }
@@ -94,7 +79,7 @@ public class TeleportReward extends Reward{
         float yaw = playerLocation.getYaw();
         
         Location teleportLocation;
-        switch(source){
+        switch(teleportSource){
             case RELATIVE_TO_PLAYER:
                 teleportLocation = offset.applyToLocation(playerLocation);
                 break;

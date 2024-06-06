@@ -14,7 +14,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -63,30 +63,30 @@ public class SquidExplosionMenu extends Editor<SquidExplosionReward>{
             menu.setItem(i, glass);
         }
         
-        ItemStack timeStack = ItemBuilder.newItem(XMaterial.CLOCK)
-                .withDisplayName("&eExplosion countdown time: &b" + item.getCountdownTime())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack timeStack = ItemStackWrapper.newItem(XMaterial.CLOCK)
+                                              .setDisplayName("&eExplosion countdown time: &b" + item.getCountdownTime())
+                                              .addLoreLine("&3Click to reset")
+                                              .toItemStack();
         
-        ItemStack radiusStack = ItemBuilder.newItem(XMaterial.COMPASS)
-                .withDisplayName("&6Explosion radius: &b" + item.getRadius())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack radiusStack = ItemStackWrapper.newItem(XMaterial.COMPASS)
+                                                .setDisplayName("&6Explosion radius: &b" + item.getRadius())
+                                                .addLoreLine("&3Click to reset")
+                                                .toItemStack();
         
-        ItemStack addEffectStack = ItemBuilder.newItem(XMaterial.POTION)
-                .withDisplayName("&aClick to add potion effects")
-                .build();
+        ItemStack addEffectStack = ItemStackWrapper.newItem(XMaterial.POTION)
+                                                   .setDisplayName("&aClick to add potion effects")
+                                                   .toItemStack();
         
-        ItemStack resetEffectsStack = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cClick to remove all potion effects")
-                .build();
+        ItemStack resetEffectsStack = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                      .setDisplayName("&cClick to remove all potion effects")
+                                                      .toItemStack();
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.ENCHANTING_TABLE);
-        builder.withDisplayName("&3Current potion effects:");
+        ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.ENCHANTING_TABLE);
+        builder.setDisplayName("&3Current potion effects:");
         item.getEffects().forEach(effect -> {
             builder.addLoreLine("  &d" + effect);
         });
-        ItemStack effectListStack = builder.build();
+        ItemStack effectListStack = builder.toItemStack();
         
         menu.setItem(19, GUIItem.getBackItem());
         menu.setItem(25, GUIItem.getNextItem());

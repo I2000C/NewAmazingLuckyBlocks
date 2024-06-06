@@ -7,186 +7,155 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.SneakyThrows;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils.textures.URLTextureException;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.RandomUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 
-public class LuckyBlockType implements Displayable, Executable{
+@Data
+@EqualsAndHashCode(of = "ID")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class LuckyBlockType implements Displayable, Executable {
+    
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private int ID;
     
     private String typeName;
     
-    private ItemStack luckyBlockItem;
+    private ItemStackWrapper luckyBlockItem;
     
     private boolean requireBreakPermission;
     private String breakPermission;
     private boolean requirePlacePermission;
     private String placePermission;
     
-    private Texture texture;
-    
+    @Setter(AccessLevel.NONE)
     private List<ItemStack> crafting;
+    
+    @Setter(AccessLevel.NONE)
     private ShapedRecipe recipe;
     
+    @Setter(AccessLevel.NONE)
     private Map<OutcomePack, Integer> packs;
+    
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private int totalProbability;
     
-    private TypeData data;
-    
-    
-    public String getTypeName(){
-        return typeName;
-    }
-    public void setTypeName(String typeName){
-        this.typeName = typeName;
-    }
+    private TypeData typeData;
     
     @Override
     public ItemStack getItemToDisplay(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        ItemBuilder builder = ItemBuilder.fromItem(this.luckyBlockItem);
-        builder.withDisplayName("&bIdentifier: &6" + this.typeName);
-        builder.withLore();
-        builder.addLoreLine("&5Material: &a" + luckyBlockItem.getType().name());
+        ItemStackWrapper wrapper = this.luckyBlockItem.clone();
+        wrapper.setDisplayName("&bIdentifier: &6" + this.typeName);
+        wrapper.setLore();
+        wrapper.addLoreLine("&5Material: &a" + luckyBlockItem.getMaterial().name());
         
-        if(this.texture == null){
-           builder.addLoreLine("&5Texture: &cnull"); 
+        Texture texture = wrapper.getTexture();
+        if(texture == null){
+           wrapper.addLoreLine("&5Texture: &cnull"); 
         }else{
-            String textureString = this.texture.toString().substring(0, 8) + "...";
-            builder.addLoreLine("&5Texture: &b" + textureString);
+            String textureString = texture.toString().substring(0, 8) + "...";
+            wrapper.addLoreLine("&5Texture: &b" + textureString);
         }
         
-        ItemBuilder builder2 = ItemBuilder.fromItem(luckyBlockItem, false);
-        String displayName = builder2.getDisplayName();
+        String displayName = this.luckyBlockItem.getDisplayName();
         if(displayName != null){
-            builder.addLoreLine(String.format("&5Item name: &r%s", displayName));
+            wrapper.addLoreLine(String.format("&5Item name: &r%s", displayName));
         }else{
-            builder.addLoreLine("&5Item name: &cnull");
+            wrapper.addLoreLine("&5Item name: &cnull");
         }
         
-        List<String> lore = builder2.getLore();
+        List<String> lore = this.luckyBlockItem.getLore();
         if(lore != null){
-            builder.addLoreLine("&5Item lore:");
-            lore.forEach(line -> builder.addLoreLine("    " + line));
+            wrapper.addLoreLine("&5Item lore:");
+            lore.forEach(line -> wrapper.addLoreLine("    " + line));
         }else{
-            builder.addLoreLine("&5Item lore: &cnull");
+            wrapper.addLoreLine("&5Item lore: &cnull");
         }
         
-        builder.addLoreLine("&5Place permission:");
-        builder.addLoreLine("    &b" + this.placePermission);
-        builder.addLoreLine("&5Break permission:");
-        builder.addLoreLine("    &b" + this.breakPermission);
-        builder.addLoreLine("&5Place permission required: " + (this.requirePlacePermission ? "&atrue" : "&7false"));
-        builder.addLoreLine("&5Break permission required: " + (this.requireBreakPermission ? "&atrue" : "&7false"));
+        wrapper.addLoreLine("&5Place permission:");
+        wrapper.addLoreLine("    &b" + this.placePermission);
+        wrapper.addLoreLine("&5Break permission:");
+        wrapper.addLoreLine("    &b" + this.breakPermission);
+        wrapper.addLoreLine("&5Place permission required: " + (this.requirePlacePermission ? "&atrue" : "&7false"));
+        wrapper.addLoreLine("&5Break permission required: " + (this.requireBreakPermission ? "&atrue" : "&7false"));
         
-        builder.addLoreLine("&5Crafting:");
-        builder.addLoreLine(String.format("    &e%s %s %s", 
-                ItemBuilder.fromItem(this.crafting.get(0), false).toString(), 
-                ItemBuilder.fromItem(this.crafting.get(1), false).toString(), 
-                ItemBuilder.fromItem(this.crafting.get(2), false).toString()));
-        builder.addLoreLine(String.format("    &e%s %s %s", 
-                ItemBuilder.fromItem(this.crafting.get(3), false).toString(), 
-                ItemBuilder.fromItem(this.crafting.get(4), false).toString(), 
-                ItemBuilder.fromItem(this.crafting.get(5), false).toString()));
-        builder.addLoreLine(String.format("    &e%s %s %s", 
-                ItemBuilder.fromItem(this.crafting.get(6), false).toString(), 
-                ItemBuilder.fromItem(this.crafting.get(7), false).toString(), 
-                ItemBuilder.fromItem(this.crafting.get(8), false).toString()));
+        wrapper.addLoreLine("&5Crafting:");
+        wrapper.addLoreLine(String.format("    &e%s %s %s", 
+                ItemStackWrapper.fromItem(this.crafting.get(0), false).toString(), 
+                ItemStackWrapper.fromItem(this.crafting.get(1), false).toString(), 
+                ItemStackWrapper.fromItem(this.crafting.get(2), false).toString()));
+        wrapper.addLoreLine(String.format("    &e%s %s %s", 
+                ItemStackWrapper.fromItem(this.crafting.get(3), false).toString(), 
+                ItemStackWrapper.fromItem(this.crafting.get(4), false).toString(), 
+                ItemStackWrapper.fromItem(this.crafting.get(5), false).toString()));
+        wrapper.addLoreLine(String.format("    &e%s %s %s", 
+                ItemStackWrapper.fromItem(this.crafting.get(6), false).toString(), 
+                ItemStackWrapper.fromItem(this.crafting.get(7), false).toString(), 
+                ItemStackWrapper.fromItem(this.crafting.get(8), false).toString()));
         
-        builder.addLoreLine("&5Pack list:");
+        wrapper.addLoreLine("&5Pack list:");
         this.packs.forEach((pack, probability) -> {
-            builder.addLoreLine("    &2" + pack.getPackname() + ";" + probability);
+            wrapper.addLoreLine("    &2" + pack.getPackname() + ";" + probability);
         });
         
-        return builder.build();
+        return wrapper.toItemStack();
 //</editor-fold>
     }
-    public ItemStack getItem(){
+    
+    public ItemStackWrapper getItem(){
         return luckyBlockItem.clone();
     }
-    public void setItem(ItemStack item){
-        this.luckyBlockItem = item;
-        this.texture = TextureManager.getTexture(item);
+    public void setItem(ItemStackWrapper item){
+        this.luckyBlockItem = item.clone();
     }
-    
-    public List<ItemStack> getCrafting(){
-        return crafting;
-    }
-    public ShapedRecipe getRecipe(){
-        return recipe;
-    }    
     
     public boolean checkBreakPermission(Player player){
         return !requireBreakPermission || player.hasPermission(breakPermission);
     }
     public boolean checkPlacePermission(Player player){
         return !requirePlacePermission || player.hasPermission(placePermission);
-    }
-    
-    public String getPlacePermission(){
-        return placePermission;
-    }
-    public void setPlacePermission(String permission){
-        placePermission = permission;
-    }
-    public String getBreakPermission(){
-        return breakPermission;
-    }
-    public void setBreakPermission(String permission){
-        breakPermission = permission;
-    }
-    
-    public boolean requirePlacePermission(){
-        return requirePlacePermission;
-    }
-    public void setRequirePlacePermission(boolean requirePermission){
-        requirePlacePermission = requirePermission;
     }    
-    public boolean requireBreakPermission(){
-        return requireBreakPermission;
-    }
-    public void setRequireBreakPermission(boolean requirePermission){
-        requireBreakPermission = requirePermission;
-    }
-    
-    public Map<OutcomePack, Integer> getPacks(){
-        return packs;
-    }
-    
-    public TypeData getTypeData(){
-        return data;
-    }
-    
     
     public LuckyBlockType(String typeName){
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.typeName = typeName;
         this.ID = -1;
         
-        luckyBlockItem = new ItemStack(Material.SPONGE);
+        luckyBlockItem = ItemStackWrapper.newItem(XMaterial.SPONGE);
         
         requireBreakPermission = false;
         breakPermission = "alb.lucky_block." + typeName + ".break";
         requirePlacePermission = false;
         placePermission = "alb.lucky_block." + typeName + ".place";
-        
-        texture = null;
         
         crafting = new ArrayList<>(9);
         ItemStack air = new ItemStack(Material.AIR);
@@ -199,13 +168,11 @@ public class LuckyBlockType implements Displayable, Executable{
         packs = new LinkedHashMap<>();
         totalProbability = 0;
         
-        data = null;
+        typeData = null;
 //</editor-fold>
-    }
+    } 
     
-    private LuckyBlockType(){}    
-    
-    public static LuckyBlockType loadFromConfig(FileConfiguration config, String typeName){
+    public static LuckyBlockType loadFromConfig(Config config, String typeName){
         //<editor-fold defaultstate="collapsed" desc="Code">
         LuckyBlockType type = new LuckyBlockType();
         
@@ -221,34 +188,32 @@ public class LuckyBlockType implements Displayable, Executable{
         // Load item
         String name = config.getString("name");
         List<String> lore = config.getStringList("lore");
-        String materialName = config.getString("material");
-        String textureID = config.getString("textureID");
+        XMaterial material = config.getMaterial("material", null);
+        String textureID = config.getString("textureID", null);
         
-        if(textureID.isEmpty() && !materialName.isEmpty()){
-            type.luckyBlockItem = ItemBuilder.newItem(materialName).build();
-            type.texture = null;
-        }else if(!textureID.isEmpty() && materialName.isEmpty()){
-            try{
-                type.texture = new Texture(textureID);
-                type.luckyBlockItem = TextureManager.getItemSkullStack();
-                TextureManager.setTexture(type.luckyBlockItem, type.texture);
-            }catch(InvalidTextureException ex){
-                Logger.err(String.format("Invalid texture for LuckyBlock type \"%s\"", 
-                        type.typeName));
+        boolean validMaterial = material != null;
+        boolean validTexture = textureID != null && !textureID.trim().isEmpty();
+        
+        if(!validTexture && validMaterial) {
+            type.luckyBlockItem = ItemStackWrapper.newItem(material);
+        } else if(validTexture && !validMaterial) {
+            try {
+                Texture texture = new Texture(textureID);
+                type.luckyBlockItem = ItemStackWrapper.fromItem(TextureManager.getItemSkullStack())
+                                                      .setTexture(texture);
+            } catch(InvalidTextureException ex) {
+                Logger.err(String.format("Invalid texture for LuckyBlock type \"%s\"", type.typeName));
                 return null;
-            }catch(URLTextureException ex){
-                Logger.err(String.format("An error occured while loading texture for LuckyBlock type \"%s\":", 
-                        type.typeName));
+            } catch(URLTextureException ex) {
+                Logger.err(String.format("An error occured while loading texture for LuckyBlock type \"%s\":", type.typeName));
                 Logger.err(ex);
                 return null;
-            }catch(TextureException ex){}
-        }else{
+            } catch(TextureException ex) { }
+        } else {
             return null;
         }
         
-        ItemBuilder.fromItem(type.luckyBlockItem, false)
-                .withDisplayName(name)
-                .withLore(lore);
+        type.luckyBlockItem.setDisplayName(name).setLore(lore);
         
         // Load crafting
         List<String> recipeMaterialNames = config.getStringList("crafting");
@@ -258,9 +223,10 @@ public class LuckyBlockType implements Displayable, Executable{
         
         type.crafting = new ArrayList<>(9);
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-            type.recipe = new ShapedRecipe(type.luckyBlockItem);
+            type.recipe = new ShapedRecipe(type.luckyBlockItem.toItemStack());
         }else{
-            type.recipe = new ShapedRecipe(new NamespacedKey(NewAmazingLuckyBlocks.getInstance(), "NewAmazingLuckyBlocks." + type.ID), type.luckyBlockItem);
+            NamespacedKey namespacedKey = new NamespacedKey(NewAmazingLuckyBlocks.getInstance(), "NewAmazingLuckyBlocks." + type.ID);
+            type.recipe = new ShapedRecipe(namespacedKey, type.luckyBlockItem.toItemStack());
         }        
         
         String char0 = materialNames[0].startsWith("AIR") ? " " : "A";
@@ -279,7 +245,7 @@ public class LuckyBlockType implements Displayable, Executable{
         
         char ingredientChar = 'A';
         for(String materialAndData : materialNames){
-            ItemStack item = ItemBuilder.newItem(materialAndData).build();
+            ItemStack item = ItemStackWrapper.newItem(materialAndData).toItemStack();
             if(item.getType() != Material.AIR){
                 if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
                     type.recipe.setIngredient(ingredientChar, item.getType(), item.getDurability());
@@ -322,20 +288,18 @@ public class LuckyBlockType implements Displayable, Executable{
             }            
         }
         if(type.packs.isEmpty()){
-            Logger.warn(String.format("LuckyBlockType \"%s\" doesn't contain any valid outcome pack", 
-                    type.typeName));
+            Logger.warn(String.format("LuckyBlockType \"%s\" doesn't contain any valid outcome pack", type.typeName));
         }else if(type.totalProbability <= 0){
-            Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
-                    type.typeName));
+            Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", type.typeName));
         }
         
-        type.data = new TypeData(type.luckyBlockItem);
+        type.typeData = new TypeData(type.luckyBlockItem);
         
         return type;
 //</editor-fold>
     }
     
-    public void saveToConfig(FileConfiguration config){
+    public void saveToConfig(Config config){
         //<editor-fold defaultstate="collapsed" desc="Code">
         
         // Save permissions
@@ -345,25 +309,30 @@ public class LuckyBlockType implements Displayable, Executable{
         config.set("permissions.place.permission", placePermission);
         
         // Save item
-        ItemBuilder builder = ItemBuilder.fromItem(luckyBlockItem, false);
-        String name = builder.getDisplayName();
-        List<String> lore = builder.getLore();
+        String name = luckyBlockItem.getDisplayName();
+        List<String> lore = luckyBlockItem.getLore();
+        
+        XMaterial material = luckyBlockItem.getMaterial();
+        Texture texture = luckyBlockItem.getTexture();
         
         config.set("name", name != null ? Logger.deColor(name) : "");
         config.set("lore", lore != null ? Logger.deColor(lore) : Collections.EMPTY_LIST);
-        config.set("material", texture == null ? ItemBuilder.fromItem(luckyBlockItem, false).toString() : "");
-        config.set("textureID", texture != null ? texture.toString() : "");
+        if(texture == null) {
+            config.set("material", material);
+        } else {
+            config.set("textureID", texture.toString());
+        }
         
         // Save crafting recipe
-        String row0 = ItemBuilder.fromItem(crafting.get(0), false).toString() + " " +
-                      ItemBuilder.fromItem(crafting.get(1), false).toString() + " " +
-                      ItemBuilder.fromItem(crafting.get(2), false).toString();
-        String row1 = ItemBuilder.fromItem(crafting.get(3), false).toString() + " " +
-                      ItemBuilder.fromItem(crafting.get(4), false).toString() + " " +
-                      ItemBuilder.fromItem(crafting.get(5), false).toString();
-        String row2 = ItemBuilder.fromItem(crafting.get(6), false).toString() + " " +
-                      ItemBuilder.fromItem(crafting.get(7), false).toString() + " " +
-                      ItemBuilder.fromItem(crafting.get(8), false).toString();
+        String row0 = ItemStackWrapper.fromItem(crafting.get(0), false).toString() + " " +
+                      ItemStackWrapper.fromItem(crafting.get(1), false).toString() + " " +
+                      ItemStackWrapper.fromItem(crafting.get(2), false).toString();
+        String row1 = ItemStackWrapper.fromItem(crafting.get(3), false).toString() + " " +
+                      ItemStackWrapper.fromItem(crafting.get(4), false).toString() + " " +
+                      ItemStackWrapper.fromItem(crafting.get(5), false).toString();
+        String row2 = ItemStackWrapper.fromItem(crafting.get(6), false).toString() + " " +
+                      ItemStackWrapper.fromItem(crafting.get(7), false).toString() + " " +
+                      ItemStackWrapper.fromItem(crafting.get(8), false).toString();
         config.set("crafting", Arrays.asList(row0, row1, row2));
         
         // Save outcome packs
@@ -382,36 +351,12 @@ public class LuckyBlockType implements Displayable, Executable{
     public void removePack(OutcomePack pack){
         packs.remove(pack);
     }
-        
-    public void replaceBlock(Block block){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        String materialName = luckyBlockItem.getType().name();
-        if(materialName.equals("SKULL_ITEM")){
-            block.setType(Material.valueOf("SKULL"));
-        }else{
-            block.setType(luckyBlockItem.getType());
-        }
-        
-        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-            block.setData((byte) luckyBlockItem.getDurability());
-        }
-        
-        if(texture != null){
-            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-                block.setData((byte) 1);
-            }
-            
-            TextureManager.setTexture(block, texture, true);
-        }
-//</editor-fold>
-    }
     
     @Override
     public void execute(Player player, Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(totalProbability <= 0){
-            Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", 
-                    typeName));
+            Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", typeName));
         }else{
             int randomNumber = RandomUtils.getInt(totalProbability);
             for(Map.Entry<OutcomePack, Integer> entry : packs.entrySet()){
@@ -427,51 +372,15 @@ public class LuckyBlockType implements Displayable, Executable{
 //</editor-fold>
     }
     
-
+    @SneakyThrows
     @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 71 * hash + this.ID;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final LuckyBlockType other = (LuckyBlockType) obj;
-        return this.ID == other.ID;
-    }
-    
-    public LuckyBlockType cloneType(){
+    public LuckyBlockType clone(){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        LuckyBlockType clone = new LuckyBlockType(typeName);
-        
-        clone.ID = this.ID;
+        LuckyBlockType clone = (LuckyBlockType) super.clone();
         
         clone.luckyBlockItem = this.getItem();
-        
-        clone.requireBreakPermission = this.requireBreakPermission;
-        clone.breakPermission = this.breakPermission;
-        clone.requirePlacePermission = this.requirePlacePermission;
-        clone.placePermission = this.placePermission;
-        
-        clone.texture = this.texture;
-        
         clone.crafting = new ArrayList<>(this.crafting);
-        clone.recipe = this.recipe;
-        
         clone.packs = new HashMap<>(this.packs);
-        clone.totalProbability = this.totalProbability;
-        
-        clone.data = this.data;
         
         return clone;
 //</editor-fold>

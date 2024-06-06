@@ -1,14 +1,5 @@
 package me.i2000c.newalb.listeners.objects;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
-import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,11 +12,22 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.MetadataManager;
+import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
+
 public class IceBow extends SpecialItem{
     
     private static final int ICE_CAGE_HEIGHT = 3;
     
-    private ItemBuilder iceItem;
+    private ItemStackWrapper iceItem;
     private boolean protectStructures;
     private long ticks;
     private long beforeTicks;
@@ -36,18 +38,18 @@ public class IceBow extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        this.iceItem = ItemBuilder.newItem(ConfigManager.getConfig().getString(super.itemPathKey + ".freeze-material"));
-        this.protectStructures = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".protect-structures");
-        this.ticks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
-        this.beforeTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-before-freezing");
-        this.snowRadius = ConfigManager.getConfig().getInt(super.itemPathKey + ".snowRadius");
-        this.generateSnow = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".generateSnow");
-        this.generateIcePrison = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".generateIcePrison");
-        this.disableArrowKnockback = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".disableArrowKnockback");
+        this.iceItem = ItemStackWrapper.newItem(ConfigManager.getMainConfig().getString(super.itemPathKey + ".freeze-material"));
+        this.protectStructures = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".protect-structures");
+        this.ticks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
+        this.beforeTicks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-before-freezing");
+        this.snowRadius = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".snowRadius");
+        this.generateSnow = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".generateSnow");
+        this.generateIcePrison = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".generateIcePrison");
+        this.disableArrowKnockback = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".disableArrowKnockback");
         
-        return ItemBuilder.newItem(XMaterial.BOW)
-                .addEnchantment(Enchantment.DURABILITY, 5)
-                .build();
+        return ItemStackWrapper.newItem(XMaterial.BOW)
+                               .addEnchantment(Enchantment.DURABILITY, 5)
+                               .toItemStack();
     }
     
     @Override

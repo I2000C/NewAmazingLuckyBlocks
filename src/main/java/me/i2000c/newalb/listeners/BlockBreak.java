@@ -6,15 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.Executable;
 import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils.LangConfig;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.WorldConfig;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils.WorldManager;
+import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Bukkit;
@@ -40,7 +39,7 @@ public class BlockBreak implements Listener{
         Player p = e.getPlayer();
         World w = p.getWorld();
         
-        if(!WorldConfig.isEnabled(w.getName())) {
+        if(!WorldManager.isEnabled(w.getName())) {
             return;
         }
         
@@ -62,14 +61,14 @@ public class BlockBreak implements Listener{
                 break;
             case TypeManager.RESULT_NO_GLOBAL_PERMISSION:
             case TypeManager.RESULT_NO_LOCAL_PERMISSION:
-                Logger.sendMessage(LangConfig.getMessage("NoPermission"), p);
+                Logger.sendMessage(ConfigManager.getLangMessage("NoPermission"), p);
                 e.setCancelled(true);
                 break;
             case TypeManager.RESULT_OK:
-                boolean requireLuckyTool = ConfigManager.getConfig().getBoolean("LuckyTool.enable");
-                boolean canOnlyBreakWithLuckyTool = ConfigManager.getConfig().getBoolean("LuckyTool.onlyCanBreakLuckyBlocksWithLuckyTool");
+                boolean requireLuckyTool = ConfigManager.getMainConfig().getBoolean("Objects.LuckyTool.enable");
+                boolean canOnlyBreakWithLuckyTool = ConfigManager.getMainConfig().getBoolean("Objects.LuckyTool.onlyCanBreakLuckyBlocksWithLuckyTool");
                 if(requireLuckyTool && canOnlyBreakWithLuckyTool){
-                    Logger.sendMessage(LangConfig.getMessage("Objects.LuckyTool.need"), p);
+                    Logger.sendMessage(ConfigManager.getLangMessage("Objects.LuckyTool.need"), p);
                     e.setCancelled(true);
                 }else{
                     b.setType(Material.AIR);
@@ -81,17 +80,17 @@ public class BlockBreak implements Listener{
     
     private static final String DEFAULT_MATERIAL = "DEFAULT";
     private void dropLuckyBlock(BlockBreakEvent e){
-        boolean drop = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.enable");
+        boolean drop = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.enable");
         if(!drop){
             return;
         }
         
-        boolean survivalOnly = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.survivalOnly");
+        boolean survivalOnly = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.survivalOnly");
         if(survivalOnly && e.getPlayer().getGameMode() != GameMode.SURVIVAL){
             return;
         }
         
-        boolean disableWithSilkTouch = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.disableWithSilkTouch");
+        boolean disableWithSilkTouch = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.disableWithSilkTouch");
         if(disableWithSilkTouch) {
             ItemStack item = e.getPlayer().getItemInHand();
             if(item != null && item.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0) {
@@ -102,14 +101,14 @@ public class BlockBreak implements Listener{
         Map<String, Integer> defaultProbabilities = new HashMap<>();
         Map<XMaterial, Map<String, Integer>> materialProbabilities = new EnumMap<>(XMaterial.class);
         
-        if(ConfigManager.getConfig().isList("LuckyBlock.DropOnBlockBreak.enabledBlocks")) {
+        if(ConfigManager.getMainConfig().getBukkitConfig().isList("LuckyBlock.DropOnBlockBreak.enabledBlocks")) {
             Logger.warn("Invalid values detected inside \"LuckyBlock.DropOnBlockBreak.enabledBlocks\" config section");
             Logger.warn("Expected: map, Found: list");
             Logger.warn("Delete current config file and reload the server to fix this issue");
             return;
         }
         
-        ConfigurationSection cs = ConfigManager.getConfig().getConfigurationSection("LuckyBlock.DropOnBlockBreak.enabledBlocks");
+        ConfigurationSection cs = ConfigManager.getMainConfig().getConfigurationSection("LuckyBlock.DropOnBlockBreak.enabledBlocks");
         for(String key : cs.getKeys(false)) {
             ConfigurationSection subSection = cs.getConfigurationSection(key);
             for(String typeName : subSection.getKeys(false)) {
@@ -123,7 +122,7 @@ public class BlockBreak implements Listener{
                 if(key.equals(DEFAULT_MATERIAL)) {
                     defaultProbabilities.put(typeName, probability);
                 } else {
-                    XMaterial material = ItemBuilder.newItem(key).getXMaterial();
+                    XMaterial material = OtherUtils.parseXMaterial(key);
                     Map<String, Integer> probabilityMap = materialProbabilities.getOrDefault(material, new HashMap<>());
                     probabilityMap.put(typeName, probability);
                     materialProbabilities.put(material, probabilityMap);
@@ -140,7 +139,7 @@ public class BlockBreak implements Listener{
         }
         
         Player p = e.getPlayer();
-        List<String> commandList = ConfigManager.getConfig().getStringList("LuckyBlock.DropOnBlockBreak.commands");
+        List<String> commandList = ConfigManager.getMainConfig().getStringList("LuckyBlock.DropOnBlockBreak.commands");
         
         final int totalProbability = 100;
         int randomValue = RandomUtils.getInt(totalProbability);
@@ -150,7 +149,7 @@ public class BlockBreak implements Listener{
             randomValue -= probability;
             if(randomValue < 0) {            
                 Block b = e.getBlock();
-                boolean dropOriginalItem = ConfigManager.getConfig().getBoolean("LuckyBlock.DropOnBlockBreak.dropOriginalItem");
+                boolean dropOriginalItem = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.dropOriginalItem");
                 if(!dropOriginalItem){
                     e.setCancelled(true);
                     b.setType(Material.AIR);
@@ -158,8 +157,7 @@ public class BlockBreak implements Listener{
 
                 Location targetLocation = b.getLocation().add(0.5, 0, 0.5);
                 LuckyBlockType randomType = TypeManager.getType(typeName);
-                ItemStack luckyItem = randomType.getItem();
-                b.getWorld().dropItemNaturally(targetLocation, luckyItem);
+                randomType.getItem().dropAtLocation(targetLocation);
 
                 commandList.forEach(command -> {
                     byte data = MinecraftVersion.CURRENT_VERSION.isLegacyVersion() ? b.getData() : 0;

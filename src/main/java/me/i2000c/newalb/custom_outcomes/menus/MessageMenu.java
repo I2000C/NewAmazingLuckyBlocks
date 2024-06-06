@@ -14,7 +14,7 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,66 +41,58 @@ public class MessageMenu extends Editor<MessageReward>{
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
-        ItemStack titleItem = ItemBuilder.newItem(XMaterial.BOOK)
-                .withDisplayName("&bSelect title")
-                .addLoreLine("&3Selected title: &r\"" + item.getTitle() + "&r\"")
-                .addLoreLine("&eClick to change")
-                .addLoreLine("")
-                .addLoreLine("&7Use &a%player% &7if you want to use")
-                .addLoreLine("&7  the player's name in the message,")
-                .addLoreLine("&7&a%x%&7, &a%y%, &a%z% &7if you want")
-                .addLoreLine("&7  to use the player's coordinates")
-                .addLoreLine("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want")
-                .addLoreLine("&7  to use the LuckyBlock's coordinates")
-                .build();
+        ItemStack titleItem = ItemStackWrapper.newItem(XMaterial.BOOK)
+                                              .setDisplayName("&bSelect title")
+                                              .addLoreLine("&3Selected title: &r\"" + item.getTitle() + "&r\"")
+                                              .addLoreLine("&eClick to change")
+                                              .addLoreLine("")
+                                              .addLoreLine("&7Use &a%player% &7if you want to use")
+                                              .addLoreLine("&7  the player's name in the message,")
+                                              .addLoreLine("&7&a%x%&7, &a%y%, &a%z% &7if you want")
+                                              .addLoreLine("&7  to use the player's coordinates")
+                                              .addLoreLine("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want")
+                                              .addLoreLine("&7  to use the LuckyBlock's coordinates")
+                                              .toItemStack();
         
-        ItemStack subtitleItem = ItemBuilder.newItem(XMaterial.BOOK)
-                .withDisplayName("&bSelect subtitle")
-                .addLoreLine("&3Selected subtitle: &r\"" + item.getSubtitle() + "&r\"")
-                .addLoreLine("&eClick to change")
-                .addLoreLine("")
-                .addLoreLine("&6The subtitle only is used")
-                .addLoreLine("&6  when message type is TITLE")
-                .addLoreLine("")
-                .addLoreLine("&7Use &a%player% &7if you want to use")
-                .addLoreLine("&7  the player's name in the message,")
-                .addLoreLine("&7&a%x%&7, &a%y%, &a%z% &7if you want")
-                .addLoreLine("&7  to use the player's coordinates")
-                .addLoreLine("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want")
-                .addLoreLine("&7  to use the LuckyBlock's coordinates")
-                .build();
+        ItemStack subtitleItem = ItemStackWrapper.newItem(XMaterial.BOOK)
+                                                 .setDisplayName("&bSelect subtitle")
+                                                 .addLoreLine("&3Selected subtitle: &r\"" + item.getSubtitle() + "&r\"")
+                                                 .addLoreLine("&eClick to change")
+                                                 .addLoreLine("")
+                                                 .addLoreLine("&6The subtitle only is used")
+                                                 .addLoreLine("&6  when message type is TITLE")
+                                                 .addLoreLine("")
+                                                 .addLoreLine("&7Use &a%player% &7if you want to use")
+                                                 .addLoreLine("&7  the player's name in the message,")
+                                                 .addLoreLine("&7&a%x%&7, &a%y%, &a%z% &7if you want")
+                                                 .addLoreLine("&7  to use the player's coordinates")
+                                                 .addLoreLine("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want")
+                                                 .addLoreLine("&7  to use the LuckyBlock's coordinates")
+                                                 .toItemStack();
         
-        ItemBuilder builder;
+        ItemStackWrapper wrapper;
         switch(item.getMessageType()){
             case TITLE:
-                builder = ItemBuilder.newItem(XMaterial.PAINTING);
+                wrapper = ItemStackWrapper.newItem(XMaterial.PAINTING);
                 break;
             case ACTION_BAR:
-                builder = ItemBuilder.newItem(XMaterial.NAME_TAG);
+                wrapper = ItemStackWrapper.newItem(XMaterial.NAME_TAG);
                 break;
             default:
             //case CHAT:
-                builder = ItemBuilder.newItem(XMaterial.OAK_SIGN);
+                wrapper = ItemStackWrapper.newItem(XMaterial.OAK_SIGN);
         }        
-        builder.withDisplayName("&aSelect message type");
-        builder.withLore("&3Selected message type: &5" + item.getMessageType().name());
-        ItemStack typeItem = builder.build();
+        wrapper.setDisplayName("&aSelect message type");
+        wrapper.setLore("&3Selected message type: &5" + item.getMessageType().name());
+        ItemStack typeItem = wrapper.toItemStack();
         
-        ItemStack back = ItemBuilder.newItem(XMaterial.ENDER_PEARL)
-                .withDisplayName("&7Back")
-                .build();
+        ItemStack deleteTitle = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                .setDisplayName("&cRemove title")
+                                                .toItemStack();
         
-        ItemStack next = ItemBuilder.newItem(XMaterial.ANVIL)
-                .withDisplayName("&bNext")
-                .build();
-        
-        ItemStack deleteTitle = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cRemove title")
-                .build();
-        
-        ItemStack deleteSubtitle = ItemBuilder.newItem(XMaterial.BARRIER)
-                .withDisplayName("&cRemove subtitle")
-                .build();
+        ItemStack deleteSubtitle = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                                   .setDisplayName("&cRemove subtitle")
+                                                   .toItemStack();
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);
@@ -118,8 +110,8 @@ public class MessageMenu extends Editor<MessageReward>{
         menu.setItem(21, deleteTitle);
         menu.setItem(22, deleteSubtitle);
         
-        menu.setItem(10, back);
-        menu.setItem(16, next);
+        menu.setItem(10, GUIItem.getBackItem());
+        menu.setItem(16, GUIItem.getNextItem());
         
         menu.openToPlayer(player);
 //</editor-fold>

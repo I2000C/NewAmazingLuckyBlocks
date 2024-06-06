@@ -2,10 +2,11 @@ package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
+import lombok.Getter;
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.particles.Particles;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.Task;
@@ -19,11 +20,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+@Getter
 public class MiniVolcano extends SpecialItem{
     
     private int defaultHeight;
-    private ItemBuilder defaultBaseMaterial;
-    private ItemBuilder defaultLavaMaterial;
+    private XMaterial defaultBaseMaterial;
+    private XMaterial defaultLavaMaterial;
     private long defaultTicks;
     private long defaultBeforeTicks;
     private boolean defaultSquared;
@@ -32,7 +34,7 @@ public class MiniVolcano extends SpecialItem{
     private int throwBlocksNumber;
     private double throwBlocksHeight;
     private double throwBlocksRadius;
-    private ItemBuilder throwBlocksMaterial;
+    private XMaterial throwBlocksMaterial;
     private long throwBlocksTicks;
     
     @Override
@@ -48,21 +50,21 @@ public class MiniVolcano extends SpecialItem{
     
     @Override
     public ItemStack buildItem(){
-        this.defaultHeight = ConfigManager.getConfig().getInt(super.itemPathKey + ".height");
-        this.defaultBaseMaterial = ItemBuilder.newItem(ConfigManager.getConfig().getString(super.itemPathKey + ".base-material"));
-        this.defaultLavaMaterial = ItemBuilder.newItem(ConfigManager.getConfig().getString(super.itemPathKey + ".lava-material"));
-        this.defaultTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
-        this.defaultBeforeTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".time-before-minivolcano");
-        this.defaultSquared = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".squared");
+        this.defaultHeight = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".height");
+        this.defaultBaseMaterial = ConfigManager.getMainConfig().getMaterial(super.itemPathKey + ".base-material");
+        this.defaultLavaMaterial = ConfigManager.getMainConfig().getMaterial(super.itemPathKey + ".lava-material");
+        this.defaultTicks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
+        this.defaultBeforeTicks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-before-minivolcano");
+        this.defaultSquared = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".squared");
         
-        this.defaultEnableThrowBlocks = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".throwBlocks.enable");
-        this.throwBlocksNumber = ConfigManager.getConfig().getInt(super.itemPathKey + ".throwBlocks.number-of-blocks");
-        this.throwBlocksHeight = ConfigManager.getConfig().getDouble(super.itemPathKey + ".throwBlocks.height");
-        this.throwBlocksRadius = ConfigManager.getConfig().getDouble(super.itemPathKey + ".throwBlocks.radius");
-        this.throwBlocksMaterial = ItemBuilder.newItem(ConfigManager.getConfig().getString(super.itemPathKey + ".throwBlocks.material"));
-        this.throwBlocksTicks = ConfigManager.getConfig().getLong(super.itemPathKey + ".throwBlocks.time-between-blocks");
+        this.defaultEnableThrowBlocks = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".throwBlocks.enable");
+        this.throwBlocksNumber = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".throwBlocks.number-of-blocks");
+        this.throwBlocksHeight = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".throwBlocks.height");
+        this.throwBlocksRadius = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".throwBlocks.radius");
+        this.throwBlocksMaterial = ConfigManager.getMainConfig().getMaterial(super.itemPathKey + ".throwBlocks.material");
+        this.throwBlocksTicks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".throwBlocks.time-between-blocks");
         
-        return ItemBuilder.newItem(XMaterial.LAVA_BUCKET).build();
+        return ItemStackWrapper.newItem(XMaterial.LAVA_BUCKET).toItemStack();
     }
     
     public void execute(Player player, Location location) {
@@ -75,9 +77,12 @@ public class MiniVolcano extends SpecialItem{
     
     public void execute(Player player, Location location, 
                         int height, 
-                        ItemBuilder baseMaterial, ItemBuilder lavaMaterial, 
+                        XMaterial baseMaterial, XMaterial lavaMaterial, 
                         long ticks, long beforeTicks, 
                         boolean squared, boolean throwBlocks) {
+        
+        ItemStackWrapper baseItemStack = ItemStackWrapper.newItem(baseMaterial);
+        ItemStackWrapper lavaItemStack = ItemStackWrapper.newItem(baseMaterial);
         
         //<editor-fold defaultstate="collapsed" desc="Code">
         XSound.ENTITY_TNT_PRIMED.play(location, 2.0f, 1.0f);
@@ -98,7 +103,7 @@ public class MiniVolcano extends SpecialItem{
                 if(currentHeight > height) {
                     cancel();
                     Location loc = center.clone().add(0, currentHeight, 0);
-                    lavaMaterial.placeAt(loc);
+                    lavaItemStack.placeAt(loc);
                     
                     if(throwBlocks) {
                         executeThrowBlocks(loc, lavaMaterial);
@@ -120,9 +125,9 @@ public class MiniVolcano extends SpecialItem{
                             if(squared || distanceSquared <= wallRadiusSquared) {
                                 if(WorldGuardManager.canBuild(player, loc)) {
                                     if(distanceSquared <= lavaRadiusSquared) {
-                                        lavaMaterial.placeAt(loc);
+                                        lavaItemStack.placeAt(loc);
                                     } else {
-                                        baseMaterial.placeAt(loc);
+                                        baseItemStack.placeAt(loc);
                                     }
                                 }
                             }
@@ -137,7 +142,7 @@ public class MiniVolcano extends SpecialItem{
 //</editor-fold>
     }
     
-    public void executeThrowBlocks(Location location, ItemBuilder lavaMaterial) {
+    public void executeThrowBlocks(Location location, XMaterial lavaMaterial) {
         this.executeThrowBlocks(location, 
                                 throwBlocksNumber, 
                                 throwBlocksHeight, 
@@ -150,8 +155,10 @@ public class MiniVolcano extends SpecialItem{
                                    int numberOfBlocks, 
                                    double height, 
                                    double radius, 
-                                   ItemBuilder blocksMaterial, ItemBuilder lavaMaterial, 
+                                   XMaterial blocksMaterial, XMaterial lavaMaterial, 
                                    long ticks) {
+        
+        ItemStackWrapper blocksItemStack = ItemStackWrapper.newItem(blocksMaterial);
         
         //<editor-fold defaultstate="collapsed" desc="Code">
         Task task = new Task() {
@@ -177,7 +184,7 @@ public class MiniVolcano extends SpecialItem{
                 Location loc = baseLoc.clone().add(dx, dy, dz);
                 Vector speed = loc.toVector().subtract(baseLoc.toVector());
                 
-                FallingBlock fb = throwBlocksMaterial.spawnFallingBlock(loc);
+                FallingBlock fb = blocksItemStack.spawnFallingBlock(loc);
                 fb.setDropItem(false);
                 fb.setVelocity(speed);
                 MetadataManager.setClassMetadata(fb, MiniVolcano.this);
@@ -193,9 +200,10 @@ public class MiniVolcano extends SpecialItem{
     @Override
     public void onFallingBlockConvert(EntityChangeBlockEvent e) {
         if(MetadataManager.hasCustomMetadata(e.getEntity())) {
-            ItemBuilder lavaMaterial = MetadataManager.getCustomMetadata(e.getEntity());
             e.setCancelled(true);
-            lavaMaterial.placeAt(e.getBlock());
+            XMaterial lavaMaterial = MetadataManager.getCustomMetadata(e.getEntity());
+            ItemStackWrapper lavaItemStack = ItemStackWrapper.newItem(lavaMaterial);
+            lavaItemStack.placeAt(e.getBlock());
         }
     }
 }

@@ -28,14 +28,14 @@ import org.bukkit.util.Vector;
 import com.cryptomorin.xseries.XMaterial;
 
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.objects.utils.BowUtils;
 import me.i2000c.newalb.listeners.objects.utils.HookBowAux;
 import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils.ConfigManager;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
@@ -56,18 +56,18 @@ public class HookBow extends SpecialItem {
     
     @Override
     public ItemStack buildItem(){
-        this.maxDistance = ConfigManager.getConfig().getDouble(super.itemPathKey + ".maxDistance");
-        this.maxFlySeconds = ConfigManager.getConfig().getLong(super.itemPathKey + ".maxFlySeconds");
-        this.stopArrowOnLiquid = ConfigManager.getConfig().getBoolean(super.itemPathKey + ".stopArrowOnLiquid");
-        this.arrowSpeed = ConfigManager.getConfig().getDouble(super.itemPathKey + ".arrowSpeed");
-        this.heightGain = ConfigManager.getConfig().getDouble(super.itemPathKey + ".heightGain");
-        this.gravity = ConfigManager.getConfig().getDouble(super.itemPathKey + ".gravity");
-        this.leashPacketRadius = ConfigManager.getConfig().getInt(super.itemPathKey + ".leashPacketRadius");
-        this.leashTimeoutSeconds = ConfigManager.getConfig().getLong(super.itemPathKey + ".leashTimeoutSeconds");
+        this.maxDistance = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".maxDistance");
+        this.maxFlySeconds = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".maxFlySeconds");
+        this.stopArrowOnLiquid = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".stopArrowOnLiquid");
+        this.arrowSpeed = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".arrowSpeed");
+        this.heightGain = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".heightGain");
+        this.gravity = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".gravity");
+        this.leashPacketRadius = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".leashPacketRadius");
+        this.leashTimeoutSeconds = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".leashTimeoutSeconds");
         
-        return ItemBuilder.newItem(XMaterial.BOW)
+        return ItemStackWrapper.newItem(XMaterial.BOW)
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
-                .build();
+                .toItemStack();
     }
     
     private void placeLeash(Arrow arrow, Entity target){
@@ -260,7 +260,7 @@ public class HookBow extends SpecialItem {
             Optional<ItemStack> arrowItem = BowUtils.getArrowFromPlayerInventory(player, !isInfiniteBow);
             if(!arrowItem.isPresent()) {
                 if(isInfiniteBow) {
-                    arrowItem = Optional.of(ItemBuilder.newItem(XMaterial.ARROW).build());
+                    arrowItem = Optional.of(ItemStackWrapper.newItem(XMaterial.ARROW).toItemStack());
                 } else {
                     return;
                 }

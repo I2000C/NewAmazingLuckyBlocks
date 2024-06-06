@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import me.i2000c.newalb.utils.Logger;
 
 @EqualsAndHashCode(of = {"major", "minor", "patch"})
 public class MinecraftVersion implements Comparable<MinecraftVersion> {

@@ -16,9 +16,6 @@
 #                        |___/                                                
 
 
-# Version of the config. Don't modify it
-ConfigVersion: 0
-
 # Lang file to use. It must be inside the lang folder
 LangFile: lang_EN.yml
 
@@ -305,7 +302,7 @@ LuckyBlock:
   # If this option is enabled, LuckyBlocks will be protected against liquids and explosions
   EnableEnvironmentProtection: true
   DropOnBlockBreak:
-    # If enabled, when you break a block (not LuckyBlock), 
+    # If enabled, when you break a block (not LuckyBlock),
     #   there is a probability that it dropped a LuckyBlock
     enable: false
     # If enabled, LuckyBlocks will only be dropped in survival mode
@@ -327,8 +324,8 @@ LuckyBlock:
     #   dropping anything.
     # For example:
     #   STONE:
-    #       default: 50
-    #       default2: 25
+    #     default: 50
+    #     default2: 25
     # In this case, there is a probability of 50% of dropping 'default' LuckyBlockType
     #   25% of dropping 'default2' LuckyBlockType and 25% of not dropping anythings
     # In addition, you can optionally add a material named "DEFAULT", which will be used
@@ -337,15 +334,15 @@ LuckyBlock:
     # You can find the material list here:
     #   https://github.com/CryptoMorin/XSeries/blob/master/src/main/java/com/cryptomorin/xseries/XMaterial.java
     enabledBlocks:
-        STONE:
-            default: 50
-            default2: 25
-        COAL_ORE:
-            default: 10
-        DIRT:
-            default2: 99
-        DEFAULT:
-            default: 3
+      STONE:
+        default: 50
+        default2: 25
+      COAL_ORE:
+        default: 10
+      DIRT:
+        default2: 99
+      DEFAULT:
+        default: 3
     # List of commands to execute after dropping a LuckyBlock.
     #   You can use %bx%, %by% and %bz% to get the x, y and z coordinates
     #   of the broken block that dropped that LuckyBlock,
@@ -357,10 +354,11 @@ LuckyBlock:
     # Note that, block data values will only work in legacy Minecraft versions
     #   (1.8 to 1.12). In Minecraft 1.13 or above, this value will always be 0.
     # You should enter one command per line without the first '/'
-    # For example: - say %player% got a LuckyBlock at %bx% %by% %bz%
+    # For example: - "say %player% got a LuckyBlock at %bx% %by% %bz%"
     commands:
-    - say %player% (%x% %y% %z%) got a luckyBlock of type "%luckyblock_type%" at %bx% %by% %bz%
-    - 'say Broken block was: %material%:%data%'
+    - "say %player% (%x% %y% %z%) got a luckyBlock of type \"%luckyblock_type%\" at %bx% %by% %bz%"
+    - "say Broken block was: %material%:%data%"
+
 # Generate random LuckyBlocks when a chunk is populated (created)
 # This feature is experimental and can contain bugs
 GenerateRandomblocks-OnChunkCreated:

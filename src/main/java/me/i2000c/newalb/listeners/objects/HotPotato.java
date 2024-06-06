@@ -1,12 +1,5 @@
 package me.i2000c.newalb.listeners.objects;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
@@ -14,6 +7,15 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.MetadataManager;
+import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 
 public class HotPotato extends SpecialItem{
     
@@ -30,10 +32,10 @@ public class HotPotato extends SpecialItem{
             MetadataManager.setClassMetadata(item, this);
             item.setVelocity(e.getPlayer().getLocation().getDirection());
             
-            long delayTicks = ConfigManager.getConfig().getLong("Objects.HotPotato.ticksBeforeExplosion");
-            float power = (float) ConfigManager.getConfig().getDouble("Objects.HotPotato.explosionPower");
-            boolean withFire = ConfigManager.getConfig().getBoolean("Objects.HotPotato.createFire");
-            boolean breakBlocks = ConfigManager.getConfig().getBoolean("Objects.HotPotato.breakBlocks");
+            long delayTicks = ConfigManager.getMainConfig().getLong("Objects.HotPotato.ticksBeforeExplosion");
+            float power = ConfigManager.getMainConfig().getFloat("Objects.HotPotato.explosionPower");
+            boolean withFire = ConfigManager.getMainConfig().getBoolean("Objects.HotPotato.createFire");
+            boolean breakBlocks = ConfigManager.getMainConfig().getBoolean("Objects.HotPotato.breakBlocks");
             
             Task.runTask(() -> {
                 if(item.isDead()) {
@@ -61,8 +63,8 @@ public class HotPotato extends SpecialItem{
         
     @Override
     public ItemStack buildItem(){
-        return ItemBuilder.newItem(XMaterial.BAKED_POTATO)
+        return ItemStackWrapper.newItem(XMaterial.BAKED_POTATO)
                 .addEnchantment(Enchantment.FIRE_ASPECT, 1)
-                .build();
+                .toItemStack();
     }
 }

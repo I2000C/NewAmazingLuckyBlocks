@@ -1,7 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.MiniVolcanoReward;
@@ -13,7 +12,7 @@ import me.i2000c.newalb.listeners.inventories.GlassColor;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -58,37 +57,31 @@ public class MiniVolcanoMenu extends Editor<MiniVolcanoReward>{
                 XMaterial.SNOW_BLOCK, 
                 XMaterial.SNOWBALL);
         
-        ItemStack heightStack = ItemBuilder.newItem(XMaterial.LADDER)
-                .withDisplayName("&3Height: &b" + item.getHeight())
-                .addLoreLine("&2Click to reset")
-                .build();
+        ItemStack heightStack = ItemStackWrapper.newItem(XMaterial.LADDER)
+                                                .setDisplayName("&3Height: &b" + item.getHeight())
+                                                .addLoreLine("&2Click to reset")
+                                                .toItemStack();
         
-        ItemStack ticksStack = ItemBuilder.newItem(XMaterial.CLOCK)
-                .withDisplayName("&5Ticks between blocks: &6" + item.getTicks())
-                .addLoreLine("&3Click to reset")
-                .build();
+        ItemStack ticksStack = ItemStackWrapper.newItem(XMaterial.CLOCK)
+                                               .setDisplayName("&5Ticks between blocks: &6" + item.getTicks())
+                                               .addLoreLine("&3Click to reset")
+                                               .toItemStack();
         
-        ItemBuilder builder = ItemBuilder.newItem(XMaterial.matchXMaterial(item.getBaseMaterial()));
-        builder.withDisplayName("&6Base material: &b" + builder.toString());
-        builder.addLoreLine("&3Click on a &3&lblock &3of your inventory");
-        builder.addLoreLine("&3to change it");
-        ItemStack baseMaterialStack = builder.build();
+        ItemStackWrapper wrapper = ItemStackWrapper.newItem(item.getBaseMaterial());
+        wrapper.setDisplayName("&6Base material: &b" + item.getBaseMaterial().name());
+        wrapper.addLoreLine("&3Click on a &3&lblock &3of your inventory");
+        wrapper.addLoreLine("&3to change it");
+        ItemStack baseMaterialStack = wrapper.toItemStack();
         
         ItemStack lavaMaterialStack;
         switch(item.getLavaMaterial()){
-            case LAVA:
-                lavaMaterialStack = new ItemStack(Material.LAVA_BUCKET);
-                break;
-            case WATER:
-                lavaMaterialStack = new ItemStack(Material.WATER_BUCKET);
-                break;
-            default:
-                lavaMaterialStack = item.getLavaMaterial().parseItem();
-                break;
+            case LAVA:  lavaMaterialStack = new ItemStack(Material.LAVA_BUCKET);  break;
+            case WATER: lavaMaterialStack = new ItemStack(Material.WATER_BUCKET); break;
+            default:    lavaMaterialStack = item.getLavaMaterial().parseItem();   break;
         }
-        ItemBuilder.fromItem(lavaMaterialStack, false)
-                .withDisplayName("&cLava material: &b" + item.getLavaMaterial().name())
-                .addLoreLine("&3Click to change");
+        ItemStackWrapper.fromItem(lavaMaterialStack, false)
+                        .setDisplayName("&cLava material: &b" + item.getLavaMaterial().name())
+                        .addLoreLine("&3Click to change");
         
         ItemStack throwBlocksStack = GUIItem.getBooleanItem(
                 item.isThrowBlocks(), 
@@ -235,10 +228,7 @@ public class MiniVolcanoMenu extends Editor<MiniVolcanoReward>{
         }else if(e.getLocation() == InventoryLocation.BOTTOM){
             ItemStack stack = e.getCurrentItem();
             if(stack != null && stack.getType().isSolid()){
-                item.setBaseMaterial(new ItemStack(stack.getType()));
-                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-                    item.getBaseMaterial().setDurability(stack.getDurability());
-                }
+                item.setBaseMaterial(XMaterial.matchXMaterial(stack));
                 openMiniVolcanoMenu(player);
             }
         }

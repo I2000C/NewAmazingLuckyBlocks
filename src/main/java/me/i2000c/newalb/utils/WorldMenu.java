@@ -10,7 +10,7 @@ import me.i2000c.newalb.listeners.inventories.GUIPagesAdapter;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -38,18 +38,18 @@ public class WorldMenu{
             adapter = new GUIPagesAdapter<>(
                     MENU_SIZE,
                     (worldName, index) -> {
-                        boolean isWorldInList = WorldConfig.isContained(worldName);
+                        boolean isWorldInList = WorldManager.isContained(worldName);
                         
-                        ItemBuilder builder;
+                        ItemStackWrapper builder;
                         if(isWorldInList){
-                            builder = ItemBuilder.newItem(XMaterial.EMERALD_BLOCK);
+                            builder = ItemStackWrapper.newItem(XMaterial.EMERALD_BLOCK);
                             builder.addLoreLine("");
                             builder.addLoreLine("&6This world &ais contained &6in the");
                             builder.addLoreLine("&6worlds list of NewAmazingLuckyBlocks");
                             builder.addLoreLine("");
                             builder.addLoreLine("&3Click to &cdelete &3it from the list");
                         }else{
-                            builder = ItemBuilder.newItem(XMaterial.REDSTONE_BLOCK);
+                            builder = ItemStackWrapper.newItem(XMaterial.REDSTONE_BLOCK);
                             builder.addLoreLine("");
                             builder.addLoreLine("&6This world &cisn't contained &6in the");
                             builder.addLoreLine("&6worlds list of NewAmazingLuckyBlocks");
@@ -57,8 +57,8 @@ public class WorldMenu{
                             builder.addLoreLine("&3Click to &aadd &3it to the list");
                         }
                         
-                        builder.withDisplayName("&d" + worldName);
-                        return builder.build();
+                        builder.setDisplayName("&d" + worldName);
+                        return builder.toItemStack();
                     }
             );
             adapter.setPreviousPageSlot(PREVIOUS_PAGE_SLOT);
@@ -81,44 +81,41 @@ public class WorldMenu{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Menu menu = GUIFactory.newMenu(CustomInventoryType.WORLD_MENU, 54, "&3&lWorlds Menu");
         
-        ItemStack exit = ItemBuilder.newItem(XMaterial.IRON_DOOR)
-                .withDisplayName("&cExit")
-                .build();
+        ItemStack exit = ItemStackWrapper.newItem(XMaterial.IRON_DOOR)
+                                         .setDisplayName("&cExit")
+                                         .toItemStack();
         
-        ItemStack allNormal = ItemBuilder
-                .newItem(XMaterial.LIME_STAINED_GLASS_PANE)
-                .withDisplayName("&aAdd &3all worlds to list")
-                .build();
+        ItemStack allNormal = ItemStackWrapper.newItem(XMaterial.LIME_STAINED_GLASS_PANE)
+                                              .setDisplayName("&aAdd &3all worlds to list")
+                                              .toItemStack();
         
-        ItemStack allDisabled = ItemBuilder
-                .newItem(XMaterial.RED_STAINED_GLASS_PANE)
-                .withDisplayName("&cRemove &3all worlds from list")
-                .build();
+        ItemStack allDisabled = ItemStackWrapper.newItem(XMaterial.RED_STAINED_GLASS_PANE)
+                                                .setDisplayName("&cRemove &3all worlds from list")
+                                                .toItemStack();
         
-        ItemStack toggleAllWorlds = ItemBuilder
-                .newItem(XMaterial.ORANGE_STAINED_GLASS_PANE)
-                .withDisplayName("&6Toggle &3all worlds")
-                .build();
+        ItemStack toggleAllWorlds = ItemStackWrapper.newItem(XMaterial.ORANGE_STAINED_GLASS_PANE)
+                                                    .setDisplayName("&6Toggle &3all worlds")
+                                                    .toItemStack();
         
-        WorldConfig.WorldListMode mode = WorldConfig.getWorldListMode();
-        ItemBuilder builder;
+        WorldManager.WorldListMode mode = WorldManager.getWorldListMode();
+        ItemStackWrapper builder;
         switch(mode) {
             case DISABLED:
-                builder = ItemBuilder.newItem(XMaterial.RED_WOOL);
+                builder = ItemStackWrapper.newItem(XMaterial.RED_WOOL);
                 builder.addLoreLine("");
                 builder.addLoreLine("&dIn this mode, the list is");
                 builder.addLoreLine("&d  disabled, so LuckyBlocks");
                 builder.addLoreLine("&d  are enabled in all worlds");
                 break;
             case WHITELIST:
-                builder = ItemBuilder.newItem(XMaterial.WHITE_WOOL);
+                builder = ItemStackWrapper.newItem(XMaterial.WHITE_WOOL);
                 builder.addLoreLine("");
                 builder.addLoreLine("&dIn this mode, LuckyBlocks");
                 builder.addLoreLine("&d  will be enabled only");
                 builder.addLoreLine("&d  in the worlds of the list");
                 break;
             default: //case BLACKLIST:
-                builder = ItemBuilder.newItem(XMaterial.BLACK_WOOL);
+                builder = ItemStackWrapper.newItem(XMaterial.BLACK_WOOL);
                 builder.addLoreLine("");
                 builder.addLoreLine("&dIn this mode, LuckyBlocks");
                 builder.addLoreLine("&d  will be enabled only");
@@ -126,11 +123,11 @@ public class WorldMenu{
                 builder.addLoreLine("&d  in the list");
                 break;
         }
-        builder.withDisplayName("&6Current list mode: " + mode);
+        builder.setDisplayName("&6Current list mode: " + mode);
         builder.addLoreLine("");
         builder.addLoreLine("&3Click to change");
         
-        ItemStack worldListMode = builder.build();
+        ItemStack worldListMode = builder.toItemStack();
         
         menu.setItem(46, worldListMode);
         menu.setItem(49, allNormal);
@@ -171,22 +168,22 @@ public class WorldMenu{
                     break;
                 case 46:
                     // Change world list mode
-                    WorldConfig.setWorldListMode(WorldConfig.getWorldListMode().next());
+                    WorldManager.setWorldListMode(WorldManager.getWorldListMode().next());
                     openWorldsMenu(p);
                     break;
                 case 49:
                     // Add all worlds to list
-                    WorldConfig.addAllWorlds();
+                    WorldManager.addAllWorlds();
                     openWorldsMenu(p);
                     break;
                 case 50:
                     // Toggle all worlds
-                    WorldConfig.toggleAllWorlds();
+                    WorldManager.toggleAllWorlds();
                     openWorldsMenu(p);
                     break;
                 case 51:
                     // Delete all worlds from the list
-                    WorldConfig.deleteAllWorlds();
+                    WorldManager.deleteAllWorlds();
                     openWorldsMenu(p);
                     break;
                 case 53:
@@ -194,13 +191,13 @@ public class WorldMenu{
                     break;
                 default:
                     if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                        ItemBuilder builder = ItemBuilder.fromItem(e.getCurrentItem(), false);
+                        ItemStackWrapper builder = ItemStackWrapper.fromItem(e.getCurrentItem(), false);
                         
                         String worldName = Logger.stripColor(builder.getDisplayName());
-                        if(WorldConfig.isContained(worldName)) {
-                            WorldConfig.deleteWorld(worldName);
+                        if(WorldManager.isContained(worldName)) {
+                            WorldManager.deleteWorld(worldName);
                         } else {
-                            WorldConfig.addWorld(worldName);
+                            WorldManager.addWorld(worldName);
                         }
                         
                         openWorldsMenu(p);

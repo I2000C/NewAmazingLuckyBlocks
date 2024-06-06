@@ -2,10 +2,11 @@ package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.Optional;
+
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.objects.utils.BowUtils;
-import me.i2000c.newalb.utils.ConfigManager;
-import me.i2000c.newalb.utils2.ItemBuilder;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -35,7 +36,7 @@ public class AutoBow extends SpecialItem {
             if(arrowStackOptional.isPresent()) {
                 arrowStack = arrowStackOptional.get();
             } else if(player.getGameMode() == GameMode.CREATIVE) {
-                arrowStack = ItemBuilder.newItem(XMaterial.ARROW).build();
+                arrowStack = ItemStackWrapper.newItem(XMaterial.ARROW).toItemStack();
             } else {
                 return;
             }
@@ -50,10 +51,10 @@ public class AutoBow extends SpecialItem {
     
     @Override
     public ItemStack buildItem(){
-        this.multiplier = ConfigManager.getConfig().getDouble(super.itemPathKey + ".velocityMultiplier");
+        this.multiplier = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".velocityMultiplier");
         
-        return ItemBuilder.newItem(XMaterial.BOW)
+        return ItemStackWrapper.newItem(XMaterial.BOW)
                 .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
-                .build();
+                .toItemStack();
     }
 }
