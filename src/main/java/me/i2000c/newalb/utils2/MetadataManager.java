@@ -11,6 +11,8 @@ public class MetadataManager {
     
     private static final String CLASS_METADATA_TAG = "NewAmazingLuckyBlocks.ClassMetadata";
     private static final String CUSTOM_METADATA_TAG = "NewAmazingLuckyBlocks.CustomMetadata";
+    private static final String CUSTOM_METADATA2_TAG = "NewAmazingLuckyBlocks.CustomMetadata2";
+    private static final String CUSTOM_METADATA3_TAG = "NewAmazingLuckyBlocks.CustomMetadata3";
     private static final Plugin PLUGIN = NewAmazingLuckyBlocks.getInstance();
     
     public static void setMetadata(Metadatable metadatable, String key, Object value) {
@@ -54,5 +56,31 @@ public class MetadataManager {
     }
     public static void removeCustomMetadata(Metadatable metadatable){
         removeMetadata(metadatable, CUSTOM_METADATA_TAG);
+    }
+    
+    public static void setCustomMetadata2(Metadatable metadatable, Object value) {
+        setMetadata(metadatable, CUSTOM_METADATA2_TAG, value);
+    }    
+    public static <T> T getCustomMetadata2(Metadatable metadatable){
+        return getMetadata(metadatable, CUSTOM_METADATA2_TAG);
+    }
+    public static boolean hasCustomMetadata2(Metadatable metadatable){
+        return hasMetadata(metadatable, CUSTOM_METADATA2_TAG);
+    }
+    public static void removeCustomMetadata2(Metadatable metadatable){
+        removeMetadata(metadatable, CUSTOM_METADATA2_TAG);
+    }
+    
+    public static void setCustomMetadata3(Metadatable metadatable, Object value) {
+        setMetadata(metadatable, CUSTOM_METADATA3_TAG, value);
+    }    
+    public static <T> T getCustomMetadata3(Metadatable metadatable){
+        return getMetadata(metadatable, CUSTOM_METADATA3_TAG);
+    }
+    public static boolean hasCustomMetadata3(Metadatable metadatable){
+        return hasMetadata(metadatable, CUSTOM_METADATA3_TAG);
+    }
+    public static void removeCustomMetadata3(Metadatable metadatable){
+        removeMetadata(metadatable, CUSTOM_METADATA3_TAG);
     }
 }

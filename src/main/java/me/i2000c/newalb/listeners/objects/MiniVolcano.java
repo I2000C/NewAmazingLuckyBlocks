@@ -82,7 +82,7 @@ public class MiniVolcano extends SpecialItem{
                         boolean squared, boolean throwBlocks) {
         
         ItemStackWrapper baseItemStack = ItemStackWrapper.newItem(baseMaterial);
-        ItemStackWrapper lavaItemStack = ItemStackWrapper.newItem(baseMaterial);
+        ItemStackWrapper lavaItemStack = ItemStackWrapper.newItem(lavaMaterial);
         
         //<editor-fold defaultstate="collapsed" desc="Code">
         XSound.ENTITY_TNT_PRIMED.play(location, 2.0f, 1.0f);
@@ -103,10 +103,12 @@ public class MiniVolcano extends SpecialItem{
                 if(currentHeight > height) {
                     cancel();
                     Location loc = center.clone().add(0, currentHeight, 0);
-                    lavaItemStack.placeAt(loc);
+                    if(WorldGuardManager.canBuild(player, loc)) {
+                        lavaItemStack.placeAt(loc);
+                    }
                     
                     if(throwBlocks) {
-                        executeThrowBlocks(loc, lavaMaterial);
+                        executeThrowBlocks(player, loc, lavaMaterial);
                     }
                     return;
                 }
@@ -142,8 +144,9 @@ public class MiniVolcano extends SpecialItem{
 //</editor-fold>
     }
     
-    public void executeThrowBlocks(Location location, XMaterial lavaMaterial) {
-        this.executeThrowBlocks(location, 
+    public void executeThrowBlocks(Player player, Location location, XMaterial lavaMaterial) {
+        this.executeThrowBlocks(player, 
+                                location, 
                                 throwBlocksNumber, 
                                 throwBlocksHeight, 
                                 throwBlocksRadius, 
@@ -151,7 +154,8 @@ public class MiniVolcano extends SpecialItem{
                                 throwBlocksTicks);
     }
     
-    public void executeThrowBlocks(Location location, 
+    public void executeThrowBlocks(Player player, 
+                                   Location location, 
                                    int numberOfBlocks, 
                                    double height, 
                                    double radius, 
@@ -188,7 +192,8 @@ public class MiniVolcano extends SpecialItem{
                 fb.setDropItem(false);
                 fb.setVelocity(speed);
                 MetadataManager.setClassMetadata(fb, MiniVolcano.this);
-                MetadataManager.setCustomMetadata(fb, lavaMaterial);
+                MetadataManager.setCustomMetadata(fb, player);
+                MetadataManager.setCustomMetadata2(fb, lavaMaterial);
                 
                 blocks++;
             }
@@ -199,11 +204,15 @@ public class MiniVolcano extends SpecialItem{
 
     @Override
     public void onFallingBlockConvert(EntityChangeBlockEvent e) {
-        if(MetadataManager.hasCustomMetadata(e.getEntity())) {
-            e.setCancelled(true);
-            XMaterial lavaMaterial = MetadataManager.getCustomMetadata(e.getEntity());
-            ItemStackWrapper lavaItemStack = ItemStackWrapper.newItem(lavaMaterial);
-            lavaItemStack.placeAt(e.getBlock());
+        e.setCancelled(true);
+
+        Player player = MetadataManager.getCustomMetadata(e.getEntity());
+        if(!WorldGuardManager.canBuild(player, e.getBlock().getLocation())) {
+            return;
         }
+
+        XMaterial lavaMaterial = MetadataManager.getCustomMetadata2(e.getEntity());
+        ItemStackWrapper lavaItemStack = ItemStackWrapper.newItem(lavaMaterial);
+        lavaItemStack.placeAt(e.getBlock());
     }
 }
