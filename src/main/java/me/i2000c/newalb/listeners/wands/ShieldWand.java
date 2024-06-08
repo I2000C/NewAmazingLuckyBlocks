@@ -3,7 +3,6 @@ package me.i2000c.newalb.listeners.wands;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.HashSet;
 import java.util.Set;
-import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.Logger;
@@ -71,7 +70,7 @@ public class ShieldWand extends SpecialItem {
         boolean withfloor = ConfigManager.getMainConfig().getBoolean("Wands.ShieldWand.withfloor");
         if(!withfloor && !locations.isEmpty()){
             int minY = locations.stream().min((loc1, loc2) -> loc1.getBlockY() - loc2.getBlockY()).get().getBlockY();
-            locations.removeIf(loc -> loc.getY() == minY);
+            locations.removeIf(loc -> loc.getBlockY() == minY);
         }
         
         return locations;
