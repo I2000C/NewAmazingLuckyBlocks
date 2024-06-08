@@ -1,18 +1,21 @@
 package me.i2000c.newalb.listeners.wands;
 
-import org.bukkit.Location;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
-
 import com.cryptomorin.xseries.XMaterial;
-
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.MetadataManager;
+import me.i2000c.newalb.utils2.WorldGuardManager;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 public class FireWand extends SpecialItem{
     
@@ -37,9 +40,34 @@ public class FireWand extends SpecialItem{
                 for(double z=-radius;z<radius;z++){
                     Location spawnLocation = location.clone().add(x, 0, z);
                     FallingBlock fallingBlock = wrapper.spawnFallingBlock(spawnLocation);
+                    fallingBlock.setDropItem(false);
                     fallingBlock.setVelocity(speed);
+                    
+                    MetadataManager.setClassMetadata(fallingBlock, this);
+                    MetadataManager.setCustomMetadata(fallingBlock, player);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onFallingBlockConvert(EntityChangeBlockEvent e) {
+        if(!WorldGuardManager.WORLDGUARD_ENABLED) {
+            return;
+        }
+        
+        // This is required to avoid problems with WorldGuard
+        e.setCancelled(true);
+        
+        Player player = MetadataManager.getCustomMetadata(e.getEntity());
+        if(!WorldGuardManager.canBuild(player, e.getBlock().getLocation())) {
+            return;
+        }
+        
+        Material material = e.getTo();
+        e.getBlock().setType(material);
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+            e.getBlock().setData(e.getData());
         }
     }
     

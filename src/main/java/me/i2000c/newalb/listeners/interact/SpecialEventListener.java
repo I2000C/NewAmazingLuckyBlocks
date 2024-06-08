@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class SpecialEventListener implements Listener{
     
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onPlayerInteract(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack stack = e.getItem();
@@ -78,7 +78,7 @@ public class SpecialEventListener implements Listener{
 //</editor-fold>
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onItemPickup(PlayerPickupItemEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Item item = e.getItem();
@@ -94,7 +94,7 @@ public class SpecialEventListener implements Listener{
 //</editor-fold>
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onEntityDamaged(EntityDamageByEntityEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity damager = e.getDamager();
@@ -116,7 +116,7 @@ public class SpecialEventListener implements Listener{
         }
 //</editor-fold>
     }    
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onArrowHit(ProjectileHitEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity projectile = e.getEntity();
@@ -144,7 +144,7 @@ public class SpecialEventListener implements Listener{
 //</editor-fold>
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onArrowShooted(EntityShootBowEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(e.getEntity() == null || !(e.getEntity() instanceof Player)){
@@ -180,7 +180,7 @@ public class SpecialEventListener implements Listener{
 //</editor-fold>
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getRightClicked();
@@ -196,7 +196,7 @@ public class SpecialEventListener implements Listener{
 //</editor-fold>
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onFallingBlockConvert(EntityChangeBlockEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Entity entity = e.getEntity();
