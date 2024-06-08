@@ -1,9 +1,19 @@
 package me.i2000c.newalb.utils;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
+import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapReward;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.NBTUtils;
+import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,18 +28,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
-import com.cryptomorin.xseries.XMaterial;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import me.i2000c.newalb.config.Config;
-import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
-import me.i2000c.newalb.custom_outcomes.rewards.reward_types.TrapReward;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.NBTUtils;
-import me.i2000c.newalb.utils2.Task;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TrapManager implements Listener {
@@ -122,7 +120,7 @@ public class TrapManager implements Listener {
 //</editor-fold>
     }
     
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onTrapActivated(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(!WorldManager.isEnabled(e.getPlayer().getWorld().getName())){
@@ -139,8 +137,11 @@ public class TrapManager implements Listener {
             return;
         }
         
-        if(e.getAction() == Action.RIGHT_CLICK_BLOCK
-                && !trap.trapItemStack.getMaterial().name().contains("CHEST")){
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK && !trap.trapItemStack.getMaterial().name().contains("CHEST")){
+            return;
+        }
+        
+        if(!WorldGuardManager.canUse(e.getPlayer(), loc)) {
             return;
         }
         
@@ -153,7 +154,7 @@ public class TrapManager implements Listener {
 //</editor-fold>
     }
     
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onTrapPlaced(BlockPlaceEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack stack = e.getItemInHand();
@@ -163,6 +164,10 @@ public class TrapManager implements Listener {
         
         Outcome outcome = decryptOutcome(stack);
         if(outcome != null){
+            if(!WorldGuardManager.canBuild(e.getPlayer(), e.getBlock().getLocation())) {
+                return;
+            }
+            
             //Add location to traps
             Trap trap = new Trap();
             trap.trapItemStack = ItemStackWrapper.fromItem(stack, true);
@@ -174,12 +179,16 @@ public class TrapManager implements Listener {
 //</editor-fold>
     }
     
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOW)
     private static void onPressurePlateBroken(BlockBreakEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
         Location loc = e.getBlock().getLocation();
         Trap trap = traps.get(loc);
         if(trap != null){
+            if(!WorldGuardManager.canBreak(e.getPlayer(), loc)) {
+                return;
+            }
+            
             e.setCancelled(true);
             e.getBlock().setType(Material.AIR);
             traps.remove(loc);
@@ -188,6 +197,10 @@ public class TrapManager implements Listener {
         }else if((trap = traps.get(loc.add(0, 1, 0))) != null){
             XMaterial material = trap.trapItemStack.getMaterial();
             if(!material.name().contains("CHEST")){
+                if(!WorldGuardManager.canBreak(e.getPlayer(), loc)) {
+                    return;
+                }
+                
                 loc.getBlock().setType(Material.AIR);
                 traps.remove(loc);
                 trap.trapItemStack.dropAtLocation(loc);
