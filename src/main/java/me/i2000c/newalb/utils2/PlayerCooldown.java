@@ -6,12 +6,19 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 
 public class PlayerCooldown {
-    private final long cooldownSeconds;
+    private long cooldownSeconds;
     private final Map<UUID, Long> cooldownMap;
     
     public PlayerCooldown(long cooldownSeconds) {
         this.cooldownSeconds = cooldownSeconds;
         this.cooldownMap = new HashMap<>();
+    }
+    
+    public long getCooldownTime() {
+        return this.cooldownSeconds;
+    }
+    public void setCooldownTime(long cooldownSeconds) {
+        this.cooldownSeconds = cooldownSeconds;
     }
     
     public void updateCooldown(Player player) {

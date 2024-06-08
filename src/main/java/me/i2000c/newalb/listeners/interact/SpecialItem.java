@@ -2,7 +2,10 @@ package me.i2000c.newalb.listeners.interact;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.PlayerCooldown;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -12,11 +15,6 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
-
-import me.i2000c.newalb.config.ConfigManager;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.PlayerCooldown;
 
 public abstract class SpecialItem {
     static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";    
@@ -72,6 +70,9 @@ public abstract class SpecialItem {
                                     .setNbtTag(ITEM_TAG, this.id)
                                     .setNbtTag(CUSTOM_MODEL_DATA_TAG, customModelData)
                                     .toItemStack();
+        
+        int cooldownTime = ConfigManager.getMainConfig().getInt(itemPathKey + ".cooldown-time", -1);
+        this.playerCooldown.setCooldownTime(cooldownTime);
         this.playerCooldown.clear();
     }
     
