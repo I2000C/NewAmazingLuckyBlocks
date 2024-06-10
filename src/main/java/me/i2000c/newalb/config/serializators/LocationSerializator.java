@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.i2000c.newalb.config.Config;
-import me.i2000c.newalb.utils.Logger;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LocationSerializator implements ConfigSerializerDeserializer<Location> {
@@ -36,9 +35,6 @@ public class LocationSerializator implements ConfigSerializerDeserializer<Locati
         
         World world = Bukkit.getWorld(worldName);
         if(world == null) {
-            Logger.warn(String.format("Skiping location [world=%s, x=%.2f, y=%.2f, z=%.2f, pitch=%.2f, yaw=%.2f]: World \"%s\" doesn't exist (config path: %s)",
-                                        worldName, x, y, z, pitch, yaw,
-                                        worldName, path + ".world"));
             return null;
         }
         
