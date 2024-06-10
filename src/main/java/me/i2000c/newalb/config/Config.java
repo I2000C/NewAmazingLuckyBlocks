@@ -180,15 +180,6 @@ public class Config {
                 writer.append(spacesString);
                 writer.append(key).append(":");
                 writer.newLine();
-            } else if(yamlConfig.isString(fullKey)) {
-                String valueAux = ((String)value).replace("\"", "\\\"");
-                writer.append(spacesString);
-                writer.append(key).append(": \"").append(valueAux).append("\"");
-                writer.newLine();
-            } else if(yamlConfig.isInt(fullKey) || yamlConfig.isDouble(fullKey) || yamlConfig.isBoolean(fullKey)) {
-                writer.append(spacesString);
-                writer.append(key).append(": ").append(value.toString());
-                writer.newLine();
             } else if(yamlConfig.isList(fullKey)) {
                 List<String> valueAux = (List<String>) value;
                 writer.append(spacesString);
@@ -203,6 +194,16 @@ public class Config {
                         writer.append(spacesString);
                         writer.append("- \"").append(elem).append("\"");
                     }
+                }
+                writer.newLine();
+            } else if(value != null) {
+                // String, int, double, boolean, etc
+                writer.append(spacesString);
+                if(value instanceof String) {
+                    String valueAux = value.toString().replace("\"", "\\\"");
+                    writer.append(key).append(": \"").append(valueAux).append("\"");
+                } else {
+                    writer.append(key).append(": ").append(value.toString());
                 }
                 writer.newLine();
             }
