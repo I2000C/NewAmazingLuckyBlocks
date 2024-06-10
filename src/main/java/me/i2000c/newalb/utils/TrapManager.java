@@ -192,7 +192,7 @@ public class TrapManager implements Listener {
             e.setCancelled(true);
             e.getBlock().setType(Material.AIR);
             traps.remove(loc);
-            trap.trapItemStack.dropAtLocation(loc);
+            trap.trapItemStack.dropAtLocation(loc.add(0.5, 0, 0.5), false);
             saveTraps();
         }else if((trap = traps.get(loc.add(0, 1, 0))) != null){
             XMaterial material = trap.trapItemStack.getMaterial();
@@ -203,7 +203,7 @@ public class TrapManager implements Listener {
                 
                 loc.getBlock().setType(Material.AIR);
                 traps.remove(loc);
-                trap.trapItemStack.dropAtLocation(loc);
+                trap.trapItemStack.dropAtLocation(loc.add(0.5, 0, 0.5), false);
                 saveTraps();
             }
         }
