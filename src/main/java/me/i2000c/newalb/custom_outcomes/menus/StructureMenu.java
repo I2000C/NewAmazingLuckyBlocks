@@ -53,18 +53,20 @@ public class StructureMenu extends Editor<StructureReward>{
     
     private void openStructureMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Menu menu = GUIFactory.newMenu(CustomInventoryType.STRUCTURE_MENU, 27, "&3&lStructure Reward");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.STRUCTURE_MENU, 36, "&3&lStructure Reward");
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);
         }
-        for(int i=18;i<27;i++){
+        for(int i=27;i<36;i++){
             menu.setItem(i, glass);
         }
         menu.setItem(9, glass);
+        menu.setItem(18, glass);
         menu.setItem(17, glass);
+        menu.setItem(26, glass);
         
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.NAME_TAG);
         if(item.getSchematicName() == null){
@@ -88,24 +90,68 @@ public class StructureMenu extends Editor<StructureReward>{
                 item.isReplaceBlocks(), 
                 "&3Replace existing blocks", 
                 XMaterial.BRICKS, 
-                XMaterial.BRICKS);
+                XMaterial.BRICKS,
+                "&6Click to toggle");
         
         ItemStack placeAirBlocks = GUIItem.getBooleanItem(
                 item.isPlaceAirBlocks(), 
                 "&3Place air blocks", 
                 XMaterial.GLASS, 
-                XMaterial.GLASS);
+                XMaterial.GLASS,
+                "&6Click to toggle");
         
-        menu.setItem(10, GUIItem.getBackItem());
-        menu.setItem(16, GUIItem.getNextItem());
+        ItemStack centerPlayerLocation = GUIItem.getBooleanItem(
+                item.isCenterPlayerLocation(), 
+                "&3Center player location", 
+                XMaterial.ARMOR_STAND, 
+                XMaterial.ARMOR_STAND,
+                "&6Click to toggle");
         
-        menu.setItem(12, fromPlayer);
-        menu.setItem(13, replaceBlocks);
-        menu.setItem(14, placeAirBlocks);
+        ItemStack centerPlayerYaw = GUIItem.getBooleanItem(
+                item.isCenterPlayerYaw(), 
+                "&3Center player yaw", 
+                XMaterial.GOLDEN_HORSE_ARMOR, 
+                XMaterial.GOLDEN_HORSE_ARMOR,
+                "&6Click to toggle");
         
-        menu.setItem(6, selectFromMenu);
-        menu.setItem(24, selectFromChat);        
+        ItemStack centerPlayerPitch = GUIItem.getBooleanItem(
+                item.isCenterPlayerPitch(), 
+                "&3Center player pitch", 
+                XMaterial.DIAMOND_HORSE_ARMOR, 
+                XMaterial.DIAMOND_HORSE_ARMOR,
+                "&6Click to toggle");
+        
+        ItemStack autorotate = GUIItem.getBooleanItem(
+                item.isAutorotate(), 
+                "&3Auto-rotate schematic towards player direction", 
+                XMaterial.COMPASS, 
+                XMaterial.GRANITE,
+                "&6Click to toggle");
+        
+        ItemStack schematicAxis = ItemStackWrapper.newItem(XMaterial.REPEATER)
+                                                  .setDisplayName("&3Schematic axis: &5" + item.getSchematicAxis() + " &c(" + item.getSchematicAxis().getRotation() + "º)")
+                                                  .addLoreLine("&bThis option is used when auto-rotate is &aenabled")
+                                                  .addLoreLine("")
+                                                  .addLoreLine("&6Click to change")
+                                                  .toItemStack();
+        
+        menu.setItem(9, GUIItem.getBackItem());
+        menu.setItem(17, GUIItem.getNextItem());
+        
+        menu.setItem(10, fromPlayer);
+        menu.setItem(11, replaceBlocks);
+        menu.setItem(12, placeAirBlocks);
+        
+        menu.setItem(14, selectFromMenu);        
         menu.setItem(15, pathItem);
+        menu.setItem(16, selectFromChat);
+        
+        menu.setItem(19, centerPlayerLocation);
+        menu.setItem(20, centerPlayerYaw);
+        menu.setItem(21, centerPlayerPitch);
+        
+        menu.setItem(23, autorotate);
+        menu.setItem(24, schematicAxis);
         
         menu.openToPlayer(player);
 //</editor-fold>
@@ -118,22 +164,22 @@ public class StructureMenu extends Editor<StructureReward>{
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
-                case 12:
+                case 10:
                     //Toggle fromPlayer
                     item.setFromPlayer(!item.isFromPlayer());
                     openStructureMenu(player);
                     break;
-                case 13:
+                case 11:
                     //Toggle replaceBlocks
                     item.setReplaceBlocks(!item.isReplaceBlocks());
                     openStructureMenu(player);
                     break;
-                case 14:
+                case 12:
                     //Toggle placeAirBlocks
                     item.setPlaceAirBlocks(!item.isPlaceAirBlocks());
                     openStructureMenu(player);
                     break;
-                case 6:
+                case 14:
                     //Select schematic file from menu
                     File schematicsFolder = new File(NewAmazingLuckyBlocks.getInstance().getDataFolder(), "schematics");
                     schematicsFolder.mkdirs();
@@ -150,7 +196,7 @@ public class StructureMenu extends Editor<StructureReward>{
                                 openStructureMenu(p);
                             });
                     break;
-                case 24:
+                case 16:
                     //Select schematic file from chat
                     ChatListener.registerPlayer(player, message -> {
                         File file = new File(StructureReward.schematicsFolder, message);
@@ -166,13 +212,38 @@ public class StructureMenu extends Editor<StructureReward>{
                     }, false);
                     player.closeInventory();
                     break;
-                case 10:
+                case 19:
+                    // Toggle center player location
+                    item.setCenterPlayerLocation(!item.isCenterPlayerLocation());
+                    openStructureMenu(player);
+                    break;
+                case 20:
+                    // Toggle center player yaw
+                    item.setCenterPlayerYaw(!item.isCenterPlayerYaw());
+                    openStructureMenu(player);
+                    break;
+                case 21:
+                    // Toggle center player pitch
+                    item.setCenterPlayerPitch(!item.isCenterPlayerPitch());
+                    openStructureMenu(player);
+                    break;
+                case 23:
+                    // Toggle auto-rotate
+                    item.setAutorotate(!item.isAutorotate());
+                    openStructureMenu(player);
+                    break;
+                case 24:
+                    // Select schematic axis
+                    item.setSchematicAxis(item.getSchematicAxis().next());
+                    openStructureMenu(player);
+                    break;
+                case 9:
                     //Back
                     onBack.accept(player);
                     break;
-                case 16:
+                case 17:
                     //Next
-                    if(item.getSchematicName()!= null){
+                    if(item.getSchematicName() != null){
                         onNext.accept(player, item);
                     }
                     break;

@@ -67,6 +67,14 @@ public class GUIItem{
             String displayText,
             XMaterial materialIfTrue,
             XMaterial materialIfFalse){
+        return getBooleanItem(value, displayText, materialIfTrue, materialIfFalse, "&3Click to toggle");
+    }
+    public static ItemStack getBooleanItem(
+            boolean value, 
+            String displayText,
+            XMaterial materialIfTrue,
+            XMaterial materialIfFalse,
+            String loreText){
         
         ItemStackWrapper wrapper;
         if(value){
@@ -76,7 +84,7 @@ public class GUIItem{
             wrapper = ItemStackWrapper.newItem(materialIfFalse);
             wrapper.setDisplayName(displayText + ": &cfalse");
         }
-        wrapper.addLoreLine("&3Click to toggle");
+        wrapper.addLoreLine(loreText);
         return wrapper.toItemStack();
     }
     public static ItemStack getEnabledDisabledItem(
@@ -84,7 +92,8 @@ public class GUIItem{
             String displayText, 
             String modeText,
             XMaterial materialIfTrue,
-            XMaterial materialIfFalse){
+            XMaterial materialIfFalse,
+            String loreText){
         
         ItemStackWrapper builder;
         if(value){
@@ -96,9 +105,17 @@ public class GUIItem{
             builder.addLoreLine("");
             builder.addLoreLine(modeText + ": &7disabled");
         }
-        builder.addLoreLine("&3Click to toggle");
+        builder.addLoreLine(loreText);
         builder.setDisplayName(displayText);
         return builder.toItemStack();
+    }
+    public static ItemStack getEnabledDisabledItem(
+            boolean value, 
+            String displayText, 
+            String modeText,
+            XMaterial materialIfTrue,
+            XMaterial materialIfFalse){
+        return getEnabledDisabledItem(value, displayText, modeText, materialIfTrue, materialIfFalse, "3Click to toggle");
     }
     
     public static ItemStack getPreviousPageItem(){
