@@ -52,7 +52,7 @@ public class FireWand extends SpecialItem{
 
     @Override
     public void onFallingBlockConvert(EntityChangeBlockEvent e) {
-        if(!WorldGuardManager.WORLDGUARD_ENABLED) {
+        if(!WorldGuardManager.isWorldGuardEnabled()) {
             return;
         }
         

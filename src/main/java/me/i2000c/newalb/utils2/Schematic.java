@@ -156,7 +156,7 @@ public class Schematic{
                         continue;
                     }
                     
-                    if(!WorldGuardManager.canBuild(player, l)) {
+                    if(!WorldGuardManager.canPasteSchematic(player, l)) {
                         continue;
                     }
                     
@@ -182,7 +182,7 @@ public class Schematic{
                         BlockVector3 target = bv.add(offset);
                         Location loc = BukkitAdapter.adapt(world, target);                     
                         return (replaceBlocks || loc.getBlock().isEmpty()) 
-                                    && WorldGuardManager.canBuild(player, loc);
+                                    && WorldGuardManager.canPasteSchematic(player, loc);
                     }
                     @Override
                     public Mask2D toMask2D() {

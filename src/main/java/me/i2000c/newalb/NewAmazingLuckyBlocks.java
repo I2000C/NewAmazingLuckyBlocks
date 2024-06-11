@@ -52,9 +52,9 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     public String prefix;
     
     @Override
-    public void onEnable(){
-        Logger.initializeLogger("NewAmazingLuckyBlocks", false);
-        
+    public void onLoad() {
+        Logger.initializeLogger("[NewAmazingLuckyBlocks]", false);
+
         if(MinecraftVersion.CURRENT_VERSION == null){
             Logger.warn("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version");
             Logger.warn("NewAmazingLuckyBlocks is going to shut down");
@@ -62,6 +62,11 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
             return;
         }
         
+        WorldGuardManager.initialize();
+    }
+    
+    @Override
+    public void onEnable(){        
         ConfigManager.initialize(this);
         ConfigManager.loadConfigs();
         
@@ -89,8 +94,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         LocationManager.loadLocations();
         TrapManager.loadTraps();
         
-        initializeWorldEdit();        
-        if(WorldGuardManager.WORLDGUARD_ENABLED) {
+        initializeWorldEdit();
+        if(WorldGuardManager.isWorldGuardEnabled()) {
             Logger.log("&dWorldGuard support: &aenabled");
         } else {
             Logger.log("&dWorldGuard support: &7disabled");
