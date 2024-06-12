@@ -5,15 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import lombok.Getter;
+import static me.i2000c.newalb.MinecraftVersion.CURRENT_VERSION;
+import static me.i2000c.newalb.MinecraftVersion.LATEST_VERSION;
+import static me.i2000c.newalb.MinecraftVersion.OLDEST_VERSION;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
@@ -33,6 +28,12 @@ import me.i2000c.newalb.utils.Updater;
 import me.i2000c.newalb.utils.WorldManager;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class NewAmazingLuckyBlocks extends JavaPlugin {
     
@@ -43,7 +44,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         instance = this;
     }
     
-    private PluginDescriptionFile pdffile = getDescription();
+    private final PluginDescriptionFile pdffile = getDescription();
     public String version = pdffile.getVersion();
     public String name = ChatColor.GOLD + pdffile.getName() + ChatColor.RESET;
     public String prefix;
@@ -51,11 +52,10 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     @Override
     public void onLoad() {
         Logger.initializeLogger("[NewAmazingLuckyBlocks]", false);
-
-        if(MinecraftVersion.CURRENT_VERSION == null){
+        
+        if(CURRENT_VERSION.isLessThan(OLDEST_VERSION) || CURRENT_VERSION.isGreaterThan(LATEST_VERSION)) {
             Logger.warn("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version");
             Logger.warn("NewAmazingLuckyBlocks is going to shut down");
-            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
         
@@ -63,7 +63,12 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     }
     
     @Override
-    public void onEnable(){        
+    public void onEnable(){
+        if(CURRENT_VERSION.isLessThan(OLDEST_VERSION) || CURRENT_VERSION.isGreaterThan(LATEST_VERSION)) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        
         ConfigManager.initialize(this);
         ConfigManager.loadConfigs();
         
@@ -125,7 +130,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     
     @Override
     public void onDisable(){
-        if(MinecraftVersion.CURRENT_VERSION == null) {
+        if(CURRENT_VERSION.isLessThan(OLDEST_VERSION) || CURRENT_VERSION.isGreaterThan(LATEST_VERSION)) {
             Logger.log("has been disabled");
         } else {
             RewardListMenu.testRewardsPlayerList.clear();

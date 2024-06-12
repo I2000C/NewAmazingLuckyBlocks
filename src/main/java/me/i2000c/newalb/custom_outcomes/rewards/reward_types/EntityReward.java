@@ -1,23 +1,8 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Ocelot;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Tameable;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import com.cryptomorin.xseries.XMaterial;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +18,18 @@ import me.i2000c.newalb.utils2.ExtendedEntityType.Age;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
 import me.i2000c.newalb.utils2.RandomUtils;
+import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Tameable;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 @Getter
 @Setter
@@ -232,7 +229,7 @@ public class EntityReward extends Reward{
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.type = ExtendedEntityType.valueOf(config.getString(path + ".type"));
         this.customName = config.getString(path + ".custom_name", null);
-        this.customNameVisible = config.getBoolean(path + ".custom_name_visible");
+        this.customNameVisible = config.getBoolean(path + ".custom_name_visible", true);
         if(this.type.isAlive()){
             this.health = config.getInt(path + ".health", -1);
             this.age = config.getEnum(path + ".age", Age.class, Age.ADULT);

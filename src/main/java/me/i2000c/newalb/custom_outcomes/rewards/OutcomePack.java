@@ -64,10 +64,12 @@ public class OutcomePack implements Displayable, Executable{
         luckyBlockTypesToNotify.clear();
         outcomes.clear();
         
-        String packVersionName = outcomeConfig.getString("MinMinecraftVersion");
-        MinecraftVersion packVersion = MinecraftVersion.fromString(packVersionName);
-        if(packVersion == null){
+        String packVersionName = outcomeConfig.getString("MinMinecraftVersion", null);
+        MinecraftVersion packVersion;
+        if(packVersionName == null){
             packVersion = MinecraftVersion.CURRENT_VERSION;
+        } else {
+            packVersion = MinecraftVersion.fromString(packVersionName);
         }
         
         MinecraftVersion currentVersion = MinecraftVersion.CURRENT_VERSION;
@@ -89,9 +91,9 @@ public class OutcomePack implements Displayable, Executable{
             }
         }
         
-        String materialName = outcomeConfig.getString("Icon");
-        if(materialName != null){
-            icon = ItemStackWrapper.newItem(materialName).toItemStack();
+        XMaterial iconMaterial = outcomeConfig.getMaterial("Icon", null);
+        if(iconMaterial != null){
+            icon = iconMaterial.parseItem();
         }
         
         if(!outcomes.isEmpty()) {

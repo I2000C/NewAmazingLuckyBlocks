@@ -1,19 +1,14 @@
 package me.i2000c.newalb;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.bukkit.Bukkit;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 
 @EqualsAndHashCode(of = {"major", "minor", "patch"})
 public class MinecraftVersion implements Comparable<MinecraftVersion> {
     
     private static final String VERSION_SEPARATOR = ".";
     private static final String VERSION_SEPARATOR_ESC = "\\" + VERSION_SEPARATOR;
-    private static final Pattern VERSION_PATTERN = Pattern.compile("([0-9]+)" + VERSION_SEPARATOR_ESC + "([0-9]+)" + "(?>" + VERSION_SEPARATOR_ESC + "([0-9]+)" + ")?");
     
     public static final int VERSION_8 =   8;
     public static final int VERSION_9 =   9;
@@ -106,25 +101,29 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
             return null;
         }
         
-        Matcher matcher = VERSION_PATTERN.matcher(version);
-        if(!matcher.find()) {
-            return null;
+        int major, minor, patch;
+        String[] split = version.split(VERSION_SEPARATOR_ESC);
+        try {
+            switch(split.length) {
+                case 2:
+                    major = Integer.parseInt(split[0]);
+                    minor = Integer.parseInt(split[1]);
+                    patch = 0;
+                    break;
+                case 3:
+                    major = Integer.parseInt(split[0]);
+                    minor = Integer.parseInt(split[1]);
+                    patch = Integer.parseInt(split[2]);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid Minecraft version: " + version);
+            }
+        } catch(NumberFormatException ex) {
+            throw new IllegalArgumentException("Invalid Minecraft version: " + version, ex);
         }
-        
-        if(matcher.groupCount() < 2) {
-            return null;
-        }
-        
-        int major = Integer.parseInt(matcher.group(1));
-        int minor = Integer.parseInt(matcher.group(2));
-        int patch = matcher.group(3) != null ? Integer.parseInt(matcher.group(3)) : 0;
         
         MinecraftVersion mcVersion = new MinecraftVersion(major, minor, patch);
-        if(mcVersion.isGreaterThanOrEqual(OLDEST_VERSION) && mcVersion.isLessThanOrEqual(LATEST_VERSION)) {
-            return mcVersion;
-        } else {
-            return null;
-        }
+        return mcVersion;
     }
     
     @Override
