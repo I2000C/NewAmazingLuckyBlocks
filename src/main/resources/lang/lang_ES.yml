@@ -44,6 +44,8 @@ Objects:
     name: "&dSopa del Enderman &7- &6Click derecho"
   HotPotato:
     name: "&cPatata caliente &7- &6Click derecho"
+  SwappingBall:
+    name: "&aBola intercambiadora &7- &6Click derecho"
   LuckyTool:
     name: "&6LuckyTool &7- &3Click derecho en un &eLuckyBlock"
     lore:

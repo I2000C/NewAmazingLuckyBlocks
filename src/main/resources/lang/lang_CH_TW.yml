@@ -44,6 +44,8 @@ Objects:
     name: "&d順移湯 &7- &6拿在手上右鍵使用可往前一小段距離"
   HotPotato:
     name: "&cHot Potato &7- &6Right Click"
+  SwappingBall:
+    name: "&aSwapping ball &7- &6Right Click"
   LuckyTool:
     name: "&6LuckyTool &7- &3拿在手上右鍵使用 on a &eLuckyBlock"
     lore:

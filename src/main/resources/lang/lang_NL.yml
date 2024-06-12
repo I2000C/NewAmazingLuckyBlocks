@@ -44,6 +44,8 @@ Objects:
     name: "&dEnderman Soep &7- &6Rechtermuisklik"
   HotPotato:
     name: "&cHot Potato &7- &6Right Click"
+  SwappingBall:
+    name: "&aSwapping ball &7- &6Right Click"
   LuckyTool:
     name: "&6LuckyTool &7- &3Rechtermuisklik op een &eLucky Blok"
     lore:

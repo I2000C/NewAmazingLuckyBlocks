@@ -249,6 +249,13 @@ Objects:
     required-permission: false
     permission: amazinglb.objects.hookbow
     custom-model-data: 1000
+  SwappingBall:
+    # cooldown-time must be in seconds (Use 0 to disable it)
+    cooldown-time: 3
+    preserve-yaw-pitch: true
+    required-permission: false
+    permission: 'amainglb.objects.swapping_ball'
+    custom-model-data: 1000
   LuckyTool:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 0

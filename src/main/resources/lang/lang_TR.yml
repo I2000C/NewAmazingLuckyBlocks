@@ -44,6 +44,8 @@ Objects:
     name: "&dEnderman Çorbası &7- &6Sağ tıklayın"
   HotPotato:
     name: "&cHot Potato &7- &6Right Click"
+  SwappingBall:
+    name: "&aSwapping ball &7- &6Right Click"
   LuckyTool:
     name: "&6LuckyTool &7- &3Right Click on a &eLuckyBlock"
     lore:

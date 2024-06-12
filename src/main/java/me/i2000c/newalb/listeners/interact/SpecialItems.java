@@ -20,6 +20,7 @@ import me.i2000c.newalb.listeners.objects.LuckyTool;
 import me.i2000c.newalb.listeners.objects.MiniVolcano;
 import me.i2000c.newalb.listeners.objects.MultiBow;
 import me.i2000c.newalb.listeners.objects.PlayerTracker;
+import me.i2000c.newalb.listeners.objects.SwappingBall;
 import me.i2000c.newalb.listeners.wands.FireWand;
 import me.i2000c.newalb.listeners.wands.FrostPathWand;
 import me.i2000c.newalb.listeners.wands.InvisibilityWand;
@@ -67,6 +68,7 @@ public class SpecialItems {
     public static final ExplosiveBow explosive_bow = new ExplosiveBow();
     public static final HomingBow homing_bow = new HomingBow();
     public static final HookBow hook_bow = new HookBow();
+    public static final SwappingBall swapping_ball = new SwappingBall();
     
     //////////////////////////////////////
     // End of special items declaration //
