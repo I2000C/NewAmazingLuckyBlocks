@@ -112,7 +112,7 @@ public class StructureReward extends Reward{
         this.fromPlayer = config.getBoolean(path + ".fromPlayer");
         this.replaceBlocks = config.getBoolean(path + ".replaceBlocks");
         this.placeAirBlocks = config.getBoolean(path + ".placeAirBlocks");
-        this.centerPlayerLocation = config.getBoolean(path + ".centerPlayerLocation", true);
+        this.centerPlayerLocation = config.getBoolean(path + ".centerPlayerLocation", fromPlayer);
         this.centerPlayerYaw = config.getBoolean(path + ".centerPlayerYaw", false);
         this.centerPlayerPitch = config.getBoolean(path + ".centerPlayerPitch", false);
         this.autorotate = config.getBoolean(path + ".autorotate", false);
