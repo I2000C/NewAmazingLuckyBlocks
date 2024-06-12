@@ -13,6 +13,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import lombok.Getter;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
@@ -33,20 +34,16 @@ import me.i2000c.newalb.utils.WorldManager;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
 
-
 public class NewAmazingLuckyBlocks extends JavaPlugin {
+    
+    @Getter
     private static NewAmazingLuckyBlocks instance = null;
 
     public NewAmazingLuckyBlocks(){
         instance = this;
     }
-
-    public static NewAmazingLuckyBlocks getInstance(){
-        return instance;
-    }
     
-    public String rutaConfig;
-    PluginDescriptionFile pdffile = getDescription();
+    private PluginDescriptionFile pdffile = getDescription();
     public String version = pdffile.getVersion();
     public String name = ChatColor.GOLD + pdffile.getName() + ChatColor.RESET;
     public String prefix;

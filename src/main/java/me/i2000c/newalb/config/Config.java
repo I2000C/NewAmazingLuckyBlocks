@@ -250,6 +250,9 @@ public class Config {
         File backupFile = new File(configFile.getPath() + BACKUP_EXTENSION);
         this.saveConfig(backupFile);
         newConfig.saveConfig(configFile);
+        
+        // Load new config
+        this.loadConfig(configFile);
     }
     
     
