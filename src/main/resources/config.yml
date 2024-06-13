@@ -1,23 +1,23 @@
 #
-#  _   _                                              _             
-# | \ | |                   /\                       (_)            
-# |  \| | _____      __    /  \   _ __ ___   __ _ _____ _ __   __ _ 
+#  _   _                                              _
+# | \ | |                   /\                       (_)
+# |  \| | _____      __    /  \   _ __ ___   __ _ _____ _ __   __ _
 # | . ` |/ _ \ \ /\ / /   / /\ \ | '_ ` _ \ / _` |_  / | '_ \ / _` |
 # | |\  |  __/\ V  V /   / ____ \| | | | | | (_| |/ /| | | | | (_| |
 # |_| \_|\___| \_/\_/   /_/    \_\_| |_| |_|\__,_/___|_|_| |_|\__, |
 #                                                              __/ |
-#  _                _            ____  _            _         |___/ 
-# | |              | |          |  _ \| |          | |              
-# | |    _   _  ___| | ___   _  | |_) | | ___   ___| | _____        
-# | |   | | | |/ __| |/ / | | | |  _ <| |/ _ \ / __| |/ / __|       
-# | |___| |_| | (__|   <| |_| | | |_) | | (_) | (__|   <\__ \       
-# |______\__,_|\___|_|\_\\__, | |____/|_|\___/ \___|_|\_\___/       
-#                         __/ |                                     
-#                        |___/                                                
+#  _                _            ____  _            _         |___/
+# | |              | |          |  _ \| |          | |
+# | |    _   _  ___| | ___   _  | |_) | | ___   ___| | _____
+# | |   | | | |/ __| |/ / | | | |  _ <| |/ _ \ / __| |/ / __|
+# | |___| |_| | (__|   <| |_| | | |_) | | (_) | (__|   <\__ \
+# |______\__,_|\___|_|\_\\__, | |____/|_|\___/ \___|_|\_\___/
+#                         __/ |
+#                        |___/
 
 
 # Lang file to use. It must be inside the lang folder
-LangFile: lang_EN.yml
+LangFile: "lang_EN.yml"
 
 # Wands configuration
 Wands:
@@ -27,7 +27,7 @@ Wands:
     # The time must be in seconds
     effect-time: 10
     required-permission: false
-    permission: amazinglb.wands.regenwand
+    permission: "amazinglb.wands.regenwand"
     custom-model-data: 1000
     limited-uses:
       enable: false
@@ -37,7 +37,7 @@ Wands:
     cooldown-time: 20
     fire-radius: 1.5
     required-permission: false
-    permission: amazinglb.wands.firewand
+    permission: "amazinglb.wands.firewand"
     custom-model-data: 1000
     limited-uses:
       enable: false
@@ -48,7 +48,7 @@ Wands:
     # The time must be in seconds
     effect-time: 10
     required-permission: false
-    permission: amazinglb.wands.invwand
+    permission: "amazinglb.wands.invwand"
     custom-model-data: 1000
     limited-uses:
       enable: false
@@ -57,7 +57,7 @@ Wands:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
     required-permission: false
-    permission: amazinglb.wands.tntwand
+    permission: "amazinglb.wands.tntwand"
     custom-model-data: 1000
     limited-uses:
       enable: false
@@ -66,7 +66,7 @@ Wands:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
     required-permission: false
-    permission: amazinglb.wands.slimewand
+    permission: "amazinglb.wands.slimewand"
     custom-model-data: 1000
     limited-uses:
       enable: false
@@ -75,7 +75,7 @@ Wands:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
     required-permission: false
-    permission: amazinglb.wands.lightning
+    permission: "amazinglb.wands.lightning"
     custom-model-data: 1000
     limited-uses:
       enable: false
@@ -83,12 +83,12 @@ Wands:
   ShieldWand:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
-    ShieldWandBlock: OAK_LEAVES
+    ShieldWandBlock: "OAK_LEAVES"
     radius: 3.0
     withfloor: true
     protect-structures: true
     required-permission: false
-    permission: amazinglb.wands.shield
+    permission: "amazinglb.wands.shield"
     custom-model-data: 1000
     limited-uses:
       enable: false
@@ -102,10 +102,10 @@ Wands:
     #   <effect-name>;<effect-time>;<effect-amplifier>;<effect-probability>
     # Note: effect time must be in seconds
     effects:
-    - JUMP;10;30;100
-    - SPEED;15;20;100
+    - "JUMP;10;30;100"
+    - "SPEED;15;20;100"
     required-permission: false
-    permission: amazinglb.wands.potion
+    permission: "amazinglb.wands.potion"
     custom-model-data: 1000
     limited-uses:
       enable: false
@@ -113,7 +113,7 @@ Wands:
   FrostPathWand:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 20
-    frostMaterial: PACKED_ICE
+    frostMaterial: "PACKED_ICE"
     maxBlocks: 20
     minPitch: -45.0
     maxPitch: 45.0
@@ -124,7 +124,7 @@ Wands:
     rows-of-blocks-each-time: 1
     row-width: 3
     required-permission: false
-    permission: amazinglb.wands.frost
+    permission: "amazinglb.wands.frost"
     custom-model-data: 1000
     limited-uses:
       enable: false
@@ -146,9 +146,9 @@ Objects:
     block-stop-mode:
       enable: false
       block-list:
-      - BEDROCK
+      - "BEDROCK"
     required-permission: false
-    permission: amazinglb.objets.darkhole
+    permission: "amazinglb.objets.darkhole"
     custom-model-data: 1000
   MiniVolcano:
     # The time must be in ticks. 1 second = 20 ticks
@@ -157,21 +157,21 @@ Objects:
     time-between-one-block-and-the-next: 20
     squared: false
     height: 3
-    lava-material: LAVA
-    base-material: OBSIDIAN
+    lava-material: "LAVA"
+    base-material: "OBSIDIAN"
     throwBlocks:
       enable: true
       number-of-blocks: 5
       height: 0.4
       radius: 0.4
-      material: NETHERRACK
+      material: "NETHERRACK"
       # The time must be in ticks. 1 second = 20 ticks
       time-between-blocks: 10
     required-permission: false
-    permission: amazinglb.objets.minivolcano
+    permission: "amazinglb.objets.minivolcano"
     custom-model-data: 1000
   IceBow:
-    freeze-material: ICE
+    freeze-material: "ICE"
     disableArrowKnockback: true
     protect-structures: true
     # The time must be in ticks. 1 second = 20 ticks
@@ -182,7 +182,7 @@ Objects:
     generateIcePrison: true
     snowRadius: 2
     required-permission: false
-    permission: amazinglb.objects.icebow
+    permission: "amazinglb.objects.icebow"
     custom-model-data: 1000
   PlayerTracker:
     # cooldown-time must be in seconds (Use 0 to disable it)
@@ -190,14 +190,14 @@ Objects:
     radius: 1000
     detect-players-only: true
     required-permission: false
-    permission: amazinglb.objects.playertracker
+    permission: "amazinglb.objects.playertracker"
     custom-model-data: 1000
   EndermanSoup:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 5
     speedMultiplier: 1.5
     required-permission: false
-    permission: amazinglb.objects.enderman_soup
+    permission: "amazinglb.objects.enderman_soup"
     custom-model-data: 1000
   HotPotato:
     ticksBeforeExplosion: 60
@@ -205,25 +205,25 @@ Objects:
     createFire: true
     breakBlocks: true
     required-permission: false
-    permission: amazinglb.objects.hot_potato
+    permission: "amazinglb.objects.hot_potato"
     custom-model-data: 1000
   AutoBow:
     velocityMultiplier: 1.0
     required-permission: false
-    permission: amazinglb.objects.autobow
+    permission: "amazinglb.objects.autobow"
     custom-model-data: 1000
   MultiBow:
     numberOfArrows: 5
     spreadAngle: 25
     required-permission: false
-    permission: amazinglb.objects.multibow
+    permission: "amazinglb.objects.multibow"
     custom-model-data: 1000
   ExplosiveBow:
     explosionPower: 2.0
     createFire: true
     breakBlocks: true
     required-permission: false
-    permission: amazinglb.objects.explosivebow
+    permission: "amazinglb.objects.explosivebow"
     custom-model-data: 1000
   HomingBow:
     followPlayersOnly: true
@@ -231,13 +231,13 @@ Objects:
     arrowRadius: 5.0
     velocityMultiplier: 0.1
     required-permission: false
-    permission: amazinglb.objects.homingbow
+    permission: "amazinglb.objects.homingbow"
     custom-model-data: 1000
   HookBow:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 10
-    maxDistance: 25
-    maxFlySeconds: 7
+    maxDistance: 50
+    maxFlySeconds: 30
     heightGain: 5
     gravity: 0.155
     stopArrowOnLiquid: true
@@ -245,45 +245,45 @@ Objects:
     # Change it to a negative value to disable instant shoot
     arrowSpeed: 1.5
     leashPacketRadius: 50
-    leashTimeoutSeconds: 10    
+    leashTimeoutSeconds: 10
     required-permission: false
-    permission: amazinglb.objects.hookbow
+    permission: "amazinglb.objects.hookbow"
     custom-model-data: 1000
   SwappingBall:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 3
     preserve-yaw-pitch: true
     required-permission: false
-    permission: 'amainglb.objects.swapping_ball'
+    permission: "amazinglb.objects.swapping_ball"
     custom-model-data: 1000
   LuckyTool:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 0
     enable: true
-    onlyCanBreakLuckyBlocksWithLuckyTool: false    
+    onlyCanBreakLuckyBlocksWithLuckyTool: false
     required-permission: false
-    permission: 'amazinglb.lucky_tool'
+    permission: "amazinglb.lucky_tool"
     custom-model-data: 1000
-    
+
 # Command permissions
 Commands:
-  Worlds-permission: amazinglb.worlds
-  Update-message-permission: amazinglb.update
-  Reload-permission: amazinglb.reload
+  Worlds-permission: "amazinglb.worlds"
+  Update-message-permission: "amazinglb.update"
+  Reload-permission: "amazinglb.reload"
   Give:
-    GiveMenu: amazinglb.givemenu
-    Wands: amazinglb.give.wands
-    Objects: amazinglb.give.objects
-    LuckyBlocks: amazinglb.give.luckyblock
-    LuckyTool: amazinglb.give.luckytool
-    OtherItems: amazinglb.give.otheritems
-  RandomBlocks-permission: amazinglb.randomblocks
-  Clear-permission: amazinglb.clear
-  Menu-permission: amazinglb.menu
-  GetSkull-permission: amazinglb.getskull
-  Tab-completer: amazinglb.tabcompleter
-  Schematic: amazinglb.schematic
-  LuckyEvent-permission: amazinglb.luckyevent
+    GiveMenu: "amazinglb.givemenu"
+    Wands: "amazinglb.give.wands"
+    Objects: "amazinglb.give.objects"
+    LuckyBlocks: "amazinglb.give.luckyblock"
+    LuckyTool: "amazinglb.give.luckytool"
+    OtherItems: "amazinglb.give.otheritems"
+  RandomBlocks-permission: "amazinglb.randomblocks"
+  Clear-permission: "amazinglb.clear"
+  Menu-permission: "amazinglb.menu"
+  GetSkull-permission: "amazinglb.getskull"
+  Tab-completer: "amazinglb.tabcompleter"
+  Schematic: "amazinglb.schematic"
+  LuckyEvent-permission: "amazinglb.luckyevent"
 
 # Enable or disable the use of colors in the console logger
 ColoredLogger: true
