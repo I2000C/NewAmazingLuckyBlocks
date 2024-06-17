@@ -54,8 +54,6 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         Logger.initializeLogger("[NewAmazingLuckyBlocks]", false);
         
         if(CURRENT_VERSION.isLessThan(OLDEST_VERSION) || CURRENT_VERSION.isGreaterThan(LATEST_VERSION)) {
-            Logger.warn("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version");
-            Logger.warn("NewAmazingLuckyBlocks is going to shut down");
             return;
         }
         
@@ -65,6 +63,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     @Override
     public void onEnable(){
         if(CURRENT_VERSION.isLessThan(OLDEST_VERSION) || CURRENT_VERSION.isGreaterThan(LATEST_VERSION)) {
+            Logger.warn("You are trying to use NewAmazingLuckyBlocks in an incompatible minecraft version");
+            Logger.warn("NewAmazingLuckyBlocks is going to shut down");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
