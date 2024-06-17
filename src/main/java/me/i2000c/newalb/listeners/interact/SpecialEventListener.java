@@ -5,6 +5,7 @@ import me.i2000c.newalb.utils.WorldManager;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -55,9 +57,11 @@ public class SpecialEventListener implements Listener{
                 }
                 
                 if(!specialItem.getPlayerCooldown().isCooldownExpired(player)){
-                    specialItem.sendRemainingSecondsMessage(player);
-                    e.setCancelled(true);
-                    return;
+                    if(e.getItem().getType() != Material.FISHING_ROD) {
+                        specialItem.sendRemainingSecondsMessage(player);
+                        e.setCancelled(true);
+                        return;
+                    }
                 }
                 
                 if(!WorldGuardManager.canUse(player, player.getLocation())) {
@@ -74,6 +78,38 @@ public class SpecialEventListener implements Listener{
                 
                 specialItem.onPlayerInteract(e);
             }
+        }
+//</editor-fold>
+    }
+    
+    @EventHandler(priority = EventPriority.LOW)
+    private static void onPlayerFish(PlayerFishEvent e) {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        Player player = e.getPlayer();
+        
+        if(!WorldManager.isEnabled(player.getWorld().getName())) {
+            return;
+        }
+        
+        SpecialItem specialItem = SpecialItems.getByItemStack(player.getItemInHand());
+        if(specialItem != null) {
+            if(!specialItem.checkPermission(player)){
+                e.setCancelled(true);
+                return;
+            }
+            
+            if(!specialItem.getPlayerCooldown().isCooldownExpired(player)){
+                specialItem.sendRemainingSecondsMessage(player);
+                e.setCancelled(true);
+                return;
+            }
+            
+            if(!WorldGuardManager.canUse(player, player.getLocation())) {
+                e.setCancelled(true);
+                return;
+            }
+            
+            specialItem.onPlayerFish(e);
         }
 //</editor-fold>
     }

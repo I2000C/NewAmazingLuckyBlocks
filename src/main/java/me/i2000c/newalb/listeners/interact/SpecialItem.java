@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -169,6 +170,8 @@ public abstract class SpecialItem {
     
     // Overridable events
     public void onPlayerInteract(PlayerInteractEvent e){}
+    
+    public void onPlayerFish(PlayerFishEvent e){}
     
     public void onItemPickup(PlayerPickupItemEvent e){}
     

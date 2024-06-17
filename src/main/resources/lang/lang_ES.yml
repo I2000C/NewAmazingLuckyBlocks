@@ -46,6 +46,8 @@ Objects:
     name: "&cPatata caliente &7- &6Click derecho"
   SwappingBall:
     name: "&aBola intercambiadora &7- &6Click derecho"
+  ItemStealer:
+    name: "&bCaña roba objetos &7- &6Click derecho"
   LuckyTool:
     name: "&6LuckyTool &7- &3Click derecho en un &eLuckyBlock"
     lore:

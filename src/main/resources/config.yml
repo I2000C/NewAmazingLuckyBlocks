@@ -256,6 +256,25 @@ Objects:
     required-permission: false
     permission: "amazinglb.objects.swapping_ball"
     custom-model-data: 1000
+  ItemStealer:
+    # cooldown-time must be in seconds (Use 0 to disable it)
+    cooldown-time: 5
+    number-of-items-to-steal: 3
+    # speed that items will have when they fly to the stealer position
+    speed-of-items: 0.5
+    # distance to stealer to stop items from flying
+    min-distance-to-stealer: 1.0
+    # min pickup time in seconds to prevent stealed items
+    #   from being picked up by other players
+    min-pickup-seconds: 1
+    # max number of seconds that items can be flying until they
+    #   reach the stealer
+    max-fly-seconds: 30
+    # Set this value to true if you want to be able to steal items from chests, furnaces, hoppers, etc
+    allow-stealing-items-from-blocks: true
+    required-permission: false
+    permission: "amazinglb.objects.item_stealer"
+    custom-model-data: 1000
   LuckyTool:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 0

@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.bukkit.inventory.ItemStack;
-
 import me.i2000c.newalb.listeners.objects.AutoBow;
 import me.i2000c.newalb.listeners.objects.DarkHole;
 import me.i2000c.newalb.listeners.objects.EndermanSoup;
@@ -16,6 +13,7 @@ import me.i2000c.newalb.listeners.objects.HomingBow;
 import me.i2000c.newalb.listeners.objects.HookBow;
 import me.i2000c.newalb.listeners.objects.HotPotato;
 import me.i2000c.newalb.listeners.objects.IceBow;
+import me.i2000c.newalb.listeners.objects.ItemStealer;
 import me.i2000c.newalb.listeners.objects.LuckyTool;
 import me.i2000c.newalb.listeners.objects.MiniVolcano;
 import me.i2000c.newalb.listeners.objects.MultiBow;
@@ -33,6 +31,7 @@ import me.i2000c.newalb.listeners.wands.TntWand;
 import me.i2000c.newalb.reflection.RefClass;
 import me.i2000c.newalb.reflection.RefField;
 import me.i2000c.newalb.utils2.NBTUtils;
+import org.bukkit.inventory.ItemStack;
 
 public class SpecialItems {
     private static final List<SpecialItem> ITEMS_BY_ID = new ArrayList<>();
@@ -69,6 +68,7 @@ public class SpecialItems {
     public static final HomingBow homing_bow = new HomingBow();
     public static final HookBow hook_bow = new HookBow();
     public static final SwappingBall swapping_ball = new SwappingBall();
+    public static final ItemStealer item_stealer = new ItemStealer();
     
     //////////////////////////////////////
     // End of special items declaration //
