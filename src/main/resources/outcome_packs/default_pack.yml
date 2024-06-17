@@ -1037,3 +1037,31 @@ Outcomes:
           squared: false
           throw_blocks: true
     delayer: []
+  '52':
+    outcome-name: SwappingBall
+    probability: 100
+    icon: SNOWBALL
+    rewards:
+      item:
+        '0':
+          material: STONE
+          spawnMode: DEFAULT
+          spawnInvSlot: 0
+          amount: 10
+          durability: 0
+          name: '%swapping_ball%'
+    delayer: []
+  '53':
+    outcome-name: ItemStealer
+    probability: 100
+    icon: FISHING_ROD
+    rewards:
+      item:
+        '0':
+          material: STONE
+          spawnMode: DEFAULT
+          spawnInvSlot: 0
+          amount: 1
+          durability: 0
+          name: '%item_stealer%'
+    delayer: []
