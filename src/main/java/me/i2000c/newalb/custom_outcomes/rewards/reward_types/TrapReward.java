@@ -1,15 +1,8 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import com.cryptomorin.xseries.XMaterial;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +15,11 @@ import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils.TrapManager;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.XMaterialUtils;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 @Getter
 @Setter
@@ -110,7 +108,7 @@ public class TrapReward extends Reward{
         if(trapMaterialName == null){
             trapMaterialName = config.getString(path + ".pressurePlateMaterial");
         }
-        this.trapMaterial = OtherUtils.parseXMaterial(trapMaterialName);
+        this.trapMaterial = XMaterialUtils.parseXMaterial(trapMaterialName);
         
         this.trapName = config.getString(path + ".trapName");
         String[] aux = config.getString(path + ".trapOutcome").split("\\/");

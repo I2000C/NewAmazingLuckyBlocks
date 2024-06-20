@@ -11,13 +11,13 @@ public class TypeData {
     private final XMaterial material;
     private final Texture texture;
     
-    public TypeData(ItemStackWrapper wrapper){
-        if(wrapper == null){
-            this.material = null;
-            this.texture = null;
-        } else {
-            this.material = wrapper.getMaterial() == XMaterial.PLAYER_WALL_HEAD ? XMaterial.PLAYER_HEAD : wrapper.getMaterial();
-            this.texture = wrapper.getTexture();
-        }
+    public TypeData(XMaterial material, Texture texture) {
+        this.material = material == XMaterial.PLAYER_WALL_HEAD ? XMaterial.PLAYER_HEAD : material;
+        this.texture = texture;
+    }
+    
+    public TypeData(ItemStackWrapper wrapper) {
+        this(wrapper != null ? wrapper.getMaterial() : null, 
+             wrapper != null ? wrapper.getTexture() : null);
     }
 }

@@ -1,18 +1,12 @@
 package me.i2000c.newalb.utils2;
 
-import java.util.Optional;
 import java.util.function.Predicate;
-
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import com.cryptomorin.xseries.XMaterial;
-
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils.Logger;
 
 public class OtherUtils{
     // Source: https://stackoverflow.com/a/990492
@@ -106,39 +100,5 @@ public class OtherUtils{
             return value;
         }
 //</editor-fold>
-    }
-    
-    public static XMaterial parseXMaterial(String materialNameAndDurability) throws IllegalArgumentException {
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        if(materialNameAndDurability == null || materialNameAndDurability.trim().isEmpty()) {
-            return null;
-        }
-        
-        String[] splitted = materialNameAndDurability.split(":");
-        String materialName = splitted[0];
-        Integer materialID = null;
-        
-        try {
-            materialID = Integer.parseInt(materialName);
-            Logger.warn("Using material IDs is deprecated and not recommended (materialID: " + materialID + ")");
-        } catch(Exception ex) { }
-        
-        Optional<XMaterial> optionalXMaterial;
-        if(materialID == null) {
-            optionalXMaterial = XMaterial.matchXMaterial(materialNameAndDurability);
-        } else {
-            if(splitted.length == 1) {
-                optionalXMaterial = XMaterial.matchXMaterial(materialID, (byte) 0);
-            } else {
-                optionalXMaterial = XMaterial.matchXMaterial(materialID, Byte.parseByte(splitted[1]));
-            }
-        }
-        
-        if(optionalXMaterial.isPresent()) {
-            return optionalXMaterial.get();
-        } else {
-            throw new IllegalArgumentException("Invalid ItemStack detected: " + materialNameAndDurability);
-        }
-        //</editor-fold>
     }
 }

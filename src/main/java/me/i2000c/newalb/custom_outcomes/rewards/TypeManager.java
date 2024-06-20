@@ -1,5 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +15,12 @@ import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.RandomUtils;
+import me.i2000c.newalb.utils2.XMaterialUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -124,11 +128,14 @@ public class TypeManager{
     }
     
     public static LuckyBlockType getType(ItemStack stack){
-        TypeData data = new TypeData(ItemStackWrapper.fromItem(stack));
+        ItemStackWrapper wrapper = ItemStackWrapper.fromItem(stack, false);
+        TypeData data = new TypeData(wrapper);
         return luckyBlockTypesAux.get(data);
     }
     public static LuckyBlockType getType(Block block){
-        TypeData data = new TypeData(ItemStackWrapper.newItem(block));
+        XMaterial material = XMaterialUtils.getXMaterial(block);
+        Texture texture = TextureManager.getTexture(block);
+        TypeData data = new TypeData(material, texture);
         return luckyBlockTypesAux.get(data);
     }    
     

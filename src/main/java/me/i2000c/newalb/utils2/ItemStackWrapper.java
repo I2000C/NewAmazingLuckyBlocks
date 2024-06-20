@@ -1,5 +1,6 @@
 package me.i2000c.newalb.utils2;
 
+import com.cryptomorin.xseries.XBlock;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +18,6 @@ import me.i2000c.newalb.utils.textures.TextureException;
 import me.i2000c.newalb.utils.textures.TextureManager;
 import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.FallingBlock;
@@ -35,30 +35,15 @@ import org.bukkit.potion.PotionEffect;
 public class ItemStackWrapper {
     private final ItemStack item;
     
-    
-    
     public static ItemStackWrapper newItem(@NonNull XMaterial material) {
+        if(!XMaterialUtils.isItem(material)) {
+            throw new IllegalArgumentException(String.format("Material \"%s\" is not an item", material.name()));
+        }
+        
         return new ItemStackWrapper(material.parseItem());
     }
     public static ItemStackWrapper newItem(@NonNull String materialNameAndDurability) {
-        return newItem(OtherUtils.parseXMaterial(materialNameAndDurability));
-    }
-    public static ItemStackWrapper newItem(@NonNull Block block) {
-        XMaterial material = XMaterial.matchXMaterial(block.getType());
-        ItemStackWrapper wrapper = ItemStackWrapper.newItem(material);
-        
-        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
-            try {
-                wrapper.setDurability(block.getData());
-                XMaterial aux = wrapper.getMaterial();
-            } catch(IllegalArgumentException ex) {
-                wrapper.setDurability(0);
-            }
-        }
-        
-        Texture texture = TextureManager.getTexture(block);
-        wrapper.setTexture(texture);
-        return wrapper;
+        return newItem(XMaterialUtils.parseXMaterial(materialNameAndDurability));
     }
     public static ItemStackWrapper fromItem(@NonNull ItemStack stack, boolean clone) {
         return new ItemStackWrapper(clone ? stack.clone() : stack);
@@ -70,6 +55,10 @@ public class ItemStackWrapper {
     
     
     public ItemStackWrapper setMaterial(XMaterial material) {
+        if(!XMaterialUtils.isItem(material)) {
+            throw new IllegalArgumentException(String.format("Material \"%s\" is not an item", material.name()));
+        }
+        
         material.setType(item);
         return this;
     }
@@ -432,7 +421,7 @@ public class ItemStackWrapper {
     }
     
     public void placeAt(Block block) {
-        block.setType(item.getType());
+        XBlock.setType(block, getMaterial());
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             block.setData((byte) item.getDurability());
         }
@@ -444,13 +433,7 @@ public class ItemStackWrapper {
     }
     
     public FallingBlock spawnFallingBlock(Location loc) {
-        Material material = item.getType();
-        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
-            byte data = (byte) item.getDurability();
-            return loc.getWorld().spawnFallingBlock(loc, material, data);
-        } else {
-            return loc.getWorld().spawnFallingBlock(loc, material, (byte) 0);
-        }        
+        return XMaterialUtils.spawnFallingBlock(loc, getMaterial());
     }
     
     public ItemStack toItemStack() {

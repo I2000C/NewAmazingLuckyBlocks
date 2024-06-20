@@ -23,16 +23,16 @@ repositories{
 }
 
 dependencies{
-	implementation 'de.tr7zw:item-nbt-api:2.12.4'
-	compileOnly 'de.tr7zw:item-nbt-api:2.12.4:javadoc'
-	compileOnly 'de.tr7zw:item-nbt-api:2.12.4:sources'
-    implementation 'com.github.cryptomorin:XSeries:10.0.0'
-    compileOnly 'com.github.cryptomorin:XSeries:10.0.0:javadoc'
-    compileOnly 'com.github.cryptomorin:XSeries:10.0.0:sources'
+    implementation 'de.tr7zw:item-nbt-api:2.13.1-SNAPSHOT'
+    compileOnly 'de.tr7zw:item-nbt-api:2.13.1-SNAPSHOT:javadoc'
+    compileOnly 'de.tr7zw:item-nbt-api:2.13.1-SNAPSHOT:sources'
+    implementation 'com.github.cryptomorin:XSeries:11.1.0'
+    compileOnly 'com.github.cryptomorin:XSeries:11.1.0:javadoc'
+    compileOnly 'com.github.cryptomorin:XSeries:11.1.0:sources'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:javadoc'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:sources'
-    compileOnly 'com.mojang:authlib:1.5.21'    
+    compileOnly 'com.mojang:authlib:1.5.21'
     implementation 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.3.0'
     compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.3.0:javadoc'
     compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.3.0:sources'

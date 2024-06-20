@@ -12,6 +12,7 @@ import lombok.NonNull;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
@@ -52,7 +53,15 @@ public class ItemStealer extends SpecialItem {
     @Override
     public void onPlayerFish(PlayerFishEvent e) {
         Player player = e.getPlayer();
-        Location location = e.getHook().getLocation();
+        
+        Entity hook;
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+            hook = e.getHook();
+        } else {
+            // Since Minecraft 1.13 the type of getHook() is 'FishHook' instead of 'Fish'
+            hook = ReflectionManager.callMethod(e, "getHook");
+        }
+        Location location = hook.getLocation();
         if(!WorldGuardManager.canUse(player, location)) {
             return;
         }

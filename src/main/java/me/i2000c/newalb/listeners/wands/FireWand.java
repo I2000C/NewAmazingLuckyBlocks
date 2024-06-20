@@ -7,6 +7,7 @@ import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.WorldGuardManager;
+import me.i2000c.newalb.utils2.XMaterialUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.FallingBlock;
@@ -17,7 +18,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-public class FireWand extends SpecialItem{
+public class FireWand extends SpecialItem {
+    
+    private static final XMaterial FIRE = XMaterial.FIRE;
     
     @Override
     public void onPlayerInteract(PlayerInteractEvent e){
@@ -35,11 +38,10 @@ public class FireWand extends SpecialItem{
             Vector speed = player.getEyeLocation().getDirection().multiply(2.8);
             Location location = player.getEyeLocation().add(direction);
             double radius = ConfigManager.getMainConfig().getDouble("Wands.FireWand.fire-radius");
-            ItemStackWrapper wrapper = ItemStackWrapper.newItem(XMaterial.FIRE);
             for(double x=-radius;x<=radius;x++){
                 for(double z=-radius;z<radius;z++){
                     Location spawnLocation = location.clone().add(x, 0, z);
-                    FallingBlock fallingBlock = wrapper.spawnFallingBlock(spawnLocation);
+                    FallingBlock fallingBlock = XMaterialUtils.spawnFallingBlock(spawnLocation, FIRE);
                     fallingBlock.setDropItem(false);
                     fallingBlock.setVelocity(speed);
                     

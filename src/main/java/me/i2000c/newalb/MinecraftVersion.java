@@ -23,11 +23,13 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
     public static final int VERSION_18 = 18;
     public static final int VERSION_19 = 19;
     public static final int VERSION_20 = 20;
+    public static final int VERSION_21 = 21;
     
     public static final MinecraftVersion v1_8    = new MinecraftVersion(1, VERSION_8, 0);
     public static final MinecraftVersion v1_9    = new MinecraftVersion(1, VERSION_9, 0);
     public static final MinecraftVersion v1_10   = new MinecraftVersion(1, VERSION_10, 0);
     public static final MinecraftVersion v1_11   = new MinecraftVersion(1, VERSION_11, 0);
+    public static final MinecraftVersion v1_12   = new MinecraftVersion(1, VERSION_12, 0);
     public static final MinecraftVersion v1_13   = new MinecraftVersion(1, VERSION_13, 0);
     public static final MinecraftVersion v1_14   = new MinecraftVersion(1, VERSION_14, 0);
     public static final MinecraftVersion v1_15   = new MinecraftVersion(1, VERSION_15, 0);
@@ -38,9 +40,10 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
     public static final MinecraftVersion v1_20_2 = new MinecraftVersion(1, VERSION_20, 2);
     public static final MinecraftVersion v1_20_5 = new MinecraftVersion(1, VERSION_20, 5);
     public static final MinecraftVersion v1_20_6 = new MinecraftVersion(1, VERSION_20, 6);
+    public static final MinecraftVersion v1_21   = new MinecraftVersion(1, VERSION_21, 0);
     
     public static final MinecraftVersion OLDEST_VERSION = v1_8;
-    public static final MinecraftVersion LATEST_VERSION = v1_20_6;
+    public static final MinecraftVersion LATEST_VERSION = v1_21;
     public static final MinecraftVersion CURRENT_VERSION = getCurrentVersion();
     public static final String CURRENT_BUKKIT_VERSION = getCurrentBukkitVersion();
     

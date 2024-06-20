@@ -1,5 +1,6 @@
 package me.i2000c.newalb.listeners.objects;
 
+import com.cryptomorin.xseries.XBlock;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
+import me.i2000c.newalb.utils2.XMaterialUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -81,9 +83,6 @@ public class MiniVolcano extends SpecialItem{
                         long ticks, long beforeTicks, 
                         boolean squared, boolean throwBlocks) {
         
-        ItemStackWrapper baseItemStack = ItemStackWrapper.newItem(baseMaterial);
-        ItemStackWrapper lavaItemStack = ItemStackWrapper.newItem(lavaMaterial);
-        
         //<editor-fold defaultstate="collapsed" desc="Code">
         XSound.ENTITY_TNT_PRIMED.play(location, 2.0f, 1.0f);
         
@@ -104,7 +103,7 @@ public class MiniVolcano extends SpecialItem{
                     cancel();
                     Location loc = center.clone().add(0, currentHeight, 0);
                     if(WorldGuardManager.canBuild(player, loc)) {
-                        lavaItemStack.placeAt(loc);
+                        XBlock.setType(loc.getBlock(), lavaMaterial);
                     }
                     
                     if(throwBlocks) {
@@ -127,9 +126,9 @@ public class MiniVolcano extends SpecialItem{
                             if(squared || distanceSquared <= wallRadiusSquared) {
                                 if(WorldGuardManager.canBuild(player, loc)) {
                                     if(distanceSquared <= lavaRadiusSquared) {
-                                        lavaItemStack.placeAt(loc);
+                                        XBlock.setType(loc.getBlock(), lavaMaterial);
                                     } else {
-                                        baseItemStack.placeAt(loc);
+                                        XBlock.setType(loc.getBlock(), baseMaterial);
                                     }
                                 }
                             }
@@ -162,8 +161,6 @@ public class MiniVolcano extends SpecialItem{
                                    XMaterial blocksMaterial, XMaterial lavaMaterial, 
                                    long ticks) {
         
-        ItemStackWrapper blocksItemStack = ItemStackWrapper.newItem(blocksMaterial);
-        
         //<editor-fold defaultstate="collapsed" desc="Code">
         Task task = new Task() {
             final Location baseLoc = location.clone();
@@ -188,7 +185,7 @@ public class MiniVolcano extends SpecialItem{
                 Location loc = baseLoc.clone().add(dx, dy, dz);
                 Vector speed = loc.toVector().subtract(baseLoc.toVector());
                 
-                FallingBlock fb = blocksItemStack.spawnFallingBlock(loc);
+                FallingBlock fb = XMaterialUtils.spawnFallingBlock(loc, blocksMaterial);
                 fb.setDropItem(false);
                 fb.setVelocity(speed);
                 MetadataManager.setClassMetadata(fb, MiniVolcano.this);
@@ -212,7 +209,6 @@ public class MiniVolcano extends SpecialItem{
         }
 
         XMaterial lavaMaterial = MetadataManager.getCustomMetadata2(e.getEntity());
-        ItemStackWrapper lavaItemStack = ItemStackWrapper.newItem(lavaMaterial);
-        lavaItemStack.placeAt(e.getBlock());
+        XBlock.setType(e.getBlock(), lavaMaterial);
     }
 }

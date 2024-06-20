@@ -13,9 +13,9 @@ import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.WorldManager;
-import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.RandomUtils;
 import me.i2000c.newalb.utils2.WorldGuardManager;
+import me.i2000c.newalb.utils2.XMaterialUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -122,7 +122,7 @@ public class BlockBreak implements Listener{
                 if(key.equals(DEFAULT_MATERIAL)) {
                     defaultProbabilities.put(typeName, probability);
                 } else {
-                    XMaterial material = OtherUtils.parseXMaterial(key);
+                    XMaterial material = XMaterialUtils.parseXMaterial(key);
                     Map<String, Integer> probabilityMap = materialProbabilities.getOrDefault(material, new HashMap<>());
                     probabilityMap.put(typeName, probability);
                     materialProbabilities.put(material, probabilityMap);

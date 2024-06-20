@@ -1,12 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import org.bukkit.Location;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.cryptomorin.xseries.XMaterial;
-
 import lombok.Getter;
 import lombok.Setter;
 import me.i2000c.newalb.config.Config;
@@ -15,9 +9,13 @@ import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
-import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
+import me.i2000c.newalb.utils2.XMaterialUtils;
+import org.bukkit.Location;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 @Getter
 @Setter
@@ -85,7 +83,7 @@ public class BlockReward extends Reward{
             int durability = config.getInt(path + ".blockItem.durability");
             materialName += ":" + durability;
         }
-        this.blockMaterial = OtherUtils.parseXMaterial(materialName);
+        this.blockMaterial = XMaterialUtils.parseXMaterial(materialName);
         this.offset = new Offset(config, path + ".offset");
     }
     

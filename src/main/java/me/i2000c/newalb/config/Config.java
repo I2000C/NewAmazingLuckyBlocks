@@ -32,7 +32,7 @@ import me.i2000c.newalb.config.serializators.ConfigSerializer;
 import me.i2000c.newalb.config.serializators.ItemStackWrapperSerializator;
 import me.i2000c.newalb.config.serializators.LocationSerializator;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.XMaterialUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -304,7 +304,7 @@ public class Config {
     }
     public XMaterial getMaterial(String path) {
         String materialNameAndDurability = getString(path);
-        return OtherUtils.parseXMaterial(materialNameAndDurability);
+        return XMaterialUtils.parseXMaterial(materialNameAndDurability);
     }
     public Location getLocation(String path) {
         assertPathExists(path);
@@ -350,9 +350,7 @@ public class Config {
         return existsPath(path) ? yamlConfig.getStringList(path) : defaultValue;
     }
     public XMaterial getMaterial(String path, XMaterial defaultValue) {
-        if(!existsPath(path)) return defaultValue;        
-        String materialNameAndDurability = getString(path);
-        return OtherUtils.parseXMaterial(materialNameAndDurability);
+        return existsPath(path) ? this.getMaterial(path) : defaultValue;
     }
     public Location getLocation(String path, Location defaultValue) {
         return existsPath(path) ? this.getLocation(path) : defaultValue;
