@@ -263,7 +263,7 @@ Objects:
     # speed that items will have when they fly to the stealer position
     speed-of-items: 0.5
     # distance to stealer to stop items from flying
-    min-distance-to-stealer: 1.0
+    min-distance-to-stealer: 0.5
     # min pickup time in seconds to prevent stealed items
     #   from being picked up by other players
     min-pickup-seconds: 1
