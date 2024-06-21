@@ -249,15 +249,16 @@ public class ItemStealer extends SpecialItem {
                 inv.setItem(slot, stack);
             }
         } else switch(slot) {
-            case HELMET_SLOT:               entity.getEquipment().setHelmet(stack);
-            case CHESTPLATE_SLOT:           entity.getEquipment().setChestplate(stack);
-            case LEGGINGS_SLOT:             entity.getEquipment().setLeggings(stack);
-            case BOOTS_SLOT:                entity.getEquipment().setBoots(stack);
-            case ITEM_IN_MAIN_HAND_SLOT:    entity.getEquipment().setItemInHand(stack);
+            case HELMET_SLOT:               entity.getEquipment().setHelmet(stack);     break;
+            case CHESTPLATE_SLOT:           entity.getEquipment().setChestplate(stack); break;
+            case LEGGINGS_SLOT:             entity.getEquipment().setLeggings(stack);   break;
+            case BOOTS_SLOT:                entity.getEquipment().setBoots(stack);      break;
+            case ITEM_IN_MAIN_HAND_SLOT:    entity.getEquipment().setItemInHand(stack); break;
             case ITEM_IN_OFF_HAND_SLOT:
                 if(!MinecraftVersion.CURRENT_VERSION.is_1_8()) {
                     entity.getEquipment().setItemInOffHand(stack);
                 }
+                break;
         }
     }
     
