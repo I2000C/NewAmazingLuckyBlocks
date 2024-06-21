@@ -96,6 +96,10 @@ public class ItemStealer extends SpecialItem {
     
     public boolean execute(Player player, Entity entity) {
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(entity instanceof Item) {
+            return execute(player, entity.getLocation());
+        }
+        
         if(!(entity instanceof LivingEntity)) {
             return false;
         }
