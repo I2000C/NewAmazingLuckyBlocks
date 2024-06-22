@@ -1,5 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
+import com.cryptomorin.xseries.XBlock;
 import com.cryptomorin.xseries.XMaterial;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,11 +36,12 @@ public class BlockReward extends Reward{
     
     @Override
     public ItemStack getItemToDisplay(){
-        ItemStackWrapper wrapper = ItemStackWrapper.newItem(blockMaterial);
-        switch(wrapper.getMaterial()){
-            case WATER: wrapper.setMaterial(XMaterial.WATER_BUCKET); break;
-            case LAVA:  wrapper.setMaterial(XMaterial.LAVA_BUCKET);  break;
-            case FIRE:  wrapper.setMaterial(XMaterial.FIRE_CHARGE);  break;
+        ItemStackWrapper wrapper;
+        switch(blockMaterial){
+            case WATER: wrapper = ItemStackWrapper.newItem(XMaterial.WATER_BUCKET); break;
+            case LAVA:  wrapper = ItemStackWrapper.newItem(XMaterial.LAVA_BUCKET);  break;
+            case FIRE:  wrapper = ItemStackWrapper.newItem(XMaterial.FIRE_CHARGE);  break;
+            default:    wrapper = ItemStackWrapper.newItem(blockMaterial);          break;
         }
         
         wrapper.setDisplayName("&9Block");
@@ -96,12 +98,11 @@ public class BlockReward extends Reward{
             return;
         }
         
-        ItemStackWrapper wrapper = ItemStackWrapper.newItem(blockMaterial);
         if(isFallingBlock) {
-            FallingBlock fb = wrapper.spawnFallingBlock(loc);
+            FallingBlock fb = XMaterialUtils.spawnFallingBlock(loc, blockMaterial);
             fb.setDropItem(false);
         } else {
-            Task.runTask(() -> wrapper.placeAt(loc), 1L);             
+            Task.runTask(() -> XBlock.setType(loc.getBlock(), blockMaterial), 1L);             
         }        
     }
     

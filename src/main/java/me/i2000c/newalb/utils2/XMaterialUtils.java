@@ -71,7 +71,7 @@ public class XMaterialUtils {
     
     public static FallingBlock spawnFallingBlock(Location loc, XMaterial material) {
         Material mat = material.parseMaterial();
-        if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_11)) {
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             byte data = (byte) material.getData();
             return loc.getWorld().spawnFallingBlock(loc, mat, data);
         } else {
