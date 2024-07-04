@@ -1,20 +1,17 @@
 package me.i2000c.newalb.listeners.objects;
 
-import java.util.List;
-
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
-
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
-
+import java.util.List;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.objects.utils.BowUtils;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 public class MultiBow extends SpecialItem {
     
@@ -82,7 +79,7 @@ public class MultiBow extends SpecialItem {
         this.numberOfArrows = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".numberOfArrows");
         
         return ItemStackWrapper.newItem(XMaterial.BOW)
-                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+                .addEnchantment(XEnchantment.POWER, 1)
                 .toItemStack();
     }
 }

@@ -1,5 +1,6 @@
 package me.i2000c.newalb.listeners.objects;
 
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.i2000c.newalb.MinecraftVersion;
@@ -10,7 +11,6 @@ import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.Effect;
 import org.bukkit.Location;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -88,7 +88,7 @@ public class SwappingBall extends SpecialItem {
     public ItemStack buildItem() {
         preserveYawPitch = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".preserve-yaw-pitch");
         return ItemStackWrapper.newItem(XMaterial.SNOWBALL)
-                               .addEnchantment(Enchantment.KNOCKBACK, 1)
+                               .addEnchantment(XEnchantment.KNOCKBACK, 1)
                                .toItemStack();
     }
 }

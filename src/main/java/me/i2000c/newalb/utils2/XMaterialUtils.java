@@ -1,13 +1,17 @@
 package me.i2000c.newalb.utils2;
 
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.Optional;
 import lombok.NonNull;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -140,6 +144,16 @@ public class XMaterialUtils {
                 return false;
             default:
                 return true;
+        }
+    }
+    
+    public static XEnchantment matchXEnchantment(Enchantment enchantment) {
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_21)) {
+            // Since Minecraft 1.21 enchantments' names are weird, so their getName() method doesn't work as expected
+            NamespacedKey key = ReflectionManager.callMethod(enchantment, "getKey");
+            return XEnchantment.matchXEnchantment(key.getKey()).orElse(null);
+        } else {
+            return XEnchantment.matchXEnchantment(enchantment);
         }
     }
 }

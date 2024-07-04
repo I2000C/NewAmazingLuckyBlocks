@@ -1,20 +1,8 @@
 package me.i2000c.newalb.listeners.objects;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.inventory.ItemStack;
-
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
@@ -22,6 +10,16 @@ import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class IceBow extends SpecialItem{
     
@@ -48,7 +46,7 @@ public class IceBow extends SpecialItem{
         this.disableArrowKnockback = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".disableArrowKnockback");
         
         return ItemStackWrapper.newItem(XMaterial.BOW)
-                               .addEnchantment(Enchantment.DURABILITY, 5)
+                               .addEnchantment(XEnchantment.UNBREAKING, 5)
                                .toItemStack();
     }
     

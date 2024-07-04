@@ -1,20 +1,18 @@
 package me.i2000c.newalb.listeners.objects;
 
-import org.bukkit.Location;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.inventory.ItemStack;
-
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
-
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.WorldGuardManager;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.inventory.ItemStack;
 
 
 public class ExplosiveBow extends SpecialItem{
@@ -42,7 +40,7 @@ public class ExplosiveBow extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemStackWrapper.newItem(XMaterial.BOW)
-                               .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+                               .addEnchantment(XEnchantment.POWER, 1)
                                .toItemStack();
     }
 }

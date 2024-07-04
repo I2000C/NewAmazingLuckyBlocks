@@ -1,7 +1,12 @@
 package me.i2000c.newalb.listeners.objects;
 
+import com.cryptomorin.xseries.XEnchantment;
+import com.cryptomorin.xseries.XMaterial;
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.Task;
 import org.bukkit.GameMode;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -9,13 +14,6 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-
-import com.cryptomorin.xseries.XMaterial;
-
-import me.i2000c.newalb.config.ConfigManager;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.Task;
 
 public class HomingBow extends SpecialItem{
   
@@ -119,7 +117,7 @@ public class HomingBow extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemStackWrapper.newItem(XMaterial.BOW)
-                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+                .addEnchantment(XEnchantment.POWER, 1)
                 .toItemStack();
     }
 }

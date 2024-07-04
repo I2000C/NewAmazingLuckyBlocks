@@ -1,6 +1,7 @@
 package me.i2000c.newalb.utils2;
 
 import com.cryptomorin.xseries.XBlock;
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -159,34 +161,38 @@ public class ItemStackWrapper {
         return item.getItemMeta().hasLore();
     }
     
-    public ItemStackWrapper addEnchantment(@NonNull Enchantment enchantment, int level) {
-        item.addUnsafeEnchantment(enchantment, level);
+    public ItemStackWrapper addEnchantment(@NonNull XEnchantment enchantment, int level) {
+        if(enchantment.isSupported()) item.addUnsafeEnchantment(enchantment.getEnchant(), level);
         return this;
     }
-    public ItemStackWrapper setEnchantments(@NonNull Map<Enchantment, Integer> enchantments) {
+    public ItemStackWrapper setEnchantments(@NonNull Map<XEnchantment, Integer> enchantments) {
         clearEnchantments();
-        item.addUnsafeEnchantments(enchantments);
+        Map<Enchantment, Integer> filteredEnchantments = enchantments.entrySet().stream()
+                                                                                .filter(entry -> entry.getKey().isSupported())
+                                                                                .collect(Collectors.toMap(entry -> entry.getKey().getEnchant(), Map.Entry::getValue));
+        item.addUnsafeEnchantments(filteredEnchantments);
         return this;
     }
     public ItemStackWrapper setEnchantments(List<String> enchantments) {
         clearEnchantments();
         enchantments.forEach(enchant -> {
             String[] splitted = enchant.split(";");
-            Enchantment enchantment = Enchantment.getByName(splitted[0]);
+            XEnchantment enchantment = XEnchantment.matchXEnchantment(splitted[0]).orElse(null);
             Objects.requireNonNull(enchantment);
             
             int level = Integer.parseInt(splitted[1]);
-            item.addUnsafeEnchantment(enchantment, level);
+            this.addEnchantment(enchantment, level);
         });
         return this;
     }
-    public Map<Enchantment, Integer> getEnchantments() {
-        return item.getEnchantments();
+    public Map<XEnchantment, Integer> getEnchantments() {
+        return item.getEnchantments().entrySet().stream()
+                                                .collect(Collectors.toMap(entry -> XMaterialUtils.matchXEnchantment(entry.getKey()), Map.Entry::getValue));
     }
     public List<String> getEnchantmentsIntoStringList() {
         List<String> enchantments = new ArrayList<>();
-        item.getEnchantments().forEach((enchantment, level) -> {
-            enchantments.add(enchantment.getName() + ";" + level);
+        this.getEnchantments().forEach((enchantment, level) -> {
+            enchantments.add(enchantment.name() + ";" + level);
         });
         return enchantments;
     }
@@ -198,19 +204,19 @@ public class ItemStackWrapper {
         return this;
     }
 
-    public ItemStackWrapper addBookEnchantment(Enchantment enchantment, int level) {
+    public ItemStackWrapper addBookEnchantment(XEnchantment enchantment, int level) {
         Objects.requireNonNull(enchantment);
         
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof EnchantmentStorageMeta) {
             EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
-            esm.addStoredEnchant(enchantment, level, true);
+            esm.addStoredEnchant(enchantment.getEnchant(), level, true);
             item.setItemMeta(esm);
         }
         
         return this;
     }
-    public ItemStackWrapper setBookEnchantments(Map<Enchantment, Integer> enchantments) {
+    public ItemStackWrapper setBookEnchantments(Map<XEnchantment, Integer> enchantments) {
         Objects.requireNonNull(enchantments);
         clearBookEnchantments();
         
@@ -218,7 +224,7 @@ public class ItemStackWrapper {
         if(meta instanceof EnchantmentStorageMeta) {
             EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
             enchantments.forEach((enchantment, level) ->
-                    esm.addStoredEnchant(enchantment, level, true));
+                    esm.addStoredEnchant(enchantment.getEnchant(), level, true));
             item.setItemMeta(esm);
         }
         
@@ -232,37 +238,32 @@ public class ItemStackWrapper {
             EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
             enchantments.forEach(enchant -> {
                 String[] splitted = enchant.split(";");
-                Enchantment enchantment = Enchantment.getByName(splitted[0]);
+                XEnchantment enchantment = XEnchantment.matchXEnchantment(splitted[0]).orElse(null);
                 Objects.requireNonNull(enchantment);
 
                 int level = Integer.parseInt(splitted[1]);
-                esm.addStoredEnchant(enchantment, level, true);
+                esm.addStoredEnchant(enchantment.getEnchant(), level, true);
             });
             item.setItemMeta(esm);
         }
         
         return this;
     }
-    public Map<Enchantment, Integer> getBookEnchantments() {
+    public Map<XEnchantment, Integer> getBookEnchantments() {
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof EnchantmentStorageMeta) {
             EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
-            return esm.getStoredEnchants();
+            return esm.getStoredEnchants().entrySet().stream()
+                                                     .collect(Collectors.toMap(entry -> XMaterialUtils.matchXEnchantment(entry.getKey()), Map.Entry::getValue));
         } else {
             return Collections.emptyMap();
         }
     }
     public List<String> getBookEnchantmentsIntoStringList() {
-        List<String> enchantments = new ArrayList<>();
-        
-        ItemMeta meta = item.getItemMeta();
-        if(meta instanceof EnchantmentStorageMeta) {
-            EnchantmentStorageMeta esm = (EnchantmentStorageMeta) meta;
-            esm.getStoredEnchants().forEach((enchantment, level) -> {
-                enchantments.add(enchantment.getName() + ";" + level);
-            });
-        }
-        
+        List<String> enchantments = new ArrayList<>();        
+        this.getBookEnchantments().forEach((enchantment, level) -> {
+            enchantments.add(enchantment.name() + ";" + level);
+        });        
         return enchantments;
     }
     public boolean hasBookEnchantments() {

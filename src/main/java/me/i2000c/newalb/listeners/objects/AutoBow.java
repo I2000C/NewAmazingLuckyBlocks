@@ -1,14 +1,13 @@
 package me.i2000c.newalb.listeners.objects;
 
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.Optional;
-
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.objects.utils.BowUtils;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.GameMode;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -54,7 +53,7 @@ public class AutoBow extends SpecialItem {
         this.multiplier = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".velocityMultiplier");
         
         return ItemStackWrapper.newItem(XMaterial.BOW)
-                .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+                .addEnchantment(XEnchantment.POWER, 1)
                 .toItemStack();
     }
 }

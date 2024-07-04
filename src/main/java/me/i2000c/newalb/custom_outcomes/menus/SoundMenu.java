@@ -7,11 +7,11 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 
 import me.i2000c.newalb.MinecraftVersion;
@@ -42,7 +42,7 @@ public class SoundMenu extends Editor<SoundReward>{
                     ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.NOTE_BLOCK);
                     builder.setDisplayName("&3" + sound.name());
                     if(item.getType() != null && sound == item.getType()){
-                        builder.addEnchantment(Enchantment.DURABILITY, 1);
+                        builder.addEnchantment(XEnchantment.UNBREAKING, 1);
                         builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     }
                     return builder.toItemStack();

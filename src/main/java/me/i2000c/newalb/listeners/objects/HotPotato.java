@@ -1,21 +1,19 @@
 package me.i2000c.newalb.listeners.objects;
 
-import org.bukkit.Location;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.inventory.ItemStack;
-
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
-
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
+import org.bukkit.Location;
+import org.bukkit.entity.Item;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class HotPotato extends SpecialItem{
     
@@ -64,7 +62,7 @@ public class HotPotato extends SpecialItem{
     @Override
     public ItemStack buildItem(){
         return ItemStackWrapper.newItem(XMaterial.BAKED_POTATO)
-                .addEnchantment(Enchantment.FIRE_ASPECT, 1)
+                .addEnchantment(XEnchantment.FIRE_ASPECT, 1)
                 .toItemStack();
     }
 }

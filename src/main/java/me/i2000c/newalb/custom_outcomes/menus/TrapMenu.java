@@ -1,5 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
@@ -19,7 +20,6 @@ import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -38,7 +38,7 @@ public class TrapMenu extends Editor<TrapReward>{
                     ItemStackWrapper builder = ItemStackWrapper.fromItem(outcome.getItemToDisplay(), false);
                     
                     if(item.getTrapOutcome() != null && item.getTrapOutcome().equals(outcome)){
-                        builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+                        builder.addEnchantment(XEnchantment.SHARPNESS, 1);
                         builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     }
                     
@@ -176,7 +176,7 @@ public class TrapMenu extends Editor<TrapReward>{
             XMaterial xmaterial = TrapReward.getPressurePlateMaterials().get(i);
             ItemStackWrapper builder = ItemStackWrapper.newItem(xmaterial);
             if(xmaterial == item.getTrapMaterial()){                
-                builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+                builder.addEnchantment(XEnchantment.SHARPNESS, 1);
                 builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
             menu.setItem(i+2, builder.toItemStack());
@@ -219,7 +219,7 @@ public class TrapMenu extends Editor<TrapReward>{
             
             ItemStackWrapper builder = ItemStackWrapper.fromItem(pack.getItemToDisplay(), false);
             if(item.getTrapOutcome() != null && item.getTrapOutcome().getPack().equals(pack)){
-                builder.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+                builder.addEnchantment(XEnchantment.SHARPNESS, 1);
                 builder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
             menu.setItem(++i, builder.toItemStack());

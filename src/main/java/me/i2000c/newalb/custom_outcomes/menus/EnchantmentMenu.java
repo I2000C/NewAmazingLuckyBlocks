@@ -1,9 +1,10 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
@@ -17,26 +18,29 @@ import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.EnchantmentWithLevel;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class EnchantmentMenu extends Editor<EnchantmentWithLevel>{
+    // https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html
+    // https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Registry.html
+    // Since Minecraft 1.21, Enchantment.name() doesn't work as expected --> Use Enchantment.getKey()
+    
+    private final Set<XEnchantment> ENCHANTMENTS;
+    
     public EnchantmentMenu(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         InventoryListener.registerInventory(CustomInventoryType.ENCHATMENTS_MENU, ENCHANTMENTS_MENU_FUNCTION);
         InventoryListener.registerInventory(CustomInventoryType.ENCHANTMENT_NAME_MENU, ENCHANTMENT_NAME_MENU_FUNCTION);
         
-        ENCHANMENT_LIST = Arrays.asList(Enchantment.values());
-        ENCHANMENT_LIST.sort((Enchantment ench1, Enchantment ench2) -> {
-            String name1 = ench1.getName();
-            String name2 = ench2.getName();
-            return name1.compareTo(name2);
-        });
+        ENCHANTMENTS = new TreeSet<>((ench1, ench2) -> ench1.name().compareTo(ench2.name()));
+        for(XEnchantment ench : XEnchantment.VALUES) {
+            if(ench.isSupported()) {
+                ENCHANTMENTS.add(ench);
+            }
+        }
 //</editor-fold>
     }
-    
-    private final List<Enchantment> ENCHANMENT_LIST;
     
     @Override
     protected void newItem(Player player){
@@ -59,7 +63,7 @@ public class EnchantmentMenu extends Editor<EnchantmentWithLevel>{
         if(item.enchantment == null){
             builder.setDisplayName("&5Select enchantment");
         }else{
-            builder.setDisplayName("&5Selected enchantment: &b" + item.enchantment.getName());
+            builder.setDisplayName("&5Selected enchantment: &b" + item.enchantment.name());
             if(item.level > 0){
                 builder.addEnchantment(item.enchantment, item.level);
             }else{
@@ -154,11 +158,11 @@ public class EnchantmentMenu extends Editor<EnchantmentWithLevel>{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Menu menu = GUIFactory.newMenu(CustomInventoryType.ENCHANTMENT_NAME_MENU, 54, "&5&lSelect enchant name");
         
-        Iterator<Enchantment> iterator = ENCHANMENT_LIST.iterator();
+        Iterator<XEnchantment> iterator = ENCHANTMENTS.iterator();
         for(int i=0; i<45 && iterator.hasNext(); i++){
-            Enchantment enchantment = iterator.next();
+            XEnchantment enchantment = iterator.next();
             ItemStack enchantItem = ItemStackWrapper.newItem(XMaterial.ENCHANTED_BOOK)
-                                                    .setDisplayName("&d" + enchantment.getName())
+                                                    .setDisplayName("&d" + enchantment.name())
                                                     .addEnchantment(enchantment, 1)
                                                     .toItemStack();
             

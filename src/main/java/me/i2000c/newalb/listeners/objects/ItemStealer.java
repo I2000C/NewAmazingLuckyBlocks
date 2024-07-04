@@ -1,5 +1,6 @@
 package me.i2000c.newalb.listeners.objects;
 
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -90,7 +90,7 @@ public class ItemStealer extends SpecialItem {
         maxFlySeconds = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".max-fly-seconds");
         allowStealingItemsFromBlocks = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".allow-stealing-items-from-blocks");
         return ItemStackWrapper.newItem(XMaterial.FISHING_ROD)
-                               .addEnchantment(Enchantment.LURE, 1)
+                               .addEnchantment(XEnchantment.LURE, 1)
                                .toItemStack();
     }
     
