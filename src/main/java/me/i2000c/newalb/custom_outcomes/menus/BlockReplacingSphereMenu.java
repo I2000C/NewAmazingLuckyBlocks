@@ -1,7 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.BlockReplacingSphereReward;
@@ -60,7 +59,7 @@ public class BlockReplacingSphereMenu extends Editor<BlockReplacingSphereReward>
                                                   .addLoreLine("&cRight click on an item of your inventory")
                                                   .addLoreLine("&c   to remove it from the list")
                                                   .addLoreLine("&2Current materials:")
-                                                  .addLore(item.getOrderedMaterialList())
+                                                  .addLore(item.getSortedMaterialList())
                                                   .toItemStack();
         
         ItemStack minRadiusItem = ItemStackWrapper.newItem(XMaterial.SNOWBALL)
@@ -74,7 +73,7 @@ public class BlockReplacingSphereMenu extends Editor<BlockReplacingSphereReward>
                                                   .toItemStack();
         
         ItemStack ticksBetweenLayersItem = ItemStackWrapper.newItem(XMaterial.CLOCK)
-                                                           .setDisplayName("&bTicks between layer: &6" + item.getTicksBetweenLayers())
+                                                           .setDisplayName("&bTicks between layers: &6" + item.getTicksBetweenLayers())
                                                            .addLoreLine("&3Click to reset")
                                                            .toItemStack();
         
@@ -141,7 +140,7 @@ public class BlockReplacingSphereMenu extends Editor<BlockReplacingSphereReward>
                     break;
                 case 16:
                     //Open next menu
-                    if(!item.emptyMaterialList()){
+                    if(!item.isEmptyMaterialList()){
                         onNext.accept(player, item);
                     }
                     break;
@@ -361,16 +360,24 @@ public class BlockReplacingSphereMenu extends Editor<BlockReplacingSphereReward>
 
             }
         }else if(e.getLocation() == InventoryLocation.BOTTOM){
-            if(e.getCurrentItem() != null && e.getCurrentItem().getType().isBlock()){
-                ItemStack stack = new ItemStack(e.getCurrentItem().getType());
-                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-                    stack.setDurability(e.getCurrentItem().getDurability());
-                }
-                if(e.getClick() == ClickType.LEFT){
-                    item.addItemStack(stack);
-                }else if(e.getClick() == ClickType.RIGHT){
-                    item.removeItemStack(stack);
-                }                
+            ItemStack stack = e.getCurrentItem();
+            if(stack == null){
+                return;
+            }
+            
+            XMaterial material = null;
+            if(stack.getType().isBlock()){
+                material = XMaterial.matchXMaterial(stack);
+            }else switch(XMaterial.matchXMaterial(stack.getType())){
+                case WATER_BUCKET:  material = XMaterial.WATER; break;
+                case LAVA_BUCKET:   material = XMaterial.LAVA;  break;
+                case FIRE_CHARGE:   material = XMaterial.FIRE;  break;
+            }
+            
+            if(material != null) {
+                if(e.getClick() == ClickType.LEFT)       item.addMaterial(material);
+                else if(e.getClick() == ClickType.RIGHT) item.removeMaterial(material);
+                
                 openBRSMenu(player);
             }
         }
