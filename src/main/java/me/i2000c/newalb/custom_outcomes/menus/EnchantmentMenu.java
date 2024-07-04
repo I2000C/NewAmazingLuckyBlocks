@@ -175,13 +175,13 @@ public class EnchantmentMenu extends Editor<EnchantmentWithLevel>{
         //<editor-fold defaultstate="collapsed" desc="Code">
         Player player = (Player) e.getWhoClicked();
         e.setCancelled(true);
-        if(e.getCurrentItem().getType() != Material.AIR){
+        ItemStack stack = e.getCurrentItem();
+        if(stack != null && stack.getType() != Material.AIR){
             if(e.getSlot() == 53){
                 openEnchantmentsMenu(player);
             }else{
-                String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
-                        .getDisplayName();
-                item.enchantment = Enchantment.getByName(Logger.stripColor(displayName));
+                String displayName = ItemStackWrapper.fromItem(stack, false).getDisplayName();
+                item.enchantment = XEnchantment.matchXEnchantment(Logger.stripColor(displayName)).orElse(null);
                 openEnchantmentsMenu(player);
             }
         }
