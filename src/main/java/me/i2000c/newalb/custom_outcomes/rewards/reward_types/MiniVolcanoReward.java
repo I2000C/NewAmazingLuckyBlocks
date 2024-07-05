@@ -68,7 +68,7 @@ public class MiniVolcanoReward extends Reward{
 
     @Override
     public void execute(Player player, Location location){
-        SpecialItems.mini_volcano.execute(player, location, height, baseMaterial, lavaMaterial, ticks, 0L, squared, throwBlocks);
+        SpecialItems.mini_volcano.execute(player, location.clone().add(0, -1, 0), height, baseMaterial, lavaMaterial, ticks, 0L, squared, throwBlocks);
     }
     
     @Override
