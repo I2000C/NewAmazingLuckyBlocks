@@ -1,8 +1,10 @@
 package me.i2000c.newalb.utils2;
 
+import javax.annotation.Nullable;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import me.i2000c.newalb.utils.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -30,36 +32,39 @@ public class WorldGuardManager {
         }
     }
     
-    private static boolean checkFlag(Player player, Location location, Flag flag) {
-        if(player == null || !worldGuardEnabled) {
+    private static boolean checkFlag(@Nullable Player player, Location location, Flag flag) {
+        if(!worldGuardEnabled) {
             return true;
         } else {
-            return WorldGuardManagerAux.checkFlag(player, location, Flag.BUILD, flag);
+            return WorldGuardManagerAux.checkFlag(player, location, flag);
         }
     }
     
-    public static boolean canBuild(Player player, Location location) {
+    public static boolean canBuild(@Nullable Player player, Location location) {
         return checkFlag(player, location, Flag.BLOCK_PLACE);
     }
     
-    public static boolean canBreak(Player player, Location location) {
+    public static boolean canBreak(@Nullable Player player, Location location) {
         return checkFlag(player, location, Flag.BLOCK_BREAK);
     }
     
-    public static boolean canUse(Player player, Location location) {
+    public static boolean canUse(@Nullable Player player, Location location) {
         return checkFlag(player, location, Flag.USE);
     }
     
-    public static boolean canPasteSchematic(Player player, Location location) {
+    public static boolean canPasteSchematic(@Nullable Player player, Location location) {
         return checkFlag(player, location, Flag.SCHEMATIC_PASTE);
     }
     
-    protected static enum Flag {
-        BUILD,
-        BLOCK_PLACE,
-        BLOCK_BREAK,
-        USE,
-        SCHEMATIC_PASTE;
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static enum Flag {
+        BLOCK_PLACE(true),
+        BLOCK_BREAK(true),
+        USE(true),
+        SCHEMATIC_PASTE(true);
+        
+        private final boolean checkBuildFlag;
         
         public String getWorldGuardFlagName() {
             return this.name().toLowerCase().replace('_', '-');

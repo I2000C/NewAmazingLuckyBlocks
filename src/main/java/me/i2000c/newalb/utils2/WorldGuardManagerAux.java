@@ -1,25 +1,27 @@
 package me.i2000c.newalb.utils2;
 
-import java.util.EnumMap;
-
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.domains.Association;
+import com.sk89q.worldguard.protection.association.RegionAssociable;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import com.sk89q.worldguard.session.SessionManager;
-
+import java.util.EnumMap;
+import javax.annotation.Nullable;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils2.WorldGuardManager.Flag;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 class WorldGuardManagerAux {
+    
+    private static final RegionAssociable NON_MEMBER_REGION_ASSOCIABLE = regions -> Association.NON_MEMBER;
     
     private static EnumMap<Flag, StateFlag> flagsMap;
 
@@ -79,40 +81,44 @@ class WorldGuardManagerAux {
 //</editor-fold>
     }
         
-    private static boolean checkFlag(Player player, Location location, StateFlag[] flags) {
+    public static boolean checkFlag(@Nullable Player player, Location location, @Nullable Flag flag) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(flags == null || flags.length == 0) {
+        if(flag == null) {
             return true;
         }
         
+        final StateFlag[] flags = {flagsMap.get(flag)};
+        
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
-            boolean hasBypass = ReflectionManager.callMethod(getSessionManager(), "hasBypass", player, location.getWorld());
+            LocalPlayer localPlayer = player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null;
+            boolean hasBypass = player != null && (boolean) ReflectionManager.callMethod(getSessionManager(), "hasBypass", player, location.getWorld());
             if(!hasBypass) {
                 Object query = ReflectionManager.callMethod(getRegionContainer(), "createQuery");
-                return ReflectionManager.callMethod(query, "testState", location, player, flags);
+                RegionAssociable ra = localPlayer != null ? localPlayer : NON_MEMBER_REGION_ASSOCIABLE;
+                if(flag.isCheckBuildFlag()) {
+                    return ReflectionManager.callMethod(query, "testBuild", location, ra, flags);
+                } else {
+                    return ReflectionManager.callMethod(query, "testState", location, ra, flags);
+                }
             }
         } else {
             com.sk89q.worldedit.util.Location worldEditLocation = BukkitAdapter.adapt(location);
             com.sk89q.worldedit.world.World worldEditWorld = BukkitAdapter.adapt(location.getWorld());
-            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-            if(!getSessionManager().hasBypass(localPlayer, worldEditWorld)) {
+            
+            LocalPlayer localPlayer = player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null;
+            boolean hasBypass = localPlayer != null && getSessionManager().hasBypass(localPlayer, worldEditWorld);
+            if(!hasBypass) {
                 RegionQuery query = ((RegionContainer) getRegionContainer()).createQuery();
-                return query.testState(worldEditLocation, localPlayer, flags);
+                RegionAssociable ra = localPlayer != null ? localPlayer : NON_MEMBER_REGION_ASSOCIABLE;
+                if(flag.isCheckBuildFlag()) {
+                    return query.testBuild(worldEditLocation, ra, flags);
+                } else {
+                    return query.testState(worldEditLocation, ra, flags);
+                }
             }
         }
         
         return true;
 //</editor-fold>
-    }
-    
-    public static boolean checkFlag(Player player, Location location, Flag... flags) {
-        if(flags == null) return true;
-        
-        StateFlag[] stateFlags = new StateFlag[flags.length];
-        for(int i=0; i<flags.length; i++) {
-            stateFlags[i] = flagsMap.get(flags[i]);
-        }
-        
-        return checkFlag(player, location, stateFlags);
     }
 }
