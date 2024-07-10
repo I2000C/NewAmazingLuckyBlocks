@@ -265,7 +265,7 @@ public class HookBow extends SpecialItem {
             
             BowUtils.applyDurability(player, bow, 1, 1);
             BowUtils.cancelBowCharging(player);
-            Arrow arrow = BowUtils.launchArrow(player, arrowItem.get(), isFireBow, isInfiniteBow, velocity);
+            Arrow arrow = BowUtils.launchArrow(this, player, arrowItem.get(), isFireBow, isInfiniteBow, velocity);
             
             EntityShootBowEvent event;
             if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_16)) {

@@ -6,19 +6,24 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.Nullable;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.reflection.RefClass;
 import me.i2000c.newalb.reflection.ReflectionManager;
+import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.TippedArrow;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
 public class BowUtils {
@@ -37,8 +42,8 @@ public class BowUtils {
         return bowStack.getEnchantments().containsKey(Enchantment.ARROW_FIRE);
     }
     
-    public static boolean isInfiniteBow(Player player, ItemStack bowStack) {
-        return player.getGameMode() == GameMode.CREATIVE
+    public static boolean isInfiniteBow(Entity shooter, ItemStack bowStack) {
+        return (shooter instanceof Player && ((Player) shooter).getGameMode() == GameMode.CREATIVE)
                 || bowStack.getEnchantments().containsKey(Enchantment.ARROW_INFINITE);
     }
     
@@ -80,7 +85,8 @@ public class BowUtils {
 //</editor-fold>
     }
     
-    public static Arrow launchArrow(Player player, 
+    public static Arrow launchArrow(@Nullable SpecialItem specialItem, 
+                                    ProjectileSource projectileSource, 
                                     ItemStack arrowStack, 
                                     boolean isFireBow, boolean isInfiniteBow, 
                                     Vector velocity) {
@@ -101,7 +107,7 @@ public class BowUtils {
         XMaterial xmaterial = XMaterial.matchXMaterial(arrowStack);
         switch(xmaterial) {
             case SPECTRAL_ARROW:
-                arrow = player.launchProjectile(SpectralArrow.class, velocity);
+                arrow = projectileSource.launchProjectile(SpectralArrow.class, velocity);
                 break;
             case TIPPED_ARROW:
                 PotionData potionData = null;
@@ -112,20 +118,20 @@ public class BowUtils {
                 
                 if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_16)) {
                     // Since Minecraft 1.16, tipped arrows are normal arrows with effects
-                    arrow = player.launchProjectile(Arrow.class, velocity);
+                    arrow = projectileSource.launchProjectile(Arrow.class, velocity);
                     if(potionData != null) {
                         ReflectionManager.callMethod(arrow, "setBasePotionMeta", potionData);
                     }
                 } else {
                     // From Minecraft 1.9 to 1.15, tipped arrows are instances of TippedArrow
-                    arrow = player.launchProjectile(TippedArrow.class, velocity);
+                    arrow = projectileSource.launchProjectile(TippedArrow.class, velocity);
                     if(potionData != null) {
                         ((TippedArrow) arrow).setBasePotionData(potionData);
                     }
                 }
                 break;
             default:
-                arrow = player.launchProjectile(Arrow.class, velocity);
+                arrow = projectileSource.launchProjectile(Arrow.class, velocity);
         }
         
         if(isFireBow) {
@@ -136,7 +142,13 @@ public class BowUtils {
             ArrowPickupStatus.CREATIVE_ONLY.setToArrow(arrow);
         }
         
-        XSound.ENTITY_ARROW_SHOOT.play(player);
+        if(projectileSource instanceof Player) {
+            XSound.ENTITY_ARROW_SHOOT.play(((Player) projectileSource));
+        }
+        
+        if(specialItem != null) {
+            MetadataManager.setClassMetadata(arrow, specialItem);
+        }
         
         return arrow;
 //</editor-fold>

@@ -5,6 +5,7 @@ import com.cryptomorin.xseries.XMaterial;
 import java.util.Optional;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.objects.utils.BowUtils;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.GameMode;
@@ -41,7 +42,7 @@ public class AutoBow extends SpecialItem {
             }
             
             Vector velocity = player.getLocation().getDirection().multiply(multiplier);
-            BowUtils.launchArrow(player, arrowStack, isFireBow, isInfiniteBow, velocity);
+            BowUtils.launchArrow(SpecialItems.auto_bow, player, arrowStack, isFireBow, isInfiniteBow, velocity);
             BowUtils.applyDurability(player, bowStack);
             BowUtils.cancelBowCharging(player);
         }

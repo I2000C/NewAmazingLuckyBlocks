@@ -1,5 +1,6 @@
 package me.i2000c.newalb.listeners.objects;
 
+import com.cryptomorin.xseries.XBlock;
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
@@ -16,16 +17,15 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class IceBow extends SpecialItem{
+public class IceBow extends SpecialItem {
     
     private static final int ICE_CAGE_HEIGHT = 3;
     
-    private ItemStackWrapper iceItem;
+    private XMaterial iceMaterial;
     private boolean protectStructures;
     private long ticks;
     private long beforeTicks;
@@ -35,8 +35,8 @@ public class IceBow extends SpecialItem{
     private boolean disableArrowKnockback;
     
     @Override
-    public ItemStack buildItem(){
-        this.iceItem = ItemStackWrapper.newItem(ConfigManager.getMainConfig().getString(super.itemPathKey + ".freeze-material"));
+    public ItemStack buildItem() {
+        this.iceMaterial = ConfigManager.getMainConfig().getMaterial(super.itemPathKey + ".freeze-material");
         this.protectStructures = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".protect-structures");
         this.ticks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-between-one-block-and-the-next");
         this.beforeTicks = ConfigManager.getMainConfig().getLong(super.itemPathKey + ".time-before-freezing");
@@ -51,47 +51,54 @@ public class IceBow extends SpecialItem{
     }
     
     @Override
-    public void onArrowHit(CustomProjectileHitEvent e){
+    public void onArrowHit(CustomProjectileHitEvent e) {
         Projectile projectile = e.getProjectile();
-        if(projectile instanceof Arrow){
-            Arrow arrow = (Arrow) projectile;
-            Entity hitEntity = e.getHitEntity();
-            Block hitBlock = e.getHitBlock();
-            
-            if(hitEntity != null){
-                if(disableArrowKnockback){
-                    // Remove knockback but not damage
-                    e.setCancelled(true);
-                    ((Damageable) hitEntity).damage(e.getDamage(), arrow);
-                    
-                    // Teleport entity to the center of its block
-                    Location loc = hitEntity.getLocation();
-                    loc.setX(loc.getBlockX() + 0.5);
-                    loc.setZ(loc.getBlockZ() + 0.5);
-                    hitEntity.teleport(loc);
-                }
-                
-                hitEntity.setFireTicks(0);
-                
-                if(generateIcePrison) {
-                    execute((Player) e.getShooter(), hitEntity);
-                }
-            }else if(hitBlock != null) {
-                if(generateSnow) {
-                    simulateSnow((Player) e.getShooter(), hitBlock.getLocation(), snowRadius);
-                }
-            }
-            
-            arrow.remove();
+        if(!(projectile instanceof Arrow)) {
+            return;
+        } 
+        
+        if(!(projectile.getShooter() instanceof Entity)) {
+            return;
         }
+        
+        Arrow arrow = (Arrow) projectile;
+        Entity shooter = (Entity) projectile.getShooter();        
+        Entity hitEntity = e.getHitEntity();
+        Block hitBlock = e.getHitBlock();
+
+        if(hitEntity != null) {
+            if(disableArrowKnockback){
+                // Remove knockback but not damage
+                e.setCancelled(true);
+                ((Damageable) hitEntity).damage(e.getDamage(), arrow);
+
+                // Teleport entity to the center of its block
+                Location loc = hitEntity.getLocation();
+                loc.setX(loc.getBlockX() + 0.5);
+                loc.setZ(loc.getBlockZ() + 0.5);
+                hitEntity.teleport(loc);
+            }
+
+            hitEntity.setFireTicks(0);
+
+            if(generateIcePrison) {
+                execute(shooter, hitEntity);
+            }
+        } else if(hitBlock != null) {
+            if(generateSnow) {
+                simulateSnow(shooter, hitBlock.getLocation(), snowRadius);
+            }
+        }
+
+        arrow.remove();
     }
     
     @Override
-    public void onArrowShooted(EntityShootBowEvent e){
+    public void onArrowShooted(EntityShootBowEvent e) {
         MetadataManager.setClassMetadata(e.getProjectile(), this);
     }
     
-    public void execute(Player player, Entity entity) {
+    public void execute(Entity shooter, Entity entity) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         final Location baseLocation = entity.getLocation().clone();
         
@@ -117,9 +124,9 @@ public class IceBow extends SpecialItem{
                 for(Location loc : locs) {
                     Block block = loc.getBlock();
                     if(!protectStructures || block.getType() == Material.AIR) {
-                        if(WorldGuardManager.canBuild(player, loc)) {
+                        if(WorldGuardManager.canBuild(shooter, loc)) {
                             XSound.BLOCK_GLASS_BREAK.play(loc);
-                            iceItem.placeAt(block);
+                            XBlock.setType(block, iceMaterial);
                         }
                     }
                 }
@@ -133,42 +140,42 @@ public class IceBow extends SpecialItem{
 //</editor-fold>
     }
     
-    private static void simulateSnow(Player player, Location loc, int radius){
+    private static void simulateSnow(Entity shooter, Location loc, int radius) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         double radiusSq = radius * radius;
         int ox = loc.getBlockX();
         int oy = loc.getBlockY();
         int oz = loc.getBlockZ();
         
-        for(int x = ox - radius; x <= ox + radius; x++){
-            for(int z = oz - radius; z <= oz + radius; z++){
+        for(int x = ox - radius; x <= ox + radius; x++) {
+            for(int z = oz - radius; z <= oz + radius; z++) {
                 Location l = new Location(loc.getWorld(), x, oy, z);
-                if(loc.distanceSquared(l) <= radiusSq){
-                    for(int y = oy - radius; y <= oy + radius; y++){
+                if(loc.distanceSquared(l) <= radiusSq) {
+                    for(int y = oy - radius; y <= oy + radius; y++) {
                         l.setY(y);
                         Block b = l.getBlock();
                         
-                        if(!WorldGuardManager.canBuild(player, l)) {
+                        if(!WorldGuardManager.canBuild(shooter, l)) {
                             continue;
                         }
                         
-                        switch(b.getType()){
+                        switch(b.getType()) {
                             case AIR:
                                 Material material = b.getRelative(0, -1, 0).getType();
                                 if(material.isSolid()){
-                                    b.setType(Material.SNOW);
+                                    XBlock.setType(b, XMaterial.SNOW);
                                 }
                                 break;
                             case WATER:
                             case STATIONARY_WATER:
-                                b.setType(Material.ICE);
+                                XBlock.setType(b, XMaterial.ICE);
                                 break;
                             case LAVA:
                             case STATIONARY_LAVA:
-                                b.setType(Material.OBSIDIAN);
+                                XBlock.setType(b, XMaterial.OBSIDIAN);
                                 break;
                             case FIRE:
-                                b.setType(Material.SNOW);
+                                XBlock.setType(b, XMaterial.SNOW);
                                 break;
                         }
                     }

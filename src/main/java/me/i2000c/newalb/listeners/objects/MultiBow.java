@@ -2,15 +2,18 @@ package me.i2000c.newalb.listeners.objects;
 
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
+import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.objects.utils.BowUtils;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
 public class MultiBow extends SpecialItem {
@@ -24,28 +27,34 @@ public class MultiBow extends SpecialItem {
     @Override
     public void onArrowShooted(EntityShootBowEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!(e.getEntity() instanceof Player)){
-            return;
-        }
         e.setCancelled(true);
         
-        Player player = (Player) e.getEntity();
+        Entity shooter = e.getEntity();
+        Player player = shooter instanceof Player ? (Player) shooter : null;
+        
         ItemStack bowStack = e.getBow();
-        
         boolean isFireBow = BowUtils.isFireBow(bowStack);
-        boolean isInfiniteBow = BowUtils.isInfiniteBow(player, bowStack);
+        boolean isInfiniteBow = BowUtils.isInfiniteBow(shooter, bowStack);
         
-        List<ItemStack> arrowItems = BowUtils.getArrowsFromPlayerInventory(player, numberOfArrows, !isInfiniteBow);
-        if(isInfiniteBow) {
-            int requiredArrows = numberOfArrows - arrowItems.size();
-            ItemStack arrowItem = ItemStackWrapper.newItem(XMaterial.ARROW).toItemStack();
-            for(int i=0; i<requiredArrows; i++) {
-                arrowItems.add(arrowItem);
+        List<ItemStack> arrowItems;
+        if(player != null) {
+            arrowItems = BowUtils.getArrowsFromPlayerInventory(player, numberOfArrows, !isInfiniteBow);
+            if(isInfiniteBow) {
+                int requiredArrows = numberOfArrows - arrowItems.size();
+                ItemStack arrowItem = ItemStackWrapper.newItem(XMaterial.ARROW).toItemStack();
+                for(int i=0; i<requiredArrows; i++) {
+                    arrowItems.add(arrowItem);
+                }
             }
-        }
-        
-        if(arrowItems.isEmpty()) {
-            return;
+
+            if(arrowItems.isEmpty()) {
+                return;
+            }
+        } else {
+            arrowItems = new ArrayList<>();
+            for(int i=0; i<numberOfArrows; i++) {
+                arrowItems.add(XMaterial.ARROW.parseItem());
+            }
         }
         
         Vector direction = e.getProjectile().getVelocity();
@@ -56,11 +65,13 @@ public class MultiBow extends SpecialItem {
         for(int i = 0; i < arrowItems.size(); i++) {
             double currentAngle = i * angleBetweenArrows - (spreadAngle / 2.0);
             Vector newDirection = rotateVector(direction, currentAngle);
-            BowUtils.launchArrow(player, bowStack, isFireBow, isInfiniteBow, newDirection.multiply(speedMultiplier));
+            BowUtils.launchArrow(this, (ProjectileSource) shooter, bowStack, isFireBow, isInfiniteBow, newDirection.multiply(speedMultiplier));
         }
         
-        BowUtils.applyDurability(player, bowStack);
-        BowUtils.cancelBowCharging(player);
+        if(player != null) {
+            BowUtils.applyDurability(player, bowStack);
+            BowUtils.cancelBowCharging(player);
+        }
 //</editor-fold>
     }
     

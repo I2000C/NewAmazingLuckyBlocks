@@ -6,7 +6,6 @@ import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import me.i2000c.newalb.utils2.WorldGuardManager;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -145,10 +144,21 @@ public class SpecialEventListener implements Listener{
                 // Set custom metadata to avoid generating ProjectileHitEvent with block
                 MetadataManager.setCustomMetadata(damager, new Object());
                 
+                if(!WorldGuardManager.canEntityDamage(damager, e.getEntity().getLocation())) {
+                    e.setCancelled(true);
+                    return;
+                }
+                
                 CustomProjectileHitEvent event = new CustomProjectileHitEvent(e);
                 specialItem.onArrowHit(event);
+            } else {            
+                if(!WorldGuardManager.canEntityDamage(damager, e.getEntity().getLocation())) {
+                    e.setCancelled(true);
+                    return;
+                }
+
+                specialItem.onEntityDamaged(e);
             }
-            specialItem.onEntityDamaged(e);
         }
 //</editor-fold>
     }    
@@ -170,7 +180,6 @@ public class SpecialEventListener implements Listener{
                     //      the projectile hit an entity so,
                     //      it shouldn't generate a ProjectileHitEvent with block
                     if(!MetadataManager.hasCustomMetadata(projectile)){
-                        Block block = arrow.getLocation().getBlock();
                         CustomProjectileHitEvent event = new CustomProjectileHitEvent(e);
                         specialItem.onArrowHit(event);
                     }
@@ -181,34 +190,36 @@ public class SpecialEventListener implements Listener{
     }
     
     @EventHandler(priority = EventPriority.LOW)
-    private static void onArrowShooted(EntityShootBowEvent e){
+    private static void onArrowShooted(EntityShootBowEvent e) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(e.getEntity() == null || !(e.getEntity() instanceof Player)){
+        Entity entity = e.getEntity();
+        if(entity == null) {
             return;
         }
         
-        Player player = (Player) e.getEntity();
-        
-        if(!WorldManager.isEnabled(player.getWorld().getName())){
+        if(!WorldManager.isEnabled(entity.getWorld().getName())){
             return;
         }
         
         SpecialItem specialItem = SpecialItems.getByItemStack(e.getBow());
         if(specialItem != null){
-            if(!specialItem.checkPermission(player)){
-                e.setCancelled(true);
-                return;
-            }
+            if(entity instanceof Player) {
+                Player player = (Player) entity;
+                if(!specialItem.checkPermission(player)){
+                    e.setCancelled(true);
+                    return;
+                }
 
-            if(!specialItem.getPlayerCooldown().isCooldownExpired(player)){
-                specialItem.sendRemainingSecondsMessage(player);
-                e.setCancelled(true);
-                return;
-            }
-            
-            if(!WorldGuardManager.canUse(player, player.getLocation())) {
-                e.setCancelled(true);
-                return;
+                if(!specialItem.getPlayerCooldown().isCooldownExpired(player)){
+                    specialItem.sendRemainingSecondsMessage(player);
+                    e.setCancelled(true);
+                    return;
+                }
+
+                if(!WorldGuardManager.canUse(player, player.getLocation())) {
+                    e.setCancelled(true);
+                    return;
+                }
             }
 
             specialItem.onArrowShooted(e);

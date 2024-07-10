@@ -5,6 +5,7 @@ import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.MetadataManager;
 import me.i2000c.newalb.utils2.Task;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
@@ -16,15 +17,16 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class HomingBow extends SpecialItem{
+    
+    private static final double MIN_DISTANCE_SQUARED = 1.5*1.5;
   
     @Override
-    public void onArrowShooted(EntityShootBowEvent e){
-        if(e.getEntity() instanceof Player){
-            executeTask((Player) e.getEntity(), e.getProjectile());
-        }
+    public void onArrowShooted(EntityShootBowEvent e) {
+        MetadataManager.setClassMetadata(e.getProjectile(), this);
+        executeTask(e.getEntity(), e.getProjectile());
     }
     
-    private static void executeTask(Player player, Entity projectile){
+    private static void executeTask(LivingEntity entity, Entity projectile){
         //<editor-fold defaultstate="collapsed" desc="Code">
         double radius = ConfigManager.getMainConfig().getDouble("Objects.HomingBow.arrowRadius");
         double radiusS = radius * radius;
@@ -35,11 +37,10 @@ public class HomingBow extends SpecialItem{
         Task task = new Task(){
             private double minDistanceSquared = -1.0;
             private LivingEntity nearestEnt = null;
-            private final Vector zeroVector = new Vector();
             
             @Override
             public void run(){
-                if(projectile.isOnGround() || projectile.isDead() || projectile.getVelocity().equals(zeroVector)){
+                if(!projectile.isValid() || projectile.isOnGround() || projectile.getVelocity().length() < 0.001){
                     this.cancel();
                     return;
                 }
@@ -47,7 +48,7 @@ public class HomingBow extends SpecialItem{
                 if(nearestEnt == null){
                     if(playersOnly){
                         for(Player p : projectile.getWorld().getPlayers()){
-                            if(p.equals(player)){
+                            if(p.equals(entity)){
                                 continue;
                             }
 
@@ -76,7 +77,7 @@ public class HomingBow extends SpecialItem{
                                 continue;
                             }
                             
-                            if(ent.equals(player)){
+                            if(ent.equals(entity)){
                                 continue;
                             }
                             
@@ -98,13 +99,13 @@ public class HomingBow extends SpecialItem{
                         this.cancel();
                     }else{
                         Vector v = nearestEnt.getEyeLocation().toVector().subtract(projectile.getLocation().toVector());
-                        if(minDistanceSquared < 1.5){
+                        if(v.lengthSquared() < MIN_DISTANCE_SQUARED){
                             projectile.setVelocity(v);
                             this.cancel();
                             //https://www.spigotmc.org/threads/homing-arrows.435839/
                             //https://www.google.com/search?q=homing+arrow+spigot&ei=enjjYMvLMNGcjLsPvvWCmAE&oq=homing+arrow+spigot&gs_lcp=Cgdnd3Mtd2l6EAMyBAgAEBM6CAgAELEDEIMBOg4ILhCxAxCDARDHARCjAjoFCAAQsQM6CwguELEDEMcBEKMCOgIILjoKCAAQsQMQgwEQQzoECAAQQzoECC4QQzoHCAAQsQMQQzoHCC4QsQMQQzoKCC4QsQMQQxCTAjoGCAAQChBDOgIIADoGCAAQFhAeOggIABAWEB4QEzoECAAQDToGCAAQDRAeSgQIQRgAUM9xWKuMAWCsjQFoAHACeACAAY0BiAG2DZIBBDE5LjGYAQCgAQGqAQdnd3Mtd2l6wAEB&sclient=gws-wiz&ved=0ahUKEwjL8P7o7szxAhVRDmMBHb66ABMQ4dUDCBg&uact=5
                         }else{
-                            projectile.setVelocity(v.multiply(multiplier));
+                            projectile.setVelocity(v.normalize().multiply(multiplier));
                         }
                     }
                 }
