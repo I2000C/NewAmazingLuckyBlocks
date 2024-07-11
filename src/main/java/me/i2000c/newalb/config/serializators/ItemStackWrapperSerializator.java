@@ -88,6 +88,10 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
 
             config.set(path + ".potionEffects", effectList);
         }
+        
+        // Save NBT tags
+        String nbt = value.exportTagsToString();
+        config.set(path + ".nbt", nbt);
     }
     
     @Override
@@ -169,6 +173,10 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
                 ex.printStackTrace();
             }
         }
+        
+        // Load NBT tags
+        String nbt = config.getString(path + ".nbt", null);
+        value.setTagsFromString(nbt);
         
         return value;
     }

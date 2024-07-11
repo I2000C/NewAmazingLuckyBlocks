@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -404,14 +405,34 @@ public class ItemStackWrapper {
         NBTUtils.set(item, tag, value);
         return this;
     }
-    public String getStringNbtTag(String tag) {
+    public String getStringTag(String tag) {
         return NBTUtils.getString(item, tag);
     }
-    public Integer getIntNbtTag(String tag) {
+    public Integer getIntTag(String tag) {
         return NBTUtils.getInt(item, tag);
     }
-    public boolean hasNbtTag(String tag) {
+    public boolean hasTag(String tag) {
         return NBTUtils.contains(item, tag);
+    }
+    public void removeTag(String tag) {
+        NBTUtils.removeTag(item, tag);
+    }
+    public void clearTags() {
+        NBTUtils.clearCustomTags(item);
+    }
+    public Set<String> getTags() {
+        return NBTUtils.getCustomNbtKeys(item);
+    }
+    public ItemStackWrapper addTagsFromString(String nbtString) {
+        NBTUtils.applyCustomNbtToItem(nbtString, item);
+        return this;
+    }
+    public ItemStackWrapper setTagsFromString(String nbtString) {
+        clearTags();
+        return addTagsFromString(nbtString);
+    }
+    public String exportTagsToString() {
+        return NBTUtils.customNbtToString(item);
     }
     
     public void dropAtLocation(Location loc) {

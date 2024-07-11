@@ -101,4 +101,10 @@ public class OtherUtils{
         }
 //</editor-fold>
     }
+    
+    public static <T> Predicate<T> not(Predicate<T> t) {
+        //<editor-fold defaultstate="collapsed" desc="Code">
+        return t.negate();
+//</editor-fold>
+    }
 }
