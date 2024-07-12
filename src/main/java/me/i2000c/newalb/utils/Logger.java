@@ -3,12 +3,19 @@ package me.i2000c.newalb.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Logger{
+    private static final Pattern HEX_COLOR_PATTERN =   Pattern.compile("&(#\\w{6})");
+    private static final Pattern HEX_DECOLOR_PATTERN = Pattern.compile("&[xX]((&[0-9a-fA-F]){6})");
+    
     private static String pluginPrefix;
     private static boolean coloredLogger;
     
@@ -23,7 +30,25 @@ public class Logger{
         if(str == null){
             return str;
         }else{
-            return ChatColor.translateAlternateColorCodes('&', str);
+            String aux = ChatColor.translateAlternateColorCodes('&', str);
+            
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_16)
+                    && aux.contains("&#")) {
+                
+                // https://www.spigotmc.org/threads/hex-chat-class.449300/#post-3864987
+                StringBuffer buffer = new StringBuffer();
+                Matcher matcher = HEX_COLOR_PATTERN.matcher(aux);
+                while(matcher.find()) {
+                    // matchedHexColor is like #ABCDEF
+                    String matchedHexColor = matcher.group(1);
+                    Object hexColor = ReflectionManager.callStaticMethod("net.md_5.bungee.api.ChatColor", "of", matchedHexColor);
+                    matcher.appendReplacement(buffer, hexColor.toString());
+                }
+                
+                aux = matcher.appendTail(buffer).toString();
+            }
+            
+            return aux;
         }
 //</editor-fold>
     }
@@ -47,7 +72,24 @@ public class Logger{
             return str;
         }else{
             //https://www.spigotmc.org/threads/solved-itemstack-chatcolor-to-string.52095/
-            return str.replace(ChatColor.COLOR_CHAR, '&');
+            String aux = str.replace(ChatColor.COLOR_CHAR, '&');
+            
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_16)
+                    && aux.toLowerCase().contains("&x")) {
+                
+                StringBuffer buffer = new StringBuffer();
+                Matcher matcher = HEX_DECOLOR_PATTERN.matcher(aux);
+                while(matcher.find()) {
+                    // hexColorData is like &A&B&C&D&E&F
+                    String hexColorData = matcher.group(1);
+                    String hexColor = "&#" + hexColorData.replaceAll("&", "");
+                    matcher.appendReplacement(buffer, hexColor);
+                }
+                
+                aux = matcher.appendTail(buffer).toString();
+            }
+            
+            return aux;
         }
 //</editor-fold>
     }    
