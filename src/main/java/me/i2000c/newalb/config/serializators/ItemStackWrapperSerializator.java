@@ -29,6 +29,7 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
         config.set(path + ".material", value.getMaterial());
         config.set(path + ".amount", value.getAmount());
         config.set(path + ".durability", value.getDurability());
+        config.set(path + ".unbreakable", value.isUnbreakable());
         if(value.hasDisplayName()) {
             config.set(path + ".name", Logger.deColor(value.getDisplayName()));
         }
@@ -104,6 +105,9 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
         
         short durability = config.getShort(path + ".durability", (short)0);
         value.setDurability(durability);
+        
+        boolean unbreakable = config.getBoolean(path + ".unbreakable", false);
+        value.setUnbreakable(unbreakable);
         
         String displayName = config.getString(path + ".name", null);
         value.setDisplayName(displayName);

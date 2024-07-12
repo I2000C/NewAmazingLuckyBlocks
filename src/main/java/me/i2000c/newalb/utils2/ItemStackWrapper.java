@@ -93,6 +93,25 @@ public class ItemStackWrapper {
         return item.getDurability();
     }
     
+    public ItemStackWrapper setUnbreakable(boolean unbreakable) {
+        ItemMeta meta = item.getItemMeta();
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
+            meta.setUnbreakable(unbreakable);
+        } else {
+            meta.spigot().setUnbreakable(unbreakable);
+        }
+        item.setItemMeta(meta);
+        return this;
+    }
+    public boolean isUnbreakable() {
+        ItemMeta meta = item.getItemMeta();
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
+            return meta.isUnbreakable();
+        } else {
+            return meta.spigot().isUnbreakable();
+        }
+    }
+    
     public ItemStackWrapper setDisplayName(String displayName) {
         ItemMeta meta = item.getItemMeta();
         if(displayName == null || displayName.isEmpty()) {
