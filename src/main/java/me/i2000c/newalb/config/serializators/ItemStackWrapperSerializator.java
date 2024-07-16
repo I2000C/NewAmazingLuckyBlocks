@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils2.CustomColor;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.Color;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -93,6 +95,14 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
         // Save NBT tags
         String nbt = value.exportTagsToString();
         config.set(path + ".nbt", nbt);
+        
+        // Save item flags
+        List<String> flags = value.getItemFlags().stream()
+                                                 .map(ItemFlag::name)
+                                                 .collect(Collectors.toList());
+        if(!flags.isEmpty()) {
+            config.set(path + ".flags", flags);
+        }
     }
     
     @Override
@@ -181,6 +191,13 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
         // Load NBT tags
         String nbt = config.getString(path + ".nbt", null);
         value.setTagsFromString(nbt);
+        
+        // Load item flags
+        ItemFlag[] flags = config.getStringList(path + ".flags", Collections.emptyList())
+                                 .stream()
+                                 .map(ItemFlag::valueOf)
+                                 .toArray(ItemFlag[]::new);
+        value.setItemFlags(flags);
         
         return value;
     }

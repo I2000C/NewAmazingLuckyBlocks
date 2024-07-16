@@ -412,8 +412,24 @@ public class ItemStackWrapper {
         item.setItemMeta(meta);
         return this;
     }
+    public ItemStackWrapper removeItemFlags() {
+        ItemMeta meta = item.getItemMeta();
+        ItemFlag[] flags = meta.getItemFlags()
+                               .stream()
+                               .toArray(ItemFlag[]::new);
+        removeItemFlags(flags);
+        return this;
+    }
     public boolean hasItemFlag(ItemFlag itemFlag) {
         return item.getItemMeta().hasItemFlag(itemFlag);
+    }
+    public Set<ItemFlag> getItemFlags() {
+        return item.getItemMeta().getItemFlags();
+    }
+    public ItemStackWrapper setItemFlags(ItemFlag... itemFlags) {
+        removeItemFlags();
+        addItemFlags(itemFlags);
+        return this;
     }
     
     public ItemStackWrapper setNbtTag(String tag, String value) {
