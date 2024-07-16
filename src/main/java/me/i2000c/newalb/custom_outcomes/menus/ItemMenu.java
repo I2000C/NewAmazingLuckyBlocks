@@ -334,6 +334,9 @@ public class ItemMenu extends Editor<ItemReward>{
         
         builder = ItemStackWrapper.newItem(XMaterial.CHAINMAIL_CHESTPLATE);
         builder.setAmount(item.getSpawnInvSlot());
+        if(builder.getAmount() <= 0 && !MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+            builder.setAmount(1);
+        }
         builder.setDisplayName("&6Current inv slot: &e" + item.getSpawnInvSlot() + " &6/ &e" + ItemReward.getMaxSlot());
         builder.addLoreLine("&2This slot is only used when");
         if(item.getSpawnMode() == ItemReward.ItemSpawnMode.SET_TO_INV){
