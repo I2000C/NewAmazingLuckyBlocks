@@ -77,10 +77,14 @@ public class ItemStackWrapper {
     }
     
     public ItemStackWrapper setDurability(int durability) {
-        if(durability >= 0) {
-            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion() || durability <= item.getType().getMaxDurability()) {
-                item.setDurability((short) durability);
-            }
+        if(durability <= 0) {
+            item.setDurability((short) 0);
+        } else if(durability <= item.getType().getMaxDurability()) {
+            item.setDurability((short) durability);
+        } else if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+            item.setDurability((short) durability);
+        } else {
+            item.setDurability(item.getType().getMaxDurability());
         }
         return this;
     }
