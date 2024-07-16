@@ -18,6 +18,7 @@ public enum CustomInventoryType{
     ITEM_MENU_2,
     ENCHATMENTS_MENU,
     ENCHANTMENT_NAME_MENU,
+    ITEM_FLAGS_MENU,
     
     //CommandMenu menus
     COMMAND_MENU,

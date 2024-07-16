@@ -1,6 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
+import java.util.Set;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
@@ -29,6 +30,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
@@ -64,6 +66,8 @@ public class ItemMenu extends Editor<ItemReward>{
     private static final int SPAWN_INV_SLOT_SLOT = 40;
     
     private static final int OFFSET_SLOT = 36;
+    
+    private static final int ITEM_FLAGS_SLOT = 47;
     
     @Override
     protected void newItem(Player player){
@@ -410,6 +414,16 @@ public class ItemMenu extends Editor<ItemReward>{
             builder.addLoreLine("&2  or &e&lSET_TO_INV");
         }
         
+        builder = ItemStackWrapper.newItem(XMaterial.MAGENTA_BANNER);
+        builder.setDisplayName("&dModify item flags");
+        builder.addLoreLine("");
+        builder.addLoreLine("&5Current flags:");
+        Set<ItemFlag> flags = item.getItem().getItemMeta().getItemFlags();
+        for(ItemFlag flag : flags) {
+            builder.addLoreLine("  &b" + flag.name());
+        }
+        ItemStack itemFlagsStack = builder.toItemStack();
+        
         menu.setItem(BACK_SLOT, GUIItem.getBackItem());
         menu.setItem(NEXT_SLOT, GUIItem.getNextItem());
         
@@ -445,6 +459,8 @@ public class ItemMenu extends Editor<ItemReward>{
         }
         
         menu.setItem(OFFSET_SLOT, offsetStack);
+        
+        menu.setItem(ITEM_FLAGS_SLOT, itemFlagsStack);
         
         menu.openToPlayer(player);
 //</editor-fold>
@@ -759,6 +775,13 @@ public class ItemMenu extends Editor<ItemReward>{
                                 item.setOffset(offset);
                                 openItemMenu2(p);
                             });
+                break;
+            case ITEM_FLAGS_SLOT:
+                Editor<ItemStack> itemFlagEditor = EditorType.ITEM_FLAGS.getEditor();
+                itemFlagEditor.editExistingItem(item.getItem(),
+                                                player,
+                                                this::openItemMenu2,
+                                                (p, __) -> openItemMenu2(p));
                 break;
         }
 //</editor-fold>

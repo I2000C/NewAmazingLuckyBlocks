@@ -13,6 +13,7 @@ import me.i2000c.newalb.custom_outcomes.menus.EntityTowerMenu;
 import me.i2000c.newalb.custom_outcomes.menus.EquipmentMenu;
 import me.i2000c.newalb.custom_outcomes.menus.ExplosionMenu;
 import me.i2000c.newalb.custom_outcomes.menus.FireworkMenu;
+import me.i2000c.newalb.custom_outcomes.menus.ItemFlagMenu;
 import me.i2000c.newalb.custom_outcomes.menus.ItemMenu;
 import me.i2000c.newalb.custom_outcomes.menus.LightningMenu;
 import me.i2000c.newalb.custom_outcomes.menus.LuckyBlockTypeListMenu;
@@ -46,6 +47,7 @@ public enum EditorType{
     COLOR(new ColorMenu()),
     OFFSET(new OffsetMenu()),
     ENCHANTMENT(new EnchantmentMenu()),
+    ITEM_FLAGS(new ItemFlagMenu()),
     EQUIPMENT(new EquipmentMenu()),
     DELAYER(new DelayerMenu()),
     

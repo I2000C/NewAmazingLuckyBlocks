@@ -195,7 +195,14 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
         // Load item flags
         ItemFlag[] flags = config.getStringList(path + ".flags", Collections.emptyList())
                                  .stream()
-                                 .map(ItemFlag::valueOf)
+                                 .map(flagName -> {
+                                     try {
+                                         return ItemFlag.valueOf(flagName);
+                                     } catch(Exception ex) {
+                                         return null;
+                                     }
+                                 })
+                                 .filter(flag -> flag != null)
                                  .toArray(ItemFlag[]::new);
         value.setItemFlags(flags);
         

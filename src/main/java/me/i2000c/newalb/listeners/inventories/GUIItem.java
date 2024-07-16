@@ -115,7 +115,7 @@ public class GUIItem{
             String modeText,
             XMaterial materialIfTrue,
             XMaterial materialIfFalse){
-        return getEnabledDisabledItem(value, displayText, modeText, materialIfTrue, materialIfFalse, "3Click to toggle");
+        return getEnabledDisabledItem(value, displayText, modeText, materialIfTrue, materialIfFalse, "&3Click to toggle");
     }
     
     public static ItemStack getPreviousPageItem(){
