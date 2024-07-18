@@ -68,6 +68,7 @@ public class ItemMenu extends Editor<ItemReward>{
     private static final int OFFSET_SLOT = 36;
     
     private static final int ITEM_FLAGS_SLOT = 47;
+    private static final int ITEM_NBT_SLOT = 51;
     
     @Override
     protected void newItem(Player player){
@@ -424,6 +425,10 @@ public class ItemMenu extends Editor<ItemReward>{
         }
         ItemStack itemFlagsStack = builder.toItemStack();
         
+        ItemStack itemNbtStack = ItemStackWrapper.newItem(XMaterial.WRITABLE_BOOK)
+                                                 .setDisplayName("&6Modify NBT tags")
+                                                 .toItemStack();
+        
         menu.setItem(BACK_SLOT, GUIItem.getBackItem());
         menu.setItem(NEXT_SLOT, GUIItem.getNextItem());
         
@@ -461,6 +466,7 @@ public class ItemMenu extends Editor<ItemReward>{
         menu.setItem(OFFSET_SLOT, offsetStack);
         
         menu.setItem(ITEM_FLAGS_SLOT, itemFlagsStack);
+        menu.setItem(ITEM_NBT_SLOT, itemNbtStack);
         
         menu.openToPlayer(player);
 //</editor-fold>
@@ -782,6 +788,13 @@ public class ItemMenu extends Editor<ItemReward>{
                                                 player,
                                                 this::openItemMenu2,
                                                 (p, __) -> openItemMenu2(p));
+                break;
+            case ITEM_NBT_SLOT:
+                Editor<ItemStack> itemNbtEditor = EditorType.ITEM_NBT.getEditor();
+                itemNbtEditor.editExistingItem(item.getItem(),
+                                               player,
+                                               this::openItemMenu2,
+                                               (p, __) -> openItemMenu2(p));
                 break;
         }
 //</editor-fold>

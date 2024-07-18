@@ -32,6 +32,9 @@ import me.i2000c.newalb.custom_outcomes.menus.SquidExplosionMenu;
 import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
 import me.i2000c.newalb.custom_outcomes.menus.TeleportMenu;
 import me.i2000c.newalb.custom_outcomes.menus.TrapMenu;
+import me.i2000c.newalb.custom_outcomes.menus.nbt.ItemNbtMenu;
+import me.i2000c.newalb.custom_outcomes.menus.nbt.ItemNbtTagMenu;
+import me.i2000c.newalb.custom_outcomes.menus.nbt.ItemNbtTypeMenu;
 import me.i2000c.newalb.utils2.FilePicker;
 
 public enum EditorType{
@@ -48,6 +51,9 @@ public enum EditorType{
     OFFSET(new OffsetMenu()),
     ENCHANTMENT(new EnchantmentMenu()),
     ITEM_FLAGS(new ItemFlagMenu()),
+    ITEM_NBT(new ItemNbtMenu()),
+    ITEM_NBT_TYPE(new ItemNbtTypeMenu()),
+    ITEM_NBT_TAG(new ItemNbtTagMenu()),
     EQUIPMENT(new EquipmentMenu()),
     DELAYER(new DelayerMenu()),
     
