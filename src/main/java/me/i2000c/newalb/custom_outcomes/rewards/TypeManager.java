@@ -128,6 +128,10 @@ public class TypeManager{
     }
     
     public static LuckyBlockType getType(ItemStack stack){
+        if(stack == null || stack.getType() == Material.AIR) {
+            return null;
+        }
+        
         ItemStackWrapper wrapper = ItemStackWrapper.fromItem(stack, false);
         TypeData data = new TypeData(wrapper);
         return luckyBlockTypesAux.get(data);
