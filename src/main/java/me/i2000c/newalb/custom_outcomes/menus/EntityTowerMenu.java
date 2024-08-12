@@ -1,8 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.sk89q.jnbt.NBTConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
@@ -20,14 +18,13 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.NBTUtils;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class EntityTowerMenu extends Editor<EntityTowerReward>{
+public class EntityTowerMenu extends Editor<EntityTowerReward> {
     public EntityTowerMenu(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         InventoryListener.registerInventory(CustomInventoryType.ENTITY_TOWER_MENU, ENTITY_TOWER_MENU_FUNCTION);
@@ -36,7 +33,7 @@ public class EntityTowerMenu extends Editor<EntityTowerReward>{
                 ENTITY_LIST_MENU_SIZE,
                 (entityReward, index) -> {
                     ItemStack stack = entityReward.getItemToDisplay();
-                    NBTUtils.set(stack, ENTITY_ID_TAG, entityReward.getEntityID());                    
+                    NBTUtils.set(stack, ENTITY_ID_TAG, entityReward.getEntityID());
                     return stack;
                 }
         );
@@ -220,7 +217,7 @@ public class EntityTowerMenu extends Editor<EntityTowerReward>{
             int slot = TOWER_SLOTS[i];
             ItemStack stack = towerInv.getItem(slot);
             if((stack == null || stack.getType() == Material.AIR)
-                    || NBTUtils.contains(stack, ENTITY_ID_TAG)) {
+                    || !NBTUtils.contains(stack, ENTITY_ID_TAG)) {
                 towerEnd = true;
                 entityIDList.add(EntityTowerReward.INVALID_ENTITY_ID);
             }else{
