@@ -23,12 +23,12 @@ repositories{
 }
 
 dependencies{
-    implementation 'de.tr7zw:item-nbt-api:2.13.2'
-    compileOnly 'de.tr7zw:item-nbt-api:2.13.2:javadoc'
-    compileOnly 'de.tr7zw:item-nbt-api:2.13.2:sources'
-    implementation 'com.github.cryptomorin:XSeries:11.2.2'
-    compileOnly 'com.github.cryptomorin:XSeries:11.2.2:javadoc'
-    compileOnly 'com.github.cryptomorin:XSeries:11.2.2:sources'
+    implementation 'de.tr7zw:item-nbt-api:2.14.0'
+    compileOnly 'de.tr7zw:item-nbt-api:2.14.0:javadoc'
+    compileOnly 'de.tr7zw:item-nbt-api:2.14.0:sources'
+    implementation 'com.github.cryptomorin:XSeries:11.3.0'
+    compileOnly 'com.github.cryptomorin:XSeries:11.3.0:javadoc'
+    compileOnly 'com.github.cryptomorin:XSeries:11.3.0:sources'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:javadoc'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:sources'
