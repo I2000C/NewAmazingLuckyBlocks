@@ -262,7 +262,7 @@ public class TypeManager{
         }
         
         Iterator<Recipe> iter = Bukkit.recipeIterator();
-        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+        if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_12)) {
             while(iter.hasNext()){
                 Recipe recipe = iter.next();
                 if(recipe.getResult().equals(typeRecipe.getResult())){

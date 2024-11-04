@@ -1,5 +1,6 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
+import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,17 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-
-import com.cryptomorin.xseries.XMaterial;
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,6 +26,13 @@ import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.RandomUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 
 @Data
 @EqualsAndHashCode(of = "ID")
@@ -222,7 +219,7 @@ public class LuckyBlockType implements Displayable, Executable {
                                   recipeMaterialNames.get(2)).split(" ");
         
         type.crafting = new ArrayList<>(9);
-        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_12)){
             type.recipe = new ShapedRecipe(type.luckyBlockItem.toItemStack());
         }else{
             NamespacedKey namespacedKey = new NamespacedKey(NewAmazingLuckyBlocks.getInstance(), "NewAmazingLuckyBlocks." + type.ID);
