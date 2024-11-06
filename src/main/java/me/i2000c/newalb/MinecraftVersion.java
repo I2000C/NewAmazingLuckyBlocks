@@ -42,9 +42,10 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
     public static final MinecraftVersion v1_20_6 = new MinecraftVersion(1, VERSION_20, 6);
     public static final MinecraftVersion v1_21   = new MinecraftVersion(1, VERSION_21, 0);
     public static final MinecraftVersion v1_21_1 = new MinecraftVersion(1, VERSION_21, 1);
+    public static final MinecraftVersion v1_21_3 = new MinecraftVersion(1, VERSION_21, 3);
     
     public static final MinecraftVersion OLDEST_VERSION = v1_8;
-    public static final MinecraftVersion LATEST_VERSION = v1_21_1;
+    public static final MinecraftVersion LATEST_VERSION = v1_21_3;
     public static final MinecraftVersion CURRENT_VERSION = getCurrentVersion();
     public static final String CURRENT_BUKKIT_VERSION = getCurrentBukkitVersion();
     

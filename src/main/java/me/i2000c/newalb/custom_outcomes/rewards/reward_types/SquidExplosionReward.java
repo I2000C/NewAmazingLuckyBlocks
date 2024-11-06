@@ -18,6 +18,7 @@ import com.cryptomorin.xseries.XSound;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
@@ -111,7 +112,10 @@ public class SquidExplosionReward extends Reward{
                             });
                     squid.remove();
                     XSound.ENTITY_GENERIC_EXPLODE.play(loc, 5, 1);
-                    Particles.EXPLOSION_HUGE.create().setPosition(loc).display();
+                    if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_21_3)) {
+                        Particles.EXPLOSION_HUGE.create().setPosition(loc).display();
+                    }
+                    
                     return;
                 }
                 
