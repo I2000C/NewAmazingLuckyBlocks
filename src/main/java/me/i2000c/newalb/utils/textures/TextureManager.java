@@ -2,10 +2,10 @@ package me.i2000c.newalb.utils.textures;
 
 import com.mojang.authlib.GameProfile;
 import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.reflection.RefClass;
 import me.i2000c.newalb.reflection.ReflectionManager;
 import org.bukkit.Material;
+import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -28,7 +28,7 @@ public class TextureManager{
             return null;
         }
         
-        GameProfile profile = ReflectionManager.getFieldValue(meta, "profile");
+        GameProfile profile = gameProfileFromWrapper(ReflectionManager.getFieldValue(meta, "profile"));
         return new Texture(profile);
 //</editor-fold>
     }
@@ -41,7 +41,7 @@ public class TextureManager{
         
         GameProfile profile = texture != null ? texture.getProfile() : null;
         if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_2)) {
-            ReflectionManager.callMethod(meta, "setProfile", profile);
+            ReflectionManager.callMethod(meta, "setProfile", gameProfileToWrapper(profile));
         } else {
             ReflectionManager.setFieldValue(meta, "profile", profile);
         }
@@ -61,8 +61,7 @@ public class TextureManager{
         }
         
         Object tileEntitySkull = block.getState();
-        GameProfile profile = ReflectionManager.getFieldValue(tileEntitySkull, "profile");
-        
+        GameProfile profile = gameProfileFromWrapper(ReflectionManager.getFieldValue(tileEntitySkull, "profile"));        
         return new Texture(profile);
 //</editor-fold>
     }
@@ -76,29 +75,18 @@ public class TextureManager{
                 return false;
             } else {
                 block.setType(getBlockSkullMaterial());
-                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
-                    block.setData((byte) 1);
+                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+                    Skull skull = (Skull) block.getState();
+                    skull.setSkullType(SkullType.PLAYER);
+                    skull.setRotation(BlockFace.NORTH);
                 }
             }
         }
         
         GameProfile profile = texture != null ? texture.getProfile() : null;
-        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_17)) {
-            Object tileEntitySkull = block.getState();
-            ReflectionManager.setFieldValue(tileEntitySkull, "profile", profile);
-            ReflectionManager.callMethod(tileEntitySkull, "update", true);
-        } else {
-            RefClass blockPositionClass = ReflectionManager.getCachedNMSClass("net.minecraft.core", "BlockPosition");
-            RefClass craftWorldClass = ReflectionManager.getCachedCraftClass("CraftWorld");
-            RefClass worldServerClass = ReflectionManager.getCachedNMSClass("net.minecraft.world.level", "World");
-            
-            Object blockPosition = blockPositionClass.callConstructor(block.getX(), block.getY(), block.getZ());
-            Object craftWorld = craftWorldClass.callMethod("getHandle", block.getWorld());
-            Object tileEntitySkull = worldServerClass.callMethod("getTileEntity", craftWorld, blockPosition);
-            
-            ReflectionManager.callMethod(tileEntitySkull, "setGameProfile", profile);
-        }
-        
+        Skull skull = (Skull) block.getState();
+        ReflectionManager.setFieldValue(skull, "profile", gameProfileToWrapper(profile));
+        skull.update(true);
         return true;
 //</editor-fold>
     }
@@ -167,6 +155,34 @@ public class TextureManager{
             return skull.getRotation();
         }else{
             return null;
+        }
+    }
+    
+    private static GameProfile gameProfileFromWrapper(Object gameProfileWrapper) {
+        if(gameProfileWrapper == null) {
+            return null;
+        }
+        
+        // Since Minecraft 1.21.1 GameProfile must be converted from ResolvableProfile first
+        // https://github.com/CryptoMorin/XSeries/commit/6a07cadd6aa613366816213de8fa37c8bcf0e95a#diff-2f15a8c96b641158b8c7aab7182c42b686791a4176e4e0361219dde034c5f9a2
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_21_1)) {
+            return ReflectionManager.callMethod(gameProfileWrapper, "gameProfile");
+        } else {
+            return (GameProfile) gameProfileWrapper;
+        }
+    }
+    private static Object gameProfileToWrapper(GameProfile gameProfile) {
+        if(gameProfile == null) {
+            return null;
+        }
+        
+        // Since Minecraft 1.21.1 GameProfile must be converted to ResolvableProfile first
+        // https://github.com/CryptoMorin/XSeries/commit/6a07cadd6aa613366816213de8fa37c8bcf0e95a#diff-2f15a8c96b641158b8c7aab7182c42b686791a4176e4e0361219dde034c5f9a2
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_21_1)) {
+            RefClass resolvableProfileClass = ReflectionManager.getCachedNMSClass("net.minecraft.world.item.component", "ResolvableProfile");
+            return resolvableProfileClass.callConstructor(gameProfile);
+        } else {
+            return gameProfile;
         }
     }
 }
