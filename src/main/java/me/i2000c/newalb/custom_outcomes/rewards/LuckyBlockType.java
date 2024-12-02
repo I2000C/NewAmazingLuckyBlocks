@@ -349,24 +349,32 @@ public class LuckyBlockType implements Displayable, Executable {
         packs.remove(pack);
     }
     
-    @Override
-    public void execute(Player player, Location location){
+    public OutcomePack getRandomPack() {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(totalProbability <= 0){
+        if(totalProbability <= 0) {
             Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", typeName));
-        }else{
+        } else {
             int randomNumber = RandomUtils.getInt(totalProbability);
-            for(Map.Entry<OutcomePack, Integer> entry : packs.entrySet()){
+            for(Map.Entry<OutcomePack, Integer> entry : packs.entrySet()) {
                 OutcomePack pack = entry.getKey();
                 Integer probability = entry.getValue();
                 randomNumber -= probability;
-                if(randomNumber < 0){
-                    pack.execute(player, location);
-                    break;
+                if(randomNumber < 0) {
+                    return pack;
                 }
             }
         }
+        
+        return null;
 //</editor-fold>
+    }
+    
+    @Override
+    public void execute(Player player, Location location){
+        OutcomePack pack = getRandomPack();
+        if(pack != null) {
+            pack.execute(player, location);
+        }
     }
     
     @SneakyThrows

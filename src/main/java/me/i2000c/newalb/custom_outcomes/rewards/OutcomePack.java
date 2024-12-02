@@ -251,19 +251,27 @@ public class OutcomePack implements Displayable, Executable{
 //</editor-fold>
     }
     
-    @Override
-    public void execute(Player player, Location location){
+    public Outcome getRandomOutcome() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         int randomNumber = RandomUtils.getInt(totalProbability);
-        for(int i=0;i<outcomes.size();i++){
+        for(int i=0; i<outcomes.size(); i++){
             Outcome outcome = outcomes.get(i);
             randomNumber = randomNumber - outcome.getProbability();
             if(randomNumber < 0){
-                outcome.execute(player, location);
-                break;
+                return outcome;
             }
         }
+        
+        return null;
 //</editor-fold>
+    }
+    
+    @Override
+    public void execute(Player player, Location location){
+        Outcome outcome = getRandomOutcome();
+        if(outcome != null) {
+            outcome.execute(player, location);
+        }
     }
     
     public void delete(){
