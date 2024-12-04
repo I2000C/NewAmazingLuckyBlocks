@@ -4,7 +4,6 @@ import com.cryptomorin.xseries.XBlock;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import lombok.Getter;
-import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.utils.particles.Particles;
@@ -87,14 +86,12 @@ public class MiniVolcano extends SpecialItem{
         //<editor-fold defaultstate="collapsed" desc="Code">
         XSound.ENTITY_TNT_PRIMED.play(location, 2.0f, 1.0f);
         
-        if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_21_3)) {
-            Particles.SMOKE_LARGE.create()
-                .setPosition(location)
-                .setOffset(0.5, 0.5, 0.5)
-                .setSpeed(0.5)
-                .setCount(100)
-                .display();
-        }
+        Particles.SMOKE_LARGE.create()
+            .withOffset(0.5, 0.5, 0.5)
+            .withSpeed(0.5)
+            .withCount(100)
+            .build()
+            .displayAt(location);
         
         Task task = new Task() {
             final Location center = location.clone();
