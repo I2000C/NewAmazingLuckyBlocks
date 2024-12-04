@@ -69,12 +69,28 @@ public abstract class Task implements Runnable{
         taskID = Task.runTaskAsynchronously(this, delay);
     }
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public synchronized void runTask(long delay, long period){
-        taskID = Task.runTask(this, delay, period);
+        taskID = Task.runTask(() -> {
+            try {
+                this.run();
+            } catch(Throwable ex) {
+                ex.printStackTrace();
+                this.cancel();
+            }
+        }, delay, period);
     }
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public synchronized void runTaskAsynchronously(long delay, long period){
-        taskID = Task.runTaskAsynchronously(this, delay, period);
+        taskID = Task.runTaskAsynchronously(() -> {
+            try {
+                this.run();
+            } catch(Throwable ex) {
+                ex.printStackTrace();
+                this.cancel();
+            }
+        }, delay, period);
     }
     
     public synchronized int getTaskId(){
