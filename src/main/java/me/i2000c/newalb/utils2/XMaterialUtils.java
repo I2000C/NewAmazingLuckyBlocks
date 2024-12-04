@@ -62,7 +62,14 @@ public class XMaterialUtils {
     }
     
     public static XMaterial getXMaterial(Block block) {
-        XMaterial material = XMaterial.matchXMaterial(block.getType());
+        XMaterial material;
+        try {
+            material = XMaterial.matchXMaterial(block.getType());
+        } catch(IllegalArgumentException ex) {
+            // Block is not present in XMaterial list.
+            // It could be an externally added block in a Minecraft mod
+            return XMaterial.AIR;
+        }
         
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             ItemStack stack = new ItemStack(block.getType());
