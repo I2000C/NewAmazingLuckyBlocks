@@ -17,6 +17,8 @@ import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class SquidExplosionMenu extends Editor<SquidExplosionReward>{
     public SquidExplosionMenu(){
@@ -47,7 +49,7 @@ public class SquidExplosionMenu extends Editor<SquidExplosionReward>{
     
     private void openSquidExplosionMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Menu menu = GUIFactory.newMenu(CustomInventoryType.SQUID_EXPLOSION_MENU, 45, "&8&lSquid Explostion Reward");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.SQUID_EXPLOSION_MENU, 45, "&8&lSquid Explosion Reward");
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.GRAY);
         for(int i=0;i<9;i++){
@@ -84,7 +86,13 @@ public class SquidExplosionMenu extends Editor<SquidExplosionReward>{
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.ENCHANTING_TABLE);
         builder.setDisplayName("&3Current potion effects:");
         item.getEffects().forEach(effect -> {
-            builder.addLoreLine("  &d" + effect);
+            String name = effect.getType().getName();
+            int duration = effect.getDuration();
+            int amplifier = effect.getAmplifier();
+            boolean isAmbient = effect.isAmbient();
+            boolean showParticles = effect.hasParticles();
+            builder.addLoreLine(String.format("  &d%s;%d;%d;%s;%s",
+                    name, duration, amplifier, isAmbient, showParticles));
         });
         ItemStack effectListStack = builder.toItemStack();
         
@@ -135,10 +143,14 @@ public class SquidExplosionMenu extends Editor<SquidExplosionReward>{
                             player, 
                             p -> openSquidExplosionMenu(p), 
                             (p, effectReward) -> {
-                                String effectName = effectReward.getPotionEffect().getName();
+                                PotionEffectType effectType = effectReward.getPotionEffect();
                                 int effectDuration = effectReward.getDuration();
                                 int effectAmplifier = effectReward.getAmplifier();
-                                item.getEffects().add(effectName + ";" + effectDuration + ";" + effectAmplifier);
+                                boolean isAmbient = effectReward.isAmbient();
+                                boolean showParticles = effectReward.isShowParticles();
+                                
+                                PotionEffect potionEffect = new PotionEffect(effectType, effectDuration, effectAmplifier, isAmbient, showParticles);
+                                item.getEffects().add(potionEffect);
                                 
                                 openSquidExplosionMenu(p);
                             });
