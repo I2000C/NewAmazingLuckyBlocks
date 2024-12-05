@@ -1,16 +1,10 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.NoSuchElementException;
 import lombok.Getter;
 import lombok.Setter;
 import me.i2000c.newalb.config.Config;
@@ -18,6 +12,10 @@ import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
 import me.i2000c.newalb.custom_outcomes.rewards.RewardType;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 @Getter
 @Setter
@@ -59,9 +57,9 @@ public class SoundReward extends Reward{
     @Override
     public void loadRewardFromConfig(Config config, String path){
         try{
-            XSound xsound = XSound.valueOf(config.getString(path + ".type"));
+            XSound xsound = XSound.matchXSound(config.getString(path + ".type")).get();
             this.type = xsound.parseSound();
-        }catch(IllegalArgumentException ex){
+        }catch(IllegalArgumentException | NoSuchElementException ex){
             this.type = Sound.valueOf(config.getString(path + ".type"));
         }            
         this.volume = config.getDouble(path + ".volume");
