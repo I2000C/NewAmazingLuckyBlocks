@@ -65,7 +65,11 @@ public class ItemStackWrapper {
         return this;
     }
     public XMaterial getMaterial() {
-        return XMaterial.matchXMaterial(item);
+        try {
+            return XMaterial.matchXMaterial(item);
+        } catch(IllegalArgumentException ex) {
+            return XMaterial.AIR;
+        }
     }
     
     public ItemStackWrapper setAmount(int amount) {
