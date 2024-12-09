@@ -1,6 +1,8 @@
 package me.i2000c.newalb.listeners.inventories;
 
 import com.cryptomorin.xseries.XMaterial;
+import java.math.BigDecimal;
+import java.util.Locale;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import org.bukkit.inventory.ItemStack;
@@ -38,27 +40,21 @@ public class GUIItem{
         }
     }
     
-    public static ItemStack getPlusLessItem(float amount){
-        if(amount >= 0){
-            if(amount % 1 == 0){
-                return ItemStackWrapper.newItem(GlassColor.LIME.toMaterial())
-                                       .setDisplayName(String.format("&a&l+%.0f", amount))
-                                       .toItemStack();
-            }else{
-                return ItemStackWrapper.newItem(GlassColor.LIME.toMaterial())
-                                       .setDisplayName(String.format("&a&l+%.2f", amount))
-                                       .toItemStack();
-            }            
-        }else{
-            if((-amount) % 1 == 0){
-                return ItemStackWrapper.newItem(GlassColor.RED.toMaterial())
-                                       .setDisplayName(String.format("&c&l%.0f", amount))
-                                       .toItemStack();
-            }else{
-                return ItemStackWrapper.newItem(GlassColor.RED.toMaterial())
-                                       .setDisplayName(String.format("&c&l%.2f", amount))
-                                       .toItemStack();
-            } 
+    public static ItemStack getPlusLessItem(int amount) {
+        return getPlusLessItem(new BigDecimal(amount), 0);
+    }
+    public static ItemStack getPlusLessItem(BigDecimal amount) {
+        return getPlusLessItem(amount, 2);
+    }
+    public static ItemStack getPlusLessItem(BigDecimal amount, int precision) {
+        if(amount.compareTo(BigDecimal.ZERO) >= 0) {
+            return ItemStackWrapper.newItem(GlassColor.LIME.toMaterial())
+                                   .setDisplayName(String.format(Locale.ENGLISH, "&a&l+%." + precision + "f", amount))
+                                   .toItemStack();
+        } else {
+            return ItemStackWrapper.newItem(GlassColor.RED.toMaterial())
+                                   .setDisplayName(String.format(Locale.ENGLISH, "&c&l%." + precision + "f", amount))
+                                   .toItemStack();
         }
     }
     

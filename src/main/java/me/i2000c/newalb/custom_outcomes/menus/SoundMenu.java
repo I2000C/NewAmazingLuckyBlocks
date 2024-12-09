@@ -1,19 +1,13 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
-
+import com.cryptomorin.xseries.XSound;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
@@ -29,6 +23,10 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 
 public class SoundMenu extends Editor<SoundReward>{
     public SoundMenu(){
@@ -52,7 +50,7 @@ public class SoundMenu extends Editor<SoundReward>{
         soundListAdapter.setCurrentPageSlot(CURRENT_PAGE_SLOT);
         soundListAdapter.setNextPageSlot(NEXT_PAGE_SLOT);
         
-        soundList = Arrays.asList(Sound.values());
+        soundList = new ArrayList<>(Arrays.asList(XSound.values()));        
         soundList.sort((sound1, sound2) -> {
             String name1 = sound1.name();
             String name2 = sound2.name();
@@ -67,8 +65,8 @@ public class SoundMenu extends Editor<SoundReward>{
     private static final int PREVIOUS_PAGE_SLOT = 51;
     private static final int CURRENT_PAGE_SLOT = 52;
     private static final int NEXT_PAGE_SLOT = 53;
-    private static GUIPagesAdapter<Sound> soundListAdapter;
-    private static List<Sound> soundList;
+    private static GUIPagesAdapter<XSound> soundListAdapter;
+    private static List<XSound> soundList;
     
     @Override
     protected void reset(){
@@ -89,18 +87,22 @@ public class SoundMenu extends Editor<SoundReward>{
     
     private void openSoundMenu(Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        Menu menu = GUIFactory.newMenu(CustomInventoryType.SOUND_MENU, 27, "&d&lSound Reward");
+        Menu menu = GUIFactory.newMenu(CustomInventoryType.SOUND_MENU, 45, "&d&lSound Reward");
         
         ItemStack glass = GUIItem.getGlassItem(GlassColor.MAGENTA);
         
         for(int i=0;i<9;i++){
             menu.setItem(i, glass);
         }
-        for(int i=18;i<27;i++){
+        for(int i=36;i<45;i++){
             menu.setItem(i, glass);
         }
         menu.setItem(9, glass);
+        menu.setItem(18, glass);
+        menu.setItem(27, glass);
         menu.setItem(17, glass);
+        menu.setItem(26, glass);
+        menu.setItem(35, glass);
         
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.NOTE_BLOCK);
         if(item.getType() == null){
@@ -110,33 +112,54 @@ public class SoundMenu extends Editor<SoundReward>{
         }
         ItemStack sound = builder.toItemStack();
         
-        double value = BigDecimal.valueOf(item.getVolume())
-                                 .setScale(3, RoundingMode.HALF_UP)
-                                 .doubleValue();
         ItemStack volume = ItemStackWrapper.newItem(XMaterial.EMERALD)
-                                           .setDisplayName("&aSound volume: &5" + value)
+                                           .setDisplayName(String.format(Locale.ENGLISH, "&aSound volume: &5%.2f", item.getVolume()))
                                            .addLoreLine("&3Click to reset")
-                                           .toItemStack();
+                                           .addLoreLine("")
+                                           .addLoreLine(String.format(Locale.ENGLISH, "&6Min volume: &d%.2f", SoundReward.MIN_VOLUME))
+                                           .addLoreLine(String.format(Locale.ENGLISH, "&6Max volume: &d%.2f", SoundReward.MAX_VOLUME))
+                                           .toItemStack();        
         
-        
-        value = BigDecimal.valueOf(item.getPitch()).setScale(3, RoundingMode.HALF_UP).doubleValue();
         ItemStack pitch = ItemStackWrapper.newItem(XMaterial.GOLD_NUGGET)
-                                          .setDisplayName("&eSound pitch: &5" + value)
+                                          .setDisplayName(String.format(Locale.ENGLISH, "&eSound pitch: &5%.2f", item.getPitch()))
                                           .addLoreLine("&3Click to reset")
+                                          .addLoreLine("")
+                                          .addLoreLine(String.format(Locale.ENGLISH, "&6Min pitch: &d%.2f", SoundReward.MIN_PITCH))
+                                          .addLoreLine(String.format(Locale.ENGLISH, "&6Max pitch: &d%.2f", SoundReward.MAX_PITCH))
                                           .toItemStack();
+        
+        ItemStack testSound = ItemStackWrapper.newItem(XMaterial.SUNFLOWER)
+                                              .setDisplayName("&eTest sound")
+                                              .toItemStack();
+        ItemStack stopSound = ItemStackWrapper.newItem(XMaterial.BARRIER)
+                                              .setDisplayName("&cStop sound")
+                                              .toItemStack();
         
         menu.setItem(10, GUIItem.getBackItem());
         menu.setItem(16, GUIItem.getNextItem());
         
-        menu.setItem(12, sound);
-        menu.setItem(13, volume);
-        menu.setItem(14, pitch);
+        menu.setItem(13, sound);
+        menu.setItem(22, volume);
+        menu.setItem(31, pitch);
         
-        menu.setItem(22, GUIItem.getPlusLessItem(-1));
-        menu.setItem(4, GUIItem.getPlusLessItem(+1));
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_10)) {
+            menu.setItem(12, stopSound);
+        }
+        menu.setItem(14, testSound);
         
-        menu.setItem(23, GUIItem.getPlusLessItem(-1));
-        menu.setItem(5, GUIItem.getPlusLessItem(+1));
+        menu.setItem(19, GUIItem.getPlusLessItem(new BigDecimal("-0.5")));
+        menu.setItem(20, GUIItem.getPlusLessItem(new BigDecimal("-0.1")));
+        menu.setItem(21, GUIItem.getPlusLessItem(new BigDecimal("-0.05")));
+        menu.setItem(23, GUIItem.getPlusLessItem(new BigDecimal("+0.05")));
+        menu.setItem(24, GUIItem.getPlusLessItem(new BigDecimal("+0.1")));
+        menu.setItem(25, GUIItem.getPlusLessItem(new BigDecimal("+0.5")));
+        
+        menu.setItem(28, GUIItem.getPlusLessItem(new BigDecimal("-0.5")));
+        menu.setItem(29, GUIItem.getPlusLessItem(new BigDecimal("-0.1")));
+        menu.setItem(30, GUIItem.getPlusLessItem(new BigDecimal("-0.05")));
+        menu.setItem(32, GUIItem.getPlusLessItem(new BigDecimal("+0.05")));
+        menu.setItem(33, GUIItem.getPlusLessItem(new BigDecimal("+0.1")));
+        menu.setItem(34, GUIItem.getPlusLessItem(new BigDecimal("+0.5")));
         
         menu.openToPlayer(player);
 //</editor-fold>
@@ -149,44 +172,53 @@ public class SoundMenu extends Editor<SoundReward>{
         
         if(e.getLocation() == InventoryLocation.TOP){
             switch(e.getSlot()){
-                case 12:
+                case 13:
                     //Open sound type inventory
                     openSoundTypeMenu(player);
                     break;
-                case 22:
-                    item.setVolume(item.getVolume() - 1.0);
-                    if(item.getVolume() < 0.0){
-                        item.setVolume(20.0);
+                case 12:
+                    //Stop sounds if minecraft version >= 1.10
+                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_10)){
+                        for(XSound sound : soundList){
+                            sound.stopSound(player);
+                        }
                     }
-                    openSoundMenu(player);
-                    break;
-                case 13:
-                    item.setVolume(10.0);
-                    openSoundMenu(player);
-                    break;
-                case 4:
-                    item.setVolume(item.getVolume() + 1.0);
-                    if(item.getVolume() > 20.0){
-                        item.setVolume(0.0);
-                    }
-                    openSoundMenu(player);
-                    break;
-                case 23:
-                    item.setPitch(item.getPitch() - 0.1);
-                    if(item.getPitch() < 0.0){
-                        item.setPitch(2.0);
-                    }
-                    openSoundMenu(player);
                     break;
                 case 14:
-                    item.setPitch(1.0);
+                    item.execute(player, player.getLocation());
+                    break;
+                case 22:
+                    // Reset volume
+                    item.setVolume(SoundReward.DEFAULT_VOLUME);
                     openSoundMenu(player);
                     break;
-                case 5:
-                    item.setPitch(item.getPitch() + 0.1);
-                    if(item.getPitch() > 2.0){
-                        item.setPitch(0.0);
-                    }
+                case 31:
+                    // Reset pitch
+                    item.setPitch(SoundReward.DEFAULT_PITCH);
+                    openSoundMenu(player);
+                    break;
+                case 19:
+                case 20:
+                case 21:
+                case 23:
+                case 24:
+                case 25:
+                    // Modify volume
+                    String variationValue = Logger.stripColor(ItemStackWrapper.fromItem(e.getCurrentItem(), false).getDisplayName());
+                    BigDecimal variation = new BigDecimal(variationValue);
+                    item.setVolume(item.getVolume().add(variation));
+                    openSoundMenu(player);
+                    break;
+                case 28:
+                case 29:
+                case 30:
+                case 32:
+                case 33:
+                case 34:
+                    // Modify pitch
+                    variationValue = Logger.stripColor(ItemStackWrapper.fromItem(e.getCurrentItem(), false).getDisplayName());
+                    variation = new BigDecimal(variationValue);
+                    item.setPitch(item.getPitch().add(variation));
                     openSoundMenu(player);
                     break;
                 case 10:
@@ -236,8 +268,8 @@ public class SoundMenu extends Editor<SoundReward>{
                 case 48:
                     //Stop sounds if minecraft version >= 1.10
                     if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_10)){
-                        for(Sound sound : soundList){
-                            player.stopSound(sound);
+                        for(XSound sound : soundList){
+                            sound.stopSound(player);
                         }
                     }
                     break;
@@ -261,7 +293,7 @@ public class SoundMenu extends Editor<SoundReward>{
                         String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
                                 .getDisplayName();
                         if(displayName != null){
-                            item.setType(Sound.valueOf(Logger.stripColor(displayName)));
+                            item.setType(XSound.matchXSound(Logger.stripColor(displayName)).get());
                             item.execute(player, player.getLocation());
                             openSoundTypeMenu(player);
                         }
