@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.Locale;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
+import me.i2000c.newalb.custom_outcomes.editor.EditorType;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.SoundReward;
+import me.i2000c.newalb.functions.EditorBackFunction;
+import me.i2000c.newalb.functions.EditorNextFunction;
 import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
 import me.i2000c.newalb.listeners.inventories.GUIFactory;
@@ -23,7 +26,6 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +34,6 @@ public class SoundMenu extends Editor<SoundReward>{
     public SoundMenu(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         InventoryListener.registerInventory(CustomInventoryType.SOUND_MENU, SOUND_MENU_FUNCTION);
-        InventoryListener.registerInventory(CustomInventoryType.SOUND_TYPE_MENU, SOUND_TYPE_MENU_FUNCTION);
         
         soundListAdapter = new GUIPagesAdapter<>(
                 SOUND_LIST_MENU_SIZE,
@@ -174,7 +175,19 @@ public class SoundMenu extends Editor<SoundReward>{
             switch(e.getSlot()){
                 case 13:
                     //Open sound type inventory
-                    openSoundTypeMenu(player);
+                    EditorBackFunction backFunction = this::openSoundMenu;
+                    EditorNextFunction<XSound> nextFunction = (p, sound) -> {
+                        item.setType(sound);
+                        openSoundMenu(p);
+                    };
+                    
+                    Editor<XSound> editor = EditorType.SOUND_TYPE.getEditor();
+                    XSound type = item.getType();
+                    if(type == null) {
+                        editor.createNewItem(player, backFunction, nextFunction);
+                    } else {
+                        editor.editExistingItem(type, player, backFunction, nextFunction);
+                    }
                     break;
                 case 12:
                     //Stop sounds if minecraft version >= 1.10
@@ -231,73 +244,6 @@ public class SoundMenu extends Editor<SoundReward>{
                         onNext.accept(player, item);
                     }
                     break;
-            }
-        }
-//</editor-fold>
-    };
-    
-    private void openSoundTypeMenu(Player player){
-        //<editor-fold defaultstate="collapsed" desc="Code">        
-        Menu menu = GUIFactory.newMenu(CustomInventoryType.SOUND_TYPE_MENU, 54, "&3&lSound Type");
-        
-        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_10)){
-            ItemStack stop = ItemStackWrapper.newItem(XMaterial.BARRIER)
-                                             .setDisplayName("&cStop all sounds")
-                                             .toItemStack();
-            
-            menu.setItem(48, stop);
-        }
-        
-        menu.setItem(45, GUIItem.getBackItem());
-        
-        soundListAdapter.updateMenu(menu);        
-        menu.openToPlayer(player);
-//</editor-fold>
-    }
-    
-    private final InventoryFunction SOUND_TYPE_MENU_FUNCTION = e -> {
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Player player = (Player) e.getWhoClicked();
-        e.setCancelled(true);
-        
-        if(e.getLocation() == InventoryLocation.TOP){
-            switch(e.getSlot()){
-                case 45:
-                    openSoundMenu(player);
-                    break;
-                case 48:
-                    //Stop sounds if minecraft version >= 1.10
-                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_10)){
-                        for(XSound sound : soundList){
-                            sound.stopSound(player);
-                        }
-                    }
-                    break;
-                case 51:
-                    if(soundListAdapter.goToPreviousPage()){
-                        openSoundTypeMenu(player);
-                    }
-                    break;
-                case 52:
-                    if(soundListAdapter.goToMainPage()){
-                        openSoundTypeMenu(player);
-                    }
-                    break;
-                case 53:
-                    if(soundListAdapter.goToNextPage()){
-                        openSoundTypeMenu(player);
-                    }
-                    break;
-                default:
-                    if(e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR){
-                        String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
-                                .getDisplayName();
-                        if(displayName != null){
-                            item.setType(XSound.matchXSound(Logger.stripColor(displayName)).get());
-                            item.execute(player, player.getLocation());
-                            openSoundTypeMenu(player);
-                        }
-                    }
             }
         }
 //</editor-fold>
