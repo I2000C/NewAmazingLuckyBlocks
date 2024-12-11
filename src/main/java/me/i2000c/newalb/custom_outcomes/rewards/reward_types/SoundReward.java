@@ -7,6 +7,7 @@ import java.util.Optional;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.Reward;
@@ -32,12 +33,14 @@ public class SoundReward extends Reward {
     private XSound type;
     private BigDecimal volume;
     private BigDecimal pitch;
+    private Long seed;
     
     public SoundReward(Outcome outcome){
         super(outcome);
         type = null;
         volume = DEFAULT_VOLUME;
         pitch = DEFAULT_PITCH;
+        seed = null;
     }
     
     public void setVolume(@NonNull BigDecimal volume) {
@@ -55,6 +58,10 @@ public class SoundReward extends Reward {
         builder.addLoreLine("&3Volume: &6" + volume);
         builder.addLoreLine("&3Pitch: &6" + pitch);
         
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_2)) {
+            builder.addLoreLine("&3Seed: &6" + (seed != null ? seed : "RANDOM"));
+        }
+        
         return builder.toItemStack();
     }
     
@@ -63,6 +70,7 @@ public class SoundReward extends Reward {
         config.set(path + ".type", type.name());
         config.set(path + ".volume", volume);
         config.set(path + ".pitch", pitch);
+        config.set(path + ".seed", seed);
     }
     
     @Override
@@ -86,6 +94,10 @@ public class SoundReward extends Reward {
         this.type = sound;
         this.volume = new BigDecimal(config.getString(path + ".volume"));
         this.pitch = new BigDecimal(config.getString(path + ".pitch"));
+        this.seed = config.getLong(path + ".seed", Long.MIN_VALUE);
+        if(this.seed < 0L) {
+            this.seed = null;
+        }
         
         this.volume = OtherUtils.clamp(this.volume, MIN_VOLUME, MAX_VOLUME);
         this.pitch = OtherUtils.clamp(this.pitch, MIN_PITCH, MAX_PITCH);
@@ -97,7 +109,13 @@ public class SoundReward extends Reward {
             return;
         }
         
-        type.play(player, volume.floatValue(), pitch.floatValue());
+        type.record()
+            .withVolume(volume.floatValue())
+            .withPitch(pitch.floatValue())
+            .withSeed(seed)
+            .soundPlayer()
+            .forPlayers(player)
+            .play();
     }
     
     @Override
