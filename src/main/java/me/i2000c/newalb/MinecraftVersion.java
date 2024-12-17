@@ -43,9 +43,10 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
     public static final MinecraftVersion v1_21   = new MinecraftVersion(1, VERSION_21, 0);
     public static final MinecraftVersion v1_21_1 = new MinecraftVersion(1, VERSION_21, 1);
     public static final MinecraftVersion v1_21_3 = new MinecraftVersion(1, VERSION_21, 3);
+    public static final MinecraftVersion v1_21_4 = new MinecraftVersion(1, VERSION_21, 4);
     
     public static final MinecraftVersion OLDEST_VERSION = v1_8;
-    public static final MinecraftVersion LATEST_VERSION = v1_21_3;
+    public static final MinecraftVersion LATEST_VERSION = v1_21_4;
     public static final MinecraftVersion CURRENT_VERSION = getCurrentVersion();
     public static final String CURRENT_BUKKIT_VERSION = getCurrentBukkitVersion();
     
@@ -63,7 +64,7 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
         this.minor = minor;
         this.patch = patch;
         
-        this.legacyVersion = this.minor >= VERSION_8 && this.minor <= VERSION_12;
+        this.legacyVersion = this.minor <= VERSION_12;
         this.newNMS = this.minor >= VERSION_17;
         this.newCraftBukkit = this.minor > VERSION_20 || (this.minor == VERSION_20 && this.patch >= 5);
         this._1_8 = this.minor == VERSION_8;
