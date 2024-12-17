@@ -30,7 +30,6 @@ public class EffectMenu extends Editor<EffectReward>{
         InventoryListener.registerInventory(CustomInventoryType.EFFECT_MENU_2, EFFECT_MENU_2_FUNCTION);
         
         POTION_EFFECT_TYPES = new ArrayList<>(Arrays.asList(XPotion.values()));
-        POTION_EFFECT_TYPES.remove(XPotion.TURTLE_MASTER);
         POTION_EFFECT_TYPES.removeIf(potionEffectType -> !potionEffectType.isSupported());
         POTION_EFFECT_TYPES.sort((effectType1, effectType2) -> {
             String effectTypeName1 = effectType1.name();
