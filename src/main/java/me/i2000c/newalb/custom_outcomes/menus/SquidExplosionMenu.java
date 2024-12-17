@@ -143,7 +143,7 @@ public class SquidExplosionMenu extends Editor<SquidExplosionReward>{
                             player, 
                             p -> openSquidExplosionMenu(p), 
                             (p, effectReward) -> {
-                                PotionEffectType effectType = effectReward.getPotionEffect();
+                                PotionEffectType effectType = effectReward.getPotionEffect().getPotionEffectType();
                                 int effectDuration = effectReward.getDuration();
                                 int effectAmplifier = effectReward.getAmplifier();
                                 boolean isAmbient = effectReward.isAmbient();

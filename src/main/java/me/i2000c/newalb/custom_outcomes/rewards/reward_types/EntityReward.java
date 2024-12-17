@@ -1,6 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -29,7 +30,6 @@ import org.bukkit.entity.Slime;
 import org.bukkit.entity.Tameable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 @Getter
 @Setter
@@ -275,6 +275,9 @@ public class EntityReward extends Reward{
         
         if(this.lastSpawnedEntity instanceof LivingEntity){
             LivingEntity le = (LivingEntity) this.lastSpawnedEntity;
+            if(le == null) {
+                return;
+            }
             
             if(le instanceof Slime && slimeSize >= 0){
                 ((Slime) le).setSize(slimeSize);
@@ -313,9 +316,8 @@ public class EntityReward extends Reward{
             
             for(String effect : this.effects){
                 String[] effectData = effect.split(";");
-                PotionEffectType effectType = PotionEffectType.getByName(effectData[0]);
-                if(effectType.equals(PotionEffectType.INVISIBILITY)
-                        && le instanceof ArmorStand){
+                XPotion effectType = XPotion.matchXPotion(effectData[0]).get();
+                if(effectType == XPotion.INVISIBILITY && le instanceof ArmorStand){
                     ((ArmorStand) le).setVisible(false);
                     continue;
                 }
@@ -325,7 +327,7 @@ public class EntityReward extends Reward{
                     time = Integer.MAX_VALUE;
                 }
                 int amplifier = Integer.parseInt(effectData[2]);
-                le.addPotionEffect(new PotionEffect(effectType, time, amplifier), true);
+                le.addPotionEffect(new PotionEffect(effectType.getPotionEffectType(), time, amplifier), true);
             }
             
             this.equipment.applyToEntity(le);

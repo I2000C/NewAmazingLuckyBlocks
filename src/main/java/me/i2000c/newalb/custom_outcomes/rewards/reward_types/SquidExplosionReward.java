@@ -1,6 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
 import com.cryptomorin.xseries.XSound;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class SquidExplosionReward extends Reward{
         builder.addLoreLine("&3Radius: &d" + radius);
         builder.addLoreLine("&3Effects:");
         effects.forEach(effect -> {
-            String name = effect.getType().getName();
+            String name = XPotion.matchXPotion(effect.getType()).name();
             int duration = effect.getDuration();
             int amplifier = effect.getAmplifier();
             boolean isAmbient = effect.isAmbient();
@@ -66,7 +67,7 @@ public class SquidExplosionReward extends Reward{
         
         List<String> effectsStringList = new ArrayList<>();
         effects.forEach(effect -> {
-            String name = effect.getType().getName();
+            String name = XPotion.matchXPotion(effect.getType()).name();
             int duration = effect.getDuration();
             int amplifier = effect.getAmplifier();
             boolean isAmbient = effect.isAmbient();
@@ -86,7 +87,7 @@ public class SquidExplosionReward extends Reward{
         this.effects.clear();
         effectsStringList.forEach(effectString -> {
             String[] split = effectString.split(";");
-            PotionEffectType name = PotionEffectType.getByName(split[0]);
+            PotionEffectType type = XPotion.matchXPotion(split[0]).get().getPotionEffectType();
             int duration = Integer.parseInt(split[1]);
             int amplifier = Integer.parseInt(split[2]);
             boolean isAmbient = false, showParticles = true;
@@ -95,7 +96,7 @@ public class SquidExplosionReward extends Reward{
                 showParticles = Boolean.parseBoolean(split[4]);
             }
             
-            PotionEffect effect = new PotionEffect(name, duration, amplifier, isAmbient, showParticles);
+            PotionEffect effect = new PotionEffect(type, duration, amplifier, isAmbient, showParticles);
             this.effects.add(effect);
         });
     }
