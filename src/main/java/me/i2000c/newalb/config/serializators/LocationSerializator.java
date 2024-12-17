@@ -1,13 +1,12 @@
 package me.i2000c.newalb.config.serializators;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.i2000c.newalb.config.Config;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LocationSerializator implements ConfigSerializerDeserializer<Location> {
@@ -16,7 +15,17 @@ public class LocationSerializator implements ConfigSerializerDeserializer<Locati
     
     @Override
     public void serialize(Config config, String path, Location value) {
-        config.set(path + ".world", value.getWorld().getName());
+        String worldName;
+        try {
+            worldName = value.getWorld().getName();
+        } catch(IllegalArgumentException ex) {
+            // IllegalArgumentException is thrown when the location world has been unloaded.
+            // In that case, null will be saved into config because the location is no longer valid.
+            config.set(path, null);
+            return;
+        }
+        
+        config.set(path + ".world", worldName);
         config.set(path + ".x", value.getX());
         config.set(path + ".y", value.getY());
         config.set(path + ".z", value.getZ());
