@@ -3,7 +3,6 @@ package me.i2000c.newalb.custom_outcomes.menus.utils;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +127,7 @@ public class SoundTreeNode implements Displayable {
     
     private static SoundTreeNode buildSoundTree() {
         SoundTreeNode mainNode = new SoundTreeNode(0, null, null, null);
-        List<XSound> sounds = new ArrayList<>(Arrays.asList(XSound.values()));
+        List<XSound> sounds = new ArrayList<>(XSound.getValues());
         sounds.remove(XSound.INTENTIONALLY_EMPTY);
         sounds.sort((sound1, sound2) -> sound1.name().compareTo(sound2.name()));
         

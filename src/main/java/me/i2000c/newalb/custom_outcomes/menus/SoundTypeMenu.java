@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
@@ -30,7 +31,7 @@ public class SoundTypeMenu extends Editor<XSound> {
     private static final int PREVIOUS_PAGE_SLOT = 51;
     private static final int CURRENT_PAGE_SLOT = 52;
     private static final int NEXT_PAGE_SLOT = 53;    
-    private static final XSound[] sounds = XSound.values();    
+    private static final List<XSound> sounds = new ArrayList<>(XSound.getValues());
     private static GUIPagesAdapter<SoundTreeNode> treeNodeListAdapter;
     
     private SoundTreeNode currentNode = null;    
@@ -76,6 +77,7 @@ public class SoundTypeMenu extends Editor<XSound> {
     
     @Override
     protected void newItem(Player player) {
+        item = null;
         openSoundTypeMenu(player);
     }
     
