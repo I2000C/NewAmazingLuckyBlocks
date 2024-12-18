@@ -3,7 +3,7 @@ package me.i2000c.newalb.custom_outcomes.menus;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import me.i2000c.newalb.MinecraftVersion;
@@ -32,7 +32,7 @@ public class SoundMenu extends Editor<SoundReward> {
         InventoryListener.registerInventory(CustomInventoryType.SOUND_MENU, SOUND_MENU_FUNCTION);
     }
     
-    private static final List<XSound> SOUNDS = Arrays.asList(XSound.values());
+    private static final List<XSound> SOUNDS = new ArrayList<>(XSound.getValues());
     
     @Override
     protected void newItem(Player player){
@@ -233,6 +233,10 @@ public class SoundMenu extends Editor<SoundReward> {
                 case 41:
                 case 42:
                 case 43:
+                    if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_20_2)) {
+                        break;
+                    }
+                    
                     // Modify seed
                     variationValue = Logger.stripColor(ItemStackWrapper.fromItem(e.getCurrentItem(), false).getDisplayName());
                     variation = new BigDecimal(variationValue);
