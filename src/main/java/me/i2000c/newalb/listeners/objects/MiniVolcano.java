@@ -87,11 +87,11 @@ public class MiniVolcano extends SpecialItem{
         XSound.ENTITY_TNT_PRIMED.play(location, 2.0f, 1.0f);
         
         Particles.SMOKE_LARGE.create()
-                .setPosition(location)
-                .setOffset(0.5, 0.5, 0.5)
-                .setSpeed(0.5)
-                .setCount(100)
-                .display();
+            .withOffset(0.5, 0.5, 0.5)
+            .withSpeed(0.5)
+            .withCount(100)
+            .build()
+            .displayAt(location);
         
         Task task = new Task() {
             final Location center = location.clone();

@@ -23,19 +23,19 @@ repositories{
 }
 
 dependencies{
-    implementation 'de.tr7zw:item-nbt-api:2.13.1'
-    compileOnly 'de.tr7zw:item-nbt-api:2.13.1:javadoc'
-    compileOnly 'de.tr7zw:item-nbt-api:2.13.1:sources'
-    implementation 'com.github.cryptomorin:XSeries:11.1.0'
-    compileOnly 'com.github.cryptomorin:XSeries:11.1.0:javadoc'
-    compileOnly 'com.github.cryptomorin:XSeries:11.1.0:sources'
+    implementation 'de.tr7zw:item-nbt-api:2.15.1'
+    compileOnly 'de.tr7zw:item-nbt-api:2.15.1:javadoc'
+    compileOnly 'de.tr7zw:item-nbt-api:2.15.1:sources'
+    implementation 'com.github.cryptomorin:XSeries:13.3.2'
+    compileOnly 'com.github.cryptomorin:XSeries:13.3.2:javadoc'
+    compileOnly 'com.github.cryptomorin:XSeries:13.3.2:sources'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:javadoc'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:sources'
     compileOnly 'com.mojang:authlib:1.5.21'
-    implementation 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.3.0'
-    compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.3.0:javadoc'
-    compileOnly 'com.github.fierioziy.particlenativeapi:ParticleNativeAPI-core:4.3.0:sources'
+    implementation 'xyz.xenondevs:particle:1.8.4'
+    compileOnly 'xyz.xenondevs:particle:1.8.4:javadoc'
+    compileOnly 'xyz.xenondevs:particle:1.8.4:sources'
     
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2'
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'

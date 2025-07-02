@@ -426,7 +426,7 @@ public class EntityMenu extends Editor<EntityReward>{
                             player, 
                             p -> openEntityMenu(p), 
                             (p, effectReward) -> {
-                                String effectName = effectReward.getPotionEffect().getName();
+                                String effectName = effectReward.getPotionEffect().name();
                                 int effectDuration = effectReward.getDuration();
                                 int effectAmplifier = effectReward.getAmplifier();
                                 item.getEffects().add(effectName + ";" + effectDuration + ";" + effectAmplifier);

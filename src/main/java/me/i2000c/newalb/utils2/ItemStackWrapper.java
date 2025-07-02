@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.ReflectionManager;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils.textures.TextureException;
@@ -66,7 +67,11 @@ public class ItemStackWrapper {
         return this;
     }
     public XMaterial getMaterial() {
-        return XMaterial.matchXMaterial(item);
+        try {
+            return XMaterial.matchXMaterial(item);
+        } catch(IllegalArgumentException ex) {
+            return XMaterial.AIR;
+        }
     }
     
     public ItemStackWrapper setAmount(int amount) {
@@ -357,6 +362,9 @@ public class ItemStackWrapper {
         if(meta instanceof PotionMeta) {
             ((PotionMeta) meta).addCustomEffect(potionEffect, true);
             item.setItemMeta(meta);
+        } else if(getMaterial() == XMaterial.SUSPICIOUS_STEW) {
+            ReflectionManager.callMethod(meta, "addCustomEffect", potionEffect, true);
+            item.setItemMeta(meta);
         }
         return this;
     }
@@ -364,6 +372,8 @@ public class ItemStackWrapper {
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof PotionMeta) {
             return ((PotionMeta) meta).getCustomEffects();
+        } else if(getMaterial() == XMaterial.SUSPICIOUS_STEW) {
+            return ReflectionManager.callMethod(meta, "getCustomEffects");
         } else {
             return null;
         }
@@ -372,6 +382,9 @@ public class ItemStackWrapper {
         ItemMeta meta = item.getItemMeta();
         if(meta instanceof PotionMeta) {
             ((PotionMeta) meta).clearCustomEffects();
+            item.setItemMeta(meta);
+        } else if(getMaterial() == XMaterial.SUSPICIOUS_STEW) {
+            ReflectionManager.callMethod(meta, "clearCustomEffects");
             item.setItemMeta(meta);
         }
         return this;

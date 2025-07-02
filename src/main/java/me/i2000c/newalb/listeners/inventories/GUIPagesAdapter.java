@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 import java.util.function.BiFunction;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.inventory.ItemStack;
 
 public class GUIPagesAdapter<T>{
@@ -22,6 +24,9 @@ public class GUIPagesAdapter<T>{
     
     private int maxPages;
     private boolean showPageItems;
+    
+    @Getter
+    @Setter
     private int pageIndex;
     
     private int previousPageSlot;

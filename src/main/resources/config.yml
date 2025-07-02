@@ -325,6 +325,9 @@ CheckIfTexturesAreValid: false
 
 # General LuckyBlock configurations
 LuckyBlock:
+  # If debug mode is enabled, when a LuckyBlock is broken, its location, contents and other stuff
+  #     will be logged in the console
+  DebugMode: false
   # If this option is enabled, LuckyBlocks will be protected against liquids and explosions
   EnableEnvironmentProtection: true
   DropOnBlockBreak:

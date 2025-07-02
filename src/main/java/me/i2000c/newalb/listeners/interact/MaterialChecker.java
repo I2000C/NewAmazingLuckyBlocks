@@ -2,6 +2,7 @@ package me.i2000c.newalb.listeners.interact;
 
 import com.cryptomorin.xseries.XMaterial;
 import java.util.EnumSet;
+import me.i2000c.newalb.utils2.XMaterialUtils;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 
@@ -12,6 +13,8 @@ public class MaterialChecker{
         PROTECTED_MATERIALS.add(XMaterial.CHEST);
         PROTECTED_MATERIALS.add(XMaterial.TRAPPED_CHEST);
         PROTECTED_MATERIALS.add(XMaterial.ENDER_CHEST);
+        
+        PROTECTED_MATERIALS.add(XMaterial.BARREL);
         
         PROTECTED_MATERIALS.add(XMaterial.FURNACE);
         
@@ -45,6 +48,7 @@ public class MaterialChecker{
         PROTECTED_MATERIALS.add(XMaterial.CRIMSON_BUTTON);
         PROTECTED_MATERIALS.add(XMaterial.WARPED_BUTTON);
         PROTECTED_MATERIALS.add(XMaterial.POLISHED_BLACKSTONE_BUTTON);
+        PROTECTED_MATERIALS.add(XMaterial.BAMBOO_BUTTON);
         
         PROTECTED_MATERIALS.add(XMaterial.DAYLIGHT_DETECTOR);
         PROTECTED_MATERIALS.add(XMaterial.OAK_FENCE_GATE);
@@ -55,6 +59,7 @@ public class MaterialChecker{
         PROTECTED_MATERIALS.add(XMaterial.ACACIA_FENCE_GATE);
         PROTECTED_MATERIALS.add(XMaterial.CRIMSON_FENCE_GATE);
         PROTECTED_MATERIALS.add(XMaterial.WARPED_FENCE_GATE);
+        PROTECTED_MATERIALS.add(XMaterial.BAMBOO_FENCE_GATE);
         
         PROTECTED_MATERIALS.add(XMaterial.OAK_DOOR);
         PROTECTED_MATERIALS.add(XMaterial.IRON_DOOR);
@@ -74,6 +79,7 @@ public class MaterialChecker{
         PROTECTED_MATERIALS.add(XMaterial.DARK_OAK_TRAPDOOR);
         PROTECTED_MATERIALS.add(XMaterial.CRIMSON_TRAPDOOR);
         PROTECTED_MATERIALS.add(XMaterial.WARPED_TRAPDOOR);
+        PROTECTED_MATERIALS.add(XMaterial.BAMBOO_TRAPDOOR);
         PROTECTED_MATERIALS.add(XMaterial.HOPPER);
         PROTECTED_MATERIALS.add(XMaterial.DROPPER);
         
@@ -89,7 +95,7 @@ public class MaterialChecker{
             return false;
         }
         
-        XMaterial material = XMaterial.matchXMaterial(e.getClickedBlock().getType());
+        XMaterial material = XMaterialUtils.getXMaterial(e.getClickedBlock());
         return PROTECTED_MATERIALS.contains(material) && !e.getPlayer().isSneaking();
     }
 }

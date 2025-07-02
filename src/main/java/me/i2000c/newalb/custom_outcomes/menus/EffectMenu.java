@@ -1,6 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -22,23 +23,22 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 public class EffectMenu extends Editor<EffectReward>{
     public EffectMenu(){
         InventoryListener.registerInventory(CustomInventoryType.EFFECT_MENU, EFFECT_MENU_FUNCTION);
         InventoryListener.registerInventory(CustomInventoryType.EFFECT_MENU_2, EFFECT_MENU_2_FUNCTION);
         
-        POTION_EFFECT_TYPES = new ArrayList<>(Arrays.asList(PotionEffectType.values()));
-        POTION_EFFECT_TYPES.removeIf(potionEffectType -> potionEffectType == null);
+        POTION_EFFECT_TYPES = new ArrayList<>(Arrays.asList(XPotion.values()));
+        POTION_EFFECT_TYPES.removeIf(potionEffectType -> !potionEffectType.isSupported());
         POTION_EFFECT_TYPES.sort((effectType1, effectType2) -> {
-            String effectTypeName1 = effectType1.getName();
-            String effectTypeName2 = effectType2.getName();
+            String effectTypeName1 = effectType1.name();
+            String effectTypeName2 = effectType2.name();
             return effectTypeName1.compareTo(effectTypeName2);
         });
     }
     
-    private final List<PotionEffectType> POTION_EFFECT_TYPES;        
+    private final List<XPotion> POTION_EFFECT_TYPES;        
     
     private static boolean showClearEffectsItem;
     
@@ -87,8 +87,8 @@ public class EffectMenu extends Editor<EffectReward>{
             if(item.getPotionEffect() == null){
                 wrapper.setDisplayName("&bSelected effect: &dnull");
             }else{
-                wrapper.setDisplayName("&bSelected effect: &d" + item.getPotionEffect().getName());
-                wrapper.addPotionEffect(new PotionEffect(item.getPotionEffect(), 0, 0));
+                wrapper.setDisplayName("&bSelected effect: &d" + item.getPotionEffect().name());
+                wrapper.addPotionEffect(new PotionEffect(item.getPotionEffect().getPotionEffectType(), 0, 0));
             }
         }
         wrapper.addLoreLine("&3Click to select");
@@ -341,12 +341,12 @@ public class EffectMenu extends Editor<EffectReward>{
             initialSlot = 0;
         }        
         
-        Iterator<PotionEffectType> iterator = POTION_EFFECT_TYPES.iterator();
+        Iterator<XPotion> iterator = POTION_EFFECT_TYPES.iterator();
         for(int i=initialSlot; iterator.hasNext() && i<45; i++){
-            PotionEffectType effectType = iterator.next();
-            PotionEffect potionEffect = new PotionEffect(effectType, 0, 0);
+            XPotion effectType = iterator.next();
+            PotionEffect potionEffect = new PotionEffect(effectType.getPotionEffectType(), 0, 0);
             ItemStack effectItem = ItemStackWrapper.newItem(XMaterial.POTION)
-                                                   .setDisplayName("&d" + effectType.getName())
+                                                   .setDisplayName("&d" + effectType.name())
                                                    .addPotionEffect(potionEffect)
                                                    .toItemStack();
             menu.setItem(i, effectItem);
@@ -379,7 +379,7 @@ public class EffectMenu extends Editor<EffectReward>{
                         item.setPotionEffect(null);
                     }else{
                         item.setClearEffects(false);
-                        item.setPotionEffect(PotionEffectType.getByName(effect_name));
+                        item.setPotionEffect(XPotion.matchXPotion(effect_name).get());
                     }
                     openEffectMenu(player);
                 }                    

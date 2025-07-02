@@ -1,6 +1,7 @@
 package me.i2000c.newalb.config.serializators;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,35 +62,49 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
                 config.set(path + ".armorColor", hexColor);
         }
         
-        // Save potion effects
-        PotionSplashType type = PotionSplashType.getFromPotion(value.toItemStack());
-        if(type != null) {
-            config.set(path + ".material" , XMaterial.POTION);
-            config.set(path + ".potionSplashType", type.name());
-            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
-                if(value.hasColor()){
-                    String hexColor = new CustomColor(value.getColor()).getHexColorString();
-                    config.set(path + ".potionColor", hexColor);
+        // Save potion meta
+        XMaterial material = value.getMaterial();
+        switch(material) {
+            case POTION:
+            case SPLASH_POTION:
+            case LINGERING_POTION:
+            case TIPPED_ARROW:
+            case SUSPICIOUS_STEW:
+                // Save potion splash type
+                if(material.name().contains("POTION")) {
+                    PotionSplashType type = PotionSplashType.getFromPotion(value.toItemStack());
+                    config.set(path + ".material" , XMaterial.POTION);
+                    config.set(path + ".potionSplashType", type.name());
                 }
-            }
-            
-            List<String> effectList = new ArrayList<>();
-            value.getPotionEffects().forEach(potionEffect -> {
-                String name = potionEffect.getType().getName();
-                int duration = potionEffect.getDuration() / 20;
-                int amplifier = potionEffect.getAmplifier();
-
-                if(duration < 0){
-                    duration = 0;
+                
+                // Save potion color
+                if(material != XMaterial.SUSPICIOUS_STEW) {                    
+                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
+                        if(value.hasColor()){
+                            String hexColor = new CustomColor(value.getColor()).getHexColorString();
+                            config.set(path + ".potionColor", hexColor);
+                        }
+                    }
                 }
-                if(amplifier < 0){
-                    amplifier = 0;
-                }
+                
+                // Save potion effects
+                List<String> effectList = new ArrayList<>();
+                value.getPotionEffects().forEach(potionEffect -> {
+                    String name = XPotion.matchXPotion(potionEffect.getType()).name();
+                    int duration = potionEffect.getDuration() / 20;
+                    int amplifier = potionEffect.getAmplifier();
 
-                effectList.add(name + ";" + duration + ";" + amplifier);
-            });
+                    if(duration < 0){
+                        duration = 0;
+                    }
+                    if(amplifier < 0){
+                        amplifier = 0;
+                    }
 
-            config.set(path + ".potionEffects", effectList);
+                    effectList.add(name + ";" + duration + ";" + amplifier);
+                });
+
+                config.set(path + ".potionEffects", effectList);
         }
         
         // Save NBT tags
@@ -143,6 +158,50 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
         }
         
         // Load potion meta
+        switch(material) {
+            case POTION:
+            case SPLASH_POTION:
+            case LINGERING_POTION:
+            case TIPPED_ARROW:
+            case SUSPICIOUS_STEW:
+                // Load potion splash type
+                if(material.name().contains("POTION")) {
+                    if(config.existsPath(path + ".potionSplashType")) {
+                        PotionSplashType type = config.getEnum(path + ".potionSplashType", PotionSplashType.class);
+                        type.setToPotion(value.toItemStack());
+                    }
+                }
+                
+                // Load potion color
+                if(material != XMaterial.SUSPICIOUS_STEW) {
+                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
+                        String hexColor = config.getString(path + ".potionColor", null);
+                        CustomColor color = hexColor != null ? new CustomColor(hexColor) : new CustomColor((Color) null);
+                        value.setColor(color.getBukkitColor());
+                    }
+                }
+                
+                // Load potion effects
+                if(config.existsPath(path + ".potionEffects")) {
+                    List<String> potionEffects = config.getStringList(path + ".potionEffects");
+                    potionEffects.forEach(string -> {
+                        String[] splitted = string.split(";");
+                        PotionEffectType type = XPotion.matchXPotion(splitted[0]).get().getPotionEffectType();
+                        int duration = Integer.parseInt(splitted[1]) * 20;
+                        int amplifier = Integer.parseInt(splitted[2]);
+
+                        if(duration < 0) {
+                            duration = Integer.MAX_VALUE;
+                        }
+                        if(amplifier < 0) {
+                            amplifier = 0;
+                        }
+
+                        value.addPotionEffect(new PotionEffect(type, duration, amplifier));
+                    });
+                }
+        }
+        
         PotionSplashType type = PotionSplashType.getFromPotion(value.toItemStack());
         if(type != null) {
             if(config.existsPath(path + ".potionSplashType")) {

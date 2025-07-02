@@ -1,6 +1,8 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
+import java.util.List;
 import java.util.Set;
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
@@ -9,6 +11,8 @@ import me.i2000c.newalb.custom_outcomes.rewards.Outcome;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.EffectReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ItemReward;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ItemReward.PotionSplashType;
+import me.i2000c.newalb.functions.EditorBackFunction;
+import me.i2000c.newalb.functions.EditorNextFunction;
 import me.i2000c.newalb.functions.InventoryFunction;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.inventories.CustomInventoryType;
@@ -236,7 +240,9 @@ public class ItemMenu extends Editor<ItemReward>{
         ItemStack removeSpecialData = null;
         ItemStack changePotionType = null;
         ItemStack setPotionColor = null;
-        if(TextureManager.isSkull(item.getItem().getType())){
+        
+        XMaterial material = XMaterial.matchXMaterial(item.getItem().getType());
+        if(TextureManager.isSkull(item.getItem().getType())) {
             //TextureMeta
             specialItem = ItemStackWrapper.newItem(XMaterial.PLAYER_HEAD)
                                           .setDisplayName("&5Click to set custom texture")
@@ -247,7 +253,7 @@ public class ItemMenu extends Editor<ItemReward>{
             removeSpecialData = ItemStackWrapper.newItem(XMaterial.BARRIER)
                                                 .setDisplayName("&cClick to remove custom texture")
                                                 .toItemStack();
-        }else switch(XMaterial.matchXMaterial(item.getItem().getType())){
+        } else switch(material) {
             case ENCHANTED_BOOK:
                 // EnchantmentStorageMeta
                 specialItem = ItemStackWrapper.newItem(XMaterial.ENCHANTED_BOOK)
@@ -261,24 +267,41 @@ public class ItemMenu extends Editor<ItemReward>{
             case POTION:
             case SPLASH_POTION:
             case LINGERING_POTION:
+            case TIPPED_ARROW:
+            case SUSPICIOUS_STEW:
                 //PotionMeta
-                specialItem = ItemStackWrapper.newItem(XMaterial.POTION)
-                                              .setDisplayName("&5Click to add custom potion effects")
-                                              .toItemStack();
+                ItemStackWrapper specialItemWrapper = ItemStackWrapper.newItem(XMaterial.POTION);
+                specialItemWrapper.setDisplayName("&5Click to add custom potion effects");
+                specialItemWrapper.addLoreLine("&3Current effects:");
+                List<PotionEffect> effects = ItemStackWrapper.fromItem(item.getItem(), false).getPotionEffects();
+                effects.forEach(effect -> {
+                    String effectName = XPotion.matchXPotion(effect.getType()).name();
+                    int duration = effect.getDuration();
+                    int amplifier = effect.getAmplifier();
+                    boolean isAmbient = effect.isAmbient();
+                    boolean showParticles = effect.hasParticles();
+                    specialItemWrapper.addLoreLine(String.format("  &d%s;%d;%d;%s;%s",
+                            effectName, duration, amplifier, isAmbient, showParticles));
+                });
+                specialItem = specialItemWrapper.toItemStack();
                 
                 removeSpecialData = ItemStackWrapper.newItem(XMaterial.BARRIER)
                                                     .setDisplayName("&cClick to remove all potion effects")
                                                     .toItemStack();
                 
-                changePotionType = ItemStackWrapper.newItem(XMaterial.BREWING_STAND)
-                                                   .setDisplayName("&bClick to change potion type")
-                                                   .addLoreLine("&dCurrent type: &e" + PotionSplashType.getFromPotion(item.getItem()))
-                                                   .toItemStack();
+                if(material.name().contains("POTION")) {
+                    changePotionType = ItemStackWrapper.newItem(XMaterial.BREWING_STAND)
+                                                       .setDisplayName("&bClick to change potion type")
+                                                       .addLoreLine("&dCurrent type: &e" + PotionSplashType.getFromPotion(item.getItem()))
+                                                       .toItemStack();
+                }
                 
-                if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)){
-                    setPotionColor = ItemStackWrapper.newItem(XMaterial.BLAZE_POWDER)
-                                                     .setDisplayName("&dClick to set potion color")
-                                                     .toItemStack();
+                if(material != XMaterial.SUSPICIOUS_STEW) {
+                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)){
+                        setPotionColor = ItemStackWrapper.newItem(XMaterial.BLAZE_POWDER)
+                                                         .setDisplayName("&dClick to set potion color")
+                                                         .toItemStack();
+                    }
                 }
                 
                 break;
@@ -592,17 +615,19 @@ public class ItemMenu extends Editor<ItemReward>{
                 if(e.getCurrentItem() != null){
                     if(e.getCurrentItem().getType() == Material.BLAZE_POWDER){
                         if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)){
-                            Color itemColor = ItemStackWrapper.fromItem(item.getItem(), false)
-                                    .getColor();
+                            Color itemColor = ItemStackWrapper.fromItem(item.getItem(), false).getColor();
                             Editor<CustomColor> editor3 = EditorType.COLOR.getEditor();
-                            editor3.editExistingItem(
-                                    new CustomColor(itemColor), 
-                                    player, 
-                                    p -> openItemMenu2(p), 
-                                    (p, color) -> {
-                                        ItemStackWrapper.fromItem(item.getItem(), false).setColor(color.getBukkitColor());
-                                        openItemMenu2(p);
-                                    });
+                            EditorBackFunction backFunction = this::openItemMenu2;
+                            EditorNextFunction<CustomColor> nextFunction = (pl, color) -> {
+                                ItemStackWrapper.fromItem(item.getItem(), false).setColor(color.getBukkitColor());
+                                openItemMenu2(pl);
+                            };
+                            
+                            if(itemColor == null) {
+                                editor3.createNewItem(player, backFunction, nextFunction);
+                            } else {
+                                editor3.editExistingItem(new CustomColor(itemColor), player, backFunction, nextFunction);
+                            }
                         }
                     }
                 }
@@ -651,11 +676,12 @@ public class ItemMenu extends Editor<ItemReward>{
                                     p -> openItemMenu2(p), 
                                     (p, effectReward) -> {
                                         PotionEffect potionEffect = new PotionEffect(
-                                                effectReward.getPotionEffect(), 
+                                                effectReward.getPotionEffect().getPotionEffectType(), 
                                                 effectReward.getDuration()*20, 
-                                                effectReward.getAmplifier());
-                                        ItemStackWrapper.fromItem(item.getItem(), false)
-                                                .addPotionEffect(potionEffect);
+                                                effectReward.getAmplifier(),
+                                                effectReward.isAmbient(),
+                                                effectReward.isShowParticles());
+                                        ItemStackWrapper.fromItem(item.getItem(), false).addPotionEffect(potionEffect);
                                         openItemMenu2(p);
                                     });
                             break;
@@ -689,11 +715,12 @@ public class ItemMenu extends Editor<ItemReward>{
                 break;
             case REMOVE_SPECIAL_DATA_SLOT:
                 //Delete special item meta
-                if(e.getCurrentItem() != null){
+                if(e.getCurrentItem() != null) {
+                    XMaterial material = XMaterial.matchXMaterial(item.getItem().getType());
                     if(TextureManager.isSkull(item.getItem().getType())){
                         TextureManager.setTexture(item.getItem(), null);
                         openItemMenu2(player);
-                    }else switch(XMaterial.matchXMaterial(item.getItem().getType())){
+                    } else switch(material) {
                         case ENCHANTED_BOOK:
                             // Remove all book enchantments
                             ItemStackWrapper.fromItem(item.getItem(), false)
@@ -703,22 +730,27 @@ public class ItemMenu extends Editor<ItemReward>{
                         case POTION:
                         case SPLASH_POTION:
                         case LINGERING_POTION:
+                        case TIPPED_ARROW:
+                        case SUSPICIOUS_STEW:
                             //Remove all effects
                             ItemStackWrapper.fromItem(item.getItem(), false)
-                                    .clearPotionEffects();
+                                            .clearPotionEffects();
                             
-                            if(MinecraftVersion.CURRENT_VERSION.is_1_8()){
-                                Potion potion = Potion.fromItemStack(item.getItem());
-                                potion.setType(PotionType.WATER);
-                                potion.apply(item.getItem());
-                            }else{
-                                PotionMeta potionMeta = (PotionMeta) item.getItem().getItemMeta();
-                                potionMeta.setBasePotionData(new PotionData(PotionType.WATER));
-                                item.getItem().setItemMeta(potionMeta);
+                            if(material.name().contains("POTION")) {
+                                if(MinecraftVersion.CURRENT_VERSION.is_1_8()){
+                                    Potion potion = Potion.fromItemStack(item.getItem());
+                                    potion.setType(PotionType.WATER);
+                                    potion.apply(item.getItem());
+                                }else{
+                                    PotionMeta potionMeta = (PotionMeta) item.getItem().getItemMeta();
+                                    potionMeta.setBasePotionData(new PotionData(PotionType.WATER));
+                                    item.getItem().setItemMeta(potionMeta);
+                                }
+
+                                //Reset potion type to normal
+                                PotionSplashType.clearPotionSplashType(item.getItem());
                             }
-                                                        
-                            //Reset potion type to normal
-                            PotionSplashType.clearPotionSplashType(item.getItem());
+                            
                             openItemMenu2(player);
                             break;
                         case LEATHER_HELMET:

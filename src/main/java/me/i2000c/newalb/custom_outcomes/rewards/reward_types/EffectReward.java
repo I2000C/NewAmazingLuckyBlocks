@@ -1,6 +1,7 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
 import lombok.Getter;
 import lombok.Setter;
 import me.i2000c.newalb.config.Config;
@@ -16,14 +17,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 @Getter
 @Setter
 public class EffectReward extends Reward{
     public static final String CLEAR_EFFECTS_TAG = "CLEAR_EFFECTS";
     
-    private PotionEffectType potionEffect;
+    private XPotion potionEffect;
     private int duration;
     private int amplifier;
     private boolean ambient;
@@ -47,7 +47,7 @@ public class EffectReward extends Reward{
         if(this.clearEffects){
             builder.addLoreLine("&dEffect name: &b" + CLEAR_EFFECTS_TAG);
         }else{
-            builder.addLoreLine("&dEffect name: &b" + this.potionEffect.getName());
+            builder.addLoreLine("&dEffect name: &b" + this.potionEffect.name());
             if(duration >= 0){
                 builder.addLoreLine("&dDuration: &b" + duration + " &dseconds");
             }else{
@@ -70,7 +70,7 @@ public class EffectReward extends Reward{
             config.set(path + ".ambient", null);
             config.set(path + ".showParticles", null);
         }else{
-            config.set(path + ".effectName", this.potionEffect.getName());
+            config.set(path + ".effectName", this.potionEffect.name());
             config.set(path + ".duration", this.duration);
             config.set(path + ".amplifier", this.amplifier);
             config.set(path + ".ambient", this.ambient);
@@ -90,7 +90,11 @@ public class EffectReward extends Reward{
             this.showParticles = true;
         }else{
             this.clearEffects = false;
-            this.potionEffect = PotionEffectType.getByName(effectName);
+            XPotion potionEffectType = XPotion.matchXPotion(effectName).orElse(null);
+            if(potionEffectType == null || !potionEffectType.isSupported()) {
+                throw new IllegalArgumentException("Invalid potion effect type: \"" + effectName + "\"");
+            }
+            this.potionEffect = potionEffectType;
             this.duration = config.getInt(path + ".duration");
             this.amplifier = config.getInt(path + ".amplifier");
             this.ambient = config.getBoolean(path + ".ambient");
@@ -108,7 +112,7 @@ public class EffectReward extends Reward{
                 durationAux = Integer.MAX_VALUE;
             }
 
-            player.addPotionEffect(new PotionEffect(potionEffect, durationAux, amplifier, ambient, showParticles), true);
+            player.addPotionEffect(new PotionEffect(potionEffect.getPotionEffectType(), durationAux, amplifier, ambient, showParticles), true);
         }            
     }
     

@@ -262,7 +262,7 @@ public class TypeManager{
         }
         
         Iterator<Recipe> iter = Bukkit.recipeIterator();
-        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+        if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_12)) {
             while(iter.hasNext()){
                 Recipe recipe = iter.next();
                 if(recipe.getResult().equals(typeRecipe.getResult())){
@@ -271,16 +271,23 @@ public class TypeManager{
                 }
             }
         } else if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_15)) {
-            while(iter.hasNext()){
+            // Since Minecraft 1.12 recipe iterator is inmutable
+            // https://www.spigotmc.org/threads/problem-remove-recipe.242988/#post-2461728            
+            List<Recipe> backup = new ArrayList<>();
+            while(iter.hasNext()) {
                 Recipe recipe = iter.next();
-                if(recipe instanceof ShapedRecipe){
+                if(recipe instanceof ShapedRecipe) {
                     ShapedRecipe sr = (ShapedRecipe) recipe;
                     if(sr.getKey().equals(typeRecipe.getKey())){
-                        iter.remove();
                         break;
                     }
                 }
+                
+                backup.add(recipe);
             }
+            
+            Bukkit.getServer().clearRecipes();
+            backup.forEach(Bukkit::addRecipe);
         } else {
             // In Minecraft 1.15 the method org.bukkit.Bukkit.removeRecipe(NamespacedKey key) was added.
             // Source: https://helpch.at/docs/1.15.2/org/bukkit/Bukkit.html

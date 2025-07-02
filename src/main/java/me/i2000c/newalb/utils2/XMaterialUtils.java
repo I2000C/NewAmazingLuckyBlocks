@@ -11,6 +11,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
@@ -60,11 +62,28 @@ public class XMaterialUtils {
     }
     
     public static XMaterial getXMaterial(Block block) {
-        XMaterial material = XMaterial.matchXMaterial(block.getType());
+        XMaterial material;
+        try {
+            material = XMaterial.matchXMaterial(block.getType());
+        } catch(IllegalArgumentException ex) {
+            // Block is not present in XMaterial list.
+            // It could be an externally added block in a Minecraft mod
+            return XMaterial.AIR;
+        }
         
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             ItemStack stack = new ItemStack(block.getType());
-            stack.setDurability(block.getData());
+            BlockState state = block.getState();
+            
+            short durability;
+            if(state instanceof Skull) {
+                Skull skull = (Skull) state;
+                durability = (short) skull.getSkullType().ordinal();
+            } else {
+                durability = block.getData();
+            }
+            
+            stack.setDurability(durability);
             try {
                 material = XMaterial.matchXMaterial(stack);
             } catch(IllegalArgumentException ex) { }

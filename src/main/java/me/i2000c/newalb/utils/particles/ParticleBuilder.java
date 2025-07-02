@@ -1,77 +1,106 @@
 package me.i2000c.newalb.utils.particles;
 
-import com.github.fierioziy.particlenativeapi.api.packet.ParticlePacket;
-import com.github.fierioziy.particlenativeapi.api.particle.type.ParticleType;
-import java.util.Arrays;
-import java.util.List;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import lombok.experimental.Tolerate;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
+import com.cryptomorin.xseries.XMaterial;
+import me.i2000c.newalb.utils.particles.data.ColoredParticleData;
+import me.i2000c.newalb.utils.particles.data.MaterialParticleData;
+import me.i2000c.newalb.utils.particles.data.NoteParticleData;
+import me.i2000c.newalb.utils.particles.data.ParticleData;
+import me.i2000c.newalb.utils2.CustomColor;
+import me.i2000c.newalb.utils2.RandomUtils;
+import org.bukkit.Color;
+import org.bukkit.inventory.ItemStack;
 
-@Accessors(chain = true)
-@Getter
-@Setter
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ParticleBuilder {
-    protected static final double PARTICLE_PACKET_RADIUS = 100.0;
     
-    @Getter(AccessLevel.NONE)
-    protected final Object particleType;
+    private final Particles particleType;
+    private final Particle particle;
     
-    protected Location position;
-    protected Vector offset = new Vector(1, 1, 1);
-    protected double speed = 1.0;    
-    protected int count = 10;
-    protected int repeatAmount = 1;
-    
-    @Tolerate public ParticleBuilder setPosition(World w, double x, double y, double z) {
-        return this.setPosition(new Location(w, x, y, z));
+    public ParticleBuilder(Particles particleType) {
+        this.particleType = particleType;
+        this.particle = new Particle(particleType);
     }
     
-    @Tolerate public ParticleBuilder setOffset(double x, double y, double z) {
-        return this.setOffset(new Vector(x, y, z));
+    public ParticleBuilder withOffsetX(double offsetX) {
+        this.particle.setOffsetX(offsetX);
+        return this;
+    }
+    public ParticleBuilder withOffsetY(double offsetY) {
+        this.particle.setOffsetY(offsetY);
+        return this;
+    }
+    public ParticleBuilder withOffsetZ(double offsetZ) {
+        this.particle.setOffsetZ(offsetZ);
+        return this;
+    }
+    public ParticleBuilder withOffset(double offsetX, double offsetY, double offsetZ) {
+        this.particle.setOffsetX(offsetX);
+        this.particle.setOffsetY(offsetX);
+        this.particle.setOffsetZ(offsetX);
+        return this;
     }
     
-    protected ParticlePacket generatePacket() {
-        ParticleType type = (ParticleType) particleType;
-        return type.packet(true, position, offset.getX(), offset.getY(), offset.getZ(), speed, count);
+    public ParticleBuilder withCount(int count) {
+        this.particle.setCount(count);
+        return this;
     }
     
-    protected ParticlePacket generatePacketMotion() {
-        throw new IllegalArgumentException("This particle doesn't support display motion");
+    public ParticleBuilder withSpeed(double speed) {
+        this.particle.setSpeed(speed);
+        return this;
     }
     
-    
-    
-    
-    private List<Player> getActualPlayers(Player... players) {
-        List<Player> targetPlayers;
-        if(players == null || players.length == 0) {
-            targetPlayers = position.getWorld().getPlayers();
-        } else {
-            targetPlayers = Arrays.asList(players);
+    public ParticleBuilder withDirectional() {
+        if(this.particleType.getProperties().contains(ParticleProperty.DIRECTIONAL)) {
+            this.particle.setCount(0);
         }
-        return targetPlayers;
+        return this;
     }
     
-    public final void display(Player... players) {
-        ParticlePacket packet = generatePacket();
-        for(int i=0; i<repeatAmount; i++) {
-            packet.sendInRadiusTo(getActualPlayers(players), PARTICLE_PACKET_RADIUS);
-        }
+    public ParticleBuilder withColor(int r, int g, int b) {
+        if(this.particleType.getProperties().contains(ParticleProperty.COLORABLE)) {
+            ParticleData data = new ColoredParticleData(r, g, b);
+            this.particle.setData(data);
+        }        
+        return this;
+    }
+    public ParticleBuilder withColor(CustomColor color) {
+        Color bukkitColor = color.getBukkitColor();
+        return this.withColor(bukkitColor.getRed(), bukkitColor.getGreen(), bukkitColor.getBlue());
+    }
+    public ParticleBuilder withRandomColor() {
+        return this.withColor(new CustomColor());
     }
     
-    public final void displayMotion(Player... players) {
-        ParticlePacket packet = generatePacketMotion();
-        for(int i=0; i<repeatAmount; i++) {
-            packet.sendInRadiusTo(getActualPlayers(players), PARTICLE_PACKET_RADIUS);
+    public ParticleBuilder withNoteColor(int note) {
+        if(this.particleType.getProperties().contains(ParticleProperty.NOTE_COLORABLE)) {
+            ParticleData data = new NoteParticleData(note);
+            this.particle.setData(data);
+            this.particle.setCount(1);
         }
+        return this;
+    }
+    public ParticleBuilder withRandomNoteColor() {
+        int randomNote = RandomUtils.getInt(0, 24);
+        return this.withNoteColor(randomNote);
+    }
+    
+    public ParticleBuilder withItemTexture(ItemStack item) {
+        ParticleData data = null;
+        if(item != null) {
+            if(this.particleType.getProperties().contains(ParticleProperty.REQUIRES_ITEM)) {
+                data = new MaterialParticleData(item, false);
+            } else if(this.particleType.getProperties().contains(ParticleProperty.REQUIRES_BLOCK) && item.getType().isBlock()) {
+                data = new MaterialParticleData(item, true);
+            }
+        }
+        this.particle.setData(data);        
+        return this;
+    }
+    public ParticleBuilder withItemTexture(XMaterial material) {
+        return withItemTexture(material.parseItem());
+    }
+    
+    public Particle build() {
+        return this.particle.clone();
     }
 }

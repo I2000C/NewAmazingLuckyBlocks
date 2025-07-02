@@ -1,20 +1,11 @@
 package me.i2000c.newalb.custom_outcomes.rewards.reward_types;
 
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
+import com.cryptomorin.xseries.XSound;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Squid;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +17,13 @@ import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.particles.Particles;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Task;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Squid;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 @Getter
 @Setter
@@ -34,7 +32,7 @@ public class SquidExplosionReward extends Reward{
     private int radius;
     
     @Setter(AccessLevel.NONE)
-    private List<String> effects;
+    private List<PotionEffect> effects;
     
     public SquidExplosionReward(Outcome outcome){
         super(outcome);
@@ -51,7 +49,13 @@ public class SquidExplosionReward extends Reward{
         builder.addLoreLine("&3Radius: &d" + radius);
         builder.addLoreLine("&3Effects:");
         effects.forEach(effect -> {
-            builder.addLoreLine("  &d" + effect);
+            String name = XPotion.matchXPotion(effect.getType()).name();
+            int duration = effect.getDuration();
+            int amplifier = effect.getAmplifier();
+            boolean isAmbient = effect.isAmbient();
+            boolean showParticles = effect.hasParticles();
+            builder.addLoreLine(String.format("  &d%s;%d;%d;%s;%s",
+                    name, duration, amplifier, isAmbient, showParticles));
         });
         return builder.toItemStack();
     }
@@ -60,30 +64,46 @@ public class SquidExplosionReward extends Reward{
     public void saveRewardIntoConfig(Config config, String path){
         config.set(path + ".countdownTime", countdownTime);
         config.set(path + ".radius", radius);
-        config.set(path + ".effects", effects);
+        
+        List<String> effectsStringList = new ArrayList<>();
+        effects.forEach(effect -> {
+            String name = XPotion.matchXPotion(effect.getType()).name();
+            int duration = effect.getDuration();
+            int amplifier = effect.getAmplifier();
+            boolean isAmbient = effect.isAmbient();
+            boolean showParticles = effect.hasParticles();
+            effectsStringList.add(String.format("%s;%d;%d;%s;%s",
+                    name, duration, amplifier, isAmbient, showParticles));
+        });
+        config.set(path + ".effects", effectsStringList);
     }
     
     @Override
     public void loadRewardFromConfig(Config config, String path){
         this.countdownTime = config.getInt(path + ".countdownTime");
         this.radius = config.getInt(path + ".radius");
-        this.effects = config.getStringList(path + ".effects");
+        
+        List<String> effectsStringList = config.getStringList(path + ".effects");
+        this.effects.clear();
+        effectsStringList.forEach(effectString -> {
+            String[] split = effectString.split(";");
+            PotionEffectType type = XPotion.matchXPotion(split[0]).get().getPotionEffectType();
+            int duration = Integer.parseInt(split[1]);
+            int amplifier = Integer.parseInt(split[2]);
+            boolean isAmbient = false, showParticles = true;
+            if(split.length == 5) {
+                isAmbient = Boolean.parseBoolean(split[3]);
+                showParticles = Boolean.parseBoolean(split[4]);
+            }
+            
+            PotionEffect effect = new PotionEffect(type, duration, amplifier, isAmbient, showParticles);
+            this.effects.add(effect);
+        });
     }
     
     @Override
     public void execute(Player player, Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        List<PotionEffect> potionEffectList = effects.stream()
-                .map(effectString -> {
-                    String[] splitted = effectString.split(";");
-                    PotionEffectType type = PotionEffectType.getByName(splitted[0]);
-                    int duration = Integer.parseInt(splitted[1])*20;
-                    int amplifier = Integer.parseInt(splitted[2]);
-                    
-                    return new PotionEffect(type, duration, amplifier, false, true);
-                })
-                .collect(Collectors.toList());
-        
         Squid squid = location.getWorld().spawn(location, Squid.class);
         squid.setCustomNameVisible(true);
         
@@ -97,24 +117,34 @@ public class SquidExplosionReward extends Reward{
                     return;
                 }
                 
+                Location loc = squid.getLocation();
                 if(time <= 0){
+                    List<PotionEffect> effectiveEffects = effects.stream().map(effect -> {
+                        PotionEffectType name = effect.getType();
+                        int durationTicks = effect.getDuration()*20;
+                        int amplifier = effect.getAmplifier();
+                        boolean isAmbient = effect.isAmbient();
+                        boolean showParticles = effect.hasParticles();
+                        
+                        PotionEffect effectiveEffect = new PotionEffect(name, durationTicks, amplifier, isAmbient, showParticles);
+                        return effectiveEffect;
+                    }).collect(Collectors.toList());
+                    
                     cancel();
-                    Location loc = squid.getLocation();
                     squid.getNearbyEntities(radius, radius, radius)
                             .forEach(entity -> {
                                 if(entity instanceof LivingEntity){
                                     LivingEntity le = (LivingEntity) entity;
-                                    potionEffectList.forEach(potionEffect -> {
-                                        le.addPotionEffect(potionEffect, true);
-                                    });                                    
+                                    effectiveEffects.forEach(effect -> le.addPotionEffect(effect, true));
                                 }
                             });
                     squid.remove();
                     XSound.ENTITY_GENERIC_EXPLODE.play(loc, 5, 1);
-                    Particles.EXPLOSION_HUGE.create().setPosition(loc).display();
+                    Particles.EXPLOSION_HUGE.create().build().displayAt(loc);                    
                     return;
                 }
                 
+                XSound.ENTITY_PLAYER_HURT.play(loc, 5, 0.5f);
                 squid.setCustomName(Logger.color("&6&l" + time));
                 squid.damage(0);
                 time--;

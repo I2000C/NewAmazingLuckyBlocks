@@ -33,6 +33,37 @@ public abstract class Task implements Runnable{
         Bukkit.getScheduler().cancelTask(taskID);
     }
     
+    public static Task runRepeatingTask(Runnable runnable, long preTicks, long periodTicks, int times) {
+        return runRepeatingTask(runnable, preTicks, periodTicks, times, false);
+    }
+    public static Task runRepeatingTaskAsync(Runnable runnable, long preTicks, long periodTicks, int times) {
+        return runRepeatingTask(runnable, preTicks, periodTicks, times, true);
+    }
+    public static Task runRepeatingTask(Runnable runnable, long preTicks, long periodTicks, int times, boolean isAsync) {
+        Task task = new Task() {
+            int i = 0;
+            
+            @Override
+            public void run() {
+                if(i < times) {
+                    runnable.run();
+                } else {
+                    cancel();
+                }
+                
+                i++;
+            }
+        };
+        
+        if(isAsync) {
+            task.runTaskAsynchronously(preTicks, periodTicks);
+        } else {
+            task.runTask(preTicks, periodTicks);
+        }
+        
+        return task;
+    }
+    
     
     //Non-static behaviour
     private static final int INVALID_TASKID = -1;
@@ -69,12 +100,28 @@ public abstract class Task implements Runnable{
         taskID = Task.runTaskAsynchronously(this, delay);
     }
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public synchronized void runTask(long delay, long period){
-        taskID = Task.runTask(this, delay, period);
+        taskID = Task.runTask(() -> {
+            try {
+                this.run();
+            } catch(Throwable ex) {
+                ex.printStackTrace();
+                this.cancel();
+            }
+        }, delay, period);
     }
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public synchronized void runTaskAsynchronously(long delay, long period){
-        taskID = Task.runTaskAsynchronously(this, delay, period);
+        taskID = Task.runTaskAsynchronously(() -> {
+            try {
+                this.run();
+            } catch(Throwable ex) {
+                ex.printStackTrace();
+                this.cancel();
+            }
+        }, delay, period);
     }
     
     public synchronized int getTaskId(){

@@ -28,6 +28,7 @@ import me.i2000c.newalb.custom_outcomes.menus.PackListMenu;
 import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
 import me.i2000c.newalb.custom_outcomes.menus.RewardTypesMenu;
 import me.i2000c.newalb.custom_outcomes.menus.SoundMenu;
+import me.i2000c.newalb.custom_outcomes.menus.SoundTypeMenu;
 import me.i2000c.newalb.custom_outcomes.menus.SquidExplosionMenu;
 import me.i2000c.newalb.custom_outcomes.menus.StructureMenu;
 import me.i2000c.newalb.custom_outcomes.menus.TeleportMenu;
@@ -62,7 +63,9 @@ public enum EditorType{
     ENTITY_REWARD(new EntityMenu()),
     ENTITY_TOWER_REWARD(new EntityTowerMenu()),
     FIREWORK_REWARD(new FireworkMenu()),
+    
     SOUND_REWARD(new SoundMenu()),
+    SOUND_TYPE(new SoundTypeMenu()),
     
     STRUCTURE_REWARD(new StructureMenu()),
     FILE_SELECTOR(new FilePicker()),
