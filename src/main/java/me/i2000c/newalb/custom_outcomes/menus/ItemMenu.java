@@ -73,6 +73,7 @@ public class ItemMenu extends Editor<ItemReward>{
     
     private static final int ITEM_FLAGS_SLOT = 47;
     private static final int ITEM_NBT_SLOT = 51;
+    private static final int ITEM_UNBREAKABLE_SLOT = 49;
     
     @Override
     protected void newItem(Player player){
@@ -416,7 +417,7 @@ public class ItemMenu extends Editor<ItemReward>{
         }
         builder.addLoreLine("");
         builder.addLoreLine("&3Click to reset");
-        ItemStack spawnInvSlotItem = builder.toItemStack();        
+        ItemStack spawnInvSlotItem = builder.toItemStack();
         
         ItemStack offsetStack = item.getOffset().getItemToDisplay();
         builder = ItemStackWrapper.fromItem(offsetStack, false);
@@ -451,6 +452,17 @@ public class ItemMenu extends Editor<ItemReward>{
         ItemStack itemNbtStack = ItemStackWrapper.newItem(XMaterial.WRITABLE_BOOK)
                                                  .setDisplayName("&6Modify NBT tags")
                                                  .toItemStack();
+        
+        if(item.getItem().getItemMeta().isUnbreakable()) {
+            builder = ItemStackWrapper.newItem(XMaterial.ANVIL);
+            builder.setDisplayName("&bUnbreakable item: &atrue");
+        } else {
+            builder = ItemStackWrapper.newItem(XMaterial.DAMAGED_ANVIL);
+            builder.setDisplayName("&bUnbreakable item: &cfalse");
+        }
+        builder.addLoreLine("");
+        builder.addLoreLine("&3Click to toggle");
+        ItemStack itemUnbreakableStack = builder.toItemStack();
         
         menu.setItem(BACK_SLOT, GUIItem.getBackItem());
         menu.setItem(NEXT_SLOT, GUIItem.getNextItem());
@@ -490,6 +502,7 @@ public class ItemMenu extends Editor<ItemReward>{
         
         menu.setItem(ITEM_FLAGS_SLOT, itemFlagsStack);
         menu.setItem(ITEM_NBT_SLOT, itemNbtStack);
+        menu.setItem(ITEM_UNBREAKABLE_SLOT, itemUnbreakableStack);
         
         menu.openToPlayer(player);
 //</editor-fold>
@@ -827,6 +840,11 @@ public class ItemMenu extends Editor<ItemReward>{
                                                player,
                                                this::openItemMenu2,
                                                (p, __) -> openItemMenu2(p));
+                break;
+            case ITEM_UNBREAKABLE_SLOT:
+                wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setUnbreakable(!wrapper.isUnbreakable());
+                openItemMenu2(player);
                 break;
         }
 //</editor-fold>
