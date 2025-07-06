@@ -105,6 +105,10 @@ public class XMaterialUtils {
     
     public static boolean isItem(@NonNull XMaterial material) {
         Material mat = material.parseMaterial();
+        if(mat == null) {
+            throw new IllegalArgumentException("Material " + material.name() + " is not supported in this version");
+        }
+        
         if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_12)) {
             return mat.isItem();
         } switch (mat) {

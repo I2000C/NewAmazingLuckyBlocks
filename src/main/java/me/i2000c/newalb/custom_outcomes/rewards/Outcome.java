@@ -216,7 +216,12 @@ public class Outcome implements Displayable, Executable, Cloneable{
         this.name = config.getString(path + ".outcome-name");
         this.probability = config.getInt(path + ".probability");
         String itemName = config.getString(path + ".icon", getDefaultIcon().getType().name());
-        this.icon = ItemStackWrapper.newItem(itemName).toItemStack();
+        try {
+            this.icon = ItemStackWrapper.newItem(itemName).toItemStack();
+        } catch(Throwable ex) {
+            Logger.err("There has been an error while loading outcome icon: " + path + ".icon" + " in pack " + pack.getPackname());
+            ex.printStackTrace();
+        }
         this.rewardList = new ArrayList<>();
         
         ConfigurationSection section = config.getConfigurationSection(path + ".rewards", null);
