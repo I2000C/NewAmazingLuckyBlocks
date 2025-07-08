@@ -24,7 +24,6 @@ public abstract class SpecialItem {
     protected final String itemPathKey;
     private final PlayerCooldown playerCooldown;
     
-    private final int id;
     private final String name;    
     private final boolean isWand;
     
@@ -32,7 +31,6 @@ public abstract class SpecialItem {
     
     public SpecialItem(){
         String className = this.getClass().getSimpleName();
-        id = SpecialItems.GLOBAL_ID++;
         name = className.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
         isWand = name.contains("wand");
         
@@ -44,10 +42,6 @@ public abstract class SpecialItem {
         
         int cooldownTime = ConfigManager.getMainConfig().getInt(itemPathKey + ".cooldown-time", -1);
         playerCooldown = new PlayerCooldown(cooldownTime);
-    }
-    
-    public final int getID() {
-        return this.id;
     }
     
     public final String getName() {
@@ -68,7 +62,7 @@ public abstract class SpecialItem {
         
         this.item = ItemStackWrapper.fromItem(buildItem())
                                     .setDisplayName(displayName)
-                                    .setNbtTag(ITEM_TAG, this.id)
+                                    .setNbtTag(ITEM_TAG, this.name)
                                     .setNbtTag(CUSTOM_MODEL_DATA_TAG, customModelData)
                                     .toItemStack();
         
