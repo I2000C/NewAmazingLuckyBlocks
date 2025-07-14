@@ -44,6 +44,7 @@ public class ItemStealer extends SpecialItem {
     private static final BlockFace[] BLOCK_FACES = BlockFace.values();
     
     private int numberOfItemsToSteal;
+    private int stealRadius;
     private double speedOfItems;
     private double minDistanceToStealer;
     private int minPickupSeconds;
@@ -92,6 +93,7 @@ public class ItemStealer extends SpecialItem {
     @Override
     public ItemStack buildItem() {
         numberOfItemsToSteal = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".number-of-items-to-steal");
+        stealRadius = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".steal-radius");
         speedOfItems = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".speed-of-items");
         minDistanceToStealer = ConfigManager.getMainConfig().getDouble(super.itemPathKey + ".min-distance-to-stealer");
         minPickupSeconds = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".min-pickup-seconds");
@@ -135,7 +137,7 @@ public class ItemStealer extends SpecialItem {
     }
     
     public boolean execute(Player player, Location loc) {
-        List<Item> items = loc.getWorld().getNearbyEntities(loc, 2, 2, 2)
+        List<Item> items = loc.getWorld().getNearbyEntities(loc, stealRadius, stealRadius, stealRadius)
                                          .stream()
                                          .filter(entity -> entity instanceof Item)
                                          .map(entity -> (Item) entity)

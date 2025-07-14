@@ -259,7 +259,10 @@ Objects:
   ItemStealer:
     # cooldown-time must be in seconds (Use 0 to disable it)
     cooldown-time: 5
+    # max number of items to steal in each attempt
     number-of-items-to-steal: 3
+    # radius around the fish hook to steal items
+    steal-radius: 2
     # speed that items will have when they fly to the stealer position
     speed-of-items: 0.5
     # distance to stealer to stop items from flying
