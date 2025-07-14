@@ -72,6 +72,14 @@ public class ItemStealer extends SpecialItem {
                     super.getPlayerCooldown().updateCooldown(player);
                 }
                 break;
+            default:
+                // In Minecraft 1.14 a new PlayerFishEvent.State was added: REEL_IN
+                // It is similar to FAILED_ATTEMPT or IN_GROUND
+                if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_14)) {
+                    if(!e.getState().name().equals("REEL_IN")) {
+                        break;
+                    }
+                }
             case FAILED_ATTEMPT:
             case IN_GROUND:
                 if(execute(player, location)) {
