@@ -151,7 +151,8 @@ public class SpecialEventListener implements Listener{
                 
                 CustomProjectileHitEvent event = new CustomProjectileHitEvent(e);
                 specialItem.onArrowHit(event);
-            } else {            
+                specialItem.onEntityDamaged(e);
+            } else {
                 if(!WorldGuardManager.canEntityDamage(damager, e.getEntity().getLocation())) {
                     e.setCancelled(true);
                     return;
