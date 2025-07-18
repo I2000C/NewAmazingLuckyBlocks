@@ -25,6 +25,7 @@ public class RandomBlocks {
     int radz;
     int blocks;
     boolean floating_blocks;
+    boolean avoid_near_water;
     boolean forceMode;
     private final NewAmazingLuckyBlocks plugin = NewAmazingLuckyBlocks.getInstance();
     private final Player player;
@@ -56,12 +57,13 @@ public class RandomBlocks {
         this.send_finish_message = true;
     }
     
-    public RandomBlocks(int radx, int rady, int radz, int blocks, boolean floating_blocks, Location targetLocation, boolean send_finish_message){
+    public RandomBlocks(int radx, int rady, int radz, int blocks, boolean floating_blocks, boolean avoid_near_water, Location targetLocation, boolean send_finish_message){
         this.radx = radx;
         this.rady = rady;
         this.radz = radz;
         this.blocks = blocks;
         this.floating_blocks = floating_blocks;
+        this.avoid_near_water = avoid_near_water;
         
         
         this.targetLocation = targetLocation;
@@ -72,7 +74,7 @@ public class RandomBlocks {
         this.isPlayer = false;
         this.sender = Bukkit.getConsoleSender();
     }
-    
+
     public void generatePackets(){
         if(player != null){
             targetLocation = player.getLocation();
@@ -301,20 +303,34 @@ public class RandomBlocks {
     }
     
     private void placeBlock(Block block){
-        if(!WorldManager.isEnabled(block.getWorld().getName())) {
-            return;
-        }
+        if(!WorldManager.isEnabled(block.getWorld().getName())) return;
         
-        if(!WorldGuardManager.canBuild(player, block.getLocation())) {
-            return;
-        }
+        if(!WorldGuardManager.canBuild(player, block.getLocation())) return;
+
+        if (avoid_near_water && isNextToWater(block)) return;
         
         TypeManager.getRandomLuckyBlockType().getItem().placeAt(block);
         blocks_placed++;
         LocationManager.registerLocation(block.getLocation());
     }
-    
-    
+
+    private boolean isNextToWater(Block block) {
+        Block[] neighbors = {
+            block.getRelative(0, 1, 0), // Above
+            block.getRelative(0, -1, 0), // Bellow
+            block.getRelative(1, 0, 0), // East
+            block.getRelative(-1, 0, 0), // West
+            block.getRelative(0, 0, 1), // South
+            block.getRelative(0, 0, -1), // North
+        };
+
+        for(Block neighbor : neighbors) {
+            if (neighbor.isLiquid()) return true;
+        }
+
+        return false;
+    }
+
     private List<Location> getValidLocations(int radx, int rady, int radz, Location center){
         List<Location> locations = new ArrayList();
         
