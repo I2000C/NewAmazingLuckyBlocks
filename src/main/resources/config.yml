@@ -402,3 +402,4 @@ GenerateRandomblocks-OnChunkCreated:
   floating-blocks: false
   send-finish-message: false
   maxTasks: 5
+  chance: 100
