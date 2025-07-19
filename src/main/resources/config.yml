@@ -400,7 +400,7 @@ GenerateRandomblocks-OnChunkCreated:
   radz: 8
   blocks: 5
   floating-blocks: false
-  avoid-near-water: false # Avoid block generation next to water (sponge becomes wet_sponge and won't work as a lucky block).
+  avoid-water: false # Avoid block generation next to water (sponge becomes wet_sponge and won't work as a lucky block).
   send-finish-message: false
   maxTasks: 5
   chance: 100

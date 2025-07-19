@@ -25,7 +25,7 @@ public class RandomBlocks {
     int radz;
     int blocks;
     boolean floating_blocks;
-    boolean avoid_near_water;
+    boolean avoid_water;
     boolean forceMode;
     private final NewAmazingLuckyBlocks plugin = NewAmazingLuckyBlocks.getInstance();
     private final Player player;
@@ -57,13 +57,13 @@ public class RandomBlocks {
         this.send_finish_message = true;
     }
     
-    public RandomBlocks(int radx, int rady, int radz, int blocks, boolean floating_blocks, boolean avoid_near_water, Location targetLocation, boolean send_finish_message){
+    public RandomBlocks(int radx, int rady, int radz, int blocks, boolean floating_blocks, boolean avoid_water, Location targetLocation, boolean send_finish_message){
         this.radx = radx;
         this.rady = rady;
         this.radz = radz;
         this.blocks = blocks;
         this.floating_blocks = floating_blocks;
-        this.avoid_near_water = avoid_near_water;
+        this.avoid_water = avoid_water;
         
         
         this.targetLocation = targetLocation;
@@ -307,7 +307,7 @@ public class RandomBlocks {
         
         if(!WorldGuardManager.canBuild(player, block.getLocation())) return;
 
-        if (avoid_near_water && isNextToWater(block)) return;
+        if (avoid_water && isNextToWater(block)) return;
         
         TypeManager.getRandomLuckyBlockType().getItem().placeAt(block);
         blocks_placed++;

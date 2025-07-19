@@ -22,7 +22,7 @@ public class ChunkEvent implements Listener{
                     int z = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");
                     int blocks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.blocks");
                     boolean floating_blocks = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.floating-blocks");
-                    boolean avoid_near_water = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.avoid-near-water");
+                    boolean avoid_water = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.avoid-water");
                     boolean send_finish_message = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.send-finish-message");
 
                     int maxTasks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.maxTasks");
@@ -33,7 +33,7 @@ public class ChunkEvent implements Listener{
                         }
                         Block b = e.getChunk().getBlock(8, 64, 8);
 
-                        RandomBlocks rb = new RandomBlocks(x, y, z, blocks, floating_blocks, avoid_near_water, b.getLocation(), send_finish_message);
+                        RandomBlocks rb = new RandomBlocks(x, y, z, blocks, floating_blocks, avoid_water, b.getLocation(), send_finish_message);
                         rb.generatePackets();
                     }
                 }
