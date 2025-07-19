@@ -48,6 +48,7 @@ public class RandomBlocks {
         this.radz = radz;
         this.blocks = blocks;
         this.floating_blocks = floating_blocks;
+        this.avoid_water = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.avoid-water");
         this.forceMode = forceMode;
         this.player = player;
         this.isPlayer = isPlayer;
@@ -63,7 +64,6 @@ public class RandomBlocks {
         this.blocks = blocks;
         this.floating_blocks = floating_blocks;
         this.avoid_water = avoid_water;
-        
         
         this.targetLocation = targetLocation;
         
