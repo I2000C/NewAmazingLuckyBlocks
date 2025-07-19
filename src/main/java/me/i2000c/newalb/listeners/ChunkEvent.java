@@ -15,24 +15,28 @@ public class ChunkEvent implements Listener{
     private void onChunkCreated(ChunkPopulateEvent e){
         if(ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.enable")){
             if(WorldManager.isEnabled(e.getWorld().getName())){
-                int x = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radx");
-                int y = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.rady");
-                int z = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");
-                int blocks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.blocks");
-                boolean floating_blocks = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.floating-blocks");
-                boolean send_finish_message = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.send-finish-message");
-                
-                int maxTasks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.maxTasks");
-                
-                if(RandomBlocks.numTasks < maxTasks){
-                    if(!e.getChunk().isLoaded()){
-                        e.getChunk().load(true);
+                double chance = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.chance") / 100.0;
+                if(Math.random() < chance) {
+                    int x = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radx");
+                    int y = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.rady");
+                    int z = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");
+                    int blocks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.blocks");
+                    boolean floating_blocks = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.floating-blocks");
+                    boolean avoid_water = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.avoid-water");
+                    boolean send_finish_message = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.send-finish-message");
+
+                    int maxTasks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.maxTasks");
+
+                    if(RandomBlocks.numTasks < maxTasks){
+                        if(!e.getChunk().isLoaded()){
+                            e.getChunk().load(true);
+                        }
+                        Block b = e.getChunk().getBlock(8, 64, 8);
+
+                        RandomBlocks rb = new RandomBlocks(x, y, z, blocks, floating_blocks, avoid_water, b.getLocation(), send_finish_message);
+                        rb.generatePackets();
                     }
-                    Block b = e.getChunk().getBlock(8, 64, 8);
-                    
-                    RandomBlocks rb = new RandomBlocks(x, y, z, blocks, floating_blocks, b.getLocation(), send_finish_message);
-                    rb.generatePackets();
-                }                
+                }
             }
         }
     }
