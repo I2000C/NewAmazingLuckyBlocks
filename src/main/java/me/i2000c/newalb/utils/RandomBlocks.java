@@ -30,7 +30,6 @@ public class RandomBlocks {
     private final NewAmazingLuckyBlocks plugin = NewAmazingLuckyBlocks.getInstance();
     private final Player player;
     Location targetLocation;
-    Block block;
     boolean isPlayer;
     CommandSender sender;
     
