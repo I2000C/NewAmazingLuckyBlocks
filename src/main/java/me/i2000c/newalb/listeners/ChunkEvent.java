@@ -8,6 +8,7 @@ import org.bukkit.event.world.ChunkPopulateEvent;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.utils.RandomBlocks;
 import me.i2000c.newalb.utils.WorldManager;
+import me.i2000c.newalb.utils2.RandomUtils;
 
 public class ChunkEvent implements Listener{
     
@@ -15,8 +16,8 @@ public class ChunkEvent implements Listener{
     private void onChunkCreated(ChunkPopulateEvent e){
         if(ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.enable")){
             if(WorldManager.isEnabled(e.getWorld().getName())){
-                double chance = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.chance") / 100.0;
-                if(Math.random() < chance) {
+                int chance = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.chance");
+                if(RandomUtils.getInt(100) < chance) {
                     int x = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radx");
                     int y = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.rady");
                     int z = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");
