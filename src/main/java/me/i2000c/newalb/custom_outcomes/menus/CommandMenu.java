@@ -51,7 +51,8 @@ public class CommandMenu extends Editor<CommandReward>{
         builder.addLoreLine("&7&a%x%&7, &a%y%, &a%z% &7if you want");
         builder.addLoreLine("&7  to use the player's coordinates");
         builder.addLoreLine("&7or &a%bx%&7, &a%by%, &a%bz% &7if you want");
-        builder.addLoreLine("&7  to use the LuckyBlock's coordinates");
+        builder.addLoreLine("&7  to use the LuckyBlock's coordinates.");
+        builder.addLoreLine("&7You can use &a%world% &7to get the player's world too");
         ItemStack cmd_item = builder.toItemStack();
                 
         if(item.isSendFromPlayer()){

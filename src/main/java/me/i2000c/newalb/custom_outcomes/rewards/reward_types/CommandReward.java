@@ -59,6 +59,7 @@ public class CommandReward extends Reward{
     
     @Override
     public void execute(Player player, Location location){
+        String world = player.getLocation().getWorld().getName();
         String x = String.valueOf(player.getLocation().getBlockX());
         String y = String.valueOf(player.getLocation().getBlockY());
         String z = String.valueOf(player.getLocation().getBlockZ());
@@ -68,7 +69,8 @@ public class CommandReward extends Reward{
         
         String command = this.command.replace("%player%", player.getName())
                                      .replace("%x%", x).replace("%y%", y).replace("%z%", z)
-                                     .replace("%bx%", bx).replace("%by%", by).replace("%bz%", bz);
+                                     .replace("%bx%", bx).replace("%by%", by).replace("%bz%", bz)
+                                     .replace("%world%", world);
         
         if(sendFromPlayer){
             Bukkit.dispatchCommand(player, command);
