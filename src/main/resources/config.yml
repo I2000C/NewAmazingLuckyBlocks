@@ -316,8 +316,8 @@ Update-checker: true
 # Enable or disable menu confirmation when using /alb menu
 Enable-openMenu-confirmation: true
 
-# Enable or disable percentaje when using /alb randomblocks
-Enable-randomBlocks-percentaje: true
+# Enable or disable percentage when using /alb randomblocks
+Enable-randomBlocks-percentage: true
 
 # Amount of random blocks that will be generated each tick
 RandomBlocks-PacketSize: 10
