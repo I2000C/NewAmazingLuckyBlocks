@@ -3,6 +3,7 @@ package me.i2000c.newalb.utils2;
 import com.cryptomorin.xseries.XBlock;
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
+import de.tr7zw.changeme.nbtapi.NBT;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -83,15 +84,20 @@ public class ItemStackWrapper {
     }
     
     public ItemStackWrapper setDurability(int durability) {
-        if(durability <= 0) {
-            item.setDurability((short) 0);
-        } else if(durability <= item.getType().getMaxDurability()) {
-            item.setDurability((short) durability);
-        } else if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
-            item.setDurability((short) durability);
-        } else {
-            item.setDurability(item.getType().getMaxDurability());
+        durability = OtherUtils.clamp(durability, 0, (int) item.getType().getMaxDurability());
+        item.setDurability((short) durability);
+        if(!MinecraftVersion.CURRENT_VERSION.isLegacyVersion() && durability == 0) {
+            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_5)) {
+                NBT.modifyComponents(item, nbt -> {
+                    nbt.removeKey("minecraft:damage");
+                });                
+            } else {
+                NBT.modify(item, nbt -> {
+                    nbt.removeKey("Damage");
+                });
+            }
         }
+        
         return this;
     }
     public short getDurability() {

@@ -568,13 +568,14 @@ public class ItemMenu extends Editor<ItemReward>{
                 break;
             case DURABILITY_SLOT:
                 //Reset durability
-                item.getItem().setDurability((short) 0);
+                ItemStackWrapper wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper.setDurability(0);
                 openItemMenu2(player);
                 break;
                 //<editor-fold defaultstate="collapsed" desc="Decrease durability slots">
             case DURABILITY_SLOT-1:
                 //Durability-1
-                ItemStackWrapper wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
+                wrapper = ItemStackWrapper.fromItem(item.getItem(), false);
                 wrapper.setDurability(wrapper.getDurability() - 1);
                 openItemMenu2(player);
                 break;
