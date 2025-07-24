@@ -326,6 +326,21 @@ RandomBlocks-PacketSize: 10
 # If you disable it, the plugin will load faster, but textures won't be checked
 CheckIfTexturesAreValid: false
 
+# Allow using unsafe enchants in anvils.
+# Note that this overrides the default enchantment behaviour in anvils.
+# If this option is enabled, the enchanted book in the second slot will override
+#   any present enchantments in the original item.
+# Besides, it will allow you to add invalid enchantments to items
+# Example (enabled option):
+#   IRON_SWORD + SHARPNESS I = IRON_SWORD with SHARPNESS I
+#   IRON_SWORD with SHARPNESS I + SHARPNESS I = IRON_SWORD with SHARPNESS I
+#   IRON_SWORD + SHARPNESS 200 = IRON_SWORD with SHARPNESS 200
+# Example (disabled option):
+#   IRON_SWORD + SHARPNESS I = IRON_SWORD with SHARPNESS I
+#   IRON_SWORD with SHARPNESS I + SHARPNESS I = IRON_SWORD with SHARPNESS II
+#   IRON_SWORD + SHARPNESS 200 = IRON_SWORD with SHARPNESS V
+AllowUnsafeAnvilEnchants: true
+
 # General LuckyBlock configurations
 LuckyBlock:
   # If debug mode is enabled, when a LuckyBlock is broken, its location, contents and other stuff

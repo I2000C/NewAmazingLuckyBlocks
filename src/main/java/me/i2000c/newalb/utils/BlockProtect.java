@@ -127,6 +127,11 @@ public class BlockProtect implements Listener{
     
     @EventHandler(ignoreCancelled = false, priority = EventPriority.HIGHEST)
     private void playerUseEnchantedBookInAnvil(InventoryClickEvent e) {
+        if(!ConfigManager.getMainConfig().getBoolean("AllowUnsafeAnvilEnchants")) {
+            return;
+        }
+        // This allows adding arbitrary enchantments to items in anvils
+        
         // https://bukkit.org/threads/inventory-anvil-events.142990/
         // https://bukkit.org/threads/1-8-open-an-anvil-inventory-not-much-code.328178/
         // https://www.google.com/search?q=set+custom+items+in+anvil+inventory+spigot+nms&rlz=1C1CHWL_esES900ES900&ei=Sva_Y8HmHIn9kwX3mLPwAw&ved=0ahUKEwjBs-fe_cH8AhWJ_qQKHXfMDD4Q4dUDCA8&uact=5&oq=set+custom+items+in+anvil+inventory+spigot+nms&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQ6CAgAEKIEELADOgUIIRCgAUoECEEYAUoFCEASATFKBAhGGABQzglY2xRgzxVoAXAAeACAAfYBiAHFBpIBBTEuNC4xmAEAoAEByAEFwAEB&sclient=gws-wiz-serp
