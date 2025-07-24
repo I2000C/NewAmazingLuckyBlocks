@@ -348,6 +348,10 @@ LuckyBlock:
   DebugMode: false
   # If this option is enabled, LuckyBlocks will be protected against liquids and explosions
   EnableEnvironmentProtection: true
+  # Wether to save or not LuckyBlock locations.
+  # You can disable if you have lots of LuckyBlocks in your server to prevent lag
+  #   when saving them, but you won't be able to remove them using the /alb clear command
+  SaveLocations: true
   DropOnBlockBreak:
     # If enabled, when you break a block (not LuckyBlock),
     #   there is a probability that it dropped a LuckyBlock

@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -24,6 +25,10 @@ public class LocationManager {
     
     public static void loadLocations(){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(!ConfigManager.getMainConfig().getBoolean("LuckyBlock.SaveLocations")) {
+            return;
+        }
+        
         config.loadConfig(CONFIG_FILENAME);
 
         locations.clear();
@@ -39,6 +44,10 @@ public class LocationManager {
     
     public static void saveLocations(){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(!ConfigManager.getMainConfig().getBoolean("LuckyBlock.SaveLocations")) {
+            return;
+        }
+        
         config.clearConfig();
         
         int i = 0;
@@ -53,12 +62,20 @@ public class LocationManager {
     
     public static void registerLocation(Location location){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(!ConfigManager.getMainConfig().getBoolean("LuckyBlock.SaveLocations")) {
+            return;
+        }
+        
         locations.add(location);
 //</editor-fold>
     }
     
     public static void removeLocations(){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(!ConfigManager.getMainConfig().getBoolean("LuckyBlock.SaveLocations")) {
+            return;
+        }
+        
         for(Iterator<Location> iter = locations.iterator(); iter.hasNext();){
             Location next = iter.next();
             if(TypeManager.getType(next.getBlock()) != null){
@@ -71,6 +88,10 @@ public class LocationManager {
     
     public static void removeLocations(World world){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(!ConfigManager.getMainConfig().getBoolean("LuckyBlock.SaveLocations")) {
+            return;
+        }
+        
         for(Iterator<Location> iter = locations.iterator(); iter.hasNext();){
             Location next = iter.next();
             if(next.getWorld().equals(world)){
