@@ -29,9 +29,9 @@ repositories{
 }
 
 dependencies{
-    implementation 'de.tr7zw:item-nbt-api:2.15.1'
-    compileOnly 'de.tr7zw:item-nbt-api:2.15.1:javadoc'
-    compileOnly 'de.tr7zw:item-nbt-api:2.15.1:sources'
+    implementation 'de.tr7zw:item-nbt-api:2.15.2-SNAPSHOT'
+    compileOnly 'de.tr7zw:item-nbt-api:2.15.2-SNAPSHOT:javadoc'
+    compileOnly 'de.tr7zw:item-nbt-api:2.15.2-SNAPSHOT:sources'
     implementation 'com.github.cryptomorin:XSeries:13.3.3'
     compileOnly 'com.github.cryptomorin:XSeries:13.3.3:javadoc'
     compileOnly 'com.github.cryptomorin:XSeries:13.3.3:sources'
