@@ -112,12 +112,12 @@ public class RandomBlocks {
                 @Override
                 public void run(){
 
-                    if(ConfigManager.getMainConfig().getBoolean("Enable-randomBlocks-percentaje")){
+                    if(ConfigManager.getMainConfig().getBoolean("Enable-randomBlocks-percentage")){
                         try{
-                            String percentaje = getProgressBar((totalBlocks-restBlocks), totalBlocks, 40, '|', ChatColor.GREEN, ChatColor.GRAY);
+                            String percentage = getProgressBar((totalBlocks-restBlocks), totalBlocks, 40, '|', ChatColor.GREEN, ChatColor.GRAY);
 
-                            int percentajeValue = (totalBlocks-restBlocks)*100/totalBlocks;
-                            String message = percentaje + " " + percentajeValue + "%";
+                            int percentageValue = (totalBlocks-restBlocks)*100/totalBlocks;
+                            String message = percentage + " " + percentageValue + "%";
                             
                             ActionBar.sendActionBar(Bukkit.getPlayer(playerName), Logger.color(message));
                         }catch(Exception ex){
@@ -162,12 +162,12 @@ public class RandomBlocks {
                 @Override
                 public void run(){
 
-                    if(ConfigManager.getMainConfig().getBoolean("Enable-randomBlocks-percentaje")){
+                    if(ConfigManager.getMainConfig().getBoolean("Enable-randomBlocks-percentage")){
                         try{
-                            String percentaje = getProgressBar((totalBlocks-restBlocks), totalBlocks, 40, '|', ChatColor.GREEN, ChatColor.GRAY);
+                            String percentage = getProgressBar((totalBlocks-restBlocks), totalBlocks, 40, '|', ChatColor.GREEN, ChatColor.GRAY);
 
-                            int percentajeValue = (totalBlocks-restBlocks)*100/totalBlocks;
-                            String message = percentaje + " " + percentajeValue + "%";
+                            int percentageValue = (totalBlocks-restBlocks)*100/totalBlocks;
+                            String message = percentage + " " + percentageValue + "%";
                             
                             ActionBar.sendActionBar(Bukkit.getPlayer(playerName), Logger.color(message));
                         }catch(Exception ex){
