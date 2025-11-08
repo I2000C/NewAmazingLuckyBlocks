@@ -2,6 +2,7 @@ package me.i2000c.newalb.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -120,12 +121,12 @@ public class Logger{
     // Titles
     public static void sendTitle(Object titleObject, Object subtitleObject, Player player){
         //<editor-fold defaultstate="collapsed" desc="Code">
-        String title = titleObject.toString();
+        String title = Objects.toString(titleObject);
         if(title.isEmpty()){
             title = "&o";
         }
         
-        String subtitle = subtitleObject.toString();
+        String subtitle = Objects.toString(subtitleObject);
         if(subtitle.isEmpty()){
             subtitle = "&o";
         }
@@ -185,9 +186,9 @@ public class Logger{
         //<editor-fold defaultstate="collapsed" desc="Code">
         String prefix = withPrefix ? pluginPrefix + " " : "";
         if(coloredLogger || sender instanceof Player){
-            sender.sendMessage(Logger.color(prefix + object.toString()));
+            sender.sendMessage(Logger.color(prefix + object));
         }else{
-            sender.sendMessage(ChatColor.stripColor(Logger.color(prefix + object.toString())));
+            sender.sendMessage(ChatColor.stripColor(Logger.color(prefix + object)));
         }
 //</editor-fold>
     }    
