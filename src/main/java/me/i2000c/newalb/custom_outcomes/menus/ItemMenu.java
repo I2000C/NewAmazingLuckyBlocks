@@ -453,7 +453,7 @@ public class ItemMenu extends Editor<ItemReward>{
                                                  .setDisplayName("&6Modify NBT tags")
                                                  .toItemStack();
         
-        if(item.getItem().getItemMeta().isUnbreakable()) {
+        if(ItemStackWrapper.fromItem(item.getItem(), false).isUnbreakable()) {
             builder = ItemStackWrapper.newItem(XMaterial.ANVIL);
             builder.setDisplayName("&bUnbreakable item: &atrue");
         } else {
