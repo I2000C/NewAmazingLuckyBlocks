@@ -80,15 +80,20 @@ public class SoundReward extends Reward {
         XSound sound;
         Optional<XSound> soundOpt = XSound.matchXSound(soundName);
         if(!soundOpt.isPresent()) {
-            Logger.warn("Sound '" + soundName + "' is not supported in this version. It will be replaced with entity.player.small_fall");
+            Logger.warn("Sound '" + soundName + "' is not present in this version. It will be replaced with entity.player.small_fall");
             sound = XSound.ENTITY_PLAYER_SMALL_FALL;
         } else {
             sound = soundOpt.get();
         }
         
         if(!sound.isSupported()) {
-            Logger.warn("Sound '" + sound.name() + "' is not supported in this version. It will be replaced with entity.player.small_fall");
-            sound = XSound.ENTITY_PLAYER_SMALL_FALL;
+        	if(sound == XSound.ENTITY_WOLF_HOWL) {
+        		// In Minecraft 1.21.5 (snapshot 25w08a) the sound entity.wolf.howl was removed
+        		sound = XSound.ENTITY_WOLF_AMBIENT;
+        	} else {
+        		Logger.warn("Sound '" + sound.name() + "' is not supported in this version. It will be replaced with entity.player.small_fall");
+        		sound = XSound.ENTITY_PLAYER_SMALL_FALL;
+        	}
         }
 
         this.type = sound;
