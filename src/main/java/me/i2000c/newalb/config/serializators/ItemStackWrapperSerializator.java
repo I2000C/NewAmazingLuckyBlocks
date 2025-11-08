@@ -202,17 +202,18 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
                 }
         }
         
-        PotionSplashType type = PotionSplashType.getFromPotion(value.toItemStack());
-        if(type != null) {
+        PotionSplashType potionSplashType = PotionSplashType.getFromPotion(value.toItemStack());
+        if(potionSplashType != null) {
             if(config.existsPath(path + ".potionSplashType")) {
-                type = config.getEnum(path + ".potionSplashType", PotionSplashType.class);
-                type.setToPotion(value.toItemStack());
+            	potionSplashType = config.getEnum(path + ".potionSplashType", PotionSplashType.class);
+            	potionSplashType.setToPotion(value.toItemStack());
             }
+            
             if(config.existsPath(path + ".potionEffects")) {
                 List<String> potionEffects = config.getStringList(path + ".potionEffects");
                 potionEffects.forEach(string -> {
                     String[] splitted = string.split(";");
-                    String name = splitted[0];
+                    PotionEffectType type = XPotion.matchXPotion(splitted[0]).get().getPotionEffectType();
                     int duration = Integer.parseInt(splitted[1]) * 20;
                     int amplifier = Integer.parseInt(splitted[2]);
                     
@@ -223,7 +224,7 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
                         amplifier = 0;
                     }
                     
-                    value.addPotionEffect(new PotionEffect(PotionEffectType.getByName(name), duration, amplifier));
+                    value.addPotionEffect(new PotionEffect(type, duration, amplifier));
                 });
             }
             if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_11)) {
