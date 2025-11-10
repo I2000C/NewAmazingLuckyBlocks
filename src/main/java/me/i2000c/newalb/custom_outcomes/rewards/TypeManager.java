@@ -1,6 +1,5 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,19 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.config.Config;
-import me.i2000c.newalb.config.ConfigManager;
-import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureManager;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.OtherUtils;
-import me.i2000c.newalb.utils2.RandomUtils;
-import me.i2000c.newalb.utils2.XMaterialUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,6 +16,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
+
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.reflection.ReflectionManager;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.textures.Texture;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils2.OtherUtils;
+import me.i2000c.newalb.utils2.RandomUtils;
+import me.i2000c.newalb.utils2.XMaterialUtils;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TypeManager{
@@ -138,7 +140,7 @@ public class TypeManager{
     }
     public static LuckyBlockType getType(Block block){
         XMaterial material = XMaterialUtils.getXMaterial(block);
-        Texture texture = TextureManager.getTexture(block);
+        Texture texture = Texture.of(block);
         TypeData data = new TypeData(material, texture);
         return luckyBlockTypesAux.get(data);
     }    

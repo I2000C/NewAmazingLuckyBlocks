@@ -1,11 +1,18 @@
 package me.i2000c.newalb.config.serializators;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XPotion;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.bukkit.Color;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,14 +20,9 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.custom_outcomes.rewards.reward_types.ItemReward.PotionSplashType;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils2.CustomColor;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
-import org.bukkit.Color;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemStackWrapperSerializator implements ConfigSerializerDeserializer<ItemStackWrapper> {
@@ -237,15 +239,8 @@ public class ItemStackWrapperSerializator implements ConfigSerializerDeserialize
         // Load texture ID
         if(config.existsPath(path + ".textureID")) {
             String textureID = config.getString(path + ".textureID");
-            try {
-                Texture texture = new Texture(textureID);
-                value.setTexture(texture);
-            } catch(InvalidTextureException ex) {
-                Logger.err("ItemStack at \"" + path + "\" contains an invalid HeadTexture");
-            } catch(Exception ex) {
-                Logger.err("An error  occurred while loading texture of ItemStack at \"" + path + "\":");
-                ex.printStackTrace();
-            }
+            Texture texture = Texture.of(textureID);
+            value.setTexture(texture);
         }
         
         // Load NBT tags

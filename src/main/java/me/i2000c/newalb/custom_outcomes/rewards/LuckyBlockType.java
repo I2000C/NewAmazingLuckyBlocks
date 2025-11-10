@@ -1,6 +1,5 @@
 package me.i2000c.newalb.custom_outcomes.rewards;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,6 +7,17 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+
+import com.cryptomorin.xseries.XMaterial;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,20 +29,9 @@ import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.TextureManager;
-import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.RandomUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 
 @Data
 @EqualsAndHashCode(of = "ID")
@@ -76,11 +75,14 @@ public class LuckyBlockType implements Displayable, Executable {
         wrapper.addLoreLine("&5Material: &a" + luckyBlockItem.getMaterial().name());
         
         Texture texture = wrapper.getTexture();
-        if(texture == null){
+        if(texture == null) {
            wrapper.addLoreLine("&5Texture: &cnull"); 
-        }else{
-            String textureString = texture.toString().substring(0, 8) + "...";
-            wrapper.addLoreLine("&5Texture: &b" + textureString);
+        } else {
+            String textureId = texture.getId();
+            if(textureId.length() > 8) {
+                textureId = textureId.substring(0, 8) + "...";
+            }
+            wrapper.addLoreLine("&5Texture: &b" + textureId);
         }
         
         String displayName = this.luckyBlockItem.getDisplayName();
@@ -194,18 +196,8 @@ public class LuckyBlockType implements Displayable, Executable {
         if(!validTexture && validMaterial) {
             type.luckyBlockItem = ItemStackWrapper.newItem(material);
         } else if(validTexture && !validMaterial) {
-            try {
-                Texture texture = new Texture(textureID);
-                type.luckyBlockItem = ItemStackWrapper.fromItem(TextureManager.getItemSkullStack())
-                                                      .setTexture(texture);
-            } catch(InvalidTextureException ex) {
-                Logger.err(String.format("Invalid texture for LuckyBlock type \"%s\"", type.typeName));
-                return null;
-            } catch(URLTextureException ex) {
-                Logger.err(String.format("An error occured while loading texture for LuckyBlock type \"%s\":", type.typeName));
-                Logger.err(ex);
-                return null;
-            } catch(TextureException ex) { }
+            Texture texture = Texture.of(textureID);
+            type.luckyBlockItem = ItemStackWrapper.fromItem(texture.createItem());
         } else {
             return null;
         }
@@ -317,7 +309,7 @@ public class LuckyBlockType implements Displayable, Executable {
         if(texture == null) {
             config.set("material", material);
         } else {
-            config.set("textureID", texture.toString());
+            config.set("textureID", texture.getId());
         }
         
         // Save crafting recipe

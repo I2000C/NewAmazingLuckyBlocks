@@ -1,9 +1,5 @@
 package me.i2000c.newalb.utils2;
 
-import com.cryptomorin.xseries.XBlock;
-import com.cryptomorin.xseries.XEnchantment;
-import com.cryptomorin.xseries.XMaterial;
-import de.tr7zw.changeme.nbtapi.NBT;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,15 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.TextureManager;
+
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -35,6 +23,19 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
+
+import com.cryptomorin.xseries.XBlock;
+import com.cryptomorin.xseries.XEnchantment;
+import com.cryptomorin.xseries.XMaterial;
+
+import de.tr7zw.changeme.nbtapi.NBT;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.reflection.ReflectionManager;
+import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.textures.Texture;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemStackWrapper {
@@ -336,34 +337,23 @@ public class ItemStackWrapper {
         return this;
     }
     public ItemStackWrapper setOwner(Player player) {
-        ItemMeta meta = item.getItemMeta();
-        if(meta instanceof SkullMeta) {
-            try {
-                ((SkullMeta) meta).setOwningPlayer(player);
-            } catch(NoSuchMethodError ex) {
-                ((SkullMeta) meta).setOwner(player.getName());
-            }
-            item.setItemMeta(meta);
-        }
-        return this;
+        return setTexture(Texture.of(player));
     }
     
     public ItemStackWrapper setTextureID(String textureID) {
-        try{
-            Texture texture = new Texture(textureID);
-            return setTexture(texture);
-        }catch(TextureException ex) {
-            Logger.err("An error occurred while setting texture of item:");
-            Logger.err(ex);
-            return this;
-        }
+        Texture texture = Texture.of(textureID);
+        return setTexture(texture);
     }
     public ItemStackWrapper setTexture(Texture texture) {
-        TextureManager.setTexture(item, texture);
+        if(texture != null) {
+            texture.apply(item);
+        } else {
+            Texture.DEFAULT_TEXTURE.apply(item);
+        }
         return this;
     }
     public Texture getTexture() {
-        return TextureManager.getTexture(item);
+        return Texture.of(item);
     }
     public boolean hasTexture() {
         return getTexture() != null;
@@ -512,7 +502,11 @@ public class ItemStackWrapper {
             block.setData((byte) item.getDurability());
         }
         Texture texture = getTexture();
-        TextureManager.setTexture(block, texture, true);
+        if(texture != null) {
+            texture.apply(block, true);
+        } else {
+            Texture.DEFAULT_TEXTURE.apply(block, false);
+        }
     }
     public void placeAt(Location loc) {
         placeAt(loc.getBlock());

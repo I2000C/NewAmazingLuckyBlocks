@@ -1,10 +1,17 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
-import com.cryptomorin.xseries.XMaterial;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.rewards.LuckyBlockType;
 import me.i2000c.newalb.custom_outcomes.rewards.OutcomePack;
@@ -19,12 +26,8 @@ import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.textures.TextureManager;
+import me.i2000c.newalb.utils.textures.Texture;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
     public LuckyBlockTypeMenu(){
@@ -201,7 +204,7 @@ public class LuckyBlockTypeMenu extends Editor<LuckyBlockType>{
                     if(e.getCursor() != null){
                         ItemStack cursor = e.getCursor();
                         if(cursor.getType() != Material.AIR && 
-                                (cursor.getType().isBlock() || TextureManager.isSkull(cursor.getType()))){
+                                (cursor.getType().isBlock() || Texture.isSkull(cursor))){
                             ItemStackWrapper wrapper = item.getItem();
                             String displayName = wrapper.getDisplayName();
                             List<String> lore = wrapper.getLore();

@@ -1,9 +1,23 @@
 package me.i2000c.newalb.custom_outcomes.menus;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XPotion;
 import java.util.List;
 import java.util.Set;
+
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionType;
+
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
+
 import me.i2000c.newalb.MinecraftVersion;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
@@ -24,23 +38,10 @@ import me.i2000c.newalb.listeners.inventories.InventoryLocation;
 import me.i2000c.newalb.listeners.inventories.Menu;
 import me.i2000c.newalb.utils.Logger;
 import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.TextureManager;
 import me.i2000c.newalb.utils2.CustomColor;
 import me.i2000c.newalb.utils2.EnchantmentWithLevel;
 import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.Offset;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionType;
 
 public class ItemMenu extends Editor<ItemReward>{
     public ItemMenu(){
@@ -243,7 +244,7 @@ public class ItemMenu extends Editor<ItemReward>{
         ItemStack setPotionColor = null;
         
         XMaterial material = XMaterial.matchXMaterial(item.getItem().getType());
-        if(TextureManager.isSkull(item.getItem().getType())) {
+        if(Texture.isSkull(item.getItem())) {
             //TextureMeta
             specialItem = ItemStackWrapper.newItem(XMaterial.PLAYER_HEAD)
                                           .setDisplayName("&5Click to set custom texture")
@@ -649,22 +650,16 @@ public class ItemMenu extends Editor<ItemReward>{
             case SPECIAL_ITEM_SLOT:
                 //Special item menu
                 if(e.getCurrentItem() != null){
-                    if(TextureManager.isSkull(e.getCurrentItem().getType())){
+                    if(Texture.isSkull(e.getCurrentItem())){
                         //Close menu
                         ChatListener.registerPlayer(player, message -> {
-                            try{
-                                if(message.equals("null")){
-                                    TextureManager.setTexture(item.getItem(), null);
-                                }else{
-                                    Texture texture = new Texture(message);
-                                    TextureManager.setTexture(item.getItem(), texture);
-                                }
-                                
-                                openItemMenu2(player);
-                            }catch(TextureException ex){
-                                Logger.sendMessage(ex, player);
-                                Logger.sendMessage("&bUse &7/alb return &bif you don't know any valid texture", player);
+                            if(message.equals("null")) {
+                                ItemStackWrapper.fromItem(item.getItem(), false).setTexture(null);
+                            }else{
+                                ItemStackWrapper.fromItem(item.getItem(), false).setTexture(Texture.of(message));
                             }
+                            
+                            openItemMenu2(player);
                         }, false);
                         player.closeInventory();
                         Logger.sendMessage("&3Enter the texture ID and press ENTER", player);
@@ -731,8 +726,8 @@ public class ItemMenu extends Editor<ItemReward>{
                 //Delete special item meta
                 if(e.getCurrentItem() != null) {
                     XMaterial material = XMaterial.matchXMaterial(item.getItem().getType());
-                    if(TextureManager.isSkull(item.getItem().getType())){
-                        TextureManager.setTexture(item.getItem(), null);
+                    if(Texture.isSkull(item.getItem())) {
+                        ItemStackWrapper.fromItem(item.getItem(), false).setTexture(null);
                         openItemMenu2(player);
                     } else switch(material) {
                         case ENCHANTED_BOOK:

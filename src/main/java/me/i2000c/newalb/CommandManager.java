@@ -6,6 +6,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.custom_outcomes.editor.Editor;
 import me.i2000c.newalb.custom_outcomes.editor.EditorType;
@@ -25,22 +34,11 @@ import me.i2000c.newalb.utils.RandomBlocks;
 import me.i2000c.newalb.utils.TrapManager;
 import me.i2000c.newalb.utils.WorldManager;
 import me.i2000c.newalb.utils.WorldMenu;
-import me.i2000c.newalb.utils.textures.InvalidTextureException;
 import me.i2000c.newalb.utils.textures.Texture;
-import me.i2000c.newalb.utils.textures.TextureException;
-import me.i2000c.newalb.utils.textures.TextureManager;
-import me.i2000c.newalb.utils.textures.URLTextureException;
 import me.i2000c.newalb.utils2.Equipment;
+import me.i2000c.newalb.utils2.ItemStackWrapper;
 import me.i2000c.newalb.utils2.OtherUtils;
 import me.i2000c.newalb.utils2.Schematic;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class CommandManager implements CommandExecutor, TabCompleter{
     private final NewAmazingLuckyBlocks plugin;
@@ -968,22 +966,12 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return false;
         }
         
-        try{
-            Texture texture = new Texture(args[1]);
-            ItemStack textureItem = TextureManager.getItemSkullStack();
-            TextureManager.setTexture(textureItem, texture);
-            ((Player) sender).getInventory().addItem(textureItem);
-            return true;
-        }catch(InvalidTextureException ex){
-            Logger.sendMessage("&cInvalid texture ID", sender);
-            return false;
-        }catch(URLTextureException ex){
-            Logger.sendMessage("&cAn error occured while loading texture:", sender);
-            Logger.sendMessage("    &4" + ex, sender);
-            return false;
-        }catch(TextureException ex){
-            return false;
-        }
+        Texture texture = Texture.of(args[1]);
+        ItemStack textureItem = ItemStackWrapper.fromItem(texture.createItem(), false)
+                                                .setDisplayName("Custom head")
+                                                .toItemStack();
+        ((Player) sender).getInventory().addItem(textureItem);
+        return true;
 //</editor-fold>
     }
     
