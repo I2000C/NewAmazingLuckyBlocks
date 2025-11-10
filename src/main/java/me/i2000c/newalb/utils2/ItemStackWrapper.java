@@ -84,17 +84,23 @@ public class ItemStackWrapper {
     }
     
     public ItemStackWrapper setDurability(int durability) {
-        durability = OtherUtils.clamp(durability, 0, (int) item.getType().getMaxDurability());
-        item.setDurability((short) durability);
-        if(!MinecraftVersion.CURRENT_VERSION.isLegacyVersion() && durability == 0) {
-            if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_5)) {
-                NBT.modifyComponents(item, nbt -> {
-                    nbt.removeKey("minecraft:damage");
-                });                
-            } else {
-                NBT.modify(item, nbt -> {
-                    nbt.removeKey("Damage");
-                });
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+            durability = OtherUtils.clamp(durability, 0, (int) Short.MAX_VALUE);
+            item.setDurability((short) durability);
+        } else {
+            durability = OtherUtils.clamp(durability, 0, (int) item.getType().getMaxDurability());
+            item.setDurability((short) durability);
+            
+            if(durability == 0) {
+                if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_5)) {
+                    NBT.modifyComponents(item, nbt -> {
+                        nbt.removeKey("minecraft:damage");
+                    });                
+                } else {
+                    NBT.modify(item, nbt -> {
+                        nbt.removeKey("Damage");
+                    });
+                }
             }
         }
         
