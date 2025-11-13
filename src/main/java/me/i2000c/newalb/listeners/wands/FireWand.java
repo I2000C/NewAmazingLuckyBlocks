@@ -1,13 +1,15 @@
 package me.i2000c.newalb.listeners.wands;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.i2000c.newalb.MinecraftVersion;
+
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.integration.WorldGuardManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.WorldGuardManager;
-import me.i2000c.newalb.utils2.XMaterialUtils;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.MetadataManager;
+import me.i2000c.newalb.utils.misc.XMaterialUtils;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.FallingBlock;

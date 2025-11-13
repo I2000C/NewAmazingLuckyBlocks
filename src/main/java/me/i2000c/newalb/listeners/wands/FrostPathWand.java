@@ -16,10 +16,10 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 
 import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.integration.WorldGuardManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.tasks.Task;
 
 public class FrostPathWand extends SpecialItem{
     

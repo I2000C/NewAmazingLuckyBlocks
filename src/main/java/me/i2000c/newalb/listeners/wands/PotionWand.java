@@ -15,12 +15,12 @@ import org.bukkit.util.Vector;
 
 import com.cryptomorin.xseries.XMaterial;
 
-import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.RandomUtils;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.random.RandomUtils;
 
 public class PotionWand extends SpecialItem{
     

@@ -1,6 +1,9 @@
 package me.i2000c.newalb.listeners.inventories;
 
 import com.google.common.base.Objects;
+
+import me.i2000c.newalb.api.gui.InventoryLocation;
+
 import java.util.List;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;

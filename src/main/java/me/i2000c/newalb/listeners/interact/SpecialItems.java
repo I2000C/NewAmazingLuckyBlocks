@@ -31,9 +31,9 @@ import me.i2000c.newalb.listeners.wands.RegenWand;
 import me.i2000c.newalb.listeners.wands.ShieldWand;
 import me.i2000c.newalb.listeners.wands.SlimeWand;
 import me.i2000c.newalb.listeners.wands.TntWand;
-import me.i2000c.newalb.reflection.RefClass;
-import me.i2000c.newalb.reflection.RefField;
-import me.i2000c.newalb.utils2.NBTUtils;
+import me.i2000c.newalb.utils.misc.NBTUtils;
+import me.i2000c.newalb.utils.reflection.RefClass;
+import me.i2000c.newalb.utils.reflection.RefField;
 
 public class SpecialItems {
     private static final Map<String, SpecialItem> ITEMS_BY_NAME = new LinkedHashMap<>();

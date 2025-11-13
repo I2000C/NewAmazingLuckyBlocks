@@ -2,7 +2,8 @@ package me.i2000c.newalb.listeners.wands;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;

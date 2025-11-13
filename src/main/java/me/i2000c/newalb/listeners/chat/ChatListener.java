@@ -2,8 +2,10 @@ package me.i2000c.newalb.listeners.chat;
 
 import java.util.HashMap;
 import java.util.Map;
-import me.i2000c.newalb.functions.ChatFunction;
-import me.i2000c.newalb.utils2.Task;
+
+import me.i2000c.newalb.api.functions.ChatFunction;
+import me.i2000c.newalb.utils.tasks.Task;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

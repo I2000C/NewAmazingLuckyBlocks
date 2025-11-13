@@ -1,33 +1,35 @@
 package me.i2000c.newalb;
 
+import static me.i2000c.newalb.api.version.MinecraftVersion.CURRENT_VERSION;
+import static me.i2000c.newalb.api.version.MinecraftVersion.LATEST_VERSION;
+import static me.i2000c.newalb.api.version.MinecraftVersion.OLDEST_VERSION;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import lombok.Getter;
-import static me.i2000c.newalb.MinecraftVersion.CURRENT_VERSION;
-import static me.i2000c.newalb.MinecraftVersion.LATEST_VERSION;
-import static me.i2000c.newalb.MinecraftVersion.OLDEST_VERSION;
 import me.i2000c.newalb.config.ConfigManager;
-import me.i2000c.newalb.custom_outcomes.menus.RewardListMenu;
-import me.i2000c.newalb.custom_outcomes.rewards.PackManager;
-import me.i2000c.newalb.custom_outcomes.rewards.TypeManager;
-import me.i2000c.newalb.listeners.BlockBreak;
-import me.i2000c.newalb.listeners.BlockPlace;
-import me.i2000c.newalb.listeners.ChunkEvent;
+import me.i2000c.newalb.integration.WorldGuardManager;
+import me.i2000c.newalb.listeners.blocks.BlockBreakListener;
+import me.i2000c.newalb.listeners.blocks.BlockPlaceListener;
+import me.i2000c.newalb.listeners.blocks.BlockProtectListener;
+import me.i2000c.newalb.listeners.blocks.ChunkLoadListener;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialEventListener;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.utils.BlockProtect;
-import me.i2000c.newalb.utils.LocationManager;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils.TrapManager;
-import me.i2000c.newalb.utils.Updater;
-import me.i2000c.newalb.utils.WorldManager;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
+import me.i2000c.newalb.lucky_blocks.TrapManager;
+import me.i2000c.newalb.lucky_blocks.editors.menus.RewardListMenu;
+import me.i2000c.newalb.lucky_blocks.rewards.PackManager;
+import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
+import me.i2000c.newalb.utils.locations.LocationManager;
+import me.i2000c.newalb.utils.locations.WorldManager;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.tasks.Task;
+import me.i2000c.newalb.utils.updater.Updater;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -108,10 +110,10 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         
         pm.registerEvents(new Updater(), this);
-        pm.registerEvents(new BlockBreak(), this);
-        pm.registerEvents(new BlockPlace(), this);
-        pm.registerEvents(new BlockProtect(), this);
-        pm.registerEvents(new ChunkEvent(), this);
+        pm.registerEvents(new BlockBreakListener(), this);
+        pm.registerEvents(new BlockPlaceListener(), this);
+        pm.registerEvents(new BlockProtectListener(), this);
+        pm.registerEvents(new ChunkLoadListener(), this);
         
         pm.registerEvents(new InventoryListener(), this);
         pm.registerEvents(new ChatListener(), this);

@@ -6,18 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import me.i2000c.newalb.MinecraftVersion;
+
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.CustomProjectileHitEvent;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.objects.utils.BowUtils;
 import me.i2000c.newalb.listeners.objects.utils.HookBowAux;
-import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.OtherUtils;
-import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.MetadataManager;
+import me.i2000c.newalb.utils.misc.OtherUtils;
+import me.i2000c.newalb.utils.reflection.ReflectionManager;
+import me.i2000c.newalb.utils.tasks.Task;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

@@ -11,7 +11,7 @@ import com.cryptomorin.xseries.XMaterial;
 
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
 public class RegenWand extends SpecialItem{
     

@@ -1,12 +1,14 @@
 package me.i2000c.newalb.utils.particles;
 
 import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.utils.misc.CustomColor;
 import me.i2000c.newalb.utils.particles.data.ColoredParticleData;
 import me.i2000c.newalb.utils.particles.data.MaterialParticleData;
 import me.i2000c.newalb.utils.particles.data.NoteParticleData;
 import me.i2000c.newalb.utils.particles.data.ParticleData;
-import me.i2000c.newalb.utils2.CustomColor;
-import me.i2000c.newalb.utils2.RandomUtils;
+import me.i2000c.newalb.utils.random.RandomUtils;
+
 import org.bukkit.Color;
 import org.bukkit.inventory.ItemStack;
 

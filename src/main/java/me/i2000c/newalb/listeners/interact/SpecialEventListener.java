@@ -1,10 +1,11 @@
 package me.i2000c.newalb.listeners.interact;
 
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.utils.WorldManager;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
+import me.i2000c.newalb.api.version.MinecraftVersion;
+import me.i2000c.newalb.integration.WorldGuardManager;
+import me.i2000c.newalb.utils.locations.WorldManager;
+import me.i2000c.newalb.utils.misc.MetadataManager;
+import me.i2000c.newalb.utils.tasks.Task;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;

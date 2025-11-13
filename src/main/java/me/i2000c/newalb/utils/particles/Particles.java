@@ -7,7 +7,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import lombok.Getter;
-import me.i2000c.newalb.MinecraftVersion;
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.utils.particles.spawning.BukkitSpawningStrategy;
 import me.i2000c.newalb.utils.particles.spawning.ParticleLibSpawningStrategy;
 import me.i2000c.newalb.utils.particles.spawning.ParticleSpawningStrategy;

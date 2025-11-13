@@ -8,12 +8,13 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
 import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.integration.WorldGuardManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.OtherUtils;
-import me.i2000c.newalb.utils2.Task;
-import me.i2000c.newalb.utils2.WorldGuardManager;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.OtherUtils;
+import me.i2000c.newalb.utils.tasks.Task;
+
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.block.Block;

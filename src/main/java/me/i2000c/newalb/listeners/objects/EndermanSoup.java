@@ -4,8 +4,9 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.particles.Particles;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;

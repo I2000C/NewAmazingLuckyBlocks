@@ -1,8 +1,11 @@
 package me.i2000c.newalb.listeners.interact;
 
 import com.cryptomorin.xseries.XMaterial;
+
+import me.i2000c.newalb.utils.misc.XMaterialUtils;
+
 import java.util.EnumSet;
-import me.i2000c.newalb.utils2.XMaterialUtils;
+
 import org.bukkit.event.player.PlayerInteractEvent;
 
 

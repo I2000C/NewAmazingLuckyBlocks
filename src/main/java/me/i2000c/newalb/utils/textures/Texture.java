@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import me.i2000c.newalb.config.ConfigManager;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
 @Getter
 @EqualsAndHashCode(of = "id")

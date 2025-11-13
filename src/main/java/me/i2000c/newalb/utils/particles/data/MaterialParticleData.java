@@ -4,8 +4,9 @@ import com.cryptomorin.xseries.XMaterial;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.reflection.ReflectionManager;
+import me.i2000c.newalb.api.version.MinecraftVersion;
+import me.i2000c.newalb.utils.reflection.ReflectionManager;
+
 import org.bukkit.inventory.ItemStack;
 import xyz.xenondevs.particle.data.texture.BlockTexture;
 import xyz.xenondevs.particle.data.texture.ItemTexture;

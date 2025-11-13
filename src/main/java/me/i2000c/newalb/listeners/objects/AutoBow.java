@@ -7,7 +7,8 @@ import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.objects.utils.BowUtils;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;

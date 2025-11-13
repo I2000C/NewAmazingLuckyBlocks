@@ -3,7 +3,8 @@ package me.i2000c.newalb.utils.particles.data;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import me.i2000c.newalb.reflection.ReflectionManager;
+import me.i2000c.newalb.utils.reflection.ReflectionManager;
+
 import org.bukkit.Color;
 import xyz.xenondevs.particle.data.color.RegularColor;
 

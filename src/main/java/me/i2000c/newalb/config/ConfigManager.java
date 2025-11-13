@@ -2,7 +2,8 @@ package me.i2000c.newalb.config;
 
 import java.io.File;
 import lombok.Getter;
-import me.i2000c.newalb.utils.Logger;
+import me.i2000c.newalb.utils.logging.Logger;
+
 import org.bukkit.plugin.Plugin;
 
 public class ConfigManager {

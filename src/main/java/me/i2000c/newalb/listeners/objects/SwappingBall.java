@@ -3,12 +3,14 @@ package me.i2000c.newalb.listeners.objects;
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import me.i2000c.newalb.MinecraftVersion;
+
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.MetadataManager;
+import me.i2000c.newalb.utils.tasks.Task;
+
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

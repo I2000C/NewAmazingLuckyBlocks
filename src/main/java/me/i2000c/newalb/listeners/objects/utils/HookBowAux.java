@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import me.i2000c.newalb.MinecraftVersion;
-import me.i2000c.newalb.reflection.RefClass;
-import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.api.version.MinecraftVersion;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.reflection.RefClass;
+import me.i2000c.newalb.utils.reflection.ReflectionManager;
+import me.i2000c.newalb.utils.tasks.Task;
 
 public class HookBowAux {
     

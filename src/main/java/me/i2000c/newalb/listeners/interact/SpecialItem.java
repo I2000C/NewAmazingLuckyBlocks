@@ -3,9 +3,10 @@ package me.i2000c.newalb.listeners.interact;
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.config.ConfigManager;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.PlayerCooldown;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.tasks.PlayerCooldown;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityChangeBlockEvent;

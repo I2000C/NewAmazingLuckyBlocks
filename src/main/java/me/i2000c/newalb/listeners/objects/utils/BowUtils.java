@@ -7,12 +7,14 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
-import me.i2000c.newalb.MinecraftVersion;
+
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.reflection.RefClass;
-import me.i2000c.newalb.reflection.ReflectionManager;
-import me.i2000c.newalb.utils2.MetadataManager;
-import me.i2000c.newalb.utils2.Task;
+import me.i2000c.newalb.utils.misc.MetadataManager;
+import me.i2000c.newalb.utils.reflection.RefClass;
+import me.i2000c.newalb.utils.reflection.ReflectionManager;
+import me.i2000c.newalb.utils.tasks.Task;
+
 import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;

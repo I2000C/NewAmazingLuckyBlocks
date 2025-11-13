@@ -4,10 +4,11 @@ import com.cryptomorin.xseries.XMaterial;
 import java.util.HashSet;
 import java.util.Set;
 import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.integration.WorldGuardManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.Logger;
-import me.i2000c.newalb.utils2.ItemStackWrapper;
-import me.i2000c.newalb.utils2.WorldGuardManager;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
