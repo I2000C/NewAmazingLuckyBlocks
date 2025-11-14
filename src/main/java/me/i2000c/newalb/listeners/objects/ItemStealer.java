@@ -288,15 +288,20 @@ public class ItemStealer extends SpecialItem {
         }
         
         // Add entity equipment
-        for(int i=HELMET_SLOT; i<=ITEM_IN_OFF_HAND_SLOT; i++) {
-            if(i == ITEM_IN_MAIN_HAND_SLOT && entity instanceof Player) {
-                continue;
-            }
-            
-            ItemStack stack = getEntityItem(entity, i);
-            if(stack != null && stack.getType() != Material.AIR) {
-                Map.Entry<Integer, ItemStack> entry = new AbstractMap.SimpleEntry<>(i, stack);
-                items.add(entry);
+        // In Minecraft 1.8 the method Player.getInventory() doesn't include equipment items
+        // From Minecraft 1.9 and onwards, that method already includes equipment items,
+        //  so they shouldn't be added here or there will be duplicated items
+        if(MinecraftVersion.CURRENT_VERSION.is_1_8() || !(entity instanceof Player)) {
+            for(int i=HELMET_SLOT; i<=ITEM_IN_OFF_HAND_SLOT; i++) {
+                if(i == ITEM_IN_MAIN_HAND_SLOT && entity instanceof Player) {
+                    continue;
+                }
+                
+                ItemStack stack = getEntityItem(entity, i);
+                if(stack != null && stack.getType() != Material.AIR) {
+                    Map.Entry<Integer, ItemStack> entry = new AbstractMap.SimpleEntry<>(i, stack);
+                    items.add(entry);
+                }
             }
         }
         
