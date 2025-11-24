@@ -174,7 +174,8 @@ public class GiveMenu{
                     openPlayerSelectionMenu(p);
                     break;
                 case 52:
-                    //Do nothing
+                    inventoryPage = 1;
+                    openPlayerSelectionMenu(p);
                     break;
                 default:
                     ItemStack sk = e.getCurrentItem();
@@ -182,8 +183,6 @@ public class GiveMenu{
                         String displayName = ItemStackWrapper.fromItem(sk).getDisplayName();
                         String playerName = Logger.stripColor(displayName);
                         target = Bukkit.getPlayer(playerName);
-                        openGiveMenu(p);
-                        
                         playerItem = ItemStackWrapper.newItem(XMaterial.PLAYER_HEAD)
                                                      .setDisplayName("&2Player Selected:")
                                                      .addLoreLine("&b" + playerName)

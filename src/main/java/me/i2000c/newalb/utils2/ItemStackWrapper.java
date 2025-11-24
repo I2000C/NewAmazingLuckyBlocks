@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -329,10 +330,9 @@ public class ItemStackWrapper {
     }
     
     public ItemStackWrapper setOwner(String playerName) {
-        ItemMeta meta = item.getItemMeta();
-        if(meta instanceof SkullMeta) {
-            ((SkullMeta) meta).setOwner(playerName);
-            item.setItemMeta(meta);
+        Player player = Bukkit.getPlayer(playerName);
+        if(player != null) {
+            setOwner(player);
         }
         return this;
     }
