@@ -512,8 +512,6 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         PackManager.loadPacks();
         TrapManager.loadTraps();
         TypeManager.loadTypes();
-
-        LocationManager.saveLocations();
         
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.reload-finished"), sender);
         return true;
@@ -936,14 +934,12 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         if(args.length == 1){
-            LocationManager.removeLocations();
-            Logger.sendMessage("&aAll LuckyBlocks were removed", sender);
+            LocationManager.removeLocations(() -> Logger.sendMessage("&aAll LuckyBlocks were removed", sender));
             return true;
         }
         String world = args[1];
         if(WorldManager.isEnabled(world)){
-            LocationManager.removeLocations(Bukkit.getWorld(world));
-            Logger.sendMessage("&aAll LuckyBlocks of the world &b" + world + " &awere removed", sender);
+            LocationManager.removeLocations(world, () -> Logger.sendMessage("&aAll LuckyBlocks of the world &b" + world + " &awere removed", sender));
             return true;
         }
         

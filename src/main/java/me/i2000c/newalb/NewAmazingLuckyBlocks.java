@@ -88,7 +88,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         Logger.log(ConfigManager.getLangMessage("Loading.worlds"));
 
         WorldManager.reloadWorlds();
-        LocationManager.loadLocations();
+        LocationManager.initialize(instance);
         TrapManager.loadTraps();
         
         initializeWorldEdit();
@@ -129,7 +129,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
             Logger.log("has been disabled");
         } else {
             RewardListMenu.testRewardsPlayerList.clear();
-            LocationManager.saveLocations();
+            LocationManager.releaseDatabaseConnection();
             Logger.log(ConfigManager.getLangMessage("Disable.line1").replace("%prefix%", ""));
         }        
     }
