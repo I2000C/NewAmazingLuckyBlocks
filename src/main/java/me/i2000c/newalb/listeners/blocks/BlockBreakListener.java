@@ -16,6 +16,7 @@ import me.i2000c.newalb.lucky_blocks.rewards.LuckyBlockType;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.OutcomePack;
 import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
+import me.i2000c.newalb.utils.locations.LocationManager;
 import me.i2000c.newalb.utils.locations.WorldManager;
 import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.XMaterialUtils;
@@ -54,6 +55,7 @@ public class BlockBreakListener implements Listener{
         
         Executable exec = RewardListMenu.testRewardsPlayerList.get(p);
         if(exec != null){
+        	LocationManager.removeLocation(loc);
             b.setType(Material.AIR);
             exec.execute(p, loc);
             return;

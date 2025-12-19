@@ -13,6 +13,7 @@ import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.lucky_blocks.rewards.LuckyBlockType;
 import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
+import me.i2000c.newalb.utils.locations.LocationManager;
 import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
@@ -46,6 +47,7 @@ public class LuckyTool extends SpecialItem{
             // Break the Lucky Block
             Block target = e.getClickedBlock();
             target.setType(Material.AIR);
+            LocationManager.removeLocation(target.getLocation());
             if(action == Action.RIGHT_CLICK_BLOCK){
                 // Execute LuckyBlock type
                 type.execute(e.getPlayer(), target.getLocation().add(0.5, 0, 0.5));

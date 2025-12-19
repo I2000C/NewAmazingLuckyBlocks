@@ -23,6 +23,7 @@ import org.bukkit.plugin.Plugin;
 import lombok.AccessLevel;
 import lombok.Cleanup;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.Synchronized;
 import me.i2000c.newalb.config.Config;
@@ -201,6 +202,21 @@ public class LocationManager {
         }
         
         return result;
+    }
+    
+    @SneakyThrows
+    public static void removeLocation(@NonNull Location location) {
+    	if(!isSaveLocations()) {
+            return;
+        }
+        
+        String sql = "DELETE FROM locations WHERE world=? AND x=? AND y=? AND z=?";
+        @Cleanup PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, location.getWorld().getName());
+        statement.setInt(2, location.getBlockX());
+        statement.setInt(3, location.getBlockY());
+        statement.setInt(4, location.getBlockZ());
+        statement.executeUpdate();
     }
     
     public static void removeLocations(@Nullable Runnable onLocationsRemoved) {
