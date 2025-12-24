@@ -88,7 +88,7 @@ public final class Texture {
         }
         
         if(profileable != null) {
-            XSkull.of(block).profile(profileable).applyAsync();
+            XSkull.of(block).profile(profileable).apply();
         } else {
             XSkull.of(block).removeProfile();
         }
