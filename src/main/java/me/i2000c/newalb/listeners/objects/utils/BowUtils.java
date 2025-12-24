@@ -227,8 +227,13 @@ public class BowUtils {
             if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
                 // In Minecraft 1.8, the field is called "fromPlayer" and requires an int (0, 1 or 2)
                 ReflectionManager.setFieldValue(craftArrow, "fromPlayer", this.ordinal());
+            } else if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_21_9)) {
+                // Since Minecraft 1.21.9 is better to use the API method Arrow.setPickupStatus()
+                RefClass refClass = ReflectionManager.getCachedClass("org.bukkit.entity.AbstractArrow$PickupStatus");
+                Object pickupStatus = refClass.callStaticMethod("valueOf", this.name());
+                ReflectionManager.callMethod(arrow, "setPickupStatus", pickupStatus);
             } else {
-                RefClass refClass = ReflectionManager.getNMSClass("net.minecraft.world.entity.projectile", "EntityArrow$PickupStatus");
+                RefClass refClass = ReflectionManager.getCachedNMSClass("net.minecraft.world.entity.projectile", "EntityArrow$PickupStatus");
                 Object pickupStatus = refClass.callStaticMethod("valueOf", this.name());
                 if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_5)) {
                     // Since Minecraft 1.20.5, the field is called "pickup"
