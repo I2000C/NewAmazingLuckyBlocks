@@ -223,28 +223,26 @@ public class BowUtils {
         
         public void setToArrow(Arrow arrow) {
             //<editor-fold defaultstate="collapsed" desc="Code">
-            Object craftArrow = ReflectionManager.callMethod(arrow, "getHandle");
             if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
                 // In Minecraft 1.8, the field is called "fromPlayer" and requires an int (0, 1 or 2)
+            	Object craftArrow = ReflectionManager.callMethod(arrow, "getHandle");
                 ReflectionManager.setFieldValue(craftArrow, "fromPlayer", this.ordinal());
-            } else if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_21_9)) {
-                // Since Minecraft 1.21.9 is better to use the API method Arrow.setPickupStatus()
-                RefClass refClass = ReflectionManager.getCachedClass("org.bukkit.entity.AbstractArrow$PickupStatus");
+            } else if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_11)) {
+            	// From Minecraft 1.9 to Minecraft 1.10, the field is still called "fromPlayer", but requires an enum
+            	Object craftArrow = ReflectionManager.callMethod(arrow, "getHandle");
+            	RefClass refClass = ReflectionManager.getCachedNMSClass("net.minecraft.world.entity.projectile", "EntityArrow$PickupStatus");
+                Object pickupStatus = refClass.callStaticMethod("valueOf", this.name());
+                ReflectionManager.setFieldValue(craftArrow, "fromPlayer", pickupStatus);
+            } else if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_14)) {
+            	// In Minecraft 1.11, the API method Arrow.setPickupStatus() was added.
+            	// This works until Minecraft 1.13
+            	Arrow.PickupStatus pickupStatus = Arrow.PickupStatus.valueOf(this.name());
+            	arrow.setPickupStatus(pickupStatus);
+            } else {
+            	// From Minecraft 1.14 and onwards, the class Arrow.PickupStatus was replaced by AbstractArrow.PickupStatus
+            	RefClass refClass = ReflectionManager.getCachedClass("org.bukkit.entity.AbstractArrow$PickupStatus");
                 Object pickupStatus = refClass.callStaticMethod("valueOf", this.name());
                 ReflectionManager.callMethod(arrow, "setPickupStatus", pickupStatus);
-            } else {
-                RefClass refClass = ReflectionManager.getCachedNMSClass("net.minecraft.world.entity.projectile", "EntityArrow$PickupStatus");
-                Object pickupStatus = refClass.callStaticMethod("valueOf", this.name());
-                if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_20_5)) {
-                    // Since Minecraft 1.20.5, the field is called "pickup"
-                    ReflectionManager.setFieldValue(craftArrow, "pickup", pickupStatus);
-                } else if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_17)) {
-                    // Since Minecraft 1.17, the field is called "d"
-                    ReflectionManager.setFieldValue(craftArrow, "d", pickupStatus);
-                } else {
-                    // From Minecraft 1.9 to Minecraft 1.16, the field is called "fromPlayer", but requires an enum
-                    ReflectionManager.setFieldValue(craftArrow, "fromPlayer", pickupStatus);
-                }
             }
 //</editor-fold>
         }
