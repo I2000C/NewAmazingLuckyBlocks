@@ -101,7 +101,18 @@ public class HookBowAux {
         Object entityToLeashEntity = ReflectionManager.callMethod(entityToLeash, "getHandle");
         
         // Build the packet
-        RefClass packetClass = ReflectionManager.getCachedNMSClass("net.minecraft.network.protocol.game", "PacketPlayOutAttachEntity");
+        RefClass packetClass;
+        if(MinecraftVersion.CURRENT_VERSION.isMojangNMS()) {
+        	// Minecraft 1.21.11 is going to be the latest update that supports Spigot mappings.
+        	// Starting from Minecraft 26.1, Mojang mappings are going to be used.
+        	// https://docs.papermc.io/paper/reference/system-properties/#paperdisablepluginremapping
+        	// https://github.com/PaperMC/Paper/issues/10676
+        	// https://papermc.io/news/1-21-11/
+        	packetClass = ReflectionManager.getCachedNMSClass("net.minecraft.network.protocol.game", "ClientboundSetEntityLinkPacket");
+        } else {
+        	packetClass = ReflectionManager.getCachedNMSClass("net.minecraft.network.protocol.game", "PacketPlayOutAttachEntity");
+        }
+        
         Object packet;
         if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
             packet = packetClass.callConstructor(1, entityToLeashEntity, leashPlayerEntity);
