@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
-@EqualsAndHashCode(of = {"major", "minor", "patch"})
+@EqualsAndHashCode(of = {"encoded"})
 public class MinecraftVersion implements Comparable<MinecraftVersion> {
     
     private static final String VERSION_SEPARATOR = ".";
@@ -57,6 +57,7 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
     private final int major;
     private final int minor;
     private final int patch;
+    private final int encoded;
     
     @Getter private final boolean legacyVersion;
     @Getter private final boolean newNMS;
@@ -64,9 +65,18 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
     @Getter private final boolean _1_8;
     
     private MinecraftVersion(int major, int minor, int patch) {
+    	if(major < 0 || minor < 0 || patch < 0) {
+            throw new IllegalArgumentException("Version numbers must be >= 0");
+        }
+    	
+        if(minor > 255 || patch > 255) {
+            throw new IllegalArgumentException("Minor and patch must be <= 255");
+        }
+    	
         this.major = major;
         this.minor = minor;
         this.patch = patch;
+        this.encoded = (major << 16) | (minor << 8) | patch;
         
         this.legacyVersion = this.minor <= VERSION_12;
         this.newNMS = this.minor >= VERSION_17;
@@ -90,21 +100,14 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
     
     @Override
     public int compareTo(MinecraftVersion other) {
-        int majorDifference = this.major - other.major;
-        if(majorDifference != 0) return majorDifference;
-        
-        int minorDifference = this.minor - other.minor;
-        if(minorDifference != 0) return minorDifference;
-        
-        int patchDifference = this.patch - other.patch;
-        return patchDifference;
+    	return Integer.compare(this.encoded, other.encoded);
     }
     
-    public boolean isLessThan(MinecraftVersion other) {return this.compareTo(other) < 0;}
-    public boolean isLessThanOrEqual(MinecraftVersion other) {return this.compareTo(other) <= 0;}
-    public boolean isGreaterThan(MinecraftVersion other) {return this.compareTo(other) > 0;}
-    public boolean isGreaterThanOrEqual(MinecraftVersion other) {return this.compareTo(other) >= 0;}
-    public boolean isEqualTo(MinecraftVersion other) {return this.compareTo(other) == 0;}    
+    public boolean isLessThan(MinecraftVersion other) {return this.encoded < other.encoded;}
+    public boolean isLessThanOrEqual(MinecraftVersion other) {return this.encoded <= other.encoded;}
+    public boolean isGreaterThan(MinecraftVersion other) {return this.encoded > other.encoded;}
+    public boolean isGreaterThanOrEqual(MinecraftVersion other) {return this.encoded >= other.encoded;}
+    public boolean isEqualTo(MinecraftVersion other) {return this.encoded == other.encoded;}    
     
     public static MinecraftVersion fromString(String version) {
         if(version == null) {
