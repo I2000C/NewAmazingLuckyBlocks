@@ -5,10 +5,13 @@ import java.util.function.Predicate;
 import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.utils.reflection.ReflectionManager;
 
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.google.common.base.Strings;
 
 public class OtherUtils{
     // Source: https://stackoverflow.com/a/990492
@@ -108,5 +111,15 @@ public class OtherUtils{
         //<editor-fold defaultstate="collapsed" desc="Code">
         return t.negate();
 //</editor-fold>
+    }
+    
+    public static String getProgressBar(int current, int max, int totalBars, char symbol, ChatColor completedColor, ChatColor notCompletedColor) {
+        //https://www.spigotmc.org/threads/progress-bars-and-percentages.276020/?__cf_chl_jschl_tk__=45c123d7886626b0cecd2cc530219da427d5214c-1580209641-0-AR6ljkF-Q6swj-OSROtke2TrSS-uy_MbFGPOgZ8lNPedOUjqxEiNa9ETsYqFS64G9TsBUlQyxRxAGCuGToSPXGUOA6orDyEN74TvJ1IXUHEWal6-5wBdbMyMaBC6_Y_YvW2sOQzrlt8PIFNgCJMpCqvLHdzf5FW8kjWSLfsL4FJu41b44pJNsgWD_4mWJnjSDKs4tru_U9cjwayifVseAspUUKUxu5B89HqV3thQpsjogf_kui1K5UGgweNH1cQAqwsYsv51bc4rmzyEdzWlg_6lXYx6GgWPedTgPW6VGo1vnwYVGAuv80G8yovQ4S2_Xw
+        
+        float percent = (float) current / max;
+        int progressBars = (int) (totalBars * percent);
+
+        return Strings.repeat("" + completedColor + symbol, progressBars)
+                + Strings.repeat("" + notCompletedColor + symbol, totalBars - progressBars);
     }
 }

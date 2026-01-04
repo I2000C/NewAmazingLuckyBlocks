@@ -8,6 +8,7 @@ import org.bukkit.event.world.ChunkPopulateEvent;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.utils.locations.WorldManager;
 import me.i2000c.newalb.utils.random.RandomBlocks;
+import me.i2000c.newalb.utils.random.RandomBlocksOptions;
 import me.i2000c.newalb.utils.random.RandomUtils;
 
 public class ChunkLoadListener implements Listener{
@@ -18,24 +19,34 @@ public class ChunkLoadListener implements Listener{
             if(WorldManager.isEnabled(e.getWorld().getName())){
                 int chance = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.chance");
                 if(RandomUtils.getInt(100) < chance) {
-                    int x = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radx");
-                    int y = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.rady");
-                    int z = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");
+                    int radx = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radx");
+                    int rady = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.rady");
+                    int radz = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.radz");
                     int blocks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.blocks");
-                    boolean floating_blocks = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.floating-blocks");
-                    boolean avoid_water = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.avoid-water");
-                    boolean send_finish_message = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.send-finish-message");
+                    boolean allowfloatingBlocks = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.floating-blocks");
+                    boolean avoidWater = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.avoid-water");
+                    boolean sendFinishMessage = ConfigManager.getMainConfig().getBoolean("GenerateRandomblocks-OnChunkCreated.send-finish-message");
 
                     int maxTasks = ConfigManager.getMainConfig().getInt("GenerateRandomblocks-OnChunkCreated.maxTasks");
 
-                    if(RandomBlocks.numTasks < maxTasks){
+                    if(RandomBlocks.getExtraTasksNumber() < maxTasks){
                         if(!e.getChunk().isLoaded()){
                             e.getChunk().load(true);
                         }
                         Block b = e.getChunk().getBlock(8, 64, 8);
-
-                        RandomBlocks rb = new RandomBlocks(x, y, z, blocks, floating_blocks, avoid_water, b.getLocation(), send_finish_message);
-                        rb.generatePackets();
+                        
+                        RandomBlocksOptions options = RandomBlocksOptions.builder()
+                                                                         .radx(radx)
+                                                                         .rady(rady)
+                                                                         .radz(radz)
+                                                                         .blocks(blocks)
+                                                                         .allowFloatingBlocks(allowfloatingBlocks)
+                                                                         .avoidWater(avoidWater)
+                                                                         .sendFinishMessage(sendFinishMessage)
+                                                                         .location(b.getLocation())
+                                                                         .extraTask(true)
+                                                                         .build();
+                        RandomBlocks.placeRandomBlocks(options);
                     }
                 }
             }

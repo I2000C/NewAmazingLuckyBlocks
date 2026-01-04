@@ -39,6 +39,7 @@ import me.i2000c.newalb.utils.misc.Equipment;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.misc.OtherUtils;
 import me.i2000c.newalb.utils.random.RandomBlocks;
+import me.i2000c.newalb.utils.random.RandomBlocksOptions;
 import me.i2000c.newalb.utils.textures.Texture;
 
 public class CommandManager implements CommandExecutor, TabCompleter{
@@ -518,112 +519,106 @@ public class CommandManager implements CommandExecutor, TabCompleter{
 //</editor-fold>
     }
     
-    private boolean executeRandomBlocks(CommandSender sender, String[] args){
+    private boolean executeRandomBlocks(CommandSender sender, String[] args) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!checkHasPermission(sender, "Commands.RandomBlocks-permission")){
+        if(!checkHasPermission(sender, "Commands.RandomBlocks-permission")) {
             return false;
         }
         
         Player player;
-        if(args.length == 2 && args[1].equalsIgnoreCase("stop")){
-            if(RandomBlocks.taskID != 0){
-                Bukkit.getScheduler().cancelTask(RandomBlocks.taskID);
-
-                Logger.sendMessage("&cRandomblock task has been cancelled", sender);
-                Logger.sendMessage("&b" + RandomBlocks.blocks_placed + " &aBlocks have been placed", sender);
-
-                RandomBlocks.taskID = 0;
-            }else{
-                Logger.sendMessage("&cThere isn't any randomblocks task running at the moment", sender);
-            }
-
+        if(args.length == 2 && args[1].equalsIgnoreCase("stop")) {
+            RandomBlocks.stopRandomBlocksMainTask(sender);
             return false;
-        }else if(args.length == 6){
+        } else if(args.length == 6) {
             if(!checkNotConsole(sender)){
                 return false;
             }
             player = (Player) sender;
-        }else if(args.length == 7){
+        } else if(args.length == 7) {
             player = getOnlinePlayer(sender, args[6]);
-            if(player == null){
+            if(player == null) {
                 return false;
             }
-        }else{
+        } else {
             Logger.sendMessage("&7Usage: " + ConfigManager.getLangMessage("Helpmenu.line3"), sender);
             return false;
         }
+        
+        String world = player.getWorld().getName();
+        if(!WorldManager.isEnabled(world)) {
+            Logger.sendMessage("&cThe world &b" + world + " &cisn't in the worlds list", sender);
+            return false;
+        }
+        
+        int radx;
+        int rady;
+        int radz;
+        int blocks;
+        try {
+            radx = Integer.parseInt(args[1]);
+        } catch(NumberFormatException numberFormatException) {
+            Logger.sendMessage("&cargs[1] must be an &ainteger&c, not &6" + args[1], sender);
+            return false;
+        }
 
-        if(RandomBlocks.taskID == 0){
-            int radx;
-            int rady;
-            int radz;
-            int blocks;
-            try{
-                radx = Integer.parseInt(args[1]);
-            }catch(NumberFormatException numberFormatException){
-                Logger.sendMessage(plugin.prefix + " &cargs[1] must be an &ainteger&c, not &6" + args[1], sender);
+        try {
+            rady = Integer.parseInt(args[2]);
+        } catch(NumberFormatException numberFormatException) {
+            Logger.sendMessage("&cargs[2] must be an &ainteger&c, not &6" + args[2], sender);
+            return false;
+        }
+
+        try {
+            radz = Integer.parseInt(args[3]);
+        } catch(NumberFormatException numberFormatException) {
+            Logger.sendMessage("&cargs[3] must be an &ainteger&c, not &6" + args[3], sender);
+            return false;
+        }
+
+        try {
+            blocks = Integer.parseInt(args[4]);
+        } catch(NumberFormatException numberFormatException) {
+            Logger.sendMessage("&cargs[4] must be an &ainteger&c, not &6" + args[4], sender);
+            return false;
+        }
+        
+        boolean allowFloatingBlocks;
+        boolean preScanSafeLocations;
+        switch(args[5]){
+            case "true":
+                allowFloatingBlocks = true;
+                preScanSafeLocations = false;
+                break;
+            case "false":
+                allowFloatingBlocks = false;
+                preScanSafeLocations = false;
+                break;
+            case "force":
+                allowFloatingBlocks = false;
+                preScanSafeLocations = true;
+                break;
+            default:
+                Logger.sendMessage("&cargs[5] must be &atrue&c, &afalse &cor &aforce&c, not &6" + args[5], sender);
                 return false;
-            }
-
-            try{
-                rady = Integer.parseInt(args[2]);
-            }catch(NumberFormatException numberFormatException){
-                Logger.sendMessage(plugin.prefix + " &cargs[2] must be an &ainteger&c, not &6" + args[2], sender);
-                return false;
-            }
-
-            try{
-                radz = Integer.parseInt(args[3]);
-            }catch(NumberFormatException numberFormatException){
-                Logger.sendMessage(plugin.prefix + " &cargs[3] must be an &ainteger&c, not &6" + args[3], sender);
-                return false;
-            }
-
-            try{
-                blocks = Integer.parseInt(args[4]);
-            }catch (NumberFormatException numberFormatException){
-                Logger.sendMessage(plugin.prefix + " &cargs[4] must be an &ainteger&c, not &6" + args[4], sender);
-                return false;
-            }
-            boolean floating_blocks;
-            boolean forceMode;
-            switch(args[5]){
-                case "true":
-                    floating_blocks = true;
-                    forceMode = false;
-                    break;
-                case "false":
-                    floating_blocks = false;
-                    forceMode = false;
-                    break;
-                case "force":
-                    floating_blocks = false;
-                    forceMode = true;
-                    break;
-                default:
-                    Logger.sendMessage(plugin.prefix + " &cargs[5] must be &atrue&c, &afalse &cor &aforce&c, not &6" + args[5], sender);
-                    return false;
-            }
-
+        }
+        
+        RandomBlocksOptions options = RandomBlocksOptions.builder()
+                                                         .radx(radx)
+                                                         .rady(rady)
+                                                         .radz(radz)
+                                                         .blocks(blocks)
+                                                         .allowFloatingBlocks(allowFloatingBlocks)
+                                                         .preScanSafeLocations(preScanSafeLocations)
+                                                         .senderToNotify(sender)
+                                                         .sendFinishMessage(true)
+                                                         .location(player.getLocation())
+                                                         .senderToNotify(sender)
+                                                         .build();
+        if(RandomBlocks.placeRandomBlocks(options)) {
             String placeblocks = ConfigManager.getLangMessage("PlacingBlocks");
             Logger.sendMessage(placeblocks, sender);
-
-            boolean isPlayer = sender instanceof Player;
-
-
-            String world = player.getWorld().getName();
-
-            if(WorldManager.isEnabled(world)){
-                RandomBlocks rb = new RandomBlocks(radx,rady,radz,blocks,floating_blocks,forceMode,player,isPlayer,sender);
-                rb.generatePackets();
-                return true;
-            }else{
-                Logger.sendMessage("&cThe world &b" + world + " &cisn't in the worlds list", sender);
-                return false;
-            }
-        }else{
-            Logger.sendMessage("&cThere already is a randomblocks task running", sender);
-            Logger.sendMessage("&cWait until it finish or use: &a/alb randomblocks stop", sender);
+            return true;
+        } else {
             return false;
         }
 //</editor-fold>
