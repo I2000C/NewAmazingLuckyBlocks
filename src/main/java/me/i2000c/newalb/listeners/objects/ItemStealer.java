@@ -1,28 +1,21 @@
 package me.i2000c.newalb.listeners.objects;
 
-import com.cryptomorin.xseries.XEnchantment;
-import com.cryptomorin.xseries.XMaterial;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.NonNull;
-import me.i2000c.newalb.api.version.MinecraftVersion;
-import me.i2000c.newalb.config.ConfigManager;
-import me.i2000c.newalb.integration.WorldGuardManager;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.utils.misc.ItemStackWrapper;
-import me.i2000c.newalb.utils.reflection.ReflectionManager;
-import me.i2000c.newalb.utils.tasks.Task;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -32,6 +25,19 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import com.cryptomorin.xseries.XEnchantment;
+import com.cryptomorin.xseries.XMaterial;
+
+import lombok.NonNull;
+import me.i2000c.newalb.api.version.MinecraftVersion;
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.integration.WorldGuardManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.reflection.ReflectionManager;
+import me.i2000c.newalb.utils.tasks.Task;
 
 public class ItemStealer extends SpecialItem {
     
@@ -51,6 +57,8 @@ public class ItemStealer extends SpecialItem {
     private int minPickupSeconds;
     private int maxFlySeconds;
     private boolean allowStealingItemsFromBlocks;
+    private boolean enableItemFilters;
+    private ConfigurationSection itemFilters;
     
     @Override
     public void onPlayerFish(PlayerFishEvent e) {
@@ -100,6 +108,8 @@ public class ItemStealer extends SpecialItem {
         minPickupSeconds = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".min-pickup-seconds");
         maxFlySeconds = ConfigManager.getMainConfig().getInt(super.itemPathKey + ".max-fly-seconds");
         allowStealingItemsFromBlocks = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".allow-stealing-items-from-blocks");
+        enableItemFilters = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".enable-item-filters");
+        itemFilters = ConfigManager.getMainConfig().getConfigurationSection(super.itemPathKey + ".item-filters");
         return ItemStackWrapper.newItem(XMaterial.FISHING_ROD)
                                .addEnchantment(XEnchantment.LURE, 1)
                                .toItemStack();
@@ -121,8 +131,10 @@ public class ItemStealer extends SpecialItem {
             return false;
         }
         
+        if(enableItemFilters) {
+            filterItems(items);
+        }
         Collections.shuffle(items);
-        
         Location loc = entity.getLocation();
         
         int min = Math.min(items.size(), numberOfItemsToSteal);
@@ -178,6 +190,9 @@ public class ItemStealer extends SpecialItem {
                 return false;
             }
             
+            if(enableItemFilters) {
+                filterItems(blockItems);
+            }
             Collections.shuffle(blockItems);
             Location blockLoc = state.getBlock().getLocation().add(0.5, 0.5, 0.5);
             
@@ -193,6 +208,80 @@ public class ItemStealer extends SpecialItem {
         }
         
         return false;
+    }
+    
+    private void filterItems(List<Map.Entry<Integer, ItemStack>> items) {
+        Iterator<Map.Entry<Integer, ItemStack>> iterator = items.iterator();
+        while(iterator.hasNext()) {
+            ItemStack item = iterator.next().getValue();
+            for(String rule : itemFilters.getKeys(false)) {
+                try {
+                    String materialFilter = itemFilters.getString(rule + ".material");
+                    String nameFilter = itemFilters.getString(rule + ".name");
+                    List<String> enchantmentsFilter = itemFilters.getStringList(rule + ".enchantments");
+                    String nbtFilter = itemFilters.getString(rule + ".nbt");
+                    
+                    if(materialFilter == null && nameFilter == null && enchantmentsFilter.isEmpty() && nbtFilter == null) {
+                        Logger.warn("Rule " + rule + " of item stealer is empty. All items will be blocked");
+                    }
+                    
+                    boolean removeItem = true;
+                    ItemStackWrapper wrapper = ItemStackWrapper.fromItem(item, false);
+                    
+                    if(removeItem && materialFilter != null) {
+                        XMaterial material = wrapper.getMaterial();
+                        String materialName = material.name().toUpperCase();
+                        materialFilter = materialFilter.toUpperCase();
+                        removeItem &= materialName.matches(materialFilter);
+                    }
+                    
+                    if(removeItem && nameFilter != null) {
+                        String name = wrapper.getDisplayName();
+                        name = Logger.stripColor(name != null ? name : "");
+                        removeItem &= name.matches(nameFilter);
+                    }
+                    
+                    if(removeItem && !enchantmentsFilter.isEmpty()) {
+                        Set<XEnchantment> enchantments = wrapper.getEnchantments().keySet();
+                        for(String enchantmentFilter : enchantmentsFilter) {
+                            enchantmentFilter = enchantmentFilter.toUpperCase();
+                            boolean isPresent = false;
+                            for(XEnchantment enchantment : enchantments) {
+                                String enchantmentName = enchantment.name();
+                                if(enchantmentName.matches(enchantmentFilter)) {
+                                    isPresent = true;
+                                    break;
+                                }
+                            }
+                            removeItem &= isPresent;
+                            if(!isPresent) {
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if(removeItem && nbtFilter != null) {
+                        boolean isPresent = false;
+                        Set<String> tags = wrapper.getTags();
+                        for(String tag : tags) {
+                            if(tag.matches(nbtFilter)) {
+                                isPresent = true;
+                                break;
+                            }
+                        }
+                        removeItem &= isPresent;
+                    }
+                    
+                    if(removeItem) {
+                        iterator.remove();
+                        break;
+                    }
+                } catch(Exception ex) {
+                    Logger.err("An error occurred while evaluating filtering rule " + rule + " of item stealer:");
+                    throw new InternalError(ex);
+                }
+            }
+        }
     }
     
     private void flyItemToPlayer(@NonNull ItemStack itemStack, @NonNull Location fromLocation, @NonNull Player player) {

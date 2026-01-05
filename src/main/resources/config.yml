@@ -267,7 +267,7 @@ Objects:
     speed-of-items: 0.5
     # distance to stealer to stop items from flying
     min-distance-to-stealer: 0.5
-    # min pickup time in seconds to prevent stealed items
+    # min pickup time in seconds to prevent stolen items
     #   from being picked up by other players
     min-pickup-seconds: 1
     # max number of seconds that items can be flying until they
@@ -275,6 +275,41 @@ Objects:
     max-fly-seconds: 30
     # Set this value to true if you want to be able to steal items from chests, furnaces, hoppers, etc
     allow-stealing-items-from-blocks: true
+    # Enable or disable filters to prevent some items from being stolen
+    enable-item-filters: false
+    # You can add filters in the list below to prevent certain items from being stolen.
+    # If an item property matches one or more filters, that item won't be able to be stolen.
+    # In addition you can use Java regexp if you know how to use it (You can test them here: https://regex101.com/).
+    # You can filter by material, by name, by enchantments and by nbt.
+    # You can find the material list here: https://github.com/CryptoMorin/XSeries/blob/master/core/src/main/java/com/cryptomorin/xseries/XMaterial.java
+    # You can find the enchantments list here: https://github.com/CryptoMorin/XSeries/blob/master/core/src/main/java/com/cryptomorin/xseries/XEnchantment.java
+    #
+    # Important: Materials and enchantments are compared ignoring case but names and nbt are compared preserving case
+    item-filters:
+      # Blocks stealing acacia boats
+      my_rule_1:
+        material: "ACACIA_BOAT"
+        # Blocks stealing arrows of any type with fire aspect enchantment
+      my_rule_2:
+        material: ".*ARROW.*"
+        enchantments:
+        - "FIRE_ASPECT"
+      # Blocks stealing any item called "DON'T STEAL PLEASE" with the nbt key "anti-steal-key"
+      my_rule_3:
+        name: "DON'T STEAL PLEASE"
+        nbt: "anti-steal-key"
+      # Blocks stealing diamond pickaxes which have the nbt key "special-item"
+      my_rule_4:
+        material: "DIAMOND_PICKAXE"
+        nbt: "special-item"
+      # Blocks stealing any item with vanishing curse and unbreaking enchantments
+      my_rule_5:
+        enchantments:
+        - "VANISHING_CURSE"
+        - "UNBREAKING"
+      # Blocks any item whose names end in TEST:
+      my_rule_6:
+        name: ".*TEST"
     required-permission: false
     permission: "amazinglb.objects.item_stealer"
     custom-model-data: 1000
