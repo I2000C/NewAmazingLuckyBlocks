@@ -72,12 +72,11 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         Logger.initializeLogger(prefix, coloredLogger);
         
         Logger.log(ConfigManager.getLangMessage("Loading.plugin"));
+        Task.initializeTaskManager(this);
         UpdateChecker.checkUpdates(version);
         
         Logger.log(ConfigManager.getLangMessage("Loading.config"));
         Logger.log(ConfigManager.getLangMessage("Loading.lang"));
-        
-        Task.initializeTaskManager(this);
         
         SpecialItems.loadItems();
         

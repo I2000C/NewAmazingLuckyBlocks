@@ -25,7 +25,6 @@ public class UpdateChecker implements Listener {
             return;
         }
         
-        Logger.log("&6Checking latest version...");
         Task.runTaskAsynchronously(() -> {
             try {
                 URL url = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + RESOURCE_ID);
@@ -34,7 +33,7 @@ public class UpdateChecker implements Listener {
                 if(scanner.hasNext()) {
                     latestVersion = scanner.next();
                     if(currentVersion.equals(latestVersion)) {
-                        Logger.log("&aYou are using the latest version");
+                        Task.runTask(() -> Logger.log("&aYou are using the latest version"));
                         updateDetected = false;
                         return;
                     }
@@ -44,17 +43,21 @@ public class UpdateChecker implements Listener {
                     int versionNumber = Integer.parseInt(versionSplit[versionSplit.length - 1]);
                     int latestVersionNumber = Integer.parseInt(latestVersionSplit[latestVersionSplit.length - 1]);
                     if(latestVersionNumber > versionNumber) {
-                        Logger.log("&cThere is a new version available: &e(&7" + latestVersion + "&e)");
-                        Logger.log("&cYou can download it at: &fhttps://www.spigotmc.org/resources/" + RESOURCE_ID);
+                        Task.runTask(() -> {
+                            Logger.log("&cThere is a new version available: &e(&7" + latestVersion + "&e)");
+                            Logger.log("&cYou can download it at: &fhttps://www.spigotmc.org/resources/" + RESOURCE_ID);
+                        });
                         updateDetected = true;
                     } else {
-                        Logger.log("&aYou are using the latest version");
+                        Task.runTask(() -> Logger.log("&aYou are using the latest version"));
                         updateDetected = false;
                     }
                 }
             } catch(Exception ex) {
-                Logger.err("&cAn error occurred while checking update:");
-                Logger.err(ex);
+                Task.runTask(() -> {
+                    Logger.err("&cAn error occurred while checking update:");
+                    Logger.err(ex);
+                });
             }
         });
     }
