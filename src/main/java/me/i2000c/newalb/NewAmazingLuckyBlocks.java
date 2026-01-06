@@ -20,6 +20,7 @@ import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialEventListener;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.updates.UpdateChecker;
 import me.i2000c.newalb.lucky_blocks.TrapManager;
 import me.i2000c.newalb.lucky_blocks.editors.menus.RewardListMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.PackManager;
@@ -28,7 +29,6 @@ import me.i2000c.newalb.utils.locations.LocationManager;
 import me.i2000c.newalb.utils.locations.WorldManager;
 import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.tasks.Task;
-import me.i2000c.newalb.utils.updater.Updater;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -72,7 +72,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         Logger.initializeLogger(prefix, coloredLogger);
         
         Logger.log(ConfigManager.getLangMessage("Loading.plugin"));
-        Updater.checkUpdates(name, version);
+        UpdateChecker.checkUpdates(name, version);
         
         Logger.log(ConfigManager.getLangMessage("Loading.config"));
         Logger.log(ConfigManager.getLangMessage("Loading.lang"));
@@ -109,7 +109,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         //<editor-fold defaultstate="collapsed" desc="Code">
         PluginManager pm = getServer().getPluginManager();
         
-        pm.registerEvents(new Updater(), this);
+        pm.registerEvents(new UpdateChecker(), this);
         pm.registerEvents(new BlockBreakListener(), this);
         pm.registerEvents(new BlockPlaceListener(), this);
         pm.registerEvents(new BlockProtectListener(), this);

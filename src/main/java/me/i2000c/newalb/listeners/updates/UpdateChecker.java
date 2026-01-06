@@ -1,4 +1,4 @@
-package me.i2000c.newalb.utils.updater;
+package me.i2000c.newalb.listeners.updates;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -13,7 +13,7 @@ import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.utils.logging.Logger;
 
 
-public class Updater implements Listener{
+public class UpdateChecker implements Listener{
     private static String latestversion;
     private static Boolean update;
     
