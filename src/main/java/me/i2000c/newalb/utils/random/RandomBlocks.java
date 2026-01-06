@@ -228,7 +228,7 @@ public class RandomBlocks {
         
         // Case 3: Floating location
         if(current.isEmpty() && below.isEmpty()) {
-            for(int ny = y-1; ny <= minY; ny--) {
+            for(int ny = y-1; ny >= minY; ny--) {
                 Block block = loc.getWorld().getBlockAt(x, ny, z);
                 if(isSafe(block.getLocation())) {
                     return block.getLocation();
