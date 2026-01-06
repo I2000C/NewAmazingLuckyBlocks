@@ -42,18 +42,32 @@ public class LocationManager {
     private static final long LOCATION_BATCH_DELAY = 5L;
     
     private static boolean initialized = false;
+    private static boolean sqLiteAvailable = false;
     private static Plugin plugin = null;
     private static Connection connection = null;
     private static Task deleteLocationsTask = null;
     
     private static boolean isSaveLocations() {
-        return ConfigManager.getMainConfig().getBoolean("LuckyBlock.SaveLocations");
+        return sqLiteAvailable && ConfigManager.getMainConfig().getBoolean("LuckyBlock.SaveLocations");
     }
     
     public static void initialize(Plugin plugin) {
         if(initialized) return;
-        
         LocationManager.plugin = plugin;
+        
+        try {
+            Class.forName("org.sqlite.JDBC");
+            sqLiteAvailable = true;
+        } catch(Exception ex) {
+            sqLiteAvailable = false;
+        }
+        
+        if(!sqLiteAvailable) {
+            Logger.warn("SQLite was not found in the classpath");
+            Logger.warn("Location saving and clearing won't be available");
+            initialized = true;
+            return;
+        }
         
         File dataFolder = new File(plugin.getDataFolder(), DATA_FOLDER_NAME);
         dataFolder.mkdirs();
