@@ -85,6 +85,27 @@ public class RandomBlocks {
         }
     }
     
+    @Synchronized
+    public static void forceStopAllRandomBlocksTasks() {
+        if(mainTask != null && mainTask.task != null && mainTask.task.isStarted()) {
+            mainTask.task.cancel();
+            LocationManager.registerLocations(mainTask.blocksPlaced);
+            mainTask.blocksPlaced.clear();
+            mainTask = null;
+        }
+        
+        Iterator<RandomBlocks> iterator = extraTasks.iterator();
+        while(iterator.hasNext()) {
+            RandomBlocks extraTask = iterator.next();
+            if(extraTask != null && extraTask.task != null && extraTask.task.isStarted()) {
+                extraTask.task.cancel();
+                LocationManager.registerLocations(extraTask.blocksPlaced);
+                extraTask.blocksPlaced.clear();
+                iterator.remove();
+            }
+        }
+    }
+    
     private void start() {
         task = new Task() {
             final int totalBlocks = options.getBlocks();

@@ -28,6 +28,7 @@ import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
 import me.i2000c.newalb.utils.locations.LocationManager;
 import me.i2000c.newalb.utils.locations.WorldManager;
 import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.random.RandomBlocks;
 import me.i2000c.newalb.utils.tasks.Task;
 
 import org.bukkit.Bukkit;
@@ -124,13 +125,10 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     
     @Override
     public void onDisable(){
-        if(CURRENT_VERSION.isLessThan(OLDEST_VERSION) || CURRENT_VERSION.isGreaterThan(LATEST_VERSION)) {
-            Logger.log("has been disabled");
-        } else {
-            RewardListMenu.testRewardsPlayerList.clear();
-            LocationManager.releaseDatabaseConnection();
-            Logger.log(ConfigManager.getLangMessage("Disable.line1").replace("%prefix%", ""));
-        }        
+        RandomBlocks.forceStopAllRandomBlocksTasks();
+        RewardListMenu.testRewardsPlayerList.clear();
+        LocationManager.releaseDatabaseConnection();
+        Logger.log(ConfigManager.getLangMessage("Disable.line1").replace("%prefix%", ""));
     }
     
     public void copyResource(String filename, File file){

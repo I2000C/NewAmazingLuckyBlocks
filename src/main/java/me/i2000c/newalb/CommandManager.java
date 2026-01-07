@@ -493,6 +493,8 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return false;
         }
         
+        RandomBlocks.forceStopAllRandomBlocksTasks();
+        
         GUIManager.setCurrentMenu(null);
         RewardListMenu.testRewardsPlayerList.clear();
         
