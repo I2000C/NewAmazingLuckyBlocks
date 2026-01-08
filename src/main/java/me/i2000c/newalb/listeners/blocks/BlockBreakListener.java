@@ -15,6 +15,7 @@ import me.i2000c.newalb.lucky_blocks.rewards.Executable;
 import me.i2000c.newalb.lucky_blocks.rewards.LuckyBlockType;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.OutcomePack;
+import me.i2000c.newalb.lucky_blocks.rewards.PackManager;
 import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
 import me.i2000c.newalb.utils.locations.LocationManager;
 import me.i2000c.newalb.utils.locations.WorldManager;
@@ -72,6 +73,12 @@ public class BlockBreakListener implements Listener{
                 e.setCancelled(true);
                 break;
             case TypeManager.RESULT_OK:
+                if(PackManager.IS_LOADING_PACKS()) {
+                    Logger.sendMessage(ConfigManager.getLangMessage("Loading.not-fully-loaded"), p);
+                    e.setCancelled(true);
+                    break;
+                }
+                
                 boolean requireLuckyTool = ConfigManager.getMainConfig().getBoolean("Objects.LuckyTool.enable");
                 boolean canOnlyBreakWithLuckyTool = ConfigManager.getMainConfig().getBoolean("Objects.LuckyTool.onlyCanBreakLuckyBlocksWithLuckyTool");
                 if(requireLuckyTool && canOnlyBreakWithLuckyTool){

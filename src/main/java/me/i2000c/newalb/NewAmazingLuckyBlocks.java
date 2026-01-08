@@ -9,6 +9,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import lombok.Getter;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.integration.WorldGuardManager;
@@ -31,13 +43,6 @@ import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.random.RandomBlocks;
 import me.i2000c.newalb.utils.tasks.Task;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
 public class NewAmazingLuckyBlocks extends JavaPlugin {
     
     @Getter
@@ -51,11 +56,23 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     public String version = pdffile.getVersion();
     public String name = ChatColor.GOLD + pdffile.getName() + ChatColor.RESET;
     public String prefix;
+    public ExecutorService asyncPacksLoaderExecutorService;
     
     @Override
     public void onLoad() {
         Logger.initializeLogger("[NewAmazingLuckyBlocks]", false);
         WorldGuardManager.initialize();
+        
+        int cores = Runtime.getRuntime().availableProcessors();
+        int threads = Math.max(1, Math.min(2, cores - 1));
+        
+        asyncPacksLoaderExecutorService = new ThreadPoolExecutor(threads, threads, 
+                0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(),
+                r -> {
+                    Thread t = new Thread(r, "LuckyBlocks-OutcomePack-Loader");
+                    t.setDaemon(true);
+                    return t;
+                });
     }
     
     @Override
@@ -81,15 +98,26 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         
         SpecialItems.loadItems();
         
-        Logger.log(ConfigManager.getLangMessage("Loading.packs"));
-        PackManager.loadPacks();        
-        TypeManager.loadTypes();
-        
         Logger.log(ConfigManager.getLangMessage("Loading.worlds"));
-
         WorldManager.reloadWorlds();
         LocationManager.initialize(instance);
-        TrapManager.loadTraps();
+        
+        Logger.log(ConfigManager.getLangMessage("Loading.packs"));
+        TypeManager.loadTypes();
+        PackManager.loadPacksAsync(() -> {
+            try {
+                TypeManager.loadPacksFromCachedPacksProbList();
+                TrapManager.loadTraps();
+            } catch(Throwable t) {
+                throw t;
+            } finally {
+                PackManager.SET_LOADING_PACKS(false);
+            }
+            
+            String message = ConfigManager.getLangMessage("Packs-loading")
+                                          .replace("%packs%", PackManager.getPacks().size() + "");
+            Task.runTask(() -> Logger.log(message));
+        });
         
         initializeWorldEdit();
         if(WorldGuardManager.isWorldGuardEnabled()) {
@@ -128,6 +156,16 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         RandomBlocks.forceStopAllRandomBlocksTasks();
         RewardListMenu.testRewardsPlayerList.clear();
         LocationManager.releaseDatabaseConnection();
+        
+        asyncPacksLoaderExecutorService.shutdown();
+        try {
+            if(!asyncPacksLoaderExecutorService.awaitTermination(3, TimeUnit.SECONDS)) {
+                asyncPacksLoaderExecutorService.shutdownNow();
+            }
+        } catch(InterruptedException ex) {
+            asyncPacksLoaderExecutorService.shutdownNow();
+        }
+        
         Logger.log(ConfigManager.getLangMessage("Disable.line1").replace("%prefix%", ""));
     }
     

@@ -247,6 +247,10 @@ public class TypeManager{
         //</editor-fold>
     }
     
+    public static void loadPacksFromCachedPacksProbList() {
+        luckyBlockTypes.forEach(LuckyBlockType::loadPacksFromCachedPacksProbList);
+    }
+    
     public static void saveTypes(){
         //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypes.forEach(type -> {

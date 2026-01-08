@@ -114,6 +114,7 @@ Helpmenu6:
   line5: "&7--------&cNewAmazingHelp <page 6/%maxPages%>&7--------"
 
 World-loading: "&eNieuweGeweldigeLuckyBlokken has loaded: &d%worlds% &bworld(s)"
+Packs-loading: "&eNieuweGeweldigeLuckyBlokken has loaded: &d%packs% &2Outcome Pack(s)"
 World-management1:
   currentMode: "&5Current mode: %worldListMode%"
   title: "&b=== &6Wereld-lijst &b==="
@@ -142,6 +143,7 @@ Loading:
   lang: "&aTalen aan het inladen..."
   worlds: "&aLoading worlds..."
   packs: "&aLoading packs..."
+  not-fully-loaded: "&cPlugin is still loading. Try again later"
 Enable:
   line1: "&a[&6NieuweGeweldigeLuckyBlokken &b%version%&a] is nu ingeladen"
 Disable:

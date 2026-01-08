@@ -3,7 +3,6 @@ package me.i2000c.newalb.lucky_blocks.rewards;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +64,10 @@ public class LuckyBlockType implements Displayable, Executable {
     private int totalProbability;
     
     private TypeData typeData;
+    
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private List<String> cachedPacksProbList;
     
     @Override
     public ItemStack getItemToDisplay(){
@@ -253,11 +256,21 @@ public class LuckyBlockType implements Displayable, Executable {
             Bukkit.addRecipe(type.recipe);
         }
         
-        // Load outcome packs
-        type.packs = new HashMap<>();
+        type.typeData = new TypeData(type.luckyBlockItem);
+        type.packs = new LinkedHashMap<>();
         type.totalProbability = 0;
-        List<String> packsProbList = config.getStringList("outcome_packs");
-        for(String packProb : packsProbList){
+        type.cachedPacksProbList = config.getStringList("outcome_packs");
+        return type;
+//</editor-fold>
+    }
+    
+    public void loadPacksFromCachedPacksProbList() {
+        if(cachedPacksProbList == null) {
+            return;
+        }
+        
+        // Load outcome packs from cachedPacksProbList
+        for(String packProb : cachedPacksProbList) {
             String[] splitted = packProb.split(";");
             String packName = splitted[0];
             int packProbability;
@@ -271,21 +284,19 @@ public class LuckyBlockType implements Displayable, Executable {
             if(pack == null){
                 Logger.log(String.format("Pack \"%s\" doesn't exist", packName));
             }else{
-                pack.addLuckyBlockTypeToNotify(type);
-                type.totalProbability += packProbability;
-                type.packs.put(pack, packProbability);
+                pack.addLuckyBlockTypeToNotify(this);
+                this.totalProbability += packProbability;
+                this.packs.put(pack, packProbability);
             }            
         }
-        if(type.packs.isEmpty()){
-            Logger.warn(String.format("LuckyBlockType \"%s\" doesn't contain any valid outcome pack", type.typeName));
-        }else if(type.totalProbability <= 0){
-            Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", type.typeName));
+        
+        if(this.packs.isEmpty()) {
+            Logger.warn(String.format("LuckyBlockType \"%s\" doesn't contain any valid outcome pack", this.typeName));
+        }else if(this.totalProbability <= 0) {
+            Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", this.typeName));
         }
         
-        type.typeData = new TypeData(type.luckyBlockItem);
-        
-        return type;
-//</editor-fold>
+        cachedPacksProbList = null;
     }
     
     public void saveToConfig(Config config){
@@ -377,7 +388,7 @@ public class LuckyBlockType implements Displayable, Executable {
         
         clone.luckyBlockItem = this.getItem();
         clone.crafting = new ArrayList<>(this.crafting);
-        clone.packs = new HashMap<>(this.packs);
+        clone.packs = new LinkedHashMap<>(this.packs);
         
         return clone;
 //</editor-fold>

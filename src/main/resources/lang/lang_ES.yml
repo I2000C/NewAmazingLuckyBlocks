@@ -113,6 +113,7 @@ Helpmenu6:
   line4: "   &7- Ejecuta un evento de LuckyBlock en la ubicación de un jugador"
   line5: "&7--------&cNewAmazingHelp <page 6/%maxPages%>&7--------"
 
+Packs-loading: "&eNewAmazingLuckyBlocks ha cargado: &d%packs% &2Outcome Pack(s)"
 World-loading: "&eNewAmazingLuckyBlocks ha cargado: &d%worlds% &bmundo(s)"
 World-management1:
   currentMode: "&5Modo actual: %worldListMode%"
@@ -143,6 +144,7 @@ Loading:
   lang: "&aCargando archivos de idioma..."
   worlds: "&aCargando mundos..."
   packs: "&aCargando packs..."
+  not-fully-loaded: "&cEl plugin todavía se está cargando. Inténtalo de nuevo más tarde"
 Enable:
   line1: "&a[&6NewAmazingLuckyBlocks &b%version%&a] ha sido activado"
 Disable:

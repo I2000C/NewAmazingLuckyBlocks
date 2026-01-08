@@ -12,6 +12,7 @@ import com.cryptomorin.xseries.XMaterial;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.lucky_blocks.rewards.LuckyBlockType;
+import me.i2000c.newalb.lucky_blocks.rewards.PackManager;
 import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
 import me.i2000c.newalb.utils.locations.LocationManager;
 import me.i2000c.newalb.utils.logging.Logger;
@@ -41,6 +42,11 @@ public class LuckyTool extends SpecialItem{
             
             if(!ConfigManager.getMainConfig().getBoolean("Objects.LuckyTool.enable")){
                 Logger.sendMessage(ConfigManager.getLangMessage("Objects.LuckyTool.disabled"), player);
+                return;
+            }
+            
+            if(PackManager.IS_LOADING_PACKS()) {
+                Logger.sendMessage(ConfigManager.getLangMessage("Loading.not-fully-loaded"), player);
                 return;
             }
             

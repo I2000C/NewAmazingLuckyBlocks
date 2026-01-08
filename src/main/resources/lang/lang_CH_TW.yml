@@ -113,6 +113,7 @@ Helpmenu6:
   line4: "   &7- Executes a LuckyBlock event at a player's location"
   line5: "&7--------&cNewAmazingHelp <page 6/%maxPages%>&7--------"
 
+Packs-loading: "&e幸運方塊以加載: &d%packs% &2Outcome Packs(s)"
 World-loading: "&e幸運方塊以加載: &d%worlds% &bworld(s)"
 World-management1:
   currentMode: "&5Current mode: %worldListMode%"
@@ -142,6 +143,7 @@ Loading:
   lang: "&a加載語言中..."
   worlds: "&aLoading worlds..."
   packs: "&aLoading packs..."
+  not-fully-loaded: "&cPlugin is still loading. Try again later"
 Enable:
   line1: "&a[&6幸運方塊 &b%版本%&a] 現已啟用"
 Disable:

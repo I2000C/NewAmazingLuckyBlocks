@@ -5,22 +5,25 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import me.i2000c.newalb.NewAmazingLuckyBlocks;
-import me.i2000c.newalb.api.version.MinecraftVersion;
-import me.i2000c.newalb.utils.logging.Logger;
-import me.i2000c.newalb.utils.misc.ItemStackWrapper;
-import me.i2000c.newalb.utils.misc.OtherUtils;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
-public class PackManager{
-    private PackManager(){
-    }
-    
-    static{
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.Synchronized;
+import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.api.version.MinecraftVersion;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.OtherUtils;
+import me.i2000c.newalb.utils.tasks.Task;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class PackManager {
+    static {
         packList = new LinkedHashMap<>();
     }
     
@@ -29,25 +32,58 @@ public class PackManager{
     
     private static final Map<String, OutcomePack> packList;
     
-    public static void loadPacks(){
+    private static boolean LOADING_PACKS = false;
+    
+    @Synchronized
+    public static void SET_LOADING_PACKS(boolean state) {
+        LOADING_PACKS = state;
+    }
+    
+    @Synchronized
+    public static boolean IS_LOADING_PACKS() {
+        return LOADING_PACKS;
+    }
+    
+    public static void loadPacksAsync(Runnable onPacksLoaded) {
+        SET_LOADING_PACKS(true);
+        List<CompletableFuture<OutcomePack>> futures = new ArrayList<>();
+        
         if(!OUTCOMES_FOLDER.exists()){
             OUTCOMES_FOLDER.mkdirs();
             copyDefaultPacks();
         }
         
         packList.clear();
-        for(File file : OUTCOMES_FOLDER.listFiles()){
-            if(!file.getName().endsWith(".yml")){
+        for(File file : OUTCOMES_FOLDER.listFiles()) {
+            if(!file.getName().endsWith(".yml")) {
                 continue;
             }
-            try{
-                OutcomePack pack = new OutcomePack(file);
-                packList.put(pack.getPackname(), pack);
-            }catch(Exception ex){
-                Logger.err("An error occurred while loading pack: \"" + file.getName() + "\"");
-                ex.printStackTrace();
-            }
+            
+            CompletableFuture<OutcomePack> future = CompletableFuture.supplyAsync(() -> {
+                try {
+                    OutcomePack pack = new OutcomePack(file);
+                    return pack;
+                } catch(Exception ex) {
+                    Logger.err("An error occurred while loading pack: \"" + file.getName() + "\"");
+                    ex.printStackTrace();
+                    return null;
+                }
+            }, PLUGIN.asyncPacksLoaderExecutorService);
+            futures.add(future);
         }
+        
+        // Wait until all packs are loaded
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                         .thenRun(() -> {
+                             futures.forEach(future -> {
+                                 OutcomePack outcomePack = future.join();
+                                 if(outcomePack != null) {
+                                     packList.put(outcomePack.getPackname(), outcomePack);
+                                 }
+                             });
+                             SET_LOADING_PACKS(false);
+                             Task.runTask(onPacksLoaded);
+                         });
     }
     
     public static OutcomePack getPack(String filename){
@@ -59,7 +95,7 @@ public class PackManager{
     }
     
     public static List<OutcomePack> getPacks(){
-        return new ArrayList(packList.values());
+        return new ArrayList<>(packList.values());
     }
     public static List<OutcomePack> getSortedPacks(){
         List<OutcomePack> list = PackManager.getPacks();

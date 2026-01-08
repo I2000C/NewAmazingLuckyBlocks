@@ -113,6 +113,7 @@ Helpmenu6:
   line5: "&7--------&cNewAmazingHelp <page 6/%maxPages%>&7--------"
 
 World-loading: "&eNewAmazingLuckyBlocks be let töltve: &d%worlds% &bworld(s)"
+Packs-loading: "&eNewAmazingLuckyBlocks be let töltve: &d%packs% &2Outcome Pack(s)"
 World-management1:
   currentMode: "&5Current mode: %worldListMode%"
   title: "&b=== &6Worlds-list &b==="
@@ -141,6 +142,7 @@ Loading:
   lang: "&aLoading lang..."
   worlds: "&aLoading worlds..."
   packs: "&aLoading packs..."
+  not-fully-loaded: "&cPlugin is still loading. Try again later"
 Enable:
   line1: "&a[&6NewAmazingLuckyBlocks &b%version%&a] is now enabled"
 Disable:

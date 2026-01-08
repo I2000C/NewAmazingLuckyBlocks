@@ -40,6 +40,7 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.misc.OtherUtils;
 import me.i2000c.newalb.utils.random.RandomBlocks;
 import me.i2000c.newalb.utils.random.RandomBlocksOptions;
+import me.i2000c.newalb.utils.tasks.Task;
 import me.i2000c.newalb.utils.textures.Texture;
 
 public class CommandManager implements CommandExecutor, TabCompleter{
@@ -493,6 +494,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return false;
         }
         
+        if(PackManager.IS_LOADING_PACKS()) {
+            Logger.sendMessage(ConfigManager.getLangMessage("Loading.not-fully-loaded"), sender);
+            return false;
+        }
+        
         RandomBlocks.forceStopAllRandomBlocksTasks();
         
         GUIManager.setCurrentMenu(null);
@@ -501,6 +507,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.config"), sender);
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.lang"), sender);
         ConfigManager.loadConfigs();
+        SpecialItems.loadItems();
         
         boolean coloredLogger = ConfigManager.getMainConfig().getBoolean("ColoredLogger");
         Logger.initializeLogger(plugin.prefix, coloredLogger);        
@@ -508,15 +515,27 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.worlds"), sender);
         WorldManager.reloadWorlds();
-
-        SpecialItems.loadItems();
         
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.packs"), sender);
-        PackManager.loadPacks();
-        TrapManager.loadTraps();
         TypeManager.loadTypes();
+        PackManager.loadPacksAsync(() -> {
+            try {
+                TypeManager.loadPacksFromCachedPacksProbList();
+                TrapManager.loadTraps();
+            } catch(Throwable t) {
+                throw t;
+            } finally {
+                PackManager.SET_LOADING_PACKS(false);
+            }
+            
+            String message = ConfigManager.getLangMessage("Packs-loading")
+                                          .replace("%packs%", PackManager.getPacks().size() + "");
+            Task.runTask(() -> {
+                Logger.logAndMessage(message, sender);
+                Logger.logAndMessage(ConfigManager.getLangMessage("Reload.reload-finished"), sender);
+            });
+        });
         
-        Logger.logAndMessage(ConfigManager.getLangMessage("Reload.reload-finished"), sender);
         return true;
 //</editor-fold>
     }
@@ -636,6 +655,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
             return false;
         }
         
+        if(PackManager.IS_LOADING_PACKS()) {
+            Logger.sendMessage(ConfigManager.getLangMessage("Loading.not-fully-loaded"), sender);
+            return false;
+        }
+        
         Player player = (Player) sender;
         if(confirmMenu && ConfigManager.getMainConfig().getBoolean("Enable-openMenu-confirmation")){
             Logger.sendMessage(ConfigManager.getLangMessage("MenuConfirmation.line1"), sender);
@@ -668,6 +692,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         }
         
         if(!checkNotConsole(sender)){
+            return false;
+        }
+        
+        if(PackManager.IS_LOADING_PACKS()) {
+            Logger.sendMessage(ConfigManager.getLangMessage("Loading.not-fully-loaded"), sender);
             return false;
         }
         
@@ -972,6 +1001,11 @@ public class CommandManager implements CommandExecutor, TabCompleter{
     private boolean executeLuckyEvent(CommandSender sender, String[] args){
         //<editor-fold defaultstate="collapsed" desc="Code">
         if(!checkHasPermission(sender, "Commands.LuckyEvent-permission")){
+            return false;
+        }
+        
+        if(PackManager.IS_LOADING_PACKS()) {
+            Logger.sendMessage(ConfigManager.getLangMessage("Loading.not-fully-loaded"), sender);
             return false;
         }
         
