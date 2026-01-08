@@ -77,7 +77,14 @@ public class ConfigManager {
     }
     
     public static String getLangMessage(String path) {
-        return getLangConfig().getString(path);
+        try {
+            return getLangConfig().getString(path);
+        } catch(IllegalArgumentException ex) {
+            Logger.warn("Lang message \"" + path + "\" doesn't exist in selected lang file. Using internal English file entry");
+            Config config = new Config();
+            config.loadConfigFromResource(Language.EN.getLangFileName());
+            return config.getString(path);
+        }
     }
     
     
