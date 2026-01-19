@@ -1,15 +1,8 @@
 package me.i2000c.newalb.listeners.blocks;
 
-import me.i2000c.newalb.config.ConfigManager;
-import me.i2000c.newalb.listeners.interact.SpecialItem;
-import me.i2000c.newalb.listeners.interact.SpecialItems;
-import me.i2000c.newalb.lucky_blocks.rewards.LuckyBlockType;
-import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
-import me.i2000c.newalb.utils.locations.WorldManager;
-import me.i2000c.newalb.utils.misc.ItemStackWrapper;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,8 +11,18 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.listeners.interact.SpecialItem;
+import me.i2000c.newalb.listeners.interact.SpecialItems;
+import me.i2000c.newalb.lucky_blocks.rewards.LuckyBlockType;
+import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
+import me.i2000c.newalb.utils.locations.WorldManager;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.tasks.Task;
 
 
 public class BlockProtectListener implements Listener{
@@ -86,6 +89,28 @@ public class BlockProtectListener implements Listener{
                     return false;
                 }
             });
+        }
+    }
+    
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void noSkullCrash4(PlayerBucketEmptyEvent event) {
+        if(!WorldManager.isEnabled(event.getBlockClicked().getWorld().getName())) {
+            return;
+        }
+        
+        Block targetBlock = event.getBlockClicked().getRelative(event.getBlockFace());
+        LuckyBlockType type = TypeManager.getType(targetBlock);
+        if(type == null) {
+            return;
+        }
+        
+        if(ConfigManager.getMainConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {            
+            event.setCancelled(true);
+            Task.runTask(() -> targetBlock.getState().update(true), 2L);
+        } else {
+            targetBlock.setType(Material.AIR);
+            Location loc = targetBlock.getLocation();
+            type.getItem().dropAtLocation(loc);
         }
     }
     
