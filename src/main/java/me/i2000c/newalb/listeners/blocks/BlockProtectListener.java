@@ -1,5 +1,8 @@
 package me.i2000c.newalb.listeners.blocks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -8,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -111,6 +115,29 @@ public class BlockProtectListener implements Listener{
             targetBlock.setType(Material.AIR);
             Location loc = targetBlock.getLocation();
             type.getItem().dropAtLocation(loc);
+        }
+    }
+    
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void noSkullCrash5(BlockPistonExtendEvent event) {
+        if(!WorldManager.isEnabled(event.getBlock().getWorld().getName())) {
+            return;
+        }
+        
+        for(Block block : event.getBlocks()) {
+            LuckyBlockType type = TypeManager.getType(block);
+            if(type == null) {
+                continue;
+            }
+            
+            if(ConfigManager.getMainConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {            
+                event.setCancelled(true);
+                break;
+            } else {
+                block.setType(Material.AIR);
+                Location loc = block.getLocation();
+                type.getItem().dropAtLocation(loc);
+            }
         }
     }
     
