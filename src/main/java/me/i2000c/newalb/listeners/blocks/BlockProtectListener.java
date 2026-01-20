@@ -1,14 +1,13 @@
 package me.i2000c.newalb.listeners.blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
@@ -18,7 +17,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
@@ -26,6 +27,7 @@ import me.i2000c.newalb.lucky_blocks.rewards.LuckyBlockType;
 import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
 import me.i2000c.newalb.utils.locations.WorldManager;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.reflection.ReflectionManager;
 import me.i2000c.newalb.utils.tasks.Task;
 
 
@@ -138,6 +140,52 @@ public class BlockProtectListener implements Listener{
                 Location loc = block.getLocation();
                 type.getItem().dropAtLocation(loc);
             }
+        }
+    }
+    
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void noSkullCrash6(BlockDispenseEvent event) {
+        if(!WorldManager.isEnabled(event.getBlock().getWorld().getName())) {
+            return;
+        }
+        
+        ItemStack item = event.getItem();
+        if(item == null) {
+            return;
+        }
+        
+        if(!item.getType().name().contains("BUCKET")) {
+            return;
+        }
+        
+        Block block = event.getBlock();
+        BlockFace face;
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+            MaterialData materialData = block.getState().getData();
+            if(!(materialData instanceof org.bukkit.material.Directional)) {
+                return;
+            }
+            face = ((org.bukkit.material.Directional) materialData).getFacing();
+        } else {
+            Object blockData = ReflectionManager.callMethod(block, "getBlockData");
+            if(!(blockData instanceof org.bukkit.block.data.Directional)) {
+                return;
+            }
+            face = ReflectionManager.callMethod(blockData, "getFacing");
+        }
+        
+        Block targetBlock = block.getRelative(face);
+        LuckyBlockType type = TypeManager.getType(targetBlock);
+        if(type == null) {
+            return;
+        }
+        
+        if(ConfigManager.getMainConfig().getBoolean("LuckyBlock.EnableEnvironmentProtection")) {            
+            event.setCancelled(true);
+        } else {
+            targetBlock.setType(Material.AIR);
+            Location loc = targetBlock.getLocation();
+            type.getItem().dropAtLocation(loc);
         }
     }
     
