@@ -1,10 +1,10 @@
 package me.i2000c.newalb.lucky_blocks;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -31,27 +31,22 @@ public class LuckyBlockDropper {
     
     private static final String DEFAULT_MATERIAL = "DEFAULT";
     
-    public static void dropLuckyBlock(BlockBreakEvent e){
-        boolean drop = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.enable");
-        if(!drop){
-            return;
-        }
+    private static boolean enableLuckyBlockDropper;
+    private static boolean survivalOnly;
+    private static boolean disableWithSilkTouch;
+    private static boolean dropOriginalItem;
+    private static List<String> commands = new ArrayList<>();
+    private static Map<XMaterial, Map<String, Integer>> enabledBlockProbabilites = new EnumMap<>(XMaterial.class);
+    private static Map<String, Integer> defaultProbabilites = new LinkedHashMap<>();
+    
+    public static void loadSettings() {
+        enableLuckyBlockDropper = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.enable");
+        survivalOnly = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.survivalOnly");
+        disableWithSilkTouch = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.disableWithSilkTouch");
+        dropOriginalItem = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.dropOriginalItem");
+        commands = ConfigManager.getMainConfig().getStringList("LuckyBlock.DropOnBlockBreak.commands");
         
-        boolean survivalOnly = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.survivalOnly");
-        if(survivalOnly && e.getPlayer().getGameMode() != GameMode.SURVIVAL){
-            return;
-        }
-        
-        boolean disableWithSilkTouch = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.disableWithSilkTouch");
-        if(disableWithSilkTouch) {
-            ItemStack item = e.getPlayer().getItemInHand();
-            if(item != null && item.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0) {
-                return;
-            }
-        }        
-        
-        Map<String, Integer> defaultProbabilities = new HashMap<>();
-        Map<XMaterial, Map<String, Integer>> materialProbabilities = new EnumMap<>(XMaterial.class);
+        enabledBlockProbabilites.clear();
         
         if(ConfigManager.getMainConfig().getBukkitConfig().isList("LuckyBlock.DropOnBlockBreak.enabledBlocks")) {
             Logger.warn("Invalid values detected inside \"LuckyBlock.DropOnBlockBreak.enabledBlocks\" config section");
@@ -60,58 +55,66 @@ public class LuckyBlockDropper {
             return;
         }
         
-        ConfigurationSection cs = ConfigManager.getMainConfig().getConfigurationSection("LuckyBlock.DropOnBlockBreak.enabledBlocks");
-        for(String key : cs.getKeys(false)) {
-            ConfigurationSection subSection = cs.getConfigurationSection(key);
-            for(String typeName : subSection.getKeys(false)) {
+        ConfigurationSection section = ConfigManager.getMainConfig().getConfigurationSection("LuckyBlock.DropOnBlockBreak.enabledBlocks");
+        for(String materialName : section.getKeys(false)) {
+            ConfigurationSection subsection = section.getConfigurationSection(materialName);
+            for(String typeName : subsection.getKeys(false)) {
+                int probability = subsection.getInt(typeName);
                 LuckyBlockType type = TypeManager.getType(typeName);
-                int probability = subSection.getInt(typeName);
                 if(type == null) {
                     Logger.warn(String.format("LuckyBlock type with name \"%s\" doesn't exist", typeName));
                     continue;
                 }
                 
-                if(key.equals(DEFAULT_MATERIAL)) {
-                    defaultProbabilities.put(typeName, probability);
+                if(materialName.equals(DEFAULT_MATERIAL)) {
+                    defaultProbabilites.put(typeName, probability);
                 } else {
-                    XMaterial material = XMaterialUtils.parseXMaterial(key);
-                    Map<String, Integer> probabilityMap = materialProbabilities.getOrDefault(material, new HashMap<>());
-                    probabilityMap.put(typeName, probability);
-                    materialProbabilities.put(material, probabilityMap);
+                    XMaterial material = XMaterialUtils.parseXMaterial(materialName.toUpperCase());
+                    enabledBlockProbabilites.computeIfAbsent(material, key -> new LinkedHashMap<>())
+                                            .put(typeName, probability);
                 }
             }
         }
-        
-        XMaterial blockMaterial = MinecraftVersion.CURRENT_VERSION.isLegacyVersion()
-                ? XMaterial.matchXMaterial(new ItemStack(e.getBlock().getType(), 1, e.getBlock().getData()))
-                : XMaterial.matchXMaterial(e.getBlock().getType());
-        Map<String, Integer> probabilityMap = materialProbabilities.getOrDefault(blockMaterial, defaultProbabilities);
-        if(probabilityMap.isEmpty()) {
+    }
+    
+    public static void dropLuckyBlock(BlockBreakEvent e) {
+        if(!enableLuckyBlockDropper) {
             return;
         }
         
+        if(survivalOnly && e.getPlayer().getGameMode() != GameMode.SURVIVAL){
+            return;
+        }
+        
+        if(disableWithSilkTouch) {
+            ItemStack item = e.getPlayer().getItemInHand();
+            if(item != null && item.getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0) {
+                return;
+            }
+        }
+        
         Player p = e.getPlayer();
-        List<String> commandList = ConfigManager.getMainConfig().getStringList("LuckyBlock.DropOnBlockBreak.commands");
+        XMaterial material = XMaterialUtils.getXMaterial(e.getBlock());
+        Map<String, Integer> probabilites = enabledBlockProbabilites.getOrDefault(material, defaultProbabilites);
         
         final int totalProbability = 100;
         int randomValue = RandomUtils.getInt(totalProbability);
-        for(Map.Entry<String, Integer> entry : probabilityMap.entrySet()) {
+        for(Map.Entry<String, Integer> entry : probabilites.entrySet()) {
             String typeName = entry.getKey();
             int probability = entry.getValue();
             randomValue -= probability;
-            if(randomValue < 0) {            
+            if(randomValue < 0) {
                 Block b = e.getBlock();
-                boolean dropOriginalItem = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.dropOriginalItem");
                 if(!dropOriginalItem){
                     e.setCancelled(true);
                     b.setType(Material.AIR);
                 }
-
+                
                 Location targetLocation = b.getLocation().add(0.5, 0, 0.5);
                 LuckyBlockType randomType = TypeManager.getType(typeName);
                 randomType.getItem().dropAtLocation(targetLocation);
-
-                commandList.forEach(command -> {
+                
+                commands.forEach(command -> {
                     byte data = MinecraftVersion.CURRENT_VERSION.isLegacyVersion() ? b.getData() : 0;
                     String fullCommand = command.replace("%x%", p.getLocation().getBlockX() + "")
                                                 .replace("%y%", b.getLocation().getBlockY() + "")

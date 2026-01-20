@@ -22,6 +22,7 @@ import me.i2000c.newalb.integration.Schematic;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
+import me.i2000c.newalb.lucky_blocks.LuckyBlockDropper;
 import me.i2000c.newalb.lucky_blocks.TrapManager;
 import me.i2000c.newalb.lucky_blocks.editors.Editor;
 import me.i2000c.newalb.lucky_blocks.editors.EditorType;
@@ -507,6 +508,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.config"), sender);
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.lang"), sender);
         ConfigManager.loadConfigs();
+        
         SpecialItems.loadItems();
         
         boolean coloredLogger = ConfigManager.getMainConfig().getBoolean("ColoredLogger");
@@ -518,6 +520,7 @@ public class CommandManager implements CommandExecutor, TabCompleter{
         
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.packs"), sender);
         TypeManager.loadTypes();
+        LuckyBlockDropper.loadSettings();
         PackManager.loadPacksAsync(() -> {
             try {
                 TypeManager.loadPacksFromCachedPacksProbList();

@@ -33,6 +33,7 @@ import me.i2000c.newalb.listeners.interact.SpecialEventListener;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
 import me.i2000c.newalb.listeners.updates.UpdateChecker;
+import me.i2000c.newalb.lucky_blocks.LuckyBlockDropper;
 import me.i2000c.newalb.lucky_blocks.TrapManager;
 import me.i2000c.newalb.lucky_blocks.editors.menus.RewardListMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.PackManager;
@@ -104,6 +105,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         
         Logger.log(ConfigManager.getLangMessage("Loading.packs"));
         TypeManager.loadTypes();
+        LuckyBlockDropper.loadSettings();
         PackManager.loadPacksAsync(() -> {
             try {
                 TypeManager.loadPacksFromCachedPacksProbList();
