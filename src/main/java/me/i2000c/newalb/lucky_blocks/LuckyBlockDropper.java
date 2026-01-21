@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -62,6 +63,11 @@ public class LuckyBlockDropper {
         }
     };
     
+    private static boolean enableDropCooldown;
+    private static int minCooldown;
+    private static int maxCooldown;
+    private static Map<UUID, Long> dropCooldowns = new HashMap<>();
+    
     public static void loadSettings() {
         enableLuckyBlockDropper = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.enable");
         survivalOnly = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.survivalOnly");
@@ -113,6 +119,19 @@ public class LuckyBlockDropper {
             long autoCleanTimeTicks = autoCleanTime * 20L;
             autoCleanLocationsTask.runTask(0L, autoCleanTimeTicks);
         }
+        
+        // Drop cooldown config
+        dropCooldowns.clear();
+        ConfigurationSection dropCooldownSection = ConfigManager.getMainConfig().getConfigurationSection("LuckyBlock.DropOnBlockBreak.dropCooldown");
+        enableDropCooldown = dropCooldownSection.getBoolean("enable");
+        minCooldown = dropCooldownSection.getInt("min");
+        maxCooldown = dropCooldownSection.getInt("max");
+        if(minCooldown < 0) {
+            minCooldown = 0;
+        }
+        if(maxCooldown < minCooldown) {
+            maxCooldown = minCooldown;
+        }
     }
     
     public static void dropLuckyBlock(BlockBreakEvent e) {
@@ -131,7 +150,6 @@ public class LuckyBlockDropper {
             }
         }
         
-        Player p = e.getPlayer();
         XMaterial material = XMaterialUtils.getXMaterial(e.getBlock());
         Map<String, Integer> probabilites = enabledBlockProbabilites.getOrDefault(material, defaultProbabilites);
         if(probabilites.isEmpty()) {
@@ -143,6 +161,20 @@ public class LuckyBlockDropper {
             Long previousTimestamp = recentBrokenLocations.put(location, System.currentTimeMillis());
             if(previousTimestamp != null) {
                 return;
+            }
+        }
+        
+        Player p = e.getPlayer();
+        if(enableDropCooldown) {
+            Long cooldownExpireTime = dropCooldowns.get(p.getUniqueId());
+            Long now = System.currentTimeMillis();
+            if(cooldownExpireTime != null && cooldownExpireTime > now) {
+                return;
+            } else {
+                int randomCooldownSeconds = RandomUtils.getInt(minCooldown, maxCooldown);
+                long randomCooldownMillis = randomCooldownSeconds * 1000L;
+                cooldownExpireTime = now + randomCooldownMillis;
+                dropCooldowns.put(p.getUniqueId(), cooldownExpireTime);
             }
         }
         

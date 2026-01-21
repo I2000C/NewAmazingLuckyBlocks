@@ -412,6 +412,15 @@ LuckyBlock:
       enable: false
       autoCleanTime: 60
       minLocationTime: 30
+    # Enable random cooldown to avoid players getting lots of LuckyBlocks by breaking blocks too fast
+    #   by using a tool with efficiency enchantments or while they have the haste potion effect.
+    # The cooldown will be enabled when a block from the enabled block list is broken.
+    # While cooldown is active, LuckyBlock dropOnBlockBreak probability won't be evaluated.
+    # You can configure min and max cooldown time (in seconds)
+    dropCooldown:
+      enable: false
+      min: 2
+      max: 5
     # List of blocks where this mode is enabled.
     # For each material that you want, put the material name (e.g.: STONE)
     #   followed by an optional data value if using Minecraft 1.8-1.12 (e.g.: STONE:3).
