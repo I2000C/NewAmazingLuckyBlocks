@@ -29,6 +29,7 @@ import org.bukkit.util.Vector;
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import lombok.NonNull;
 import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.ConfigManager;
@@ -59,6 +60,8 @@ public class ItemStealer extends SpecialItem {
     private boolean allowStealingItemsFromBlocks;
     private boolean enableItemFilters;
     private ConfigurationSection itemFilters;
+    private boolean enableEntityFilters;
+    private ConfigurationSection entityFilters;
     
     @Override
     public void onPlayerFish(PlayerFishEvent e) {
@@ -110,6 +113,8 @@ public class ItemStealer extends SpecialItem {
         allowStealingItemsFromBlocks = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".allow-stealing-items-from-blocks");
         enableItemFilters = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".enable-item-filters");
         itemFilters = ConfigManager.getMainConfig().getConfigurationSection(super.itemPathKey + ".item-filters");
+        enableEntityFilters = ConfigManager.getMainConfig().getBoolean(super.itemPathKey + ".enable-entity-filters");
+        entityFilters = ConfigManager.getMainConfig().getConfigurationSection(super.itemPathKey + ".entity-filters");
         return ItemStackWrapper.newItem(XMaterial.FISHING_ROD)
                                .addEnchantment(XEnchantment.LURE, 1)
                                .toItemStack();
@@ -126,6 +131,13 @@ public class ItemStealer extends SpecialItem {
         }
         
         LivingEntity livingEntity = (LivingEntity) entity;
+        if(enableEntityFilters) {
+            boolean isProtectedEntity = checkProtectedEntity(livingEntity);
+            if(isProtectedEntity) {
+                return false;
+            }
+        }
+        
         List<Map.Entry<Integer, ItemStack>> items = getEntityItems(livingEntity);
         if(items.isEmpty()) {
             return false;
@@ -222,7 +234,7 @@ public class ItemStealer extends SpecialItem {
                     String nbtFilter = itemFilters.getString(rule + ".nbt");
                     
                     if(materialFilter == null && nameFilter == null && enchantmentsFilter.isEmpty() && nbtFilter == null) {
-                        Logger.warn("Rule " + rule + " of item stealer is empty. All items will be blocked");
+                        Logger.warn("Item rule " + rule + " of item stealer is empty. All items will be blocked");
                     }
                     
                     boolean removeItem = true;
@@ -277,11 +289,67 @@ public class ItemStealer extends SpecialItem {
                         break;
                     }
                 } catch(Exception ex) {
-                    Logger.err("An error occurred while evaluating filtering rule " + rule + " of item stealer:");
+                    Logger.err("An error occurred while evaluating item filtering rule " + rule + " of item stealer:");
                     throw new InternalError(ex);
                 }
             }
         }
+    }
+    
+    private boolean checkProtectedEntity(LivingEntity entity) {
+        for(String rule : entityFilters.getKeys(false)) {
+            try {
+                boolean protectEntity = true;
+                
+                String typeFilter = entityFilters.getString(rule + ".type");
+                String nameFilter = entityFilters.getString(rule + ".name");
+                String nbtFilter = entityFilters.getString(rule + ".nbt");
+                
+                if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_14)) {
+                    Logger.warn("Entity rule " + rule + " of item stealer uses NBT, which is only supported for entities since Minecraft 1.14");
+                    nbtFilter = null;
+                }
+                
+                if(typeFilter == null && nameFilter == null && nbtFilter == null) {
+                    Logger.warn("Entity rule " + rule + " of item stealer is empty. All entities will be protected");
+                }
+                
+                if(protectEntity && typeFilter != null) {
+                    String type = entity.getType().name();
+                    typeFilter = typeFilter.toUpperCase();
+                    protectEntity &= type.matches(typeFilter);
+                }
+                
+                if(protectEntity && nameFilter != null) {
+                    String name = entity.getCustomName();
+                    name = Logger.stripColor(name != null ? name : "");
+                    protectEntity &= name.matches(nameFilter);
+                }
+                
+                if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_14)) {
+                    if(protectEntity && nbtFilter != null) {
+                        boolean isPresent = false;
+                        Set<String> tags = NBT.getPersistentData(entity, nbt -> {return nbt.getKeys();});
+                        for(String tag : tags) {
+                            if(tag.matches(nbtFilter)) {
+                                isPresent = true;
+                                break;
+                            }
+                        }
+                        protectEntity &= isPresent;
+                    }
+                }
+                
+                if(protectEntity) {
+                    return true;
+                }
+            } catch(Exception ex) {
+                Logger.err("An error occurred while evaluating entity filtering rule "+ rule + " of item stealer:");
+                throw new InternalError(ex);
+            }
+        }
+        
+        return false;
     }
     
     private void flyItemToPlayer(@NonNull ItemStack itemStack, @NonNull Location fromLocation, @NonNull Player player) {

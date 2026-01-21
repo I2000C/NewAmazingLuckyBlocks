@@ -310,6 +310,29 @@ Objects:
       # Blocks any item whose names end in TEST:
       my_rule_6:
         name: ".*TEST"
+    # Enable or disable filters to protect certain entities from being stolen
+    enable-entity-filters: false
+    # You can add filters in the list below to protect certain entities from being stolen.
+    # If an entity property matches one or more filters, players won't be be able to steal items from that entity.
+    # In addition you can use Java regexp if you know how to use it (You can test them here: https://regex101.com/).
+    # You can filter by type, by name and by nbt (only in Minecraft 1.14+).
+    #
+    # Important: Entity type is compared ignoring case but names and nbt are compared preserving case
+    entity-filters:
+      my_rule_1:
+        # Blocks stealing items from any type of zombie
+        type: ".*ZOMBIE.*"
+      my_rule_2:
+        # Blocks stealing items from a player called Bob
+        type: "PLAYER"
+        name: "Bob"
+      my_rule_3:
+        # Blocks stealing items from a skeleton which has the nbt key "cool-skeleton"
+        type: "SKELETON"
+        nbt: "cool-skeleton"
+      my_rule_4:
+        # Blocks stealing items from any entity which has the nbt key "anti-steal-key"
+        nbt: "anti-steal-key"
     required-permission: false
     permission: "amazinglb.objects.item_stealer"
     custom-model-data: 1000

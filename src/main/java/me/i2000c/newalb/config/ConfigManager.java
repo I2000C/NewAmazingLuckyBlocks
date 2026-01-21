@@ -43,7 +43,8 @@ public class ConfigManager {
                     "LuckyBlock.DropOnBlockBreak.locationFiltering",
                     "LuckyBlock.DropOnBlockBreak.dropCooldown",
                     "LuckyBlock.DropOnBlockBreak.enabledBlocks",
-                    "Objects.ItemStealer.item-filters");
+                    "Objects.ItemStealer.item-filters",
+                    "Objects.ItemStealer.entity-filters");
         }
         
         // Update all lang configs
