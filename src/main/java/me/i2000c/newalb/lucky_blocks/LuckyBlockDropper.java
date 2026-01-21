@@ -40,8 +40,8 @@ public class LuckyBlockDropper {
     private static boolean disableWithSilkTouch;
     private static boolean dropOriginalItem;
     private static List<String> commands = new ArrayList<>();
-    private static Map<XMaterial, Map<String, Integer>> enabledBlockProbabilites = new EnumMap<>(XMaterial.class);
-    private static Map<String, Integer> defaultProbabilites = new LinkedHashMap<>();
+    private static Map<XMaterial, Map<String, Double>> enabledBlockProbabilites = new EnumMap<>(XMaterial.class);
+    private static Map<String, Double> defaultProbabilites = new LinkedHashMap<>();
     
     private static boolean enableLocationFiltering;
     private static int autoCleanTime;
@@ -88,7 +88,7 @@ public class LuckyBlockDropper {
         for(String materialName : section.getKeys(false)) {
             ConfigurationSection subsection = section.getConfigurationSection(materialName);
             for(String typeName : subsection.getKeys(false)) {
-                int probability = subsection.getInt(typeName);
+                double probability = subsection.getDouble(typeName);
                 LuckyBlockType type = TypeManager.getType(typeName);
                 if(type == null) {
                     Logger.warn(String.format("LuckyBlock type with name \"%s\" doesn't exist", typeName));
@@ -151,7 +151,7 @@ public class LuckyBlockDropper {
         }
         
         XMaterial material = XMaterialUtils.getXMaterial(e.getBlock());
-        Map<String, Integer> probabilites = enabledBlockProbabilites.getOrDefault(material, defaultProbabilites);
+        Map<String, Double> probabilites = enabledBlockProbabilites.getOrDefault(material, defaultProbabilites);
         if(probabilites.isEmpty()) {
             return;
         }
@@ -179,10 +179,10 @@ public class LuckyBlockDropper {
         }
         
         final int totalProbability = 100;
-        int randomValue = RandomUtils.getInt(totalProbability);
-        for(Map.Entry<String, Integer> entry : probabilites.entrySet()) {
+        double randomValue = RandomUtils.getInt(totalProbability*1000)/1000.0;
+        for(Map.Entry<String, Double> entry : probabilites.entrySet()) {
             String typeName = entry.getKey();
-            int probability = entry.getValue();
+            double probability = entry.getValue();
             randomValue -= probability;
             if(randomValue < 0) {
                 Block b = e.getBlock();
