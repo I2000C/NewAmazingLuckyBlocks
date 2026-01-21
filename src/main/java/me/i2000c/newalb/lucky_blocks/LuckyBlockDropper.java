@@ -2,6 +2,8 @@ package me.i2000c.newalb.lucky_blocks;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,7 @@ import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
 import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.XMaterialUtils;
 import me.i2000c.newalb.utils.random.RandomUtils;
+import me.i2000c.newalb.utils.tasks.Task;
 
 public class LuckyBlockDropper {
     
@@ -38,6 +41,26 @@ public class LuckyBlockDropper {
     private static List<String> commands = new ArrayList<>();
     private static Map<XMaterial, Map<String, Integer>> enabledBlockProbabilites = new EnumMap<>(XMaterial.class);
     private static Map<String, Integer> defaultProbabilites = new LinkedHashMap<>();
+    
+    private static boolean enableLocationFiltering;
+    private static int autoCleanTime;
+    private static int minLocationTime;
+    private static Map<Location, Long> recentBrokenLocations = new HashMap<>();
+    private static Task autoCleanLocationsTask = new Task() {
+        @Override
+        public void run() {
+            Iterator<Map.Entry<Location, Long>> iterator = recentBrokenLocations.entrySet().iterator();
+            while(iterator.hasNext()) {
+                Map.Entry<Location, Long> entry = iterator.next();
+                long timestampMillis = entry.getValue();
+                long timeElapsedMillis = System.currentTimeMillis() - timestampMillis;
+                long minLocationTimeMillis = minLocationTime * 1000;
+                if(timeElapsedMillis > minLocationTimeMillis) {
+                    iterator.remove();
+                }
+            }
+        }
+    };
     
     public static void loadSettings() {
         enableLuckyBlockDropper = ConfigManager.getMainConfig().getBoolean("LuckyBlock.DropOnBlockBreak.enable");
@@ -75,6 +98,21 @@ public class LuckyBlockDropper {
                 }
             }
         }
+        
+        // Location filtering config
+        autoCleanLocationsTask.cancel();
+        recentBrokenLocations.clear();
+        ConfigurationSection locationFilteringSection = ConfigManager.getMainConfig().getConfigurationSection("LuckyBlock.DropOnBlockBreak.locationFiltering");
+        enableLocationFiltering = locationFilteringSection.getBoolean("enable");
+        autoCleanTime = locationFilteringSection.getInt("autoCleanTime");
+        if(autoCleanTime < 1) {
+            autoCleanTime = 1;
+        }
+        minLocationTime = locationFilteringSection.getInt("minLocationTime");
+        if(enableLocationFiltering) {
+            long autoCleanTimeTicks = autoCleanTime * 20L;
+            autoCleanLocationsTask.runTask(0L, autoCleanTimeTicks);
+        }
     }
     
     public static void dropLuckyBlock(BlockBreakEvent e) {
@@ -96,6 +134,17 @@ public class LuckyBlockDropper {
         Player p = e.getPlayer();
         XMaterial material = XMaterialUtils.getXMaterial(e.getBlock());
         Map<String, Integer> probabilites = enabledBlockProbabilites.getOrDefault(material, defaultProbabilites);
+        if(probabilites.isEmpty()) {
+            return;
+        }
+        
+        if(enableLocationFiltering) {
+            Location location = e.getBlock().getLocation();
+            Long previousTimestamp = recentBrokenLocations.put(location, System.currentTimeMillis());
+            if(previousTimestamp != null) {
+                return;
+            }
+        }
         
         final int totalProbability = 100;
         int randomValue = RandomUtils.getInt(totalProbability);

@@ -40,6 +40,7 @@ public class ConfigManager {
         } else {
             mainConfig.loadConfig(mainConfigFile);
             mainConfig.updateConfig(MAIN_CONFIG_FILENAME, mainConfigFile, 
+                    "LuckyBlock.DropOnBlockBreak.locationFiltering",
                     "LuckyBlock.DropOnBlockBreak.enabledBlocks",
                     "Objects.ItemStealer.item-filters");
         }

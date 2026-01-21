@@ -401,6 +401,17 @@ LuckyBlock:
     # If enabled, the original item will be dropped with the LuckyBlock.
     #   If not, only the LuckyBlock will be dropped
     dropOriginalItem: true
+    # Enable block location filtering to prevent players from using macros like
+    #       Place block --> Break block --> Wait time --> Repeat
+    #   to get LuckyBlocks automatically.
+    # Location list will be cleaned after 'autoCleanTime' time (in seconds)
+    #   or when the plugin is reloaded.
+    # When location list is auto cleaned, only locations older than
+    #   'minLocationTime' seconds will be deleted
+    locationFiltering:
+      enable: false
+      autoCleanTime: 60
+      minLocationTime: 30
     # List of blocks where this mode is enabled.
     # For each material that you want, put the material name (e.g.: STONE)
     #   followed by an optional data value if using Minecraft 1.8-1.12 (e.g.: STONE:3).
