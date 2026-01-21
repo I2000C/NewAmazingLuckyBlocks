@@ -119,7 +119,7 @@ public class LuckyBlockDropper {
                     String fullCommand = command.replace("%x%", p.getLocation().getBlockX() + "")
                                                 .replace("%y%", b.getLocation().getBlockY() + "")
                                                 .replace("%z%", b.getLocation().getBlockZ() + "")
-                                                .replace("%bx%", b.getZ() + "")
+                                                .replace("%bx%", b.getX() + "")
                                                 .replace("%by%", b.getY() + "")
                                                 .replace("%bz%", b.getZ() + "")
                                                 .replace("%player%", p.getDisplayName())

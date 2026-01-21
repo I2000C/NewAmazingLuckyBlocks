@@ -412,8 +412,8 @@ LuckyBlock:
     #   STONE:
     #     default: 50
     #     default2: 25
-    # In this case, there is a probability of 50% of dropping 'default' LuckyBlockType
-    #   25% of dropping 'default2' LuckyBlockType and 25% of not dropping anythings
+    # In this case, there is a probability of 50% of dropping 'default' LuckyBlock type,
+    #   25% of dropping 'default2' LuckyBlock type and 25% of not dropping anything
     # In addition, you can optionally add a material named "DEFAULT", which will be used
     #   when the broken block is not specified.
     #
