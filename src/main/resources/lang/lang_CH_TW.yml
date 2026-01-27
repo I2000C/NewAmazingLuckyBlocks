@@ -62,7 +62,7 @@ cannot-rename: "&cYou cannot rename luckyblocks"
 Helpmenu:
   line1: "%prefix%"
   line2: ""
-  line3: '&c/alb randomblock <radx> <rady> <radz> <blocks> <floating_blocks: true/false/force>
+  line3: '&c/alb randomblocks <radx> <rady> <radz> <blocks> <floating_blocks: true/false/force>
     [player] &7- Places random lucky blocks'
   line4: "&c/alb reload &7- 重新加載配置和 lang 文件"
   line5: "&c/alb help <page> &7- 打開幫助頁面"
@@ -83,7 +83,7 @@ Helpmenu3:
   line2: ""
   line3: "&c/alb clear &7- 从所有世界中移除所有的幸运块"
   line4: "&c/alb clear <world> &7- 移除<世界名子>全部的幸運方塊"
-  line5: "&c/alb randomblock stop &7-停止放置隨機幸運方塊"
+  line5: "&c/alb randomblocks stop &7- 停止放置隨機幸運方塊"
   line6: "&7--------&c幸運方塊幫助選單第3/%maxPages%頁&7--------"
 Helpmenu4:
   line1: "%prefix%"

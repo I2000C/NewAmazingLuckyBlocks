@@ -62,10 +62,10 @@ cannot-rename: "&cYou cannot rename luckyblocks"
 Helpmenu:
   line1: "%prefix%"
   line2: ""
-  line3: "&c/alb randomblock <radx> <rady> <radz> <blocks> <Lebegő blok: igaz/hamis> [player] &7- Random lucky blokok le letek rakva"
+  line3: "&c/alb randomblocks <radx> <rady> <radz> <blocks> <Lebegő blok: igaz/hamis> [player] &7- Random lucky blokok le letek rakva"
   line4: "&c/alb reload  &7- A cofing be let töltve"
   line5: "&c/alb help <page> &7- Open the help page"
-  line6: "&c/alb  &7-  Show plugin name and version"
+  line6: "&c/alb  &7- Show plugin name and version"
   line7: "&7--------&cNewAmazingHelp <page 1/%maxPages%>&7--------"
 Helpmenu2:
   line1: "%prefix%"
@@ -82,7 +82,7 @@ Helpmenu3:
   line2: ""
   line3: "&c/alb clear &7- Removes all LuckyBlocks of all worlds"
   line4: "&c/alb clear <world> &7- Removes all LuckyBlocks of the world &7world"
-  line5: "&c/alb randomblock stop &7-Stop placing random lucky blocks"
+  line5: "&c/alb randomblocks stop &7-Stop placing random lucky blocks"
   line6: "&7--------&cNewAmazingHelp <page 3/%maxPages%>&7--------"
 Helpmenu4:
   line1: "%prefix%"

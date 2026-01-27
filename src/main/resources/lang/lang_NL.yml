@@ -62,7 +62,7 @@ cannot-rename: "&cJe kunt Lucky Blokken niet hernoemen"
 Helpmenu:
   line1: "%prefix%"
   line2: ""
-  line3: '&c/alb randomblock <radx> <rady> <radz> <blocks> <floating_blocks: true/false/force>
+  line3: '&c/alb randomblocks <radx> <rady> <radz> <blocks> <floating_blocks: true/false/force>
     [player] &7- Plaatst willekeurig lucky blokken om de speler'
   line4: "&c/alb reload &7- Herlaad de configuratie and taal bestanden files"
   line5: "&c/alb help <page> &7- Opent de help pagina"
@@ -83,7 +83,7 @@ Helpmenu3:
   line2: ""
   line3: "&c/alb clear &7- Verwijdert alle LuckyBlokken van alle werelden"
   line4: "&c/alb clear <world> &7- Verwijdert alle Lucky Blokken van de wereld &7world"
-  line5: "&c/alb randomblock stop &7-Stoppen met het plaatsen van Lucky Blokken"
+  line5: "&c/alb randomblocks stop &7-Stoppen met het plaatsen van Lucky Blokken"
   line6: "&7--------&cNieuweGeweldigeHelp <page 3/%maxPages%>&7--------"
 Helpmenu4:
   line1: "%prefix%"
