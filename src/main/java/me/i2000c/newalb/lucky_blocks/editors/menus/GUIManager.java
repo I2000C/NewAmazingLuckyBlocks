@@ -1,17 +1,19 @@
 package me.i2000c.newalb.lucky_blocks.editors.menus;
 
-import me.i2000c.newalb.CommandManager;
+import lombok.Getter;
+import lombok.Setter;
 import me.i2000c.newalb.api.gui.Menu;
 
-public class GUIManager{
+public class GUIManager {
+    @Getter
     private static Menu currentMenu = null;
     
     public static void setCurrentMenu(Menu menu){
         currentMenu = menu;
-        CommandManager.confirmMenu = menu != null;
+        confirmMenu = menu != null;
     }
     
-    public static Menu getCurrentMenu(){
-        return currentMenu;
-    }
+    @Getter
+    @Setter
+    private static boolean confirmMenu = false;
 }

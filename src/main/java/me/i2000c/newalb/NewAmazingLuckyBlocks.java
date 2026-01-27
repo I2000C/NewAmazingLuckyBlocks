@@ -127,9 +127,10 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         } else {
             Logger.log("&dWorldGuard support: &7disabled");
         }
-
-        getCommand("alb").setExecutor(new CommandManager(this));
-        getCommand("nalb").setExecutor(new CommandManager(this));
+        
+        CommandManager commandManager = new CommandManager();
+        getCommand("alb").setExecutor(commandManager);
+        getCommand("nalb").setExecutor(commandManager);
         registerEvents();
 
         Logger.log(ConfigManager.getLangMessage("Enable.line1").replace("%version%", version));
