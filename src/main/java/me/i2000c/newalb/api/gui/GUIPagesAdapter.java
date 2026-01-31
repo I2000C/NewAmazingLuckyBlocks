@@ -48,7 +48,7 @@ public class GUIPagesAdapter<T>{
         this.itemList = null;
         this.itemsPerPage = 0;
         
-        this.ignoredColumns = Collections.EMPTY_SET;
+        this.ignoredColumns = Collections.emptySet();
         
         this.pageIndex = 0;
         this.previousPageSlot = -1;

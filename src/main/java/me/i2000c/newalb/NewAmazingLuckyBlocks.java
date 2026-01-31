@@ -32,6 +32,7 @@ import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.listeners.interact.SpecialEventListener;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
+import me.i2000c.newalb.listeners.textures.TextureCacher;
 import me.i2000c.newalb.listeners.updates.UpdateChecker;
 import me.i2000c.newalb.lucky_blocks.LuckyBlockDropper;
 import me.i2000c.newalb.lucky_blocks.TrapManager;
@@ -102,6 +103,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         Logger.log(ConfigManager.getLangMessage("Loading.worlds"));
         WorldManager.reloadWorlds();
         LocationManager.initialize(instance);
+        TextureCacher.initialCaching();
         
         Logger.log(ConfigManager.getLangMessage("Loading.packs"));
         TypeManager.loadTypes();
@@ -149,6 +151,8 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         pm.registerEvents(new InventoryListener(), this);
         pm.registerEvents(new ChatListener(), this);
         pm.registerEvents(new SpecialEventListener(), this);
+        
+        pm.registerEvents(new TextureCacher(), this);
         
         pm.registerEvents(TrapManager.getManager(), this);
 //</editor-fold>
