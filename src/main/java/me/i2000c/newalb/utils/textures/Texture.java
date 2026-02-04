@@ -2,7 +2,6 @@ package me.i2000c.newalb.utils.textures;
 
 import java.util.Base64;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
@@ -11,10 +10,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.cryptomorin.xseries.profiles.exceptions.ProfileChangeException;
 import com.cryptomorin.xseries.profiles.exceptions.ProfileException;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
-import com.cryptomorin.xseries.profiles.objects.Profileable.PlayerProfileable;
 import com.google.gson.Gson;
 
 import lombok.EqualsAndHashCode;
@@ -77,13 +74,8 @@ public final class Texture {
         if(profileable != null) {
             try {
                 XSkull.of(item).profile(profileable).apply();
-            } catch(ProfileChangeException ex) {
-                if(!Bukkit.getOnlineMode() && profileable instanceof PlayerProfileable) {
-                    // UnknownPlayerException
-                    XSkull.of(item).removeProfile();
-                } else {
-                    throw ex;
-                }
+            } catch(Exception ex) {
+                XSkull.of(item).removeProfile();
             }
         } else {
             XSkull.of(item).removeProfile();
@@ -102,13 +94,8 @@ public final class Texture {
         if(profileable != null) {
             try {
                 XSkull.of(block).profile(profileable).apply();
-            } catch(ProfileChangeException ex) {
-                if(!Bukkit.getOnlineMode() && profileable instanceof PlayerProfileable) {
-                    // UnknownPlayerException
-                    XSkull.of(block).removeProfile();
-                } else {
-                    throw ex;
-                }
+            } catch(Exception ex) {
+                XSkull.of(block).removeProfile();
             }
         } else {
             XSkull.of(block).removeProfile();
