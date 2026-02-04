@@ -103,7 +103,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         Logger.log(ConfigManager.getLangMessage("Loading.worlds"));
         WorldManager.reloadWorlds();
         LocationManager.initialize(instance);
-        TextureCacher.initialCaching();
+        TextureCacher.scheduleCaching();
         
         Logger.log(ConfigManager.getLangMessage("Loading.packs"));
         TypeManager.loadTypes();
