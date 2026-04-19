@@ -198,11 +198,7 @@ public class WorldMenu{
                         ItemStackWrapper builder = ItemStackWrapper.fromItem(e.getCurrentItem(), false);
                         
                         String worldName = Logger.stripColor(builder.getDisplayName());
-                        if(WorldManager.isContained(worldName)) {
-                            WorldManager.deleteWorld(worldName);
-                        } else {
-                            WorldManager.addWorld(worldName);
-                        }
+                        WorldManager.toggleWorld(worldName);
                         
                         openWorldsMenu(p);
                     }

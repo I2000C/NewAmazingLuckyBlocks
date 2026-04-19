@@ -63,6 +63,14 @@ public class WorldManager {
         }
     }
     
+    public static void toggleWorld(String worldName) {
+        if(worlds.contains(worldName)) {
+            deleteWorld(worldName);
+        } else {
+            addWorld(worldName);
+        }
+    }
+    
     public static void addAllWorlds() {
         Bukkit.getWorlds().forEach(world -> worlds.add(world.getName()));
         saveWorlds();
