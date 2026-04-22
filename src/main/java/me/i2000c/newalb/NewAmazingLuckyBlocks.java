@@ -164,13 +164,15 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         RewardListMenu.testRewardsPlayerList.clear();
         LocationManager.releaseDatabaseConnection();
         
-        asyncPacksLoaderExecutorService.shutdown();
-        try {
-            if(!asyncPacksLoaderExecutorService.awaitTermination(3, TimeUnit.SECONDS)) {
-                asyncPacksLoaderExecutorService.shutdownNow();
-            }
-        } catch(InterruptedException ex) {
-            asyncPacksLoaderExecutorService.shutdownNow();
+        if(asyncPacksLoaderExecutorService != null) {
+	        asyncPacksLoaderExecutorService.shutdown();
+	        try {
+	            if(!asyncPacksLoaderExecutorService.awaitTermination(3, TimeUnit.SECONDS)) {
+	                asyncPacksLoaderExecutorService.shutdownNow();
+	            }
+	        } catch(InterruptedException ex) {
+	            asyncPacksLoaderExecutorService.shutdownNow();
+	        }
         }
         
         Logger.log(ConfigManager.getLangMessage("Disable.line1").replace("%prefix%", ""));

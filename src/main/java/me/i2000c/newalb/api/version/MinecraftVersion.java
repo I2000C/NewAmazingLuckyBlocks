@@ -49,9 +49,10 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
     public static final MinecraftVersion v1_21_9 = new MinecraftVersion(1, VERSION_21, 9);
     public static final MinecraftVersion v1_21_10 = new MinecraftVersion(1, VERSION_21, 10);
     public static final MinecraftVersion v1_21_11 = new MinecraftVersion(1, VERSION_21, 11);
+    public static final MinecraftVersion v26_1_2 = new MinecraftVersion(26, 1, 2);
     
     public static final MinecraftVersion OLDEST_VERSION = v1_8;
-    public static final MinecraftVersion LATEST_VERSION = v1_21_11;
+    public static final MinecraftVersion LATEST_VERSION = v26_1_2;
     public static final MinecraftVersion CURRENT_VERSION = getCurrentVersion();
     public static final String CURRENT_BUKKIT_VERSION = getCurrentBukkitVersion();
     
@@ -80,11 +81,19 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
         this.patch = patch;
         this.encoded = (major << 16) | (minor << 8) | patch;
         
-        this.legacyVersion = this.minor <= VERSION_12;
-        this.newNMS = this.minor >= VERSION_17;
-        this.newCraftBukkit = this.minor > VERSION_20 || (this.minor == VERSION_20 && this.patch >= 5);
-        this.mojangNMS = this.major > 1 || (this.major == 1 && this.minor == VERSION_21 && this.patch == 11);
-        this._1_8 = this.minor == VERSION_8;
+        if(this.major == 1) {
+	        this.legacyVersion = this.minor <= VERSION_12;
+	        this.newNMS = this.minor >= VERSION_17;
+	        this.newCraftBukkit = this.minor > VERSION_20 || (this.minor == VERSION_20 && this.patch >= 5);
+	        this.mojangNMS = this.minor == VERSION_21 && this.patch == 11;
+	        this._1_8 = this.minor == VERSION_8;
+        } else {
+        	this.legacyVersion = false;
+        	this.newNMS = true;
+        	this.newCraftBukkit = true;
+        	this.mojangNMS = true;
+        	this._1_8 = false;
+        }
     }
     
     private static MinecraftVersion getCurrentVersion() {
@@ -120,20 +129,13 @@ public class MinecraftVersion implements Comparable<MinecraftVersion> {
         int major, minor, patch;
         String[] split = version.split(VERSION_SEPARATOR_ESC);
         try {
-            switch(split.length) {
-                case 2:
-                    major = Integer.parseInt(split[0]);
-                    minor = Integer.parseInt(split[1]);
-                    patch = 0;
-                    break;
-                case 3:
-                    major = Integer.parseInt(split[0]);
-                    minor = Integer.parseInt(split[1]);
-                    patch = Integer.parseInt(split[2]);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid Minecraft version: " + version);
-            }
+        	major = Integer.parseInt(split[0]);
+        	minor = Integer.parseInt(split[1]);
+        	try {
+        		patch = Integer.parseInt(split[2]);
+        	} catch(Exception ex) {
+        		patch = 0;
+        	}
         } catch(NumberFormatException ex) {
             throw new IllegalArgumentException("Invalid Minecraft version: " + version, ex);
         }
