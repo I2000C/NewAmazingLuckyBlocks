@@ -1,280 +1,170 @@
 package me.i2000c.newalb.utils.misc;
 
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
+import lombok.SneakyThrows;
 import me.i2000c.newalb.config.Config;
 
-public final class Equipment implements Cloneable{
-    public static final String[] EQUIPMENT_KEYS = {
-        "Helmet", "Chestplate", "Leggings", "Boots", "ItemInHand"};
+public final class Equipment implements Cloneable {
     
-    public static final int HELMET_ID = 0;
-    public static final int CHESTPLATE_ID = 1;
-    public static final int LEGGINGS_ID = 2;
-    public static final int BOOTS_ID = 3;
-    public static final int ITEM_IN_HAND_ID = 4;
+    public static final int DEFAULT_DROP_CHANCE = 50;
+    public static final int MIN_DROP_CHANCE = 0;
+    public static final int MAX_DROP_CHANCE = 100;
     
-    private ItemStack helmet;
-    private ItemStack chestplate;
-    private ItemStack leggings;
-    private ItemStack boots;
-    private ItemStack itemInHand;
+    private Map<EquipmentSlot, ItemStack> equipmentItems = new EnumMap<>(EquipmentSlot.class);
+    private Map<EquipmentSlot, Integer> equipmentDropChances = new EnumMap<>(EquipmentSlot.class);
     
-    private int helmetDropChance;
-    private int chestplateDropChance;
-    private int leggingsDropChance;
-    private int bootsDropChance;
-    private int itemInHandDropChance;
-
-    public Equipment(){
-        //<editor-fold defaultstate="collapsed" desc="Code">
+    public Equipment() {
         reset();
-//</editor-fold>
     }
     
-    public ItemStack getEquipmentItem(int slot){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        switch(slot){
-            case HELMET_ID: return helmet;
-            case CHESTPLATE_ID: return chestplate;
-            case LEGGINGS_ID: return leggings;
-            case BOOTS_ID: return boots;
-            case ITEM_IN_HAND_ID: return itemInHand;
-            default: throw new IllegalArgumentException("Invalid equipment slot: " + slot);
+    public void reset() {
+        for(EquipmentSlot slot : EquipmentSlot.VALUES) {
+            equipmentItems.put(slot, null);
+            equipmentDropChances.put(slot, DEFAULT_DROP_CHANCE);
         }
-//</editor-fold>
     }
-    public void setEquipmentItem(int slot, ItemStack stack){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        if(stack != null && stack.getType() == Material.AIR){
+    
+    public void resetItems() {
+        for(EquipmentSlot slot : EquipmentSlot.VALUES) {
+            equipmentItems.put(slot, null);
+        }
+    }
+    
+    public void resetDropChances() {
+        for(EquipmentSlot slot : EquipmentSlot.VALUES) {
+            equipmentDropChances.put(slot, DEFAULT_DROP_CHANCE);
+        }
+    }
+    
+    public ItemStack getItem(EquipmentSlot slot) {
+        return equipmentItems.get(slot);
+    }
+    
+    public void setItem(EquipmentSlot slot, ItemStack stack) {
+        if(stack != null && stack.getType() == Material.AIR) {
             stack = null;
         }
         
-        switch(slot){
-            case HELMET_ID:
-                if(stack != helmet){
-                    if(stack == null){
-                        helmet = null;
-                    }else{
-                        helmet = stack.clone();
-                    }
-                }
-                break;
-            case CHESTPLATE_ID:
-                if(stack != chestplate){
-                    if(stack == null){
-                        chestplate = null;
-                    }else{
-                        chestplate = stack.clone();
-                    }
-                }
-                break;
-            case LEGGINGS_ID:
-                if(stack != leggings){
-                    if(stack == null){
-                        leggings = null;
-                    }else{
-                        leggings = stack.clone();
-                    }
-                }
-                break;
-            case BOOTS_ID:
-                if(stack != boots){
-                    if(stack == null){
-                        boots = null;
-                    }else{
-                        boots = stack.clone();
-                    }
-                }
-                break;
-            case ITEM_IN_HAND_ID:
-                if(stack != itemInHand){
-                    if(stack == null){
-                        itemInHand = null;
-                    }else{
-                        itemInHand = stack.clone();
-                    }
-                }
-                break;
-            default: throw new IllegalArgumentException("Invalid equipment slot: " + slot);
+        ItemStack item = equipmentItems.get(slot);
+        if(item != stack) {
+            equipmentItems.put(slot, stack != null ? stack.clone() : null);
         }
-//</editor-fold>
-    }
-    public int getEquipmentDropChance(int slot){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        switch(slot){
-            case HELMET_ID: return helmetDropChance;
-            case CHESTPLATE_ID: return chestplateDropChance;
-            case LEGGINGS_ID: return leggingsDropChance;
-            case BOOTS_ID: return bootsDropChance;
-            case ITEM_IN_HAND_ID: return itemInHandDropChance;
-            default: throw new IllegalArgumentException("Invalid equipment slot: " + slot);
-        }
-//</editor-fold>
-    }
-    public void setEquipmentDropChance(int slot, int dropChance){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        if(dropChance < 0 || dropChance > 100){
-            throw new IllegalArgumentException("Invalid drop chance: " + dropChance);
-        }
-        
-        switch(slot){
-            case HELMET_ID: helmetDropChance = dropChance; break;
-            case CHESTPLATE_ID: chestplateDropChance = dropChance; break;
-            case LEGGINGS_ID: leggingsDropChance = dropChance; break;
-            case BOOTS_ID: bootsDropChance = dropChance; break;
-            case ITEM_IN_HAND_ID: itemInHandDropChance = dropChance; break;
-            default: throw new IllegalArgumentException("Invalid equipment slot: " + slot);
-        }
-//</editor-fold>
     }
     
-    public Equipment(Config config, String path){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        this();
+    public int getDropChance(EquipmentSlot slot) {
+        return equipmentDropChances.get(slot);
+    }
+    
+    public void setDropChance(EquipmentSlot slot, int dropChance) {
+        if(dropChance < MIN_DROP_CHANCE || dropChance > MAX_DROP_CHANCE) {
+            throw new IllegalArgumentException("Invalid drop chance: " + dropChance);
+        }
+        equipmentDropChances.put(slot, dropChance);
+    }
+    
+    public Equipment(Config config, String path) {
+        reset();
         
-        if(!config.existsPath(path)){
+        if(!config.existsPath(path)) {
             return;
         }
         
-        for(int i=0; i<EQUIPMENT_KEYS.length; i++){
-            String fullPath = path + "." + EQUIPMENT_KEYS[i];
+        for(EquipmentSlot slot : EquipmentSlot.VALUES) {
+            String fullPath = path + "." + slot.getConfigKey();
             if(!config.existsPath(fullPath)) {
                 continue;
             }
             
             ItemStackWrapper wrapper = config.getItemStackWrapper(fullPath);
-            int dropChance = config.getInt(fullPath + ".dropChance", 50);
+            int dropChance = config.getInt(fullPath + ".dropChance", DEFAULT_DROP_CHANCE);
             
-            setEquipmentItem(i, wrapper.toItemStack());
-            setEquipmentDropChance(i, dropChance);
+            setItem(slot, wrapper.toItemStack());
+            setDropChance(slot, dropChance);
         }
-//</editor-fold>
     }
     
-    public void saveToConfig(Config config, String path){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!isEmpty()){
-            for(int i=0; i<EQUIPMENT_KEYS.length; i++){
-                ItemStack stack = getEquipmentItem(i);
-                int dropChance = getEquipmentDropChance(i);
+    public void saveToConfig(Config config, String path) {
+        if(!isEmpty()) {
+            for(EquipmentSlot slot : EquipmentSlot.VALUES) {
+                ItemStack stack = getItem(slot);
+                int dropChance = getDropChance(slot);
                 
-                if(stack != null && stack.getType() != Material.AIR){
-                    String fullPath = path + "." + EQUIPMENT_KEYS[i];
+                if(stack != null && stack.getType() != Material.AIR) {
+                    String fullPath = path + "." + slot.getConfigKey();
                     ItemStackWrapper wrapper = ItemStackWrapper.fromItem(stack, false);
                     config.set(fullPath, wrapper);                    
                     config.set(fullPath + ".dropChance", dropChance);
                 }
             }
         }
-//</editor-fold>
     }
 
-    public boolean isEmpty(){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        return helmet == null
-                && chestplate == null
-                && leggings == null
-                && boots == null
-                && itemInHand == null;
-//</editor-fold>
+    public boolean isEmpty() {
+        return equipmentItems.values()
+                             .stream()
+                             .allMatch(Objects::isNull);
     }
     
-    public void applyToEntity(LivingEntity le){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        EntityEquipment equipment = le.getEquipment();
-        if(helmet != null){
-            equipment.setHelmet(helmet.clone());
-            if(le.getType() != EntityType.ARMOR_STAND){
-                equipment.setHelmetDropChance(helmetDropChance / 100f);
-            }            
-        }
-        if(chestplate != null){
-            equipment.setChestplate(chestplate.clone());
-            if(le.getType() != EntityType.ARMOR_STAND){
-                equipment.setChestplateDropChance(chestplateDropChance / 100f);
+    @SuppressWarnings("deprecation")
+    public void applyToEntity(LivingEntity le) {
+        EntityEquipment entityEquipment = le.getEquipment();
+        
+        for(EquipmentSlot slot : EquipmentSlot.VALUES) {
+            ItemStack item = getItem(slot);
+            if(item != null) {
+                item = item.clone();
+            }
+            float dropChance = getDropChance(slot) / 100f;
+            switch(slot) {
+                case HELMET:
+                    entityEquipment.setHelmet(item);
+                    entityEquipment.setHelmetDropChance(dropChance);
+                    break;
+                case CHESTPLATE:
+                    entityEquipment.setChestplate(item);
+                    entityEquipment.setChestplateDropChance(dropChance);
+                    break;
+                case LEGGINGS:
+                    entityEquipment.setLeggings(item);
+                    entityEquipment.setLeggingsDropChance(dropChance);
+                    break;
+                case BOOTS:
+                    entityEquipment.setBoots(item);
+                    entityEquipment.setBootsDropChance(dropChance);
+                    break;
+                case ITEM_IN_HAND:
+                    entityEquipment.setItemInHand(item);
+                    entityEquipment.setItemInHandDropChance(dropChance);
+                    if(le instanceof ArmorStand) {
+                        ArmorStand armorStand = (ArmorStand) le;
+                        armorStand.setArms(true);
+                        armorStand.setBasePlate(false);
+                    }
+                    break;
+                    
             }
         }
-        if(leggings != null){
-            equipment.setLeggings(leggings.clone());
-            if(le.getType() != EntityType.ARMOR_STAND){
-                equipment.setLeggingsDropChance(leggingsDropChance / 100f);
-            }
-        }
-        if(boots != null){
-            equipment.setBoots(boots.clone());
-            if(le.getType() != EntityType.ARMOR_STAND){
-                equipment.setBootsDropChance(bootsDropChance / 100f);
-            }
-        }
-        if(itemInHand != null){
-            equipment.setItemInHand(itemInHand.clone());
-            if(le.getType() != EntityType.ARMOR_STAND){
-                equipment.setItemInHandDropChance(itemInHandDropChance / 100f);
-            }else{
-                ArmorStand armorStand = (ArmorStand) le;
-                armorStand.setArms(true);
-                armorStand.setBasePlate(false);
-            }
-        }
-//</editor-fold>
     }
-
-    public void reset(){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        for(int i=0; i<EQUIPMENT_KEYS.length; i++){
-            setEquipmentItem(i, null);
-            setEquipmentDropChance(i, 50);
-        }
-//</editor-fold>
-    }
-    public void resetEquipmentItems(){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        for(int i=0; i<EQUIPMENT_KEYS.length; i++){
-            setEquipmentItem(i, null);
-        }
-//</editor-fold>
-    }
-    public void resetEquipmentDropChances(){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        for(int i=0; i<EQUIPMENT_KEYS.length; i++){
-            setEquipmentDropChance(i, 50);
-        }
-//</editor-fold>
-    }
-
+    
     @Override
-    @SuppressWarnings("CloneDeclaresCloneNotSupported")
-    public Equipment clone(){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        try{
-            Equipment copy = (Equipment) super.clone();
-            
-            if(this.helmet != null){
-                copy.helmet = this.helmet.clone();
-            }
-            if(this.chestplate != null){
-                copy.chestplate = this.chestplate.clone();
-            }
-            if(this.leggings != null){
-                copy.leggings = this.leggings.clone();
-            }
-            if(this.boots != null){
-                copy.boots = this.boots.clone();
-            }
-            if(this.itemInHand != null){
-                copy.itemInHand = this.itemInHand.clone();
-            }
-            
-            return copy;
-        }catch(CloneNotSupportedException ex){
-            return null;
-        }
-//</editor-fold>
+    @SneakyThrows(CloneNotSupportedException.class)
+    public Equipment clone() {
+        Equipment copy = (Equipment) super.clone();
+        copy.equipmentItems = new EnumMap<>(EquipmentSlot.class);
+        copy.equipmentDropChances = new EnumMap<>(this.equipmentDropChances);
+        
+        this.equipmentItems.forEach((slot, item) -> 
+            copy.equipmentItems.put(slot, item != null ? item.clone() : null));
+        
+        return copy;
     }
 }

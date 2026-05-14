@@ -1,14 +1,21 @@
 package me.i2000c.newalb.lucky_blocks.rewards.types;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
 import java.math.BigDecimal;
 import java.util.Optional;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
+
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.lucky_blocks.editors.menus.sound.SoundMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -16,16 +23,12 @@ import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.misc.OtherUtils;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 @Getter
 @Setter
-public class SoundReward extends Reward {
+public class SoundReward extends Reward<SoundReward> {
     
     public static final BigDecimal MIN_VOLUME = BigDecimal.ZERO;
-    public static final BigDecimal MAX_VOLUME = BigDecimal.ONE;
+    public static final BigDecimal MAX_VOLUME = BigDecimal.valueOf(Long.MAX_VALUE);
     public static final BigDecimal DEFAULT_VOLUME = BigDecimal.ONE;
     public static final BigDecimal MIN_PITCH = new BigDecimal("0.5");
     public static final BigDecimal MAX_PITCH = new BigDecimal("2.0");
@@ -36,7 +39,7 @@ public class SoundReward extends Reward {
     private BigDecimal pitch;
     private Long seed;
     
-    public SoundReward(Outcome outcome){
+    public SoundReward(Outcome outcome) {
         super(outcome);
         type = null;
         volume = DEFAULT_VOLUME;
@@ -44,15 +47,8 @@ public class SoundReward extends Reward {
         seed = null;
     }
     
-    public void setVolume(@NonNull BigDecimal volume) {
-        this.volume = OtherUtils.clamp(volume, MIN_VOLUME, MAX_VOLUME);
-    }
-    public void setPitch(@NonNull BigDecimal pitch) {
-        this.pitch = OtherUtils.clamp(pitch, MIN_PITCH, MAX_PITCH);
-    }
-    
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.NOTE_BLOCK);
         builder.setDisplayName("&dSound: &e" + this.type.name());
         
@@ -67,7 +63,7 @@ public class SoundReward extends Reward {
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".type", type.name());
         config.set(path + ".volume", volume);
         config.set(path + ".pitch", pitch);
@@ -75,11 +71,11 @@ public class SoundReward extends Reward {
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         String soundName = config.getString(path + ".type");
         
         XSound sound;
-        Optional<XSound> soundOpt = XSound.matchXSound(soundName);
+        Optional<XSound> soundOpt = XSound.of(soundName);
         if(!soundOpt.isPresent()) {
             Logger.warn("Sound '" + soundName + "' is not present in this version. It will be replaced with entity.player.small_fall");
             sound = XSound.ENTITY_PLAYER_SMALL_FALL;
@@ -110,7 +106,7 @@ public class SoundReward extends Reward {
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         if(type == null) {
             return;
         }
@@ -125,12 +121,17 @@ public class SoundReward extends Reward {
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.sound;
+    }
+    
+    @Override
+    public EditorMenu<SoundReward> getEditor() {
+        return new SoundMenu();
     }
 
     @Override
-    public Reward clone(){
+    public SoundReward clone() {
         SoundReward copy = (SoundReward) super.clone();
         return copy;
     }

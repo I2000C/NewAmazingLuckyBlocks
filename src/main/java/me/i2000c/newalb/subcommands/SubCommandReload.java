@@ -5,11 +5,11 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.api.gui.MenuManager;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.lucky_blocks.LuckyBlockDropper;
 import me.i2000c.newalb.lucky_blocks.TrapManager;
-import me.i2000c.newalb.lucky_blocks.editors.menus.GUIManager;
 import me.i2000c.newalb.lucky_blocks.editors.menus.RewardListMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.PackManager;
 import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
@@ -33,7 +33,8 @@ public class SubCommandReload implements SubCommand {
         
         RandomBlocks.forceStopAllRandomBlocksTasks();
         
-        GUIManager.setCurrentMenu(null);
+        MenuManager.removeAllMenus();
+        MenuManager.closeAllMenus();
         RewardListMenu.testRewardsPlayerList.clear();
         
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.config"), sender);

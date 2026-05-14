@@ -1,9 +1,15 @@
 package me.i2000c.newalb.lucky_blocks.rewards;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.Config;
@@ -13,45 +19,37 @@ import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.tasks.Task;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 public class Outcome implements Displayable, Executable, Cloneable{
-    private static final Comparator<Reward> REWARD_COMPARATOR = (Reward r1, Reward r2) -> r1.getRewardType().compareTo(r2.getRewardType());
-    
     private final OutcomePack pack;
     
     private String name;
     private int probability;
     private int ID;
-    private List<Reward> rewardList;
+    private List<Reward<?>> rewardList;
     private ItemStack icon;
     
-    public ItemStack getIcon(){
+    public ItemStack getIcon() {
         return this.icon;
     }
-    public void setIcon(ItemStack icon){
+    public void setIcon(ItemStack icon) {
         Material material = icon.getType();
-        if(material.name().contains("POTION")){
+        if(material.name().contains("POTION")) {
             material = Material.POTION;
         }
         
         this.icon = new ItemStack(material);
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()
-                && material != Material.POTION){
+                && material != Material.POTION) {
             this.icon.setDurability(icon.getDurability());
         }
     }
-    public static ItemStack getDefaultIcon(){
+    public static ItemStack getDefaultIcon() {
         return new ItemStack(Material.CHEST);
     }
     
-    public Outcome(String name, int probability, int ID, OutcomePack pack){
+    public Outcome(String name, int probability, int ID, OutcomePack pack) {
         this.pack = pack;
-        if(ID == -1){
+        if(ID == -1) {
             ID = pack.getOutcomes().size();
         }
         this.ID = ID;
@@ -71,65 +69,65 @@ public class Outcome implements Displayable, Executable, Cloneable{
         return outcome;
     }
     
-    public OutcomePack getPack(){
+    public OutcomePack getPack() {
         return this.pack;
     }
     
-    public void setProbability(int probability){
+    public void setProbability(int probability) {
         this.probability = probability;
     }
-    public int getProbability(){
+    public int getProbability() {
         return this.probability;
     }
     
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
-    public String getName(){
+    public String getName() {
         return this.name;
     }
     
-    public int getID(){
+    public int getID() {
         return this.ID;
     }
-    protected void setID(int ID){
+    protected void setID(int ID) {
         this.ID = ID;
     }
     
-    public List<Reward> getRewards(){
+    public List<Reward<?>> getRewards() {
         return this.rewardList;
     }
-    public Reward getReward(int i){
+    public Reward<?> getReward(int i) {
         return this.rewardList.get(i);
     }
-    public boolean addReward(Reward r){
-        if(this.rewardList.contains(r)){
+    public boolean addReward(Reward<?> r) {
+        if(this.rewardList.contains(r)) {
             this.rewardList.set(this.rewardList.indexOf(r), r);
             return true;
-        }else{
+        } else {
             this.rewardList.add(r);
             return true;
         }
     }
-    public boolean setReward(int i, Reward reward){
-        if(i >= 0 && i < this.rewardList.size()){
+    public boolean setReward(int i, Reward<?> reward) {
+        if(i >= 0 && i < this.rewardList.size()) {
             this.rewardList.set(i, reward);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    public boolean removeReward(int i){
-        if(i >= 0 && i < this.rewardList.size()){
-            Reward reward = this.rewardList.get(i);
-            if(reward instanceof EntityReward){
+    public boolean removeReward(int i) {
+        if(i >= 0 && i < this.rewardList.size()) {
+            Reward<?> reward = this.rewardList.get(i);
+            if(reward instanceof EntityReward) {
                 EntityReward entityReward = (EntityReward) reward;
                 int entityID = entityReward.getEntityID();
-                for(Reward r : this.rewardList){
-                    if(r instanceof EntityTowerReward){
+                for(Reward<?> r : this.rewardList) {
+                    if(r instanceof EntityTowerReward) {
                         EntityTowerReward entityTowerReward = (EntityTowerReward) r;
                         List<Integer> entityList = entityTowerReward.getEntityList();
-                        if(entityList.contains(entityID)){
+                        if(entityList.contains(entityID)) {
                             return false;
                         }
                     }
@@ -142,38 +140,38 @@ public class Outcome implements Displayable, Executable, Cloneable{
             
             this.rewardList.remove(i);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    public int getNumberOfRewards(){
+    public int getNumberOfRewards() {
         return this.rewardList.size();
     }
-    public void sortRewards(){        
-        this.rewardList.sort(REWARD_COMPARATOR);
+    public void sortRewards() {
+        Collections.sort(rewardList);
     }
     
-    public int getEntityRewardsNumber(){
+    public int getEntityRewardsNumber() {
         return (int) this.rewardList
                 .stream()
                 .filter(reward -> reward instanceof EntityReward)
                 .count();
     }
-    public List<EntityReward> getEntityRewards(){
+    public List<EntityReward> getEntityRewards() {
         return this.rewardList
                 .stream()
                 .filter(reward -> reward instanceof EntityReward)
                 .map(reward -> (EntityReward) reward)
                 .collect(Collectors.toList());
     }
-    public EntityReward getEntityReward(int entityRewardID){
+    public EntityReward getEntityReward(int entityRewardID) {
         return getEntityRewards().get(entityRewardID);
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        try{
+        try {
             List<Integer> entitiesInTowerRewards = new ArrayList<>();
             this.rewardList.stream()
                     .filter(reward -> reward instanceof EntityTowerReward)
@@ -182,18 +180,18 @@ public class Outcome implements Displayable, Executable, Cloneable{
                         entitiesInTowerRewards.addAll(entityList);
                     });
             
-            for(Reward reward : this.rewardList){
-                if(reward instanceof EntityReward){
+            for(Reward<?> reward : this.rewardList) {
+                if(reward instanceof EntityReward) {
                     int entityID = ((EntityReward) reward).getEntityID();
-                    if(entitiesInTowerRewards.contains(entityID)){
+                    if(entitiesInTowerRewards.contains(entityID)) {
                         continue;
                     }
                 }
                 
                 int delay = reward.getDelay();
-                if(delay <= 0){
+                if(delay <= 0) {
                     reward.execute(player, location);
-                }else{
+                } else {
                     Task.runTask(() -> {
                         try {
                             reward.execute(player, location);
@@ -204,14 +202,14 @@ public class Outcome implements Displayable, Executable, Cloneable{
                     }, delay);
                 }
             }
-        }catch(Exception ex){
+        } catch(Exception ex) {
             Logger.err("An error occurred while executing outcome: " + this.ID + " of pack " + this.pack.getPackname());
             ex.printStackTrace();
         }
 //</editor-fold>
     }
     
-    public Outcome(Config config, String path, int ID, OutcomePack pack){
+    public Outcome(Config config, String path, int ID, OutcomePack pack) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.pack = pack;
         this.ID = ID;
@@ -227,23 +225,22 @@ public class Outcome implements Displayable, Executable, Cloneable{
         this.rewardList = new ArrayList<>();
         
         ConfigurationSection section = config.getConfigurationSection(path + ".rewards", null);
-        if(section != null){
-            for(String mainKey : section.getKeys(false)){
+        if(section != null) {
+            for(String mainKey : section.getKeys(false)) {
                 ConfigurationSection subsection = config.getConfigurationSection(path + ".rewards." + mainKey);
-                for(String key : subsection.getKeys(false)){
+                for(String key : subsection.getKeys(false)) {
                     String fullPath = path + ".rewards." + mainKey + "." + key;
-                    try{
+                    try {
                         RewardType rewardType = RewardType.valueOf(mainKey);
                         
-                        @SuppressWarnings("LeakingThisInConstructor")
-                        Reward reward = rewardType.createReward(this);
+                        Reward<?> reward = rewardType.createReward(this);
                         reward.loadRewardFromConfig(config, fullPath);
-                        if(reward instanceof EntityReward){
+                        if(reward instanceof EntityReward) {
                             int entityID = Integer.parseInt(key);
                             ((EntityReward) reward).setEntityID(entityID);
                         }
                         this.rewardList.add(reward);
-                    }catch(Throwable ex){
+                    } catch(Throwable ex) {
                         Logger.err("There has been an error while loading outcome: " + fullPath + " in pack " + pack.getPackname());
                         ex.printStackTrace();
                     }
@@ -251,23 +248,23 @@ public class Outcome implements Displayable, Executable, Cloneable{
             }
             
             List<String> delays = config.getStringList(path + ".delayer", null);
-            if(delays != null){
-                for(String str : delays){
+            if(delays != null) {
+                for(String str : delays) {
                     int rewardID = Integer.parseInt(str.split(";")[0]);
                     int delay = Integer.parseInt(str.split(";")[1]);
                     this.rewardList.get(rewardID).setDelay(delay);
                 }
             }
-        }else{
+        } else {
             Logger.warn("Outcome " + this.name + " doesn't have any rewards");
         }
 //</editor-fold>
     }
     
-    public void saveOutcome(){
+    public void saveOutcome() {
         pack.addOutcome(this, false);
     }
-    protected void saveOutcome(Config config, String path){
+    protected void saveOutcome(Config config, String path) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         config.set(path, null);
         
@@ -277,7 +274,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
         
         List<String> delays = new ArrayList<>();
         int i=0;
-        for(Reward reward : this.rewardList){
+        for(Reward<?> reward : this.rewardList) {
             int rewardID = 0;
             ConfigurationSection section = config.getConfigurationSection(path + ".rewards." + reward.getRewardType().name(), null);
             if(section != null) {
@@ -285,7 +282,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
             }
             reward.saveRewardIntoConfig(config, path + ".rewards." + reward.getRewardType().name() + "." + rewardID);
             
-            if(reward.getDelay() > 0){
+            if(reward.getDelay() > 0) {
                 delays.add(i + ";" + reward.getDelay());
             }
             i++;
@@ -296,7 +293,7 @@ public class Outcome implements Displayable, Executable, Cloneable{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         return ItemStackWrapper.fromItem(icon)
                                .setDisplayName("&3Outcome " + ID)
                                .addLoreLine("&aName: &d" + this.name)
@@ -305,24 +302,23 @@ public class Outcome implements Displayable, Executable, Cloneable{
     }
     
     @Override
-    @SuppressWarnings("CloneDeclaresCloneNotSupported")
-    public Outcome clone(){
-        try{
+    public Outcome clone() {
+        try {
             Outcome copy = (Outcome) super.clone();
             copy.rewardList = new ArrayList<>();            
             this.rewardList.forEach(reward -> {
-                Reward rewardCopy = reward.clone();
+                Reward<?> rewardCopy = reward.clone();
                 rewardCopy.setOutcome(copy);
                 copy.rewardList.add(rewardCopy);
             });
             return copy;
-        }catch(CloneNotSupportedException ex){
+        } catch(CloneNotSupportedException ex) {
             return null;
         }
     }
     
     @Override
-    public String toString(){
+    public String toString() {
         return pack.getPackname() + "/" + ID;
     }
 }

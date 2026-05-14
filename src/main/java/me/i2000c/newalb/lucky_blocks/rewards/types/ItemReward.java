@@ -10,10 +10,12 @@ import org.bukkit.potion.Potion;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.listeners.interact.SpecialItem;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
+import me.i2000c.newalb.lucky_blocks.editors.menus.item.ItemMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -21,9 +23,10 @@ import me.i2000c.newalb.utils.locations.Offset;
 import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
+@SuppressWarnings("deprecation")
 @Getter
 @Setter
-public class ItemReward extends Reward{
+public class ItemReward extends Reward<ItemReward> {
     public static final int SURVIVAL_INV_SIZE = 36;    
     
     public static final int HELMET_SLOT = 36;
@@ -33,10 +36,10 @@ public class ItemReward extends Reward{
     public static final int ITEM_IN_HAND_SLOT = 40;
     public static final int ITEM_IN_OFF_HAND_SLOT = 41;
     
-    public static int getMaxSlot(){
-        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_9)){
+    public static int getMaxSlot() {
+        if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_9)) {
             return ITEM_IN_OFF_HAND_SLOT;
-        }else{
+        } else {
             return ITEM_IN_OFF_HAND_SLOT - 1;
         }
     }
@@ -46,7 +49,7 @@ public class ItemReward extends Reward{
     private int spawnInvSlot;
     private Offset offset;
     
-    public ItemReward(Outcome outcome){
+    public ItemReward(Outcome outcome) {
         super(outcome);
         item = null;
         spawnMode = ItemSpawnMode.DEFAULT;
@@ -55,7 +58,7 @@ public class ItemReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStackWrapper builder = ItemStackWrapper.fromItem(item);
         
@@ -72,7 +75,7 @@ public class ItemReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         item = config.getItemStackWrapper(path).toItemStack();
         spawnMode = config.getEnum(path + ".spawnMode", ItemSpawnMode.class, ItemSpawnMode.DEFAULT);
@@ -82,7 +85,7 @@ public class ItemReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStackWrapper wrapper = ItemStackWrapper.fromItem(item, false);
         config.set(path, wrapper);
@@ -93,23 +96,23 @@ public class ItemReward extends Reward{
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStack stack = null;
         String displayName = ItemStackWrapper.fromItem(item, false).getDisplayName();
-        if(displayName != null){
+        if(displayName != null) {
             String name = Logger.stripColor(displayName);
-            if(name.charAt(0) == '%' && name.charAt(name.length()-1) == '%'){
+            if(name.charAt(0) == '%' && name.charAt(name.length()-1) == '%') {
                 SpecialItem specialItem = SpecialItems.getByName(name.substring(1, name.length()-1));
-                if(specialItem != null){
-                    stack = specialItem.getItem();
+                if(specialItem != null) {
+                    stack = specialItem.getItem().toItemStack();
                 }
             }
         }
         
-        if(stack == null){
+        if(stack == null) {
             stack = item.clone();
-        }else{
+        } else {
             // Set only amount and enchantments if the item is a special item
             stack.setAmount(item.getAmount());
             stack.addUnsafeEnchantments(item.getEnchantments());
@@ -117,26 +120,26 @@ public class ItemReward extends Reward{
         
         location = offset.applyToLocation(location.clone());
         Inventory inv = player.getInventory();
-        switch(spawnMode){
+        switch(spawnMode) {
             case DEFAULT:
                 location.getWorld().dropItemNaturally(location, stack);
                 break;
             case ADD_TO_INV:
-                if(!inv.addItem(stack).isEmpty()){
+                if(!inv.addItem(stack).isEmpty()) {
                     location.getWorld().dropItemNaturally(location, stack);
                 }
                 break;
             case SET_TO_INV:
                 ItemStack invItem = getItemFromPlayer(player, spawnInvSlot);
-                if(invItem != null && invItem.getType() != Material.AIR){
+                if(invItem != null && invItem.getType() != Material.AIR) {
                     location.getWorld().dropItemNaturally(location, stack);
-                }else{
+                } else {
                     setItemToPlayer(player, stack, spawnInvSlot);
                 }
                 break;
             case FORCE_SET_TO_INV:
                 invItem = getItemFromPlayer(player, spawnInvSlot);
-                if(invItem != null && invItem.getType() != Material.AIR){
+                if(invItem != null && invItem.getType() != Material.AIR) {
                     Location playerLocation = player.getLocation();
                     playerLocation.getWorld().dropItemNaturally(playerLocation, invItem);
                 }
@@ -146,27 +149,27 @@ public class ItemReward extends Reward{
 //</editor-fold>
     }
     
-    private static ItemStack getItemFromPlayer(Player player, int slot){
+    private static ItemStack getItemFromPlayer(Player player, int slot) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(slot < 0){
+        if(slot < 0) {
             Logger.warn("Spawn slot (" + slot + ") cannot be negative in ItemReward");
             return null;
         }
         
-        if(slot < SURVIVAL_INV_SIZE){
+        if(slot < SURVIVAL_INV_SIZE) {
             return player.getInventory().getItem(slot);
-        }else{
+        } else {
             EntityEquipment equipment = player.getEquipment();
-            switch(slot){
+            switch(slot) {
                 case HELMET_SLOT: return equipment.getHelmet();
                 case CHESTPLATE_SLOT: return equipment.getChestplate();
                 case LEGGINGS_SLOT: return equipment.getLeggings();
                 case BOOTS_SLOT: return equipment.getBoots();
                 case ITEM_IN_HAND_SLOT: return equipment.getItemInHand();
                 case ITEM_IN_OFF_HAND_SLOT:
-                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_9)){
+                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_9)) {
                         return equipment.getItemInOffHand();
-                    }else{
+                    } else {
                         Logger.warn("Invalid slot (" + slot + "). There is no off-hand in Minecraft 1.8");
                         return null;
                     }
@@ -177,27 +180,27 @@ public class ItemReward extends Reward{
         }
 //</editor-fold>
     }
-    private static void setItemToPlayer(Player player, ItemStack stack, int slot){
+    private static void setItemToPlayer(Player player, ItemStack stack, int slot) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(slot < 0){
+        if(slot < 0) {
             Logger.warn("Spawn slot (" + slot + ") cannot be negative in ItemReward");
             return;
         }
         
-        if(slot < SURVIVAL_INV_SIZE){
+        if(slot < SURVIVAL_INV_SIZE) {
             player.getInventory().setItem(slot, stack);
-        }else{
+        } else {
             EntityEquipment equipment = player.getEquipment();
-            switch(slot){
+            switch(slot) {
                 case HELMET_SLOT: equipment.setHelmet(stack); break;
                 case CHESTPLATE_SLOT: equipment.setChestplate(stack); break;
                 case LEGGINGS_SLOT: equipment.setLeggings(stack); break;
                 case BOOTS_SLOT: equipment.setBoots(stack); break;
                 case ITEM_IN_HAND_SLOT: equipment.setItemInHand(stack); break;
                 case ITEM_IN_OFF_HAND_SLOT:
-                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_9)){
+                    if(MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v1_9)) {
                         equipment.setItemInOffHand(stack);
-                    }else{
+                    } else {
                         Logger.log("Invalid slot (" + slot + "). There is no off-hand in Minecraft 1.8");
                     }
                     break;
@@ -209,14 +212,19 @@ public class ItemReward extends Reward{
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.item;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<ItemReward> getEditor() {
+        return new ItemMenu();
+    }
+    
+    @Override
+    public ItemReward clone() {
         ItemReward copy = (ItemReward) super.clone();
-        copy.item = this.item.clone();
+        copy.item = this.item != null ? this.item.clone() : null;
         copy.offset = this.offset.clone();
         return copy;
     }
@@ -227,19 +235,19 @@ public class ItemReward extends Reward{
         SPLASH,
         LINGERING;
         
-        public static PotionSplashType getFromPotion(ItemStack stack){
-            if(MinecraftVersion.CURRENT_VERSION.is_1_8()){
-                if(stack.getType() != Material.POTION){
+        public static PotionSplashType getFromPotion(ItemStack stack) {
+            if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                if(stack.getType() != Material.POTION) {
                     return null;
                 }
                 
                 Potion potion = Potion.fromItemStack(stack);
-                if(potion.isSplash()){
+                if(potion.isSplash()) {
                     return SPLASH;
-                }else{
+                } else {
                     return NORMAL;
                 }
-            }else switch(stack.getType()){
+            }else switch(stack.getType()) {
                 case POTION:
                     return NORMAL;
                 case SPLASH_POTION:
@@ -251,17 +259,17 @@ public class ItemReward extends Reward{
             }
         }
         
-        public static void clearPotionSplashType(ItemStack stack){
+        public static void clearPotionSplashType(ItemStack stack) {
             NORMAL.setToPotion(stack);
         }
         
-        public void setToPotion(ItemStack stack){
-            if(MinecraftVersion.CURRENT_VERSION.is_1_8()){
+        public void setToPotion(ItemStack stack) {
+            if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
                 Potion potion = Potion.fromItemStack(stack);
                 potion.setSplash(this != NORMAL);
                 potion.apply(stack);
-            }else{
-                switch(this){
+            } else {
+                switch(this) {
                     case NORMAL:
                         stack.setType(Material.POTION);
                         break;
@@ -275,11 +283,11 @@ public class ItemReward extends Reward{
             }
         }
         
-        public PotionSplashType next(){
-            if(MinecraftVersion.CURRENT_VERSION.is_1_8()){
+        public PotionSplashType next() {
+            if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
                 return this == NORMAL ? SPLASH : NORMAL;
-            }else{
-                switch(this){
+            } else {
+                switch(this) {
                     case NORMAL:
                         return SPLASH;
                     case SPLASH:
@@ -291,7 +299,7 @@ public class ItemReward extends Reward{
         }
         
         @Override
-        public String toString(){
+        public String toString() {
             return name().toLowerCase();
         }
 //</editor-fold>
@@ -306,7 +314,7 @@ public class ItemReward extends Reward{
         
         private static final ItemSpawnMode[] vals = values();
         
-        public ItemSpawnMode next(){
+        public ItemSpawnMode next() {
             return vals[(this.ordinal() + 1) % vals.length];
         }
 //</editor-fold>

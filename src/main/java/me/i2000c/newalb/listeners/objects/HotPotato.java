@@ -27,7 +27,7 @@ public class HotPotato extends SpecialItem{
             super.decreaseAmountOfItem(e);
             
             Location loc = e.getPlayer().getEyeLocation();
-            Item item = loc.getWorld().dropItem(loc, getItem());
+            Item item = loc.getWorld().dropItem(loc, getItem().toItemStack());
             MetadataManager.setClassMetadata(item, this);
             item.setVelocity(e.getPlayer().getLocation().getDirection());
             

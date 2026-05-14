@@ -11,39 +11,42 @@ import org.bukkit.inventory.ItemStack;
 
 import com.cryptomorin.xseries.XMaterial;
 
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.lucky_blocks.editors.menus.EntityTowerMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
 import me.i2000c.newalb.utils.misc.ExtendedEntityType;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
-public class EntityTowerReward extends Reward{
-    public static final int PLAYER_ENTITY_ID = -1;
-    public static final int INVALID_ENTITY_ID = -2;
+public class EntityTowerReward extends Reward<EntityTowerReward> {
+    public static final int PLAYER_ENTITY_ID = -2;
+    public static final int INVALID_ENTITY_ID = -1;
     private List<Integer> entityList;
     
-    public EntityTowerReward(Outcome outcome){
+    public EntityTowerReward(Outcome outcome) {
         super(outcome);
         this.entityList = new ArrayList<>();
     }
     
-    public List<Integer> getEntityList(){
+    public List<Integer> getEntityList() {
         return this.entityList;
     }
-    public void setEntityList(List<Integer> entityList){
+    public void setEntityList(List<Integer> entityList) {
         this.entityList = new ArrayList<>(entityList);
     }
     
-    public static ItemStack getPlayerItem(){
+    public static ItemStack getPlayerItem() {
         return ItemStackWrapper.newItem(XMaterial.PLAYER_HEAD)
                                .setDisplayName("&2Player")
                                .toItemStack();
     }
-    public static EntityReward getPlayerEntityReward(){
-        EntityReward playerEntityReward = new EntityReward(null){
+    public static EntityReward getPlayerEntityReward() {
+        EntityReward playerEntityReward = new EntityReward(null) {
             @Override
-            public ItemStack getItemToDisplay(){
+            public ItemStack getItemToDisplay() {
                 return getPlayerItem();
             }
         };
@@ -54,16 +57,16 @@ public class EntityTowerReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.ARMOR_STAND);
         builder.setDisplayName("&eEntityTower");
         
         StringBuilder stringBuilder = new StringBuilder();
-        if(!entityList.isEmpty()){        
+        if(!entityList.isEmpty()) {        
             this.entityList.forEach(entityID -> {                
-                if(entityID == PLAYER_ENTITY_ID){
+                if(entityID == PLAYER_ENTITY_ID) {
                     stringBuilder.append("&2Player&r");
-                }else{
+                } else {
                     stringBuilder.append(entityID);
                 }
                 stringBuilder.append(", ");
@@ -78,12 +81,12 @@ public class EntityTowerReward extends Reward{
     }
 
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         StringBuilder stringBuilder = new StringBuilder();
         this.entityList.forEach(entityID -> {
             stringBuilder.append(entityID).append(",");
         });
-        if(stringBuilder.length() > 0){
+        if(stringBuilder.length() > 0) {
             stringBuilder.setLength(stringBuilder.length() - 1);
         }
         
@@ -91,44 +94,54 @@ public class EntityTowerReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.entityList = new ArrayList<>();
         
         String[] data = config.getString(path).split(",");
-        for(String id : data){
+        for(String id : data) {
             this.entityList.add(Integer.parseInt(id));
         }
     }
     
+    @SuppressWarnings("deprecation")
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         List<EntityReward> entityRewardList = this.getOutcome().getEntityRewards();
         List<Entity> entities = new ArrayList<>(this.entityList.size());
-        for(int entityID : this.entityList){
-            if(entityID == PLAYER_ENTITY_ID){
+        for(int entityID : this.entityList) {
+            if(entityID == PLAYER_ENTITY_ID) {
                 entities.add(player);
-            }else{
+            } else {
                 EntityReward entityReward = entityRewardList.get(entityID);
                 entityReward.execute(player, location);
                 entities.add(entityReward.lastSpawnedEntity);
             }
         }
         
-        for(int i=0;i<this.entityList.size()-1;i++){
+        for(int i=0;i<this.entityList.size()-1;i++) {
             Entity entity1 = entities.get(i);
             Entity entity2 = entities.get(i+1);
             
-            entity1.setPassenger(entity2);
+            if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
+                entity1.setPassenger(entity2);
+            } else {
+                entity1.addPassenger(entity2);
+            }
         }
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.tower_entity;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<EntityTowerReward> getEditor() {
+        return new EntityTowerMenu();
+    }
+    
+    @Override
+    public EntityTowerReward clone() {
         EntityTowerReward copy = (EntityTowerReward) super.clone();
         copy.entityList = new ArrayList<>(this.entityList);
         return copy;

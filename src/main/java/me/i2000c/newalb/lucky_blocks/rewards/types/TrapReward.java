@@ -1,13 +1,23 @@
 package me.i2000c.newalb.lucky_blocks.rewards.types;
 
-import com.cryptomorin.xseries.XMaterial;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XMaterial;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.lucky_blocks.TrapManager;
+import me.i2000c.newalb.lucky_blocks.editors.menus.TrapMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.OutcomePack;
 import me.i2000c.newalb.lucky_blocks.rewards.PackManager;
@@ -17,14 +27,9 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.misc.OtherUtils;
 import me.i2000c.newalb.utils.misc.XMaterialUtils;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 @Getter
 @Setter
-public class TrapReward extends Reward{
+public class TrapReward extends Reward<TrapReward> {
     
     private XMaterial trapMaterial;
     private String trapName;
@@ -41,7 +46,7 @@ public class TrapReward extends Reward{
     @Setter(AccessLevel.NONE)
     private int trapOutcomeID;
     
-    public TrapReward(Outcome outcome){
+    public TrapReward(Outcome outcome) {
         super(outcome);
         trapMaterial = XMaterial.OAK_PRESSURE_PLATE;
         trapName = null;
@@ -51,21 +56,21 @@ public class TrapReward extends Reward{
         trapOutcome = null;
     }
     
-    public Outcome getTrapOutcome(){
-        if(this.trapOutcome == null && this.trapOutcomePackName != null){
+    public Outcome getTrapOutcome() {
+        if(this.trapOutcome == null && this.trapOutcomePackName != null) {
             OutcomePack pack = PackManager.getPack(trapOutcomePackName);
             trapOutcome = pack.getOutcome(trapOutcomeID);
         }
         return this.trapOutcome;
     }
-    public void setTrapOutcome(Outcome trapOutcome){
+    public void setTrapOutcome(Outcome trapOutcome) {
         this.trapOutcome = trapOutcome;
         trapOutcomePackName = trapOutcome.getPack().getPackname();
         trapOutcomeID = trapOutcome.getID();
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper builder = ItemStackWrapper.newItem(trapMaterial);
         builder.setDisplayName("&5Trap");
         builder.addLoreLine("&3Name: &r" + trapName);
@@ -76,24 +81,22 @@ public class TrapReward extends Reward{
     }
     
     private static List<XMaterial> TRAP_MATERIALS;
-    public static List<XMaterial> getPressurePlateMaterials(){
-        if(TRAP_MATERIALS == null){
-            TRAP_MATERIALS = new ArrayList<>();
-            for(Material material : Material.values()){
-                if(material.isBlock() && material.name().contains("PLATE")){
-                    try {
-                        TRAP_MATERIALS.add(XMaterial.matchXMaterial(material));
-                    } catch(IllegalArgumentException ex) {}
-                }
-            }
-            TRAP_MATERIALS.add(XMaterial.CHEST);
-            TRAP_MATERIALS.add(XMaterial.TRAPPED_CHEST);
+    public static List<XMaterial> getPressurePlateMaterials() {
+        if(TRAP_MATERIALS == null) {
+            TRAP_MATERIALS = Arrays.stream(XMaterial.VALUES)
+                                    .filter(material -> 
+                                        material.name().endsWith("_PLATE") || material.name().endsWith("_CHEST") || material == XMaterial.CHEST)
+                                    .filter(material -> material != XMaterial.ENDER_CHEST)
+                                    .filter(XMaterial::isSupported)
+                                    .sorted(Comparator.comparing((XMaterial material) -> material.name().contains("PLATE"))
+                                                      .thenComparing(XMaterial::name))
+                                    .collect(Collectors.toList());
         }
         return TRAP_MATERIALS;
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         if(trapOutcomePackName.endsWith(".yml")) {
             trapOutcomePackName = OtherUtils.removeExtension(trapOutcomePackName);
         }
@@ -104,9 +107,9 @@ public class TrapReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         String trapMaterialName = config.getString(path + ".trapMaterial", null);
-        if(trapMaterialName == null){
+        if(trapMaterialName == null) {
             trapMaterialName = config.getString(path + ".pressurePlateMaterial");
         }
         this.trapMaterial = XMaterialUtils.parseXMaterial(trapMaterialName);
@@ -118,7 +121,7 @@ public class TrapReward extends Reward{
         this.trapOutcome = null;
     }
     
-    private ItemStack getItemToDrop(){
+    private ItemStack getItemToDrop() {
         ItemStackWrapper wrapper = ItemStackWrapper.newItem(trapMaterial)
                                                    .setDisplayName(trapName);
         
@@ -127,17 +130,22 @@ public class TrapReward extends Reward{
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         location.getWorld().dropItemNaturally(location, getItemToDrop());
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.trap;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<TrapReward> getEditor() {
+        return new TrapMenu();
+    }
+    
+    @Override
+    public TrapReward clone() {
         TrapReward copy = (TrapReward) super.clone();
         return copy;
     }

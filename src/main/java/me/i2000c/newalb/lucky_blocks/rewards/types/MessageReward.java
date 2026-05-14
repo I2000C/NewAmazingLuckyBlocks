@@ -9,7 +9,9 @@ import com.cryptomorin.xseries.messages.ActionBar;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.lucky_blocks.editors.menus.MessageMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -18,12 +20,12 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
 @Getter
 @Setter
-public class MessageReward extends Reward{
+public class MessageReward extends Reward<MessageReward> {
     private String title;
     private String subtitle;
     private MessageType messageType;
     
-    public MessageReward(Outcome outcome){
+    public MessageReward(Outcome outcome) {
         super(outcome);
         title = "";
         subtitle = "";
@@ -31,7 +33,7 @@ public class MessageReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         return ItemStackWrapper.newItem(XMaterial.BOOK)
                                .setDisplayName("&6Message")
                                .addLoreLine("&3MessageType: &b" + messageType.name())
@@ -41,21 +43,21 @@ public class MessageReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".title", this.title);
         config.set(path + ".subtitle", this.subtitle);
         config.set(path + ".messageType", messageType);
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.title = config.getString(path + ".title");
         this.subtitle = config.getString(path + ".subtitle");
         this.messageType = config.getEnum(path + ".messageType", MessageType.class);
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         String x = String.valueOf(player.getLocation().getBlockX());
         String y = String.valueOf(player.getLocation().getBlockY());
         String z = String.valueOf(player.getLocation().getBlockZ());
@@ -73,7 +75,7 @@ public class MessageReward extends Reward{
                 .replace("%x%", x).replace("%y%", y).replace("%z%", z)
                 .replace("%bx%", bx).replace("%by%", by).replace("%bz%", bz);
         
-        switch(messageType){
+        switch(messageType) {
             case TITLE:
                 Logger.sendTitle(replacedTitle, replacedSubtitle, player);
                 break;
@@ -87,12 +89,17 @@ public class MessageReward extends Reward{
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.message;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<MessageReward> getEditor() {
+        return new MessageMenu();
+    }
+    
+    @Override
+    public MessageReward clone() {
         MessageReward copy = (MessageReward) super.clone();
         return copy;
     }
@@ -102,8 +109,8 @@ public class MessageReward extends Reward{
         ACTION_BAR,
         CHAT;
         
-        public MessageType getNextType(){
-            switch(this){
+        public MessageType next() {
+            switch(this) {
                 case TITLE:
                     return ACTION_BAR;
                 case ACTION_BAR:

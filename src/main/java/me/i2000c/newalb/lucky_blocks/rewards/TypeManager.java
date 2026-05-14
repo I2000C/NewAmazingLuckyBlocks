@@ -59,19 +59,19 @@ public class TypeManager{
     
     private static int currentRecipeID;
     
-    static int getNextTypeID(){
+    static int getNextTypeID() {
         return ++currentRecipeID;
     }
     
     //<editor-fold defaultstate="collapsed" desc="Global permissions methods">
-    private static void loadGlobalPermissions(){
+    private static void loadGlobalPermissions() {
         globalPermissionsConfig.loadConfig(LUCKY_BLOCK_TYPES_FOLDER + "/" + PERMISSIONS_FILENAME);        
         requireBreakPermissionGlobal = globalPermissionsConfig.getBoolean("GlobalPermissions.break.enable");
         breakPermissionGlobal = globalPermissionsConfig.getString("GlobalPermissions.break.permission");
         requirePlacePermissionGlobal = globalPermissionsConfig.getBoolean("GlobalPermissions.place.enable");
         placePermissionGlobal = globalPermissionsConfig.getString("GlobalPermissions.place.permission");
     }
-    private static void saveGlobalPermissions(){
+    private static void saveGlobalPermissions() {
         globalPermissionsConfig.set("GlobalPermissions.break.enable", requireBreakPermissionGlobal);
         globalPermissionsConfig.set("GlobalPermissions.break.permission", breakPermissionGlobal);
         globalPermissionsConfig.set("GlobalPermissions.place.enable", requirePlacePermissionGlobal);
@@ -79,57 +79,57 @@ public class TypeManager{
         globalPermissionsConfig.saveConfig(LUCKY_BLOCK_TYPES_FOLDER + "/" + PERMISSIONS_FILENAME);
     }
     
-    public static String getGlobalBreakPermission(){
+    public static String getGlobalBreakPermission() {
         return breakPermissionGlobal;
     }
-    public static void setGlobalBreakPermission(String permission){
+    public static void setGlobalBreakPermission(String permission) {
         breakPermissionGlobal = permission;
         saveGlobalPermissions();
     }
-    public static String getGlobalPlacePermission(){
+    public static String getGlobalPlacePermission() {
         return placePermissionGlobal;
     }
-    public static void setGlobalPlacePermission(String permission){
+    public static void setGlobalPlacePermission(String permission) {
         placePermissionGlobal = permission;
         saveGlobalPermissions();
     }
     
-    public static boolean isGlobalBreakPermissionEnabled(){
+    public static boolean isGlobalBreakPermissionEnabled() {
         return requireBreakPermissionGlobal;
     }
-    public static void setEnableGlobalBreakPermission(boolean enable){
+    public static void setEnableGlobalBreakPermission(boolean enable) {
         requireBreakPermissionGlobal = enable;
         saveGlobalPermissions();
     }
-    public static boolean isGlobalPlacePermissionEnabled(){
+    public static boolean isGlobalPlacePermissionEnabled() {
         return requirePlacePermissionGlobal;
     }
-    public static void setEnableGlobalPlacePermission(boolean enable){
+    public static void setEnableGlobalPlacePermission(boolean enable) {
         requirePlacePermissionGlobal = enable;
         saveGlobalPermissions();
     }
     
-    private static boolean checkBreakPermissionGlobal(Player player){
+    private static boolean checkBreakPermissionGlobal(Player player) {
         return !requireBreakPermissionGlobal || player.hasPermission(breakPermissionGlobal);
     }
-    private static boolean checkPlacePermissionGlobal(Player player){
+    private static boolean checkPlacePermissionGlobal(Player player) {
         return !requirePlacePermissionGlobal || player.hasPermission(placePermissionGlobal);
     }
 //</editor-fold>
     
-    public static ItemStack getMenuItemStack(){
+    public static ItemStack getMenuItemStack() {
         return new ItemStack(Material.SPONGE);
     }
     
-    public static List<LuckyBlockType> getTypes(){
+    public static List<LuckyBlockType> getTypes() {
         return luckyBlockTypes;
     }
     
-    public static LuckyBlockType getRandomLuckyBlockType(){
+    public static LuckyBlockType getRandomLuckyBlockType() {
         return luckyBlockTypes.get(RandomUtils.getInt(luckyBlockTypes.size()));
     }
     
-    public static LuckyBlockType getType(ItemStack stack){
+    public static LuckyBlockType getType(ItemStack stack) {
         if(stack == null || stack.getType() == Material.AIR) {
             return null;
         }
@@ -138,7 +138,7 @@ public class TypeManager{
         TypeData data = new TypeData(wrapper);
         return luckyBlockTypesAux.get(data);
     }
-    public static LuckyBlockType getType(Block block){
+    public static LuckyBlockType getType(Block block) {
         XMaterial material = XMaterialUtils.getXMaterial(block);
         Texture texture = Texture.of(block);
         TypeData data = new TypeData(material, texture);
@@ -151,25 +151,25 @@ public class TypeManager{
         public int resultCode;
         public LuckyBlockType resultType;
         
-        public Result(int resultCode, LuckyBlockType resultType){
+        public Result(int resultCode, LuckyBlockType resultType) {
             this.resultCode = resultCode;
             this.resultType = resultType;
         }
 //</editor-fold>
     }
     
-    public static Result canPlaceBlock(Player player, ItemStack stack){
+    public static Result canPlaceBlock(Player player, ItemStack stack) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         LuckyBlockType type = getType(stack);
-        if(type == null){
+        if(type == null) {
             return new Result(RESULT_NOT_LUCKYBLOCK, null);
         }
         
-        if(!checkPlacePermissionGlobal(player)){
+        if(!checkPlacePermissionGlobal(player)) {
             return new Result(RESULT_NO_GLOBAL_PERMISSION, null);
         }
         
-        if(!type.checkPlacePermission(player)){
+        if(!type.checkPlacePermission(player)) {
             return new Result(RESULT_NO_LOCAL_PERMISSION, null);
         }
         
@@ -177,18 +177,18 @@ public class TypeManager{
 //</editor-fold>
     }
     
-    public static Result canBreakBlock(Player player, Location location){
+    public static Result canBreakBlock(Player player, Location location) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         LuckyBlockType type = getType(location.getBlock());
-        if(type == null){
+        if(type == null) {
             return new Result(RESULT_NOT_LUCKYBLOCK, null);
         }
         
-        if(!checkBreakPermissionGlobal(player)){
+        if(!checkBreakPermissionGlobal(player)) {
             return new Result(RESULT_NO_GLOBAL_PERMISSION, null);
         }
         
-        if(!type.checkBreakPermission(player)){
+        if(!type.checkBreakPermission(player)) {
             return new Result(RESULT_NO_LOCAL_PERMISSION, null);
         }
         
@@ -197,13 +197,12 @@ public class TypeManager{
     }
     
     
-    public static void loadTypes(){
-        //<editor-fold defaultstate="collapsed" desc="Code">
+    public static void loadTypes() {
         currentRecipeID = -1;
         
         // Remove all previously used recipes
         Iterator<LuckyBlockType> iter = luckyBlockTypes.iterator();
-        while(iter.hasNext()){
+        while(iter.hasNext()) {
             LuckyBlockType type = iter.next();
             removeRecipe(type.getRecipe());
             iter.remove();
@@ -221,14 +220,14 @@ public class TypeManager{
         luckyBlockTypes.clear();
         luckyBlockTypesAux.clear();
         
-        for(File file : luckyBlockTypesFolder.listFiles()){
+        for(File file : luckyBlockTypesFolder.listFiles()) {
             try {
                 String name = file.getName();
-                if(!name.endsWith(".yml")){
+                if(!name.endsWith(".yml")) {
                     continue;
                 }
                 
-                if(name.equals(PERMISSIONS_FILENAME)){
+                if(name.equals(PERMISSIONS_FILENAME)) {
                     continue;
                 }
                 
@@ -244,14 +243,13 @@ public class TypeManager{
                 ex.printStackTrace();
             }
         }
-        //</editor-fold>
     }
     
     public static void loadPacksFromCachedPacksProbList() {
         luckyBlockTypes.forEach(LuckyBlockType::loadPacksFromCachedPacksProbList);
     }
     
-    public static void saveTypes(){
+    public static void saveTypes() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypes.forEach(type -> {
             Config config = new Config();
@@ -261,17 +259,17 @@ public class TypeManager{
 //</editor-fold>
     }
     
-    static void removeRecipe(ShapedRecipe typeRecipe){
+    static void removeRecipe(ShapedRecipe typeRecipe) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(typeRecipe == null){
+        if(typeRecipe == null) {
             return;
         }
         
         Iterator<Recipe> iter = Bukkit.recipeIterator();
         if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_12)) {
-            while(iter.hasNext()){
+            while(iter.hasNext()) {
                 Recipe recipe = iter.next();
-                if(recipe.getResult().equals(typeRecipe.getResult())){
+                if(recipe.getResult().equals(typeRecipe.getResult())) {
                     iter.remove();
                     break;
                 }
@@ -284,7 +282,7 @@ public class TypeManager{
                 Recipe recipe = iter.next();
                 if(recipe instanceof ShapedRecipe) {
                     ShapedRecipe sr = (ShapedRecipe) recipe;
-                    if(sr.getKey().equals(typeRecipe.getKey())){
+                    if(sr.getKey().equals(typeRecipe.getKey())) {
                         break;
                     }
                 }
@@ -302,20 +300,20 @@ public class TypeManager{
 //</editor-fold>
     }
     
-    public static LuckyBlockType getType(int typeID){
+    public static LuckyBlockType getType(int typeID) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(typeID >= 0 && typeID < luckyBlockTypes.size()){
+        if(typeID >= 0 && typeID < luckyBlockTypes.size()) {
             return luckyBlockTypes.get(typeID);
-        }else{
+        } else {
             return null;
         }
 //</editor-fold>
     }
     
-    public static LuckyBlockType getType(String typeName){
+    public static LuckyBlockType getType(String typeName) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        for(LuckyBlockType type : luckyBlockTypes){
-            if(type.getTypeName().equals(typeName)){
+        for(LuckyBlockType type : luckyBlockTypes) {
+            if(type.getTypeName().equals(typeName)) {
                 return type;
             }
         }
@@ -323,17 +321,10 @@ public class TypeManager{
 //</editor-fold>
     }
     
-    public static void removeType(int typeID){
+    public static void removeType(LuckyBlockType type) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(typeID >= 0 && typeID < luckyBlockTypes.size()){
-            LuckyBlockType type = luckyBlockTypes.remove(typeID);
-            removeType(type);
-        }
-//</editor-fold>
-    }
-    private static void removeType(LuckyBlockType type){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        luckyBlockTypesAux.remove(type.getTypeData());
+        LuckyBlockType removedType = luckyBlockTypesAux.remove(type.getTypeData());
+        luckyBlockTypes.remove(removedType);
         removeRecipe(type.getRecipe());
         String filename = LUCKY_BLOCK_TYPES_FOLDER + "/" + type.getTypeName() + ".yml";
         File typeFile = new File(ConfigManager.getDataFolder(), filename);
@@ -341,14 +332,14 @@ public class TypeManager{
 //</editor-fold>
     }
     
-    public static void addType(LuckyBlockType type){
+    public static void addType(LuckyBlockType type) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         int typeID = luckyBlockTypes.indexOf(type);
-        if(typeID != -1){
+        if(typeID != -1) {
             removeRecipe(luckyBlockTypes.get(typeID).getRecipe());
             LuckyBlockType oldType = luckyBlockTypes.set(typeID, type);
             removeType(oldType);
-        }else{
+        } else {
             luckyBlockTypes.add(type);
         }
         
@@ -359,7 +350,7 @@ public class TypeManager{
 //</editor-fold>
     }
     
-    public static void renameType(int typeID, String newName){
+    public static void renameType(int typeID, String newName) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         LuckyBlockType type = luckyBlockTypes.get(typeID);
         String oldFilename = LUCKY_BLOCK_TYPES_FOLDER + "/" + type.getTypeName() + ".yml";
@@ -372,12 +363,12 @@ public class TypeManager{
         type.saveToConfig(config);
         config.saveConfig(newTypeFile);
         oldTypeFile.delete();
-        loadTypes();        
+        loadTypes();
 //</editor-fold>
     }
     
     
-    private static void copyDefaultTypes(){
+    private static void copyDefaultTypes() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         Arrays.asList(PERMISSIONS_FILENAME, "default.yml", "default2.yml").forEach(filename -> {
             String path = LUCKY_BLOCK_TYPES_FOLDER + "/" + filename;
@@ -387,3 +378,4 @@ public class TypeManager{
         });//</editor-fold>
     }
 }
+

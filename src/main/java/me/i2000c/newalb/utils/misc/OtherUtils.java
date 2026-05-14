@@ -1,5 +1,6 @@
 package me.i2000c.newalb.utils.misc;
 
+import java.nio.file.Path;
 import java.util.function.Predicate;
 
 import me.i2000c.newalb.api.version.MinecraftVersion;
@@ -36,6 +37,12 @@ public class OtherUtils{
         
         return filename.substring(0, extensionIndex);
 //</editor-fold>
+    }
+    
+    public static String getExtension(Path path) {
+        String name = path.getFileName().toString();
+        int dot = name.lastIndexOf('.');
+        return (dot == -1) ? "" : name.substring(dot + 1);
     }
     
     public static void removePlayerItems(Player player, int amount, Predicate<ItemStack> predicate){
@@ -121,5 +128,55 @@ public class OtherUtils{
 
         return Strings.repeat("" + completedColor + symbol, progressBars)
                 + Strings.repeat("" + notCompletedColor + symbol, totalBars - progressBars);
+    }
+    
+    /**
+     * Normalizes a value into the range [min, max).
+     * The result will always be greater than or equal to min,
+     * and strictly less than max.
+     *
+     * @param value the input value to normalize
+     * @param min the lower bound (inclusive)
+     * @param max the upper bound (exclusive), must be greater than min
+     * @return the normalized value within [min, max)
+     * @throws IllegalArgumentException if max <= min
+     */
+    public static int normalize(int value, int min, int max) {
+        if (max <= min) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+        
+        int range = max - min;
+        int result = (value - min) % range;
+        if (result < 0) {
+            result += range;
+        }
+        return result + min;
+    }
+    
+    /**
+     * Adds two values and wraps the result into the range [min, max).
+     *
+     * @param a the first operand
+     * @param b the second operand
+     * @param min the lower bound (inclusive)
+     * @param max the upper bound (exclusive), must be greater than min
+     * @return the result of (a + b) normalized within [min, max)
+     */
+    public static int addInRange(int a, int b, int min, int max) {
+        return normalize(a + b, min, max);
+    }
+
+    /**
+     * Subtracts two values and wraps the result into the range [min, max).
+     *
+     * @param a the first operand
+     * @param b the second operand (subtracted from a)
+     * @param min the lower bound (inclusive)
+     * @param max the upper bound (exclusive), must be greater than min
+     * @return the result of (a - b) normalized within [min, max)
+     */
+    public static int subInRange(int a, int b, int min, int max) {
+        return normalize(a - b, min, max);
     }
 }

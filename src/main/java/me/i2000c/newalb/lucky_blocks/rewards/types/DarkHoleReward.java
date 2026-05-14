@@ -8,8 +8,10 @@ import com.cryptomorin.xseries.XMaterial;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
+import me.i2000c.newalb.lucky_blocks.editors.menus.DarkHoleMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -17,13 +19,13 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
 @Getter
 @Setter
-public class DarkHoleReward extends Reward{
+public class DarkHoleReward extends Reward<DarkHoleReward> {
     private int depth;
     private int radius;
     private long ticks;
     private boolean squared;    
     
-    public DarkHoleReward(Outcome outcome){
+    public DarkHoleReward(Outcome outcome) {
         super(outcome);
         depth = SpecialItems.dark_hole.getDefaultDepth();
         radius = SpecialItems.dark_hole.getDefaultRadius();
@@ -32,12 +34,12 @@ public class DarkHoleReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.BUCKET);
         builder.setDisplayName("&7DarkHole");
-        if(this.depth < 0){
+        if(this.depth < 0) {
             builder.addLoreLine("&3Depth: &6infinite");
-        }else{
+        } else {
             builder.addLoreLine("&3Depth: &6" + this.depth);
         }
         builder.addLoreLine("&3Radius: &6" + this.radius);
@@ -48,7 +50,7 @@ public class DarkHoleReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".depth", depth);
         config.set(path + ".radius", radius);
         config.set(path + ".ticks_between_blocks", ticks);
@@ -56,7 +58,7 @@ public class DarkHoleReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         depth = config.getInt(path + ".depth", SpecialItems.dark_hole.getDefaultDepth());
         radius = config.getInt(path + ".radius", SpecialItems.dark_hole.getDefaultRadius());
         ticks = config.getLong(path + ".ticks_between_blocks", SpecialItems.dark_hole.getDefaultTicks());
@@ -64,17 +66,22 @@ public class DarkHoleReward extends Reward{
     }
 
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         SpecialItems.dark_hole.execute(player, location, depth, radius, ticks, 0L, squared);
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.dark_hole;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<DarkHoleReward> getEditor() {
+        return new DarkHoleMenu();
+    }
+    
+    @Override
+    public DarkHoleReward clone() {
         DarkHoleReward copy = (DarkHoleReward) super.clone();
         return copy;
     }

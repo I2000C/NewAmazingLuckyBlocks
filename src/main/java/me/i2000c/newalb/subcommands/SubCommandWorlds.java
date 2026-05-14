@@ -29,8 +29,7 @@ public class SubCommandWorlds implements SubCommand {
                     return false;
                 }
                 
-                WorldMenu.reset();
-                WorldMenu.openWorldsMenu((Player) sender);
+                new WorldMenu().openToPlayer((Player) sender);
                 return true;
             case 1:
                 switch(args.get(0)) {

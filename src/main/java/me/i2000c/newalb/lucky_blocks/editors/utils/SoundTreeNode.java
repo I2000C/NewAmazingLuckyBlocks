@@ -3,6 +3,7 @@ package me.i2000c.newalb.lucky_blocks.editors.utils;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +131,7 @@ public class SoundTreeNode implements Displayable {
         SoundTreeNode mainNode = new SoundTreeNode(0, null, null, null);
         List<XSound> sounds = new ArrayList<>(XSound.getValues());
         sounds.remove(XSound.INTENTIONALLY_EMPTY);
-        sounds.sort((sound1, sound2) -> sound1.name().compareTo(sound2.name()));
+        sounds.sort(Comparator.comparing(XSound::name));
         
         for(XSound sound : sounds) {
             SoundTreeNode currentNode = mainNode;
@@ -165,13 +166,17 @@ public class SoundTreeNode implements Displayable {
     }
     
     
-    public boolean isParentNode(SoundTreeNode node) {
-        SoundTreeNode currentNode = this;
-        while(!currentNode.isRootNode()) {
-            if(currentNode == node) {
+    public boolean isParentOf(SoundTreeNode node) {
+        if(node == null || node == this) {
+            return false;
+        }
+        
+        while(node != null && !node.isRootNode()) {
+            if(node == this) {
                 return true;
-            }            
-            currentNode = currentNode.parentNode;
+            } else {
+                node = node.parentNode;
+            }
         }
         
         return false;

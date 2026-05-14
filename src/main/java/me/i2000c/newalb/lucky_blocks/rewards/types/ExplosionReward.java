@@ -8,8 +8,10 @@ import com.cryptomorin.xseries.XMaterial;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.integration.WorldGuardManager;
+import me.i2000c.newalb.lucky_blocks.editors.menus.ExplosionMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -17,12 +19,12 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
 @Getter
 @Setter
-public class ExplosionReward extends Reward{
+public class ExplosionReward extends Reward<ExplosionReward> {
     private int power;
     private boolean withFire;
     private boolean breakBlocks;
     
-    public ExplosionReward(Outcome outcome){
+    public ExplosionReward(Outcome outcome) {
         super(outcome);
         power = 4;
         withFire = true;
@@ -30,18 +32,18 @@ public class ExplosionReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.TNT);
         builder.setDisplayName("&4Explosion");
         builder.addLoreLine("&6Power: &e" + this.power);
-        if(breakBlocks){
+        if(breakBlocks) {
             builder.addLoreLine("&6Generate fire: &atrue");
-        }else{
+        } else {
             builder.addLoreLine("&6Generate fire: &cfalse");
         }
-        if(breakBlocks){
+        if(breakBlocks) {
             builder.addLoreLine("&6Break blocks: &atrue");
-        }else{
+        } else {
             builder.addLoreLine("&6Break blocks: &cfalse");
         }
         
@@ -49,21 +51,21 @@ public class ExplosionReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".power", this.power);
         config.set(path + ".withFire", this.withFire);
         config.set(path + ".breakBlocks", this.breakBlocks);
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.power = config.getInt(path + ".power");
         this.withFire = config.getBoolean(path + ".withFire");
         this.breakBlocks = config.getBoolean(path + ".breakBlocks");
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         if(!WorldGuardManager.canBreak(player, location)) {
             return;
         }
@@ -75,12 +77,17 @@ public class ExplosionReward extends Reward{
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.explosion;
+    }
+
+    @Override
+    public EditorMenu<ExplosionReward> getEditor() {
+        return new ExplosionMenu();
     }
     
     @Override
-    public Reward clone(){
+    public ExplosionReward clone() {
         ExplosionReward copy = (ExplosionReward) super.clone();
         return copy;
     }

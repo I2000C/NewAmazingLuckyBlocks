@@ -16,7 +16,9 @@ import com.cryptomorin.xseries.XMaterial;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.lucky_blocks.editors.menus.FireworkMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -26,7 +28,7 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
 @Getter
 @Setter
-public class FireworkReward extends Reward{
+public class FireworkReward extends Reward<FireworkReward> {
     private int amount;
     private int power;
     private boolean withTrail;
@@ -36,7 +38,7 @@ public class FireworkReward extends Reward{
     private List<String> fadeColorsHEX;
     private Offset offset;
     
-    public FireworkReward(Outcome outcome){
+    public FireworkReward(Outcome outcome) {
         super(outcome);
         this.amount = 1;
         this.power = 1;
@@ -48,15 +50,15 @@ public class FireworkReward extends Reward{
         this.offset = new Offset();
     }
     
-    public void setColorsHEX(List<String> colorHEX){
+    public void setColorsHEX(List<String> colorHEX) {
         this.colorsHEX = new ArrayList<>(colorHEX);
     }
-    public void setFadeColorsHEX(List<String> fadeHEX){
+    public void setFadeColorsHEX(List<String> fadeHEX) {
         this.fadeColorsHEX = new ArrayList<>(fadeHEX);
     }
 
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.FIREWORK_ROCKET);
         builder.setDisplayName("&6Firework");
         
@@ -85,7 +87,7 @@ public class FireworkReward extends Reward{
     }
 
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".amount", this.amount);
         config.set(path + ".power", this.power);
         config.set(path + ".trail", this.withTrail);
@@ -97,7 +99,7 @@ public class FireworkReward extends Reward{
     }    
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.amount = config.getInt(path + ".amount");
         this.power = config.getInt(path + ".power");
         this.withTrail = config.getBoolean(path + ".trail");
@@ -109,19 +111,19 @@ public class FireworkReward extends Reward{
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         List<Color> mainColorList = new ArrayList<>();
-        for(String str : colorsHEX){
+        for(String str : colorsHEX) {
             CustomColor color = new CustomColor(str);
             mainColorList.add(color.getBukkitColor());
         }
         List<Color> fadeColorList = new ArrayList<>();
-        for(String str : fadeColorsHEX){
+        for(String str : fadeColorsHEX) {
             CustomColor color = new CustomColor(str);
             fadeColorList.add(color.getBukkitColor());
         }
             
-        for(int i=0;i<amount;i++){
+        for(int i=0;i<amount;i++) {
             Location loc = offset.applyToLocation(location.clone());
             Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
             FireworkMeta fwm = fw.getFireworkMeta();
@@ -139,12 +141,17 @@ public class FireworkReward extends Reward{
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.firework;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<FireworkReward> getEditor() {
+        return new FireworkMenu();
+    }
+    
+    @Override
+    public FireworkReward clone() {
         FireworkReward copy = (FireworkReward) super.clone();
         copy.colorsHEX = new ArrayList<>(this.colorsHEX);
         copy.fadeColorsHEX = new ArrayList<>(this.fadeColorsHEX);

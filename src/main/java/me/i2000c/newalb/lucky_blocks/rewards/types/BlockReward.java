@@ -1,11 +1,19 @@
 package me.i2000c.newalb.lucky_blocks.rewards.types;
 
+import org.bukkit.Location;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.cryptomorin.xseries.XBlock;
 import com.cryptomorin.xseries.XMaterial;
+
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.integration.WorldGuardManager;
+import me.i2000c.newalb.lucky_blocks.editors.menus.BlockMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -14,20 +22,15 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.misc.XMaterialUtils;
 import me.i2000c.newalb.utils.tasks.Task;
 
-import org.bukkit.Location;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 @Getter
 @Setter
-public class BlockReward extends Reward{
+public class BlockReward extends Reward<BlockReward> {
     private boolean usePlayerLoc;
     private boolean isFallingBlock;
     private XMaterial blockMaterial;
     private Offset offset;
     
-    public BlockReward(Outcome outcome){
+    public BlockReward(Outcome outcome) {
         super(outcome);
         usePlayerLoc = false;
         isFallingBlock = false;
@@ -36,9 +39,9 @@ public class BlockReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper wrapper;
-        switch(blockMaterial){
+        switch(blockMaterial) {
             case WATER: wrapper = ItemStackWrapper.newItem(XMaterial.WATER_BUCKET); break;
             case LAVA:  wrapper = ItemStackWrapper.newItem(XMaterial.LAVA_BUCKET);  break;
             case FIRE:  wrapper = ItemStackWrapper.newItem(XMaterial.FIRE_CHARGE);  break;
@@ -47,15 +50,15 @@ public class BlockReward extends Reward{
         
         wrapper.setDisplayName("&9Block");
         
-        if(usePlayerLoc){
+        if(usePlayerLoc) {
             wrapper.addLoreLine("&bTarget location: &2player");
-        }else{
+        } else {
             wrapper.addLoreLine("&bTarget location: &6lucky block");
         }
         
-        if(isFallingBlock){
+        if(isFallingBlock) {
             wrapper.addLoreLine("&6IsFallingBlock: &atrue");
-        }else{
+        } else {
             wrapper.addLoreLine("&6IsFallingBlock: &7false");
         }
         
@@ -68,7 +71,7 @@ public class BlockReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".usePlayerLoc", usePlayerLoc);
         config.set(path + ".isFallingBlock", isFallingBlock);
         config.set(path + ".material", blockMaterial);
@@ -76,11 +79,11 @@ public class BlockReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
         this.isFallingBlock = config.getBoolean(path + ".isFallingBlock");
         String materialName = config.getString(path + ".material", null);
-        if(materialName == null){
+        if(materialName == null) {
             // Support for old system
             materialName = config.getString(path + ".blockItem.material");
             int durability = config.getInt(path + ".blockItem.durability");
@@ -108,12 +111,17 @@ public class BlockReward extends Reward{
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.block;
+    }
+    
+    @Override
+    public EditorMenu<BlockReward> getEditor() {
+        return new BlockMenu();
     }
 
     @Override
-    public Reward clone(){
+    public BlockReward clone() {
         BlockReward copy = (BlockReward) super.clone();
         copy.offset = this.offset.clone();
         return copy;

@@ -1,42 +1,47 @@
 package me.i2000c.newalb.lucky_blocks.editors.menus;
 
-import com.cryptomorin.xseries.XMaterial;
-
-import me.i2000c.newalb.api.functions.InventoryFunction;
-import me.i2000c.newalb.api.gui.CustomInventoryType;
-import me.i2000c.newalb.api.gui.GUIFactory;
-import me.i2000c.newalb.api.gui.GUIItem;
-import me.i2000c.newalb.api.gui.GlassColor;
-import me.i2000c.newalb.api.gui.InventoryLocation;
-import me.i2000c.newalb.api.gui.Menu;
-import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.lucky_blocks.editors.Editor;
-import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class DelayerMenu extends Editor<Integer>{
-    public DelayerMenu(){
-        InventoryListener.registerInventory(CustomInventoryType.DELAYER_MENU, DELAYER_MENU_FUNCTION);
-    }
+import com.cryptomorin.xseries.XMaterial;
 
-    @Override
-    protected void newItem(Player player){
-        item = 0;
-        openDelayerMenu(player);
-    }
+import me.i2000c.newalb.api.gui.GUIItem;
+import me.i2000c.newalb.api.gui.GlassColor;
+import me.i2000c.newalb.api.gui.MenuSize;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.OtherUtils;
 
-    @Override
-    protected void editItem(Player player){
-        openDelayerMenu(player);
+public class DelayerMenu extends EditorMenu<Integer> {
+    
+    private static final int[] VALUES = {+1, +10, +100, -1, -10, -100};
+    
+    private final List<Consumer<Integer>> delayerPropertyList = new ArrayList<>();
+    
+    public DelayerMenu() {
+        super("&5Configure Delay", MenuSize.SIZE_3_ROWS, true);
+        
+        delayerPropertyList.add(value -> {
+            if(value == 0) {
+                item = 0;
+            } else {
+                item = OtherUtils.clamp(item + value, 0, Integer.MAX_VALUE);
+            }
+        });
     }
-        
-    private void openDelayerMenu(Player player){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Menu menu = GUIFactory.newMenu(CustomInventoryType.DELAYER_MENU, 27, "&5Configure Delay");
-        
-        ItemStack glass = GUIItem.getGlassItem(GlassColor.BLUE);
+    
+    @Override
+    protected Integer createNewItem() {
+        return 0;
+    }
+    
+    @Override
+    protected void buildMenu(Player player) {
+        addGlassBorder(GlassColor.BLUE);
         
         ItemStack delay = ItemStackWrapper.newItem(XMaterial.CLOCK)
                                           .setDisplayName("&6Delay: &b" + item + " &dtick(s)")
@@ -44,84 +49,26 @@ public class DelayerMenu extends Editor<Integer>{
                                           .addLoreLine("&3Click to reset")
                                           .toItemStack();
         
-        for(int i=0;i<=9;i++){
-            menu.setItem(i, glass);
-        }
-        for(int i=17;i<27;i++){
-            menu.setItem(i, glass);
-        }
+        setBackItem(10);
+        setNextItem(16);
         
-        menu.setItem(10, GUIItem.getBackItem());
-        menu.setItem(16, GUIItem.getNextItem());
+        setItem(13, delay, e -> {
+            item = 0;
+            openToPlayer(player);
+        });
         
-        menu.setItem(13, delay);
-        
-        menu.setItem(3, GUIItem.getPlusLessItem(+1));
-        menu.setItem(4, GUIItem.getPlusLessItem(+10));
-        menu.setItem(5, GUIItem.getPlusLessItem(+100));
-        
-        menu.setItem(21, GUIItem.getPlusLessItem(-1));
-        menu.setItem(22, GUIItem.getPlusLessItem(-10));
-        menu.setItem(23, GUIItem.getPlusLessItem(-100));
-        
-        menu.openToPlayer(player);
-//</editor-fold>
-    }
-    
-    private final InventoryFunction DELAYER_MENU_FUNCTION = e -> {
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Player player = (Player) e.getWhoClicked();
-        e.setCancelled(true);
-        
-        if(e.getLocation() == InventoryLocation.TOP){
-            switch(e.getSlot()){
-                case 3:
-                    item++;
-                    openDelayerMenu(player);
-                    break;
-                case 4:
-                    item += 10;
-                    openDelayerMenu(player);
-                    break;
-                case 5:
-                    item += 100;
-                    openDelayerMenu(player);
-                    break;
-                case 13:
-                    item = 0;
-                    openDelayerMenu(player);
-                    break;
-                case 21:
-                    item--;
-                    if(item < 0){
-                        item = 0;
-                    }
-                    openDelayerMenu(player);
-                    break;
-                case 22:
-                    item -= 10;
-                    if(item < 0){
-                        item = 0;
-                    }
-                    openDelayerMenu(player);
-                    break;
-                case 23:
-                    item -= 100;
-                    if(item < 0){
-                        item = 0;
-                    }
-                    openDelayerMenu(player);
-                    break;
-                case 10:
-                    // Go to previous menu
-                    onBack.accept(player);
-                    break;
-                case 16:
-                    // Go to next menu
-                    onNext.accept(player, item);
-                    break;                
+        int slot = 3;
+        for(int value : VALUES) {
+            setItem(slot++, GUIItem.getPlusLessItem(value), e -> {
+                delayerPropertyList.get(0).accept(value);
+                openToPlayer(player);
+            });
+            
+            if(slot == 6) {
+                // +1, +10 and +100 items go in slots 3, 4 and 5
+                // -1, -10 and -100 items go in slots 21, 22 and 23
+                slot = 21;
             }
         }
-//</editor-fold>
     };
 }

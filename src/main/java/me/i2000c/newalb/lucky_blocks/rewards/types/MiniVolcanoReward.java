@@ -1,22 +1,25 @@
 package me.i2000c.newalb.lucky_blocks.rewards.types;
 
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.cryptomorin.xseries.XMaterial;
+
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
+import me.i2000c.newalb.lucky_blocks.editors.menus.MiniVolcanoMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 @Getter
 @Setter
-public class MiniVolcanoReward extends Reward{
+public class MiniVolcanoReward extends Reward<MiniVolcanoReward> {
     private int height;
     private XMaterial baseMaterial;
     private XMaterial lavaMaterial;
@@ -24,7 +27,7 @@ public class MiniVolcanoReward extends Reward{
     private boolean squared;    
     private boolean throwBlocks;
     
-    public MiniVolcanoReward(Outcome outcome){
+    public MiniVolcanoReward(Outcome outcome) {
         super(outcome);
         height = SpecialItems.mini_volcano.getDefaultHeight();
         baseMaterial = SpecialItems.mini_volcano.getDefaultBaseMaterial();
@@ -35,7 +38,7 @@ public class MiniVolcanoReward extends Reward{
     }    
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         return ItemStackWrapper.newItem(XMaterial.LAVA_BUCKET)
                                .setDisplayName("&cMiniVolcano")
                                .addLoreLine("&bHeight: &6" + this.height)
@@ -48,7 +51,7 @@ public class MiniVolcanoReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".height", height);
         config.set(path + ".baseMaterial", baseMaterial);
         config.set(path + ".lavaMaterial", lavaMaterial);
@@ -58,7 +61,7 @@ public class MiniVolcanoReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         height = config.getInt(path + ".height", SpecialItems.mini_volcano.getDefaultHeight());
         baseMaterial = config.getMaterial(path + ".baseMaterial", SpecialItems.mini_volcano.getDefaultBaseMaterial());
         lavaMaterial = config.getMaterial(path + ".lavaMaterial", SpecialItems.mini_volcano.getDefaultLavaMaterial());
@@ -68,17 +71,22 @@ public class MiniVolcanoReward extends Reward{
     }
 
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         SpecialItems.mini_volcano.execute(player, location.clone().add(0, -1, 0), height, baseMaterial, lavaMaterial, ticks, 0L, squared, throwBlocks);
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.mini_volcano;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<MiniVolcanoReward> getEditor() {
+        return new MiniVolcanoMenu();
+    }
+    
+    @Override
+    public MiniVolcanoReward clone() {
         MiniVolcanoReward copy = (MiniVolcanoReward) super.clone();
         return copy;
     }

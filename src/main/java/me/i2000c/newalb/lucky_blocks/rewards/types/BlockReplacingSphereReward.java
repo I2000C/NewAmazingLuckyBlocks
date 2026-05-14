@@ -1,7 +1,5 @@
 package me.i2000c.newalb.lucky_blocks.rewards.types;
 
-import com.cryptomorin.xseries.XBlock;
-import com.cryptomorin.xseries.XMaterial;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -9,11 +7,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import com.cryptomorin.xseries.XBlock;
+import com.cryptomorin.xseries.XMaterial;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.integration.WorldGuardManager;
+import me.i2000c.newalb.lucky_blocks.editors.menus.BlockReplacingSphereMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -23,14 +32,9 @@ import me.i2000c.newalb.utils.misc.XMaterialUtils;
 import me.i2000c.newalb.utils.random.RandomUtils;
 import me.i2000c.newalb.utils.tasks.Task;
 
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 @Getter
 @Setter
-public class BlockReplacingSphereReward extends Reward{
+public class BlockReplacingSphereReward extends Reward<BlockReplacingSphereReward> {
     private int minRadius;
     private int maxRadius;
     private int ticksBetweenLayers;
@@ -45,7 +49,7 @@ public class BlockReplacingSphereReward extends Reward{
     @Setter(AccessLevel.NONE)
     private int totalProbability;
     
-    public BlockReplacingSphereReward(Outcome outcome){
+    public BlockReplacingSphereReward(Outcome outcome) {
         super(outcome);
         minRadius = 0;
         maxRadius = 5;
@@ -56,34 +60,34 @@ public class BlockReplacingSphereReward extends Reward{
         totalProbability = 0;
     }
     
-    public void addMaterial(XMaterial material){
+    public void addMaterial(XMaterial material) {
         int amount = this.materials.getOrDefault(material, 0);
         this.materials.put(material, amount+1);
         this.totalProbability++;
     }
-    public void removeMaterial(XMaterial material){
-        if(!this.materials.containsKey(material)){
+    public void removeMaterial(XMaterial material) {
+        if(!this.materials.containsKey(material)) {
             return;
         }
         
         int amount = this.materials.get(material);
-        if(amount == 1){
+        if(amount == 1) {
             this.materials.remove(material);
             this.totalProbability--;
-        }else if(amount > 1){
+        }else if(amount > 1) {
             this.materials.put(material, amount-1);
             this.totalProbability--;
         }
     }
-    public void clearMaterials(){
+    public void clearMaterials() {
         this.materials.clear();
         this.totalProbability = 0;
     }
-    public boolean isEmptyMaterialList(){
+    public boolean isEmptyMaterialList() {
         return this.materials.isEmpty();
     }
     
-    public List<String> getSortedMaterialList(){
+    public List<String> getSortedMaterialList() {
         List<String> sortedMaterials = new ArrayList<>();
         this.materials.forEach((material, amount) -> {
             String name = "   &3" + material.name() + " x" + amount;
@@ -93,20 +97,20 @@ public class BlockReplacingSphereReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper wrapper = ItemStackWrapper.newItem(XMaterial.DIAMOND_ORE);
         wrapper.setDisplayName("&bBlock Replacing Sphere");
         wrapper.addLoreLine("&dMin radius: &3" + this.minRadius);
         wrapper.addLoreLine("&dMax radius: &3" + this.maxRadius);
         wrapper.addLoreLine("&dTicks between layers: &3" + this.ticksBetweenLayers);
-        if(this.usePlayerLoc){
+        if(this.usePlayerLoc) {
             wrapper.addLoreLine("&dReplace liquids: &atrue");
-        }else{
+        } else {
             wrapper.addLoreLine("&dReplace liquids: &cfalse");
         }
-        if(this.replaceLiquids){
+        if(this.replaceLiquids) {
             wrapper.addLoreLine("&dUse player location: &atrue");
-        }else{
+        } else {
             wrapper.addLoreLine("&dUse player location: &cfalse");
         }
         wrapper.addLoreLine("&dMaterials:");
@@ -116,7 +120,7 @@ public class BlockReplacingSphereReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".minRadius", this.minRadius);
         config.set(path + ".maxRadius", this.maxRadius);
         config.set(path + ".ticksBetweenLayers", this.ticksBetweenLayers);
@@ -129,7 +133,7 @@ public class BlockReplacingSphereReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.minRadius = config.getInt(path + ".minRadius");
         this.maxRadius = config.getInt(path + ".maxRadius");
         this.ticksBetweenLayers = config.getInt(path + ".ticksBetweenLayers");
@@ -154,17 +158,17 @@ public class BlockReplacingSphereReward extends Reward{
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         Location source = this.usePlayerLoc ? player.getLocation() : location;
         
-        Task task = new Task(){
+        Task task = new Task() {
             int currentRadius = minRadius;
             Set<Location> placedLocations = new LinkedHashSet<>();
             
             @Override
-            public void run(){
-                if(currentRadius >= maxRadius){
+            public void run() {
+                if(currentRadius >= maxRadius) {
                     cancel();
                     return;
                 }
@@ -177,27 +181,27 @@ public class BlockReplacingSphereReward extends Reward{
                 int maxY = source.getBlockY() + currentRadius;
                 int minZ = source.getBlockZ() - currentRadius;
                 int maxZ = source.getBlockZ() + currentRadius;
-                for(int x=minX; x<=maxX; x++){
-                    for(int y=minY; y<=maxY; y++){
-                        for(int z=minZ; z<=maxZ; z++){
+                for(int x=minX; x<=maxX; x++) {
+                    for(int y=minY; y<=maxY; y++) {
+                        for(int z=minZ; z<=maxZ; z++) {
                             Block block = source.getWorld().getBlockAt(x, y, z);
-                            if(block.isEmpty() || !block.getType().isBlock()){
+                            if(block.isEmpty() || !block.getType().isBlock()) {
                                 continue;
                             }
                             
-                            if(!replaceLiquids && block.isLiquid()){
+                            if(!replaceLiquids && block.isLiquid()) {
                                 continue;
                             }
                             
-                            if(block.getLocation().distanceSquared(source) > currentRadiusSquared){
+                            if(block.getLocation().distanceSquared(source) > currentRadiusSquared) {
                                 continue;
                             }
                             
-                            if(placedLocations.contains(block.getLocation())){
+                            if(placedLocations.contains(block.getLocation())) {
                                 continue;
                             }
                             
-                            if(TypeManager.getType(block) != null){
+                            if(TypeManager.getType(block) != null) {
                                 continue;
                             }
                             
@@ -206,7 +210,7 @@ public class BlockReplacingSphereReward extends Reward{
                             }
                             
                             XMaterial material = getRandomMaterial();
-                            if(material != null){
+                            if(material != null) {
                                 XBlock.setType(block, material);
                                 placedLocations.add(block.getLocation());
                             }
@@ -223,11 +227,11 @@ public class BlockReplacingSphereReward extends Reward{
     private XMaterial getRandomMaterial() {
         int randomNumber = RandomUtils.getInt(totalProbability);
         
-        for(Map.Entry<XMaterial, Integer> entry : materials.entrySet()){
+        for(Map.Entry<XMaterial, Integer> entry : materials.entrySet()) {
             XMaterial material = entry.getKey();
             Integer amount = entry.getValue();
             randomNumber -= amount;
-            if(randomNumber < 0){
+            if(randomNumber < 0) {
                 return material;
             }
         }
@@ -236,12 +240,17 @@ public class BlockReplacingSphereReward extends Reward{
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.block_replacing_sphere;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<BlockReplacingSphereReward> getEditor() {
+        return new BlockReplacingSphereMenu();
+    }
+    
+    @Override
+    public BlockReplacingSphereReward clone() {
         BlockReplacingSphereReward copy = (BlockReplacingSphereReward) super.clone();
         copy.materials = new LinkedHashMap<>(this.materials);
         return copy;

@@ -8,7 +8,9 @@ import com.cryptomorin.xseries.XMaterial;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.lucky_blocks.editors.menus.LightningMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -17,12 +19,12 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
 @Getter
 @Setter
-public class LightningReward extends Reward{
+public class LightningReward extends Reward<LightningReward> {
     private boolean usePlayerLoc;
     private boolean causeDamage;
     private Offset offset;
     
-    public LightningReward(Outcome outcome){
+    public LightningReward(Outcome outcome) {
         super(outcome);
         usePlayerLoc = false;
         causeDamage = true;
@@ -30,17 +32,17 @@ public class LightningReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.WHITE_WOOL);
         builder.setDisplayName("&eLightning");
-        if(usePlayerLoc){
+        if(usePlayerLoc) {
             builder.addLoreLine("&bTarget location: &2player");
-        }else{
+        } else {
             builder.addLoreLine("&bTarget location: &6lucky block");
         }
-        if(causeDamage){
+        if(causeDamage) {
             builder.addLoreLine("&cCause damage: &atrue");
-        }else{
+        } else {
            builder.addLoreLine("&cCause damage: &7false");
         }
         builder.addLoreLine("&dOffset:");
@@ -52,43 +54,48 @@ public class LightningReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".usePlayerLoc", usePlayerLoc);
         config.set(path + ".causeDamage", causeDamage);
         offset.saveToConfig(config, path + ".offset");
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc");
         this.causeDamage = config.getBoolean(path + ".causeDamage");
         this.offset = new Offset(config, path + ".offset");
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         Location loc;
-        if(usePlayerLoc){
+        if(usePlayerLoc) {
             loc = player.getLocation().clone();
-        }else{
+        } else {
             loc = location.clone().subtract(0.5, 0, 0.5);
         }
         
         offset.applyToLocation(loc);
-        if(causeDamage){
+        if(causeDamage) {
             loc.getWorld().strikeLightning(loc);
-        }else{
+        } else {
             loc.getWorld().strikeLightningEffect(loc);
         }        
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.lightning;
+    }
+    
+    @Override
+    public EditorMenu<LightningReward> getEditor() {
+        return new LightningMenu();
     }
 
     @Override
-    public Reward clone(){
+    public LightningReward clone() {
         LightningReward copy = (LightningReward) super.clone();
         copy.offset = this.offset.clone();
         return copy;

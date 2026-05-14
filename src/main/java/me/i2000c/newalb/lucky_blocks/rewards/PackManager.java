@@ -48,7 +48,7 @@ public class PackManager {
         SET_LOADING_PACKS(true);
         List<CompletableFuture<OutcomePack>> futures = new ArrayList<>();
         
-        if(!OUTCOMES_FOLDER.exists()){
+        if(!OUTCOMES_FOLDER.exists()) {
             OUTCOMES_FOLDER.mkdirs();
             copyDefaultPacks();
         }
@@ -86,7 +86,7 @@ public class PackManager {
                          });
     }
     
-    public static OutcomePack getPack(String filename){
+    public static OutcomePack getPack(String filename) {
         if(filename.endsWith(".yml")) {
             filename = OtherUtils.removeExtension(filename);
         }
@@ -94,36 +94,36 @@ public class PackManager {
         return packList.get(filename);
     }
     
-    public static List<OutcomePack> getPacks(){
+    public static List<OutcomePack> getPacks() {
         return new ArrayList<>(packList.values());
     }
-    public static List<OutcomePack> getSortedPacks(){
+    public static List<OutcomePack> getSortedPacks() {
         List<OutcomePack> list = PackManager.getPacks();
         list.sort((OutcomePack pack1, OutcomePack pack2) -> pack1.getPackname().compareTo(pack2.getPackname()));
         return list;
     }
     
-    public static void addNewPack(OutcomePack pack, CommandSender sender){
+    public static void addNewPack(OutcomePack pack, CommandSender sender) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(packList.containsKey(pack.getPackname())){
+        if(packList.containsKey(pack.getPackname())) {
             Logger.sendMessage("&cPack &6\"" + pack.getPackname() + "\" &calready exists", sender);
-        }else{
+        } else {
             packList.put(pack.getPackname(), pack);
         }
 //</editor-fold>
     }
-    public static void clonePack(String name, CommandSender sender){
+    public static void clonePack(String name, CommandSender sender) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         name = OtherUtils.removeExtension(name);
         OutcomePack pack = getPack(name);
-        if(pack == null){
+        if(pack == null) {
             Logger.sendMessage("&cPack &6\"" + name + "\" &cdoesn't exist", sender);
-        }else{
+        } else {
             String newName = "";
-            for(int i=1; i<Integer.MAX_VALUE; i++){
+            for(int i=1; i<Integer.MAX_VALUE; i++) {
                 newName = name + "_" + i + ".yml";
                 File file = new File(OUTCOMES_FOLDER, newName);
-                if(!file.exists()){
+                if(!file.exists()) {
                     break;
                 }                    
             }
@@ -133,15 +133,15 @@ public class PackManager {
         }
 //</editor-fold>
     }
-    public static void renamePack(String oldName, String newName, CommandSender sender){
+    public static void renamePack(String oldName, String newName, CommandSender sender) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         newName = OtherUtils.removeExtension(newName);
         OutcomePack pack = getPack(OtherUtils.removeExtension(oldName));
-        if(pack == null){
+        if(pack == null) {
             Logger.sendMessage("&cPack &6\"" + oldName + "\" &cdoesn't exist", sender);
-        }else if(getPack(newName) != null){
+        }else if(getPack(newName) != null) {
             Logger.sendMessage("&cPack &6\"" + newName + "\" &calready exists", sender);
-        }else{
+        } else {
             packList.remove(oldName);
             pack.renamePack(newName);
             packList.put(newName, pack);
@@ -149,16 +149,16 @@ public class PackManager {
         }
 //</editor-fold>
     }
-    public static void changePackIcon(String name, ItemStack icon, CommandSender sender){
+    public static void changePackIcon(String name, ItemStack icon, CommandSender sender) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         Material material = icon.getType();
-        if(material.name().contains("POTION")){
+        if(material.name().contains("POTION")) {
             material = Material.POTION;
         }
         
         ItemStack newIcon = new ItemStack(material);
         if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()
-                && material != Material.POTION){
+                && material != Material.POTION) {
             newIcon.setDurability(icon.getDurability());
         }
         
@@ -169,13 +169,13 @@ public class PackManager {
         Logger.sendMessage("&aIcon of pack &6\"" + name + "\" &ahas been changed to &b" + iconString, sender);
 //</editor-fold>
     }
-    public static void removePack(String name, CommandSender sender){
+    public static void removePack(String name, CommandSender sender) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         name = OtherUtils.removeExtension(name);
         OutcomePack pack = getPack(name);
-        if(pack == null){
+        if(pack == null) {
             Logger.sendMessage("&cPack &6\"" + name + "\" &cdoesn't exist", sender);
-        }else{
+        } else {
             packList.remove(name);
             pack.delete();
             Logger.sendMessage("&aPack &6\"" + name + "\" &ahas been &4deleted", sender);
@@ -184,7 +184,7 @@ public class PackManager {
     }
     
     
-    private static void copyDefaultPacks(){
+    private static void copyDefaultPacks() {
         File examplePackFile = new File(OUTCOMES_FOLDER, "example_pack.yml");
         NewAmazingLuckyBlocks.getInstance().copyResource("outcome_packs/example_pack.yml", examplePackFile);
         

@@ -1,63 +1,104 @@
 package me.i2000c.newalb.lucky_blocks.editors.menus;
 
+import java.io.File;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.cryptomorin.xseries.XMaterial;
 
-import java.io.File;
-
-import me.i2000c.newalb.api.functions.InventoryFunction;
-import me.i2000c.newalb.api.gui.CustomInventoryType;
-import me.i2000c.newalb.api.gui.GUIFactory;
 import me.i2000c.newalb.api.gui.GUIItem;
-import me.i2000c.newalb.api.gui.InventoryLocation;
-import me.i2000c.newalb.api.gui.Menu;
+import me.i2000c.newalb.api.gui.MenuItem;
+import me.i2000c.newalb.api.gui.MenuSize;
+import me.i2000c.newalb.api.gui.menus.PaginatedMenu;
 import me.i2000c.newalb.listeners.chat.ChatListener;
-import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.lucky_blocks.editors.Editor;
-import me.i2000c.newalb.lucky_blocks.editors.EditorType;
+import me.i2000c.newalb.listeners.inventories.MenuClickEvent;
 import me.i2000c.newalb.lucky_blocks.rewards.OutcomePack;
 import me.i2000c.newalb.lucky_blocks.rewards.PackManager;
 import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.misc.OtherUtils;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-public class PackListMenu extends Editor{
-    public PackListMenu(){
-        InventoryListener.registerInventory(CustomInventoryType.GUI_PACK_MANAGER_MENU, GUI_PACK_MANAGER_MENU_FUNCTION);
-    }
+public class PackListMenu extends PaginatedMenu<OutcomePack> {
     
-    private int lastClickedSlot;
     private boolean renameMode;
     private boolean changeIconMode;
     private boolean cloneMode;
     private boolean deleteMode;
     
-    @Override
-    protected void reset(){
-        lastClickedSlot = -1;
-        renameMode = false;
-        changeIconMode = false;
-        cloneMode = false;
-        deleteMode = false;
+    public PackListMenu() {
+        super("&3&lPack menu", MenuSize.SIZE_6_ROWS, true, MenuSize.SIZE_5_ROWS);
     }
     
     @Override
-    protected void newItem(Player player){
-        openPackListMenu(player);
+    public List<OutcomePack> getItemList() {
+        return PackManager.getSortedPacks();
+    }
+    
+    @SuppressWarnings("deprecation")
+    @Override
+    public MenuItem mapItemToPage(OutcomePack outcomePack, int index) {
+        ItemStackWrapper wrapper = ItemStackWrapper.fromItem(outcomePack.getItemToDisplay(), false);
+        Consumer<MenuClickEvent> action = e -> {
+            Player player = e.getPlayer();
+            String packName = outcomePack.getPackname();
+            if(renameMode) {
+                //Rename pack
+                ChatListener.registerPlayer(player, message -> {
+                    String newPackName = OtherUtils.removeExtension(message);
+                    File newFile = new File(PackManager.OUTCOMES_FOLDER, newPackName + ".yml");
+                    if(newFile.exists()) {
+                        Logger.sendMessage("&cPack &6\"" + packName + "\" &calready exists", player);
+                        Logger.sendMessage("&cUse &b/alb return &cto return to the menu", player, false);
+                        return;
+                    }
+                    
+                    ChatListener.removePlayer(player);
+                    PackManager.renamePack(packName, newPackName, player);
+                    openToPlayer(player);
+                });
+                player.closeInventory();
+                Logger.sendMessage(("&3Write the new pack name in the chat"), player);
+            } else if(changeIconMode) {
+                //Change pack icon
+                if(!e.isEmptyCursor()) {
+                    PackManager.changePackIcon(packName, e.getCursor(), player);
+                    e.setCursor(null);
+                    resetPagination();
+                    openToPlayer(player);
+                }
+            } else if(cloneMode) {
+                //Clone pack
+                PackManager.clonePack(packName, player);
+                resetPagination();
+                openToPlayer(player);
+            } else if(deleteMode) {
+                //Delete pack
+                PackManager.removePack(packName, player);
+                resetPagination();
+                openToPlayer(player);
+            } else {
+                //Edit pack
+                int outcomeNumber = outcomePack.getOutcomes().size();
+                OutcomeListMenu menu = new OutcomeListMenu();
+                menu.setItemToEdit(outcomePack);
+                menu.setOnBack(p -> {
+                    int newOutcomeNumber = outcomePack.getOutcomes().size();
+                    if(outcomeNumber != newOutcomeNumber) {
+                        resetPagination();
+                    }
+                    openToPlayer(player);
+                });
+                menu.openToPlayer(player);
+            }
+        };
+        return new MenuItem(wrapper, action);
     }
     
     @Override
-    protected void editItem(Player player){
-        openPackListMenu(player);
-    }
-    
-    private void openPackListMenu(Player player){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Menu menu = GUIFactory.newMenu(CustomInventoryType.GUI_PACK_MANAGER_MENU, 54, "&3&lPack menu");
-        
+    protected void buildMenu(Player player) {
         ItemStack createPack = ItemStackWrapper.newItem(XMaterial.SLIME_BALL)
                                                .setDisplayName("&aCreate new pack")
                                                .toItemStack();
@@ -101,165 +142,65 @@ public class PackListMenu extends Editor{
                 .addLoreLine("&byour inventory and then click")
                 .addLoreLine("&bon a pack to change its icon");
         
-        menu.setItem(45, GUIItem.getBackItem());
-        if(!renameMode && !changeIconMode && !cloneMode && !deleteMode){
-            menu.setItem(46, createPack);
-        }
-        if(!changeIconMode && !cloneMode && !deleteMode){
-            menu.setItem(47, renamePack);
-        }
-        if(!renameMode && !cloneMode && !deleteMode){
-            menu.setItem(48, changeIcon);
-        }
-        if(!renameMode && !changeIconMode && !deleteMode){
-            menu.setItem(49, clonePack);
-        }
-        if(!renameMode && !changeIconMode && !cloneMode){
-            menu.setItem(50, deletePack);
-        }        
+        setBackItem(45);
         
-        //Not required for the moment
-        //menu.setItem(51, GUIItem.getPreviousPageItem());
-        //menu.setItem(52, GUIItem.getCurrentPageItem(0, 0));
-        //menu.setItem(53, GUIItem.getNextPageItem());
-        
-        int i = 0;
-        for(OutcomePack pack : PackManager.getSortedPacks()){
-            if(i >= 45){
-                break;
-            }
-            menu.setItem(i, pack.getItemToDisplay());
-            i++;
+        if(!renameMode && !changeIconMode && !cloneMode && !deleteMode) {
+            setItem(46, createPack, e -> {
+                ChatListener.registerPlayer(player, message -> {
+                    String packName = OtherUtils.removeExtension(message);
+                    File newFile = new File(PackManager.OUTCOMES_FOLDER, packName + ".yml");
+                    if(newFile.exists()) {
+                        Logger.sendMessage("&cPack &6\"" + packName + "\" &calready exists", player);
+                        Logger.sendMessage("&cUse &b/alb return &cto return to the menu", player, false);
+                        return;
+                    }
+                    
+                    ChatListener.removePlayer(player);
+                    OutcomePack pack = new OutcomePack(newFile);
+                    pack.saveOutcomes();
+                    PackManager.addNewPack(pack, player);
+                    resetPagination();
+                    openToPlayer(player);
+                }, false);
+                player.closeInventory();
+                Logger.sendMessage("&3Write the new pack name in the chat", player);
+            });
         }
-        
-        menu.openToPlayer(player);
-//</editor-fold>
+        if(!changeIconMode && !cloneMode && !deleteMode) {
+            setItem(47, renamePack, e -> {
+                renameMode = !renameMode;
+                openToPlayer(player);
+            });
+        }
+        if(!renameMode && !cloneMode && !deleteMode) {
+            setItem(48, changeIcon, e -> {
+                if(e.isEmptyCursor()) {
+                    changeIconMode = !changeIconMode;
+                    openToPlayer(player);
+                }
+            });
+        }
+        if(!renameMode && !changeIconMode && !deleteMode) {
+            setItem(49, clonePack, e -> {
+                cloneMode = !cloneMode;
+                openToPlayer(player);
+            });
+        }
+        if(!renameMode && !changeIconMode && !cloneMode) {
+            setItem(50, deletePack, e -> {
+                deleteMode = !deleteMode;
+                openToPlayer(player);
+            });
+        }
     }
     
-    private final InventoryFunction GUI_PACK_MANAGER_MENU_FUNCTION = e -> {
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Player player = (Player) e.getWhoClicked();
-        e.setCancelled(true);
-        
-        if(e.getLocation() == InventoryLocation.TOP){
-            switch(e.getSlot()){
-                case 45:
-                    // Go to previous menu
-                    onBack.accept(player);
-                    break;
-                case 46:
-                    //Create new pack
-                    if(!renameMode && !changeIconMode && !cloneMode && !deleteMode){
-                        ChatListener.registerPlayer(player, message -> {
-                            String packName = OtherUtils.removeExtension(message);
-                            File newFile = new File(PackManager.OUTCOMES_FOLDER, packName + ".yml");
-                            if(newFile.exists()){
-                                Logger.sendMessage("&cPack &6\"" + packName + "\" &calready exists", player);
-                                Logger.sendMessage("&cUse &b/alb return &cto return to the menu", player, false);
-                                return;
-                            }
-                            
-                            ChatListener.removePlayer(player);
-                            OutcomePack pack = new OutcomePack(newFile);
-                            pack.saveOutcomes();
-                            PackManager.addNewPack(pack, player);
-                            openPackListMenu(player);
-                        }, false);
-                        player.closeInventory();
-                        Logger.sendMessage("&3Write the new pack name in the chat", player);
-                    }
-                    break;
-                case 47:
-                    //Toggle rename mode
-                    if(!cloneMode && !changeIconMode && !deleteMode){
-                        renameMode = !renameMode;
-                        openPackListMenu(player);
-                    }
-                    break;
-                case 48:
-                    //Toggle changeIcon mode
-                    if(!renameMode && !cloneMode && !deleteMode){
-                        changeIconMode = !changeIconMode;
-                        openPackListMenu(player);
-                    }
-                    break;
-                case 49:
-                    //Toggle clone mode
-                    if(!renameMode && !changeIconMode && !deleteMode){
-                        cloneMode = !cloneMode;
-                        openPackListMenu(player);
-                    }
-                    break;
-                case 50:
-                    //Toggle delete mode
-                    if(!renameMode && !changeIconMode && !cloneMode){
-                        deleteMode = !deleteMode;
-                        openPackListMenu(player);
-                    }
-                    break;                
-                default:
-                    ItemStack sk = e.getCurrentItem();
-                    if(sk != null && sk.getType() != Material.AIR){
-                        String displayName = ItemStackWrapper.fromItem(e.getCurrentItem(), false)
-                                .getDisplayName();
-                        if(displayName == null){
-                            return;
-                        }
-                        
-                        String packName = Logger.stripColor(displayName);
-                        if(renameMode){
-                            //Rename pack
-                            ChatListener.registerPlayer(player, message -> {
-                                String newPackName = OtherUtils.removeExtension(message);
-                                File newFile = new File(PackManager.OUTCOMES_FOLDER, newPackName + ".yml");
-                                if(newFile.exists()){
-                                    Logger.sendMessage("&cPack &6\"" + packName + "\" &calready exists", player);
-                                    Logger.sendMessage("&cUse &b/alb return &cto return to the menu", player, false);
-                                    return;
-                                }
-                                
-                                ChatListener.removePlayer(player);
-                                PackManager.renamePack(packName, newPackName, player);
-                                openPackListMenu(player);
-                            });
-                            player.closeInventory();
-                            Logger.sendMessage(("&3Write the new pack name in the chat"), player);
-                        }else if(changeIconMode){
-                            //Change pack icon
-                            ItemStack stack = e.getCursor();
-                            if(stack == null || stack.getType() == Material.AIR){
-                                return;
-                            }
-                            
-                            e.setCursor(null);
-                            e.getView().getBottomInventory().setItem(lastClickedSlot, stack);
-                            PackManager.changePackIcon(packName, stack, player);
-                            openPackListMenu(player);
-                        }else if(cloneMode){
-                            //Clone pack
-                            PackManager.clonePack(packName, player);
-                            openPackListMenu(player);
-                        }else if(deleteMode){
-                            //Delete pack
-                            PackManager.removePack(packName, player);
-                            openPackListMenu(player);
-                        }else{
-                            //Edit pack
-                            Editor<OutcomePack> editor = EditorType.OUTCOME_LIST.getEditor();
-                            editor.editExistingItem(
-                                    PackManager.getPack(packName), 
-                                    player, 
-                                    p -> openPackListMenu(p), 
-                                    null);
-                        }
-                    }
-            }
-        }else if(e.getLocation() == InventoryLocation.BOTTOM){
-            if(changeIconMode){
-                e.setCancelled(false);
-                lastClickedSlot = e.getSlot();
-            }
+    @SuppressWarnings("deprecation")
+    @Override
+    protected void onClickDefault(MenuClickEvent event) {
+        if(changeIconMode && event.isBottomInventory() && !event.isEmptyItem()) {
+            event.setCursor(event.getCurrentItem());
+        } else {
+            event.setCursor(null);
         }
-//</editor-fold>
-    };
+    }
 }

@@ -1,22 +1,8 @@
 package me.i2000c.newalb.lucky_blocks.rewards.types;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XPotion;
-import com.cryptomorin.xseries.XSound;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import me.i2000c.newalb.config.Config;
-import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
-import me.i2000c.newalb.lucky_blocks.rewards.Reward;
-import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
-import me.i2000c.newalb.utils.logging.Logger;
-import me.i2000c.newalb.utils.misc.ItemStackWrapper;
-import me.i2000c.newalb.utils.particles.Particles;
-import me.i2000c.newalb.utils.tasks.Task;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -26,16 +12,34 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XPotion;
+import com.cryptomorin.xseries.XSound;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
+import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.lucky_blocks.editors.menus.SquidExplosionMenu;
+import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
+import me.i2000c.newalb.lucky_blocks.rewards.Reward;
+import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
+import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.particles.Particles;
+import me.i2000c.newalb.utils.tasks.Task;
+
 @Getter
 @Setter
-public class SquidExplosionReward extends Reward{
+public class SquidExplosionReward extends Reward<SquidExplosionReward> {
     private int countdownTime;
     private int radius;
     
     @Setter(AccessLevel.NONE)
     private List<PotionEffect> effects;
     
-    public SquidExplosionReward(Outcome outcome){
+    public SquidExplosionReward(Outcome outcome) {
         super(outcome);
         countdownTime = 5;
         radius = 5;
@@ -43,14 +47,14 @@ public class SquidExplosionReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper builder =  ItemStackWrapper.newItem(XMaterial.INK_SAC);
         builder.setDisplayName("&7Squid explosion");
         builder.addLoreLine("&3Countdown time: &d" + countdownTime);
         builder.addLoreLine("&3Radius: &d" + radius);
         builder.addLoreLine("&3Effects:");
         effects.forEach(effect -> {
-            String name = XPotion.matchXPotion(effect.getType()).name();
+            String name = XPotion.of(effect.getType()).name();
             int duration = effect.getDuration();
             int amplifier = effect.getAmplifier();
             boolean isAmbient = effect.isAmbient();
@@ -62,13 +66,13 @@ public class SquidExplosionReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".countdownTime", countdownTime);
         config.set(path + ".radius", radius);
         
         List<String> effectsStringList = new ArrayList<>();
         effects.forEach(effect -> {
-            String name = XPotion.matchXPotion(effect.getType()).name();
+            String name = XPotion.of(effect.getType()).name();
             int duration = effect.getDuration();
             int amplifier = effect.getAmplifier();
             boolean isAmbient = effect.isAmbient();
@@ -80,7 +84,7 @@ public class SquidExplosionReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.countdownTime = config.getInt(path + ".countdownTime");
         this.radius = config.getInt(path + ".radius");
         
@@ -88,7 +92,7 @@ public class SquidExplosionReward extends Reward{
         this.effects.clear();
         effectsStringList.forEach(effectString -> {
             String[] split = effectString.split(";");
-            PotionEffectType type = XPotion.matchXPotion(split[0]).get().getPotionEffectType();
+            PotionEffectType type = XPotion.of(split[0]).get().getPotionEffectType();
             int duration = Integer.parseInt(split[1]);
             int amplifier = Integer.parseInt(split[2]);
             boolean isAmbient = false, showParticles = true;
@@ -103,23 +107,22 @@ public class SquidExplosionReward extends Reward{
     }
     
     @Override
-    public void execute(Player player, Location location){
-        //<editor-fold defaultstate="collapsed" desc="Code">
+    public void execute(Player player, Location location) {
         Squid squid = location.getWorld().spawn(location, Squid.class);
         squid.setCustomNameVisible(true);
         
-        Task task = new Task(){
+        Task task = new Task() {
             int time = countdownTime;
             
             @Override
-            public void run(){
-                if(squid.isDead()){
+            public void run() {
+                if(squid.isDead()) {
                     cancel();
                     return;
                 }
                 
                 Location loc = squid.getLocation();
-                if(time <= 0){
+                if(time <= 0) {
                     List<PotionEffect> effectiveEffects = effects.stream().map(effect -> {
                         PotionEffectType name = effect.getType();
                         int durationTicks = effect.getDuration()*20;
@@ -134,7 +137,7 @@ public class SquidExplosionReward extends Reward{
                     cancel();
                     squid.getNearbyEntities(radius, radius, radius)
                             .forEach(entity -> {
-                                if(entity instanceof LivingEntity){
+                                if(entity instanceof LivingEntity) {
                                     LivingEntity le = (LivingEntity) entity;
                                     effectiveEffects.forEach(effect -> le.addPotionEffect(effect, true));
                                 }
@@ -152,16 +155,20 @@ public class SquidExplosionReward extends Reward{
             }
         };
         task.runTask(0L, 20L);
-//</editor-fold>
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.squid_explosion;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<SquidExplosionReward> getEditor() {
+        return new SquidExplosionMenu();
+    }
+    
+    @Override
+    public SquidExplosionReward clone() {
         SquidExplosionReward copy = (SquidExplosionReward) super.clone();
         copy.effects = new ArrayList<>(this.effects);
         return copy;

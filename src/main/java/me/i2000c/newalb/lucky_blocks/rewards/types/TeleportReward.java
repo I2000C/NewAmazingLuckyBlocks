@@ -10,7 +10,9 @@ import com.cryptomorin.xseries.XMaterial;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
+import me.i2000c.newalb.lucky_blocks.editors.menus.TeleportMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -20,7 +22,7 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
 @Getter
 @Setter
-public class TeleportReward extends Reward{
+public class TeleportReward extends Reward<TeleportReward> {
     public static final String PLAYER_WORLD_PATTERN = "%world%";
     
     private TeleportSource teleportSource;
@@ -33,12 +35,12 @@ public class TeleportReward extends Reward{
         ABSOLUTE;
         
         private static final TeleportSource[] vals = values();
-        public TeleportSource next(){
+        public TeleportSource next() {
             return vals[(this.ordinal()+1) % vals.length];
         }
     }
     
-    public TeleportReward(Outcome outcome){
+    public TeleportReward(Outcome outcome) {
         super(outcome);
         teleportSource = TeleportSource.RELATIVE_TO_PLAYER;
         worldName = PLAYER_WORLD_PATTERN;
@@ -46,7 +48,7 @@ public class TeleportReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         return ItemStackWrapper.newItem(XMaterial.COMPASS)
                 .setDisplayName("&eTeleport")
                 .addLoreLine("&bSource: &3" + teleportSource.name())
@@ -59,27 +61,27 @@ public class TeleportReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".source", teleportSource.name());
         config.set(path + ".worldName", worldName);
         offset.saveToConfig(config, path + ".offset");        
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.teleportSource = config.getEnum(path + ".source", TeleportSource.class);
         this.worldName = config.getString(path + ".worldName");
         this.offset = new Offset(config, path + ".offset");        
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         Location playerLocation = player.getLocation();
         float pitch = playerLocation.getPitch();
         float yaw = playerLocation.getYaw();
         
         Location teleportLocation;
-        switch(teleportSource){
+        switch(teleportSource) {
             case RELATIVE_TO_PLAYER:
                 teleportLocation = offset.applyToLocation(playerLocation);
                 break;
@@ -88,11 +90,11 @@ public class TeleportReward extends Reward{
                 break;
             default:
                 World world;
-                if(worldName.equals(PLAYER_WORLD_PATTERN)){
+                if(worldName.equals(PLAYER_WORLD_PATTERN)) {
                     world = player.getWorld();
-                }else{
+                } else {
                     world = Bukkit.getWorld(worldName);
-                    if(world == null){
+                    if(world == null) {
                         Logger.warn("Cannot execute teleport reward");
                         Logger.warn("World " + worldName + " doesn't exist");
                         return;
@@ -107,12 +109,17 @@ public class TeleportReward extends Reward{
     }
     
     @Override
-    public RewardType getRewardType(){
+    public EditorMenu<TeleportReward> getEditor() {
+        return new TeleportMenu();
+    }
+    
+    @Override
+    public RewardType getRewardType() {
         return RewardType.teleport;
     }
     
     @Override
-    public Reward clone(){
+    public TeleportReward clone() {
         TeleportReward copy = (TeleportReward) super.clone();
         copy.offset = this.offset.clone();
         return copy;

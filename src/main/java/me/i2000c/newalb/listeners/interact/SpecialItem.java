@@ -3,6 +3,7 @@ package me.i2000c.newalb.listeners.interact;
 import java.util.ArrayList;
 import java.util.List;
 import me.i2000c.newalb.config.ConfigManager;
+import me.i2000c.newalb.lucky_blocks.rewards.ItemProvider;
 import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.tasks.PlayerCooldown;
@@ -18,7 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class SpecialItem {
+public abstract class SpecialItem implements ItemProvider {
     static final String ITEM_TAG = "NewAmazingLuckyBlocks.SpecialItem";    
     static final String CUSTOM_MODEL_DATA_TAG = "CustomModelData";
     
@@ -53,8 +54,9 @@ public abstract class SpecialItem {
         return this.isWand;
     }
     
-    public final ItemStack getItem(){
-        return this.item.clone();
+    @Override
+    public final ItemStackWrapper getItem(){
+        return ItemStackWrapper.fromItem(this.item, true);
     }
     
     public final void loadItem(){

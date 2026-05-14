@@ -22,6 +22,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
+import me.i2000c.newalb.api.gui.MenuManager;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.integration.WorldGuardManager;
 import me.i2000c.newalb.listeners.blocks.BlockBreakListener;
@@ -159,7 +160,10 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
     }
     
     @Override
-    public void onDisable(){
+    public void onDisable() {
+    	MenuManager.removeAllMenus();
+    	MenuManager.closeAllMenus();
+    	
         RandomBlocks.forceStopAllRandomBlocksTasks();
         RewardListMenu.testRewardsPlayerList.clear();
         LocationManager.releaseDatabaseConnection();

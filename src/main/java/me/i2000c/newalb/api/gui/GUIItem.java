@@ -46,6 +46,12 @@ public class GUIItem{
     public static ItemStack getPlusLessItem(int amount) {
         return getPlusLessItem(new BigDecimal(amount), 0);
     }
+    public static ItemStack getPlusLessItem(String amount) {
+        return getPlusLessItem(new BigDecimal(amount));
+    }
+    public static ItemStack getPlusLessItem(String amount, int precision) {
+        return getPlusLessItem(new BigDecimal(amount), precision);
+    }
     public static ItemStack getPlusLessItem(BigDecimal amount) {
         return getPlusLessItem(amount, 2);
     }

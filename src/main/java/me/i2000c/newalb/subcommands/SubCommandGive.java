@@ -14,7 +14,7 @@ import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.lucky_blocks.rewards.LuckyBlockType;
 import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
 import me.i2000c.newalb.utils.logging.Logger;
-import me.i2000c.newalb.utils.menus.GiveMenu;
+import me.i2000c.newalb.utils.menus.give.GiveMenu;
 
 public class SubCommandGive implements SubCommand {
     
@@ -31,9 +31,9 @@ public class SubCommandGive implements SubCommand {
             if(!checkNotConsole(sender)) {
                 return false;
             }
-                        
-            GiveMenu.reset();
-            GiveMenu.openGiveMenu((Player) sender);
+            
+            GiveMenu giveMenu = new GiveMenu();
+            giveMenu.openToPlayer((Player) sender);
             return true;
         }
         
@@ -94,9 +94,7 @@ public class SubCommandGive implements SubCommand {
                 String loadwands = ConfigManager.getLangMessage("LoadingWands");
                 Logger.sendMessage(loadwands, sender);
                 for(SpecialItem wand : SpecialItems.getWands()) {
-                    ItemStack stack = wand.getItem();
-                    stack.setAmount(amount);
-                    target.getInventory().addItem(stack);
+                    target.getInventory().addItem(wand.getItem().setAmount(amount).toItemStack());
                 }
                 break;
             case "objects":
@@ -107,9 +105,7 @@ public class SubCommandGive implements SubCommand {
                 String loadobjects = ConfigManager.getLangMessage("LoadingObjects");                    
                 Logger.sendMessage(loadobjects, sender);
                 for(SpecialItem object : SpecialItems.getObjects()) {
-                    ItemStack stack = object.getItem();
-                    stack.setAmount(amount);
-                    target.getInventory().addItem(stack);
+                    target.getInventory().addItem(object.getItem().setAmount(amount).toItemStack());
                 }
                 break;
             case "luckyblocks":
@@ -149,7 +145,7 @@ public class SubCommandGive implements SubCommand {
                         return false;
                     }
                 } else {
-                    stack = specialItem.getItem();
+                    stack = specialItem.getItem().toItemStack();
                 }
                 
                 String loadSpecialItem = ConfigManager.getLangMessage("LoadingSpecialItem");

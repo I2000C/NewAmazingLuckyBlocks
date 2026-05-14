@@ -35,7 +35,7 @@ import me.i2000c.newalb.utils.textures.Texture;
 @Data
 @EqualsAndHashCode(of = "ID")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LuckyBlockType implements Displayable, Executable {
+public class LuckyBlockType implements Displayable, Executable, ItemProvider, Cloneable {
     
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
@@ -56,7 +56,6 @@ public class LuckyBlockType implements Displayable, Executable {
     @Setter(AccessLevel.NONE)
     private ShapedRecipe recipe;
     
-    @Setter(AccessLevel.NONE)
     private Map<OutcomePack, Integer> packs;
     
     @Getter(AccessLevel.NONE)
@@ -70,7 +69,7 @@ public class LuckyBlockType implements Displayable, Executable {
     private List<String> cachedPacksProbList;
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         ItemStackWrapper wrapper = this.luckyBlockItem.clone();
         wrapper.setDisplayName("&bIdentifier: &6" + this.typeName);
@@ -89,17 +88,17 @@ public class LuckyBlockType implements Displayable, Executable {
         }
         
         String displayName = this.luckyBlockItem.getDisplayName();
-        if(displayName != null){
+        if(displayName != null) {
             wrapper.addLoreLine(String.format("&5Item name: &r%s", displayName));
-        }else{
+        } else {
             wrapper.addLoreLine("&5Item name: &cnull");
         }
         
         List<String> lore = this.luckyBlockItem.getLore();
-        if(lore != null){
+        if(lore != null) {
             wrapper.addLoreLine("&5Item lore:");
             lore.forEach(line -> wrapper.addLoreLine("    " + line));
-        }else{
+        } else {
             wrapper.addLoreLine("&5Item lore: &cnull");
         }
         
@@ -133,21 +132,22 @@ public class LuckyBlockType implements Displayable, Executable {
 //</editor-fold>
     }
     
-    public ItemStackWrapper getItem(){
+    @Override
+    public ItemStackWrapper getItem() {
         return luckyBlockItem.clone();
     }
-    public void setItem(ItemStackWrapper item){
+    public void setItem(ItemStackWrapper item) {
         this.luckyBlockItem = item.clone();
     }
     
-    public boolean checkBreakPermission(Player player){
+    public boolean checkBreakPermission(Player player) {
         return !requireBreakPermission || player.hasPermission(breakPermission);
     }
-    public boolean checkPlacePermission(Player player){
+    public boolean checkPlacePermission(Player player) {
         return !requirePlacePermission || player.hasPermission(placePermission);
     }    
     
-    public LuckyBlockType(String typeName){
+    public LuckyBlockType(String typeName) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.typeName = typeName;
         this.ID = -1;
@@ -161,7 +161,7 @@ public class LuckyBlockType implements Displayable, Executable {
         
         crafting = new ArrayList<>(9);
         ItemStack air = new ItemStack(Material.AIR);
-        for(int i=0; i<9; i++){
+        for(int i=0; i<9; i++) {
             crafting.add(air);
         }
         
@@ -174,7 +174,8 @@ public class LuckyBlockType implements Displayable, Executable {
 //</editor-fold>
     } 
     
-    public static LuckyBlockType loadFromConfig(Config config, String typeName){
+    @SuppressWarnings("deprecation")
+    public static LuckyBlockType loadFromConfig(Config config, String typeName) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         LuckyBlockType type = new LuckyBlockType();
         
@@ -214,9 +215,9 @@ public class LuckyBlockType implements Displayable, Executable {
                                   recipeMaterialNames.get(2)).split(" ");
         
         type.crafting = new ArrayList<>(9);
-        if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_12)){
+        if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_12)) {
             type.recipe = new ShapedRecipe(type.luckyBlockItem.toItemStack());
-        }else{
+        } else {
             NamespacedKey namespacedKey = new NamespacedKey(NewAmazingLuckyBlocks.getInstance(), "NewAmazingLuckyBlocks." + type.ID);
             type.recipe = new ShapedRecipe(namespacedKey, type.luckyBlockItem.toItemStack());
         }        
@@ -236,12 +237,12 @@ public class LuckyBlockType implements Displayable, Executable {
                           char6 + char7 + char8);
         
         char ingredientChar = 'A';
-        for(String materialAndData : materialNames){
+        for(String materialAndData : materialNames) {
             ItemStack item = ItemStackWrapper.newItem(materialAndData).toItemStack();
-            if(item.getType() != Material.AIR){
-                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
+            if(item.getType() != Material.AIR) {
+                if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
                     type.recipe.setIngredient(ingredientChar, item.getType(), item.getDurability());
-                }else{
+                } else {
                     type.recipe.setIngredient(ingredientChar, item.getType());
                 }
             }
@@ -252,7 +253,7 @@ public class LuckyBlockType implements Displayable, Executable {
         //Remove previous recipe if exists
         TypeManager.removeRecipe(type.recipe);
         
-        if(type.crafting.stream().anyMatch(item -> item.getType() != Material.AIR)){
+        if(type.crafting.stream().anyMatch(item -> item.getType() != Material.AIR)) {
             Bukkit.addRecipe(type.recipe);
         }
         
@@ -274,16 +275,16 @@ public class LuckyBlockType implements Displayable, Executable {
             String[] splitted = packProb.split(";");
             String packName = splitted[0];
             int packProbability;
-            try{
+            try {
                 packProbability = Integer.parseInt(splitted[1]);
-            }catch(Exception ex){
+            } catch(Exception ex) {
                 packProbability = 0;
             }
             
             OutcomePack pack = PackManager.getPack(packName);
-            if(pack == null){
+            if(pack == null) {
                 Logger.log(String.format("Pack \"%s\" doesn't exist", packName));
-            }else{
+            } else {
                 pack.addLuckyBlockTypeToNotify(this);
                 this.totalProbability += packProbability;
                 this.packs.put(pack, packProbability);
@@ -292,14 +293,14 @@ public class LuckyBlockType implements Displayable, Executable {
         
         if(this.packs.isEmpty()) {
             Logger.warn(String.format("LuckyBlockType \"%s\" doesn't contain any valid outcome pack", this.typeName));
-        }else if(this.totalProbability <= 0) {
+        } else if(this.totalProbability <= 0) {
             Logger.warn(String.format("Total probability of LuckyBlockType \"%s\" must be positive", this.typeName));
         }
         
         cachedPacksProbList = null;
     }
     
-    public void saveToConfig(Config config){
+    public void saveToConfig(Config config) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         
         // Save permissions
@@ -342,13 +343,13 @@ public class LuckyBlockType implements Displayable, Executable {
 //</editor-fold>       
     }
     
-    public Integer getProbabilityPack(OutcomePack pack){
+    public Integer getProbabilityPack(OutcomePack pack) {
         return packs.get(pack);
     }
-    public void addProbabilityPack(OutcomePack pack, int probability){
+    public void addProbabilityPack(OutcomePack pack, int probability) {
         packs.put(pack, probability);
     }
-    public void removePack(OutcomePack pack){
+    public void removePack(OutcomePack pack) {
         packs.remove(pack);
     }
     
@@ -373,7 +374,7 @@ public class LuckyBlockType implements Displayable, Executable {
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         OutcomePack pack = getRandomPack();
         if(pack != null) {
             pack.execute(player, location);
@@ -382,8 +383,7 @@ public class LuckyBlockType implements Displayable, Executable {
     
     @SneakyThrows
     @Override
-    public LuckyBlockType clone(){
-        //<editor-fold defaultstate="collapsed" desc="Code">
+    public LuckyBlockType clone() {
         LuckyBlockType clone = (LuckyBlockType) super.clone();
         
         clone.luckyBlockItem = this.getItem();
@@ -391,7 +391,6 @@ public class LuckyBlockType implements Displayable, Executable {
         clone.packs = new LinkedHashMap<>(this.packs);
         
         return clone;
-//</editor-fold>
     }
     
 }

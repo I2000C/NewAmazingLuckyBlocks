@@ -36,18 +36,18 @@ public class OutcomePack implements Displayable, Executable{
     
     private final Set<LuckyBlockType> luckyBlockTypesToNotify;
     
-    void addLuckyBlockTypeToNotify(LuckyBlockType type){
+    void addLuckyBlockTypeToNotify(LuckyBlockType type) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypesToNotify.add(type);
 //</editor-fold>
     }
-    void removeLuckyBlockTypeFromNotify(LuckyBlockType type){
+    void removeLuckyBlockTypeFromNotify(LuckyBlockType type) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypesToNotify.remove(type);
 //</editor-fold>
     }
     
-    public OutcomePack(File file){
+    public OutcomePack(File file) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypesToNotify = new HashSet<>();
         outcomeFile = file;
@@ -58,7 +58,7 @@ public class OutcomePack implements Displayable, Executable{
 //</editor-fold>
     }
     
-    public final void loadPack(){
+    public final void loadPack() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         outcomeConfig.loadConfig(outcomeFile);
         
@@ -68,14 +68,14 @@ public class OutcomePack implements Displayable, Executable{
         
         String packVersionName = outcomeConfig.getString("MinMinecraftVersion", null);
         MinecraftVersion packVersion;
-        if(packVersionName == null){
+        if(packVersionName == null) {
             packVersion = MinecraftVersion.CURRENT_VERSION;
         } else {
             packVersion = MinecraftVersion.fromString(packVersionName);
         }
         
         MinecraftVersion currentVersion = MinecraftVersion.CURRENT_VERSION;
-        if(currentVersion.isLessThan(packVersion)){
+        if(currentVersion.isLessThan(packVersion)) {
             Logger.warn("Pack \"" + getPackname() + "\" requires at least Minecraft " + packVersion);
             Logger.warn("However, you are using Minecraft " + currentVersion);
             Logger.warn("In order to avoid errors, the outcomes of this pack won't be loaded");
@@ -83,10 +83,10 @@ public class OutcomePack implements Displayable, Executable{
         }
         
         ConfigurationSection section = outcomeConfig.getConfigurationSection("Outcomes", null);
-        if(section != null){
+        if(section != null) {
             List<String> keys = new ArrayList<>(section.getKeys(false));
             Collections.sort(keys, COMPARATOR);
-            for(String key : keys){
+            for(String key : keys) {
                 Outcome outcome = new Outcome(outcomeConfig, "Outcomes." + key, Integer.parseInt(key), this);
                 totalProbability += outcome.getProbability();
                 outcomes.put(outcome.getID(), outcome);
@@ -94,7 +94,7 @@ public class OutcomePack implements Displayable, Executable{
         }
         
         XMaterial iconMaterial = outcomeConfig.getMaterial("Icon", null);
-        if(iconMaterial != null){
+        if(iconMaterial != null) {
             icon = iconMaterial.parseItem();
         }
         
@@ -106,10 +106,10 @@ public class OutcomePack implements Displayable, Executable{
             int nextCorrectID = 0;
 
             //Check if all outcomes' IDs are 1, 2, 3, etc and change the incorrect IDs
-            for(int i=0;i<=max;i++){
+            for(int i=0;i<=max;i++) {
                 Outcome aux = outcomes.get(i);
-                if(aux != null){
-                    if(aux.getID() != nextCorrectID){
+                if(aux != null) {
+                    if(aux.getID() != nextCorrectID) {
                         int previousID = aux.getID();
                         aux.setID(nextCorrectID);
                         outcomes.remove(previousID);
@@ -122,37 +122,37 @@ public class OutcomePack implements Displayable, Executable{
 //</editor-fold>
     }
     
-    public String getPackname(){
+    public String getPackname() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         return OtherUtils.removeExtension(this.outcomeFile.getName());
 //</editor-fold>
     }
     
-    public String getFilename(){
+    public String getFilename() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         return this.outcomeFile.getName();
 //</editor-fold>
     }
     
-    public void setIcon(ItemStack icon){
+    public void setIcon(ItemStack icon) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.icon = new ItemStack(icon.getType());
-        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()){
+        if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
             this.icon.setDurability(icon.getDurability());
         }
 //</editor-fold>
     }
-    public ItemStack getIcon(){
+    public ItemStack getIcon() {
         return this.icon;
     }
     
-    public Map<Integer, Outcome> getOutcomes(){
+    public Map<Integer, Outcome> getOutcomes() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         return this.outcomes;
 //</editor-fold>
     }
     
-    public List<Outcome> getSortedOutcomes(){
+    public List<Outcome> getSortedOutcomes() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         List<Outcome> list = new ArrayList<>(this.outcomes.values());
         list.sort((outcome1, outcome2) -> outcome1.getID() - outcome2.getID());
@@ -160,7 +160,7 @@ public class OutcomePack implements Displayable, Executable{
 //</editor-fold>
     }
     
-    public Outcome getOutcome(int i){
+    public Outcome getOutcome(int i) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         return outcomes.get(i);
 //</editor-fold>
@@ -168,20 +168,20 @@ public class OutcomePack implements Displayable, Executable{
     
     private static final Comparator<String> COMPARATOR = (String s1, String s2) -> {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        try{
+        try {
             int value1 = Integer.parseInt(s1);
             int value2 = Integer.parseInt(s2);
             
             return value1 - value2;
-        }catch(NumberFormatException ex){
+        } catch(NumberFormatException ex) {
             return 1;
         }
 //</editor-fold>
     };
     
-    public void addOutcome(Outcome outcome, boolean isNewOutcome){
+    public void addOutcome(Outcome outcome, boolean isNewOutcome) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(isNewOutcome || outcome.getID() == -1){
+        if(isNewOutcome || outcome.getID() == -1) {
             outcome.setID(outcomes.size());
         }
         outcomes.put(outcome.getID(), outcome);
@@ -189,16 +189,16 @@ public class OutcomePack implements Displayable, Executable{
 //</editor-fold>
     }
     
-    public void removeOutcome(Outcome outcome){
+    public void removeOutcome(Outcome outcome) {
         //<editor-fold defaultstate="collapsed" desc="Code">
-        if(!outcomes.containsKey(outcome.getID())){
+        if(!outcomes.containsKey(outcome.getID())) {
             return;
         }
         
         outcomes.remove(outcome.getID());
         totalProbability = totalProbability - outcome.getProbability();
         
-        if(outcomes.isEmpty()){
+        if(outcomes.isEmpty()) {
             return;
         }
         
@@ -209,10 +209,10 @@ public class OutcomePack implements Displayable, Executable{
         int nextCorrectID = 0;
         
         //Check if all outcomes' IDs are 1, 2, 3, etc and change the incorrect IDs
-        for(int i=0;i<=max;i++){
+        for(int i=0;i<=max;i++) {
             Outcome aux = outcomes.get(i);
-            if(aux != null){
-                if(aux.getID() != nextCorrectID){
+            if(aux != null) {
+                if(aux.getID() != nextCorrectID) {
                     int previousID = aux.getID();
                     aux.setID(nextCorrectID);
                     outcomes.remove(previousID);
@@ -223,13 +223,13 @@ public class OutcomePack implements Displayable, Executable{
         }
 //</editor-fold>
     }
-    public void removeOutcome(int outcomeID){
+    public void removeOutcome(int outcomeID) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         outcomes.remove(outcomeID);
 //</editor-fold>
     }
     
-    public void saveOutcomes(){
+    public void saveOutcomes() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         outcomeConfig.clearConfig();
         
@@ -243,7 +243,7 @@ public class OutcomePack implements Displayable, Executable{
 //</editor-fold>
     }
     
-    public void renamePack(String newName){
+    public void renamePack(String newName) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         newName = OtherUtils.removeExtension(newName);
         File newFile = new File(outcomeFile.getParentFile(), newName + ".yml");
@@ -256,10 +256,10 @@ public class OutcomePack implements Displayable, Executable{
     public Outcome getRandomOutcome() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         int randomNumber = RandomUtils.getInt(totalProbability);
-        for(int i=0; i<outcomes.size(); i++){
+        for(int i=0; i<outcomes.size(); i++) {
             Outcome outcome = outcomes.get(i);
             randomNumber = randomNumber - outcome.getProbability();
-            if(randomNumber < 0){
+            if(randomNumber < 0) {
                 return outcome;
             }
         }
@@ -269,14 +269,14 @@ public class OutcomePack implements Displayable, Executable{
     }
     
     @Override
-    public void execute(Player player, Location location){
+    public void execute(Player player, Location location) {
         Outcome outcome = getRandomOutcome();
         if(outcome != null) {
             outcome.execute(player, location);
         }
     }
     
-    public void delete(){
+    public void delete() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         luckyBlockTypesToNotify.forEach(type -> type.removePack(this));
         TypeManager.saveTypes();
@@ -284,15 +284,15 @@ public class OutcomePack implements Displayable, Executable{
 //</editor-fold>
     }
     
-    public OutcomePack clonePack(String filename){
+    public OutcomePack clonePack(String filename) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         filename = OtherUtils.removeExtension(filename);
-        try{
+        try {
             File newFile = new File(outcomeFile.getParentFile(), filename + ".yml");
             Files.copy(Paths.get(outcomeFile.getPath()), Paths.get(newFile.getPath()));
             OutcomePack newPack = new OutcomePack(newFile);
             return newPack;
-        }catch(IOException ex){
+        } catch(IOException ex) {
             Logger.err("Couln't create file \"" + filename + "\"");
             Logger.err(ex);
             return null;
@@ -301,7 +301,7 @@ public class OutcomePack implements Displayable, Executable{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         //<editor-fold defaultstate="collapsed" desc="Code">
         return ItemStackWrapper.fromItem(icon)
                                .setDisplayName("&6" + getPackname())

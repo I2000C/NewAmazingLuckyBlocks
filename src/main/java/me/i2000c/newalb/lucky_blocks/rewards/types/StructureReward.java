@@ -1,14 +1,24 @@
 package me.i2000c.newalb.lucky_blocks.rewards.types;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+
 import com.cryptomorin.xseries.XMaterial;
-import java.io.File;
+
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.i2000c.newalb.NewAmazingLuckyBlocks;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.integration.Schematic;
+import me.i2000c.newalb.lucky_blocks.editors.menus.StructureMenu;
 import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.Reward;
 import me.i2000c.newalb.lucky_blocks.rewards.RewardType;
@@ -16,15 +26,10 @@ import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.tasks.Task;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
-
 @Getter
 @Setter
-public class StructureReward extends Reward{
-    public static final File schematicsFolder = new File(NewAmazingLuckyBlocks.getInstance().getDataFolder(), "schematics");
+public class StructureReward extends Reward<StructureReward> {
+    public static final Path SCHEMATICS_FOLDER = NewAmazingLuckyBlocks.getInstance().getDataFolder().toPath().resolve("schematics");
     
     private String schematicName;
     private boolean fromPlayer;
@@ -36,7 +41,7 @@ public class StructureReward extends Reward{
     private boolean autorotate;
     private Axis schematicAxis;
     
-    public StructureReward(Outcome outcome){
+    public StructureReward(Outcome outcome) {
         super(outcome);
         this.schematicName = null;
         this.fromPlayer = true;
@@ -50,23 +55,23 @@ public class StructureReward extends Reward{
     }
     
     @Override
-    public ItemStack getItemToDisplay(){
+    public ItemStack getItemToDisplay() {
         ItemStackWrapper builder = ItemStackWrapper.newItem(XMaterial.BRICKS);
         builder.setDisplayName("&6Structure Reward");
         builder.addLoreLine("&3Schematic name: &b" + this.schematicName);
-        if(this.fromPlayer){
+        if(this.fromPlayer) {
             builder.addLoreLine("&3Source location: &2Player");
-        }else{
+        } else {
             builder.addLoreLine("&3Source location: &eLuckyBlock");
         }
-        if(this.replaceBlocks){
+        if(this.replaceBlocks) {
             builder.addLoreLine("&3Replace existing blocks: &atrue");
-        }else{
+        } else {
             builder.addLoreLine("&3Replace existing blocks: &7false");
         }
-        if(this.placeAirBlocks){
+        if(this.placeAirBlocks) {
             builder.addLoreLine("&3Place air blocks: &atrue");
-        }else{
+        } else {
             builder.addLoreLine("&3Place air blocks: &7false");
         }
         if(this.centerPlayerLocation) {
@@ -95,7 +100,7 @@ public class StructureReward extends Reward{
     }
     
     @Override
-    public void saveRewardIntoConfig(Config config, String path){
+    public void saveRewardIntoConfig(Config config, String path) {
         config.set(path + ".filename", this.schematicName);
         config.set(path + ".fromPlayer", this.fromPlayer);
         config.set(path + ".replaceBlocks", this.replaceBlocks);
@@ -108,7 +113,7 @@ public class StructureReward extends Reward{
     }
     
     @Override
-    public void loadRewardFromConfig(Config config, String path){
+    public void loadRewardFromConfig(Config config, String path) {
         this.schematicName = config.getString(path + ".filename");
         this.fromPlayer = config.getBoolean(path + ".fromPlayer");
         this.replaceBlocks = config.getBoolean(path + ".replaceBlocks");
@@ -124,18 +129,18 @@ public class StructureReward extends Reward{
     private long lastModified = 0L;
     
     @Override
-    public void execute(Player player, Location location){
-        if(NewAmazingLuckyBlocks.getWorldEditPlugin() == null){
+    public void execute(Player player, Location location) {
+        if(NewAmazingLuckyBlocks.getWorldEditPlugin() == null) {
             Logger.warn("You cannot execute Structure Rewards unless you have installed WorldEdit");
             return;
         }
         
-        File schematicFile = new File(schematicsFolder, this.schematicName);
-        if(!schematicFile.exists()){
+        Path schematicPath = SCHEMATICS_FOLDER.resolve(this.schematicName);
+        if(!Files.exists(schematicPath)) {
             Logger.err("Error: file \"" + this.schematicName + "\" doesn't exist");
             return;
         }
-        try{
+        try {
             if(centerPlayerYaw) {
                 Location loc = player.getLocation();
                 loc.setYaw(0);
@@ -156,38 +161,44 @@ public class StructureReward extends Reward{
             
             final Location targetLocation = fromPlayer ? player.getLocation() : location;
             
-            if(schematic == null || schematicFile.lastModified() != lastModified){
-                lastModified = schematicFile.lastModified();
+            long lastModified = Files.getLastModifiedTime(schematicPath).toMillis();
+            if(schematic == null || lastModified != this.lastModified) {
+                this.lastModified = lastModified;
                 schematic = new Schematic();
-                schematic.loadFromFile(schematicFile, targetLocation.getWorld());
+                schematic.loadFromFile(schematicPath.toFile(), targetLocation.getWorld());
             }
             
             Task.runTask(() -> {
-                try{
+                try {
                     int rotation = 0;
                     if(autorotate) {
                         Axis playerAxis = Axis.fromDirection(player.getLocation().getDirection());
                         rotation = playerAxis != null ? schematicAxis.getAngleDistanceTo(playerAxis) : 0;
                     }
                     schematic.pasteAt(player, targetLocation, replaceBlocks, placeAirBlocks, rotation);
-                }catch(Exception ex){
+                } catch(Exception ex) {
                     Logger.err("An error occurred while executing structure reward " + this.schematicName + ":");
                     ex.printStackTrace();
                 }                
             }, 1L);            
-        }catch(Exception ex){
+        } catch(Exception ex) {
             Logger.err("An error occurred while executing structure reward " + this.schematicName + ":");
             ex.printStackTrace();
         }
     }
     
     @Override
-    public RewardType getRewardType(){
+    public RewardType getRewardType() {
         return RewardType.structure;
     }
     
     @Override
-    public Reward clone(){
+    public EditorMenu<StructureReward> getEditor() {
+        return new StructureMenu();
+    }
+    
+    @Override
+    public StructureReward clone() {
         StructureReward copy = (StructureReward) super.clone();
         return copy;
     }

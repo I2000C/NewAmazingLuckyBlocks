@@ -1,47 +1,27 @@
 package me.i2000c.newalb.lucky_blocks.editors.menus;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import com.cryptomorin.xseries.XMaterial;
 
-import me.i2000c.newalb.api.functions.InventoryFunction;
-import me.i2000c.newalb.api.gui.CustomInventoryType;
-import me.i2000c.newalb.api.gui.GUIFactory;
-import me.i2000c.newalb.api.gui.GUIItem;
 import me.i2000c.newalb.api.gui.GlassColor;
-import me.i2000c.newalb.api.gui.InventoryLocation;
-import me.i2000c.newalb.api.gui.Menu;
+import me.i2000c.newalb.api.gui.MenuSize;
+import me.i2000c.newalb.api.gui.menus.EditorMenu;
 import me.i2000c.newalb.listeners.chat.ChatListener;
-import me.i2000c.newalb.listeners.inventories.InventoryListener;
-import me.i2000c.newalb.lucky_blocks.editors.Editor;
-import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.types.MessageReward;
 import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-public class MessageMenu extends Editor<MessageReward>{
-    public MessageMenu(){
-        InventoryListener.registerInventory(CustomInventoryType.MESSAGE_MENU, MESSAGE_MENU_FUNCTION);
+public class MessageMenu extends EditorMenu<MessageReward> {
+    
+    public MessageMenu() {
+        super("&7&lMessage Reward", MenuSize.SIZE_3_ROWS, true);
     }
     
     @Override
-    protected void newItem(Player player){
-        Outcome outcome = RewardListMenu.getCurrentOutcome();
-        item = new MessageReward(outcome);
-        openMessageMenu(player);
-    }
-    
-    @Override
-    protected void editItem(Player player){
-        openMessageMenu(player);
-    }
-    
-    private void openMessageMenu(Player player){
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Menu menu = GUIFactory.newMenu(CustomInventoryType.MESSAGE_MENU, 27, "&7&lMessage Reward");
-        
-        ItemStack glass = GUIItem.getGlassItem(GlassColor.CYAN);
+    protected void buildMenu(Player player) {
+        addGlassBorder(GlassColor.CYAN);
         
         ItemStack titleItem = ItemStackWrapper.newItem(XMaterial.BOOK)
                                               .setDisplayName("&bSelect title")
@@ -73,7 +53,7 @@ public class MessageMenu extends Editor<MessageReward>{
                                                  .toItemStack();
         
         ItemStackWrapper wrapper;
-        switch(item.getMessageType()){
+        switch(item.getMessageType()) {
             case TITLE:
                 wrapper = ItemStackWrapper.newItem(XMaterial.PAINTING);
                 break;
@@ -96,75 +76,37 @@ public class MessageMenu extends Editor<MessageReward>{
                                                    .setDisplayName("&cRemove subtitle")
                                                    .toItemStack();
         
-        for(int i=0;i<9;i++){
-            menu.setItem(i, glass);
-        }
-        for(int i=18;i<27;i++){
-            menu.setItem(i, glass);
-        }
-        menu.setItem(9, glass);
-        menu.setItem(17, glass);
+        setBackItem(10);
+        setNextItem(16);
         
-        menu.setItem(12, titleItem);
-        menu.setItem(13, subtitleItem);
-        menu.setItem(14, typeItem);
+        setItem(12, titleItem, e -> {
+            ChatListener.registerPlayer(player, message -> {
+                item.setTitle(message);
+                openToPlayer(player);
+            });
+            player.closeInventory();
+            Logger.sendMessage("&3Write the title in the chat and press ENTER", player);
+        });
+        setItem(13, subtitleItem, e -> {
+            ChatListener.registerPlayer(player, message -> {
+                item.setSubtitle(message);
+                openToPlayer(player);
+            });
+            player.closeInventory();
+            Logger.sendMessage("&3Write the subtitle in the chat and press ENTER", player);
+        });
+        setItem(14, typeItem, e -> {
+            item.setMessageType(item.getMessageType().next());
+            openToPlayer(player);
+        });
         
-        menu.setItem(21, deleteTitle);
-        menu.setItem(22, deleteSubtitle);
-        
-        menu.setItem(10, GUIItem.getBackItem());
-        menu.setItem(16, GUIItem.getNextItem());
-        
-        menu.openToPlayer(player);
-//</editor-fold>
-    }    
-    
-    private final InventoryFunction MESSAGE_MENU_FUNCTION = e -> {
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        Player player = (Player) e.getWhoClicked();
-        e.setCancelled(true);
-        
-        if(e.getLocation() == InventoryLocation.TOP){
-            switch(e.getSlot()){
-                case 10:
-                    // Go to previous menu
-                    onBack.accept(player);
-                    break;
-                case 16:
-                    // Go to next menu
-                    onNext.accept(player, item);
-                    break;
-                case 12:
-                    ChatListener.registerPlayer(player, message -> {
-                        item.setTitle(message);
-                        openMessageMenu(player);
-                    });
-                    player.closeInventory();
-                    Logger.sendMessage("&3Write the title in the chat and press ENTER", player);
-                    break;
-                case 13:
-                    ChatListener.registerPlayer(player, message -> {
-                        item.setSubtitle(message);
-                        openMessageMenu(player);
-                    });
-                    player.closeInventory();
-                    Logger.sendMessage("&3Write the subtitle in the chat and press ENTER", player);
-                    break;
-                case 14:
-                    MessageReward.MessageType type = item.getMessageType();
-                    item.setMessageType(type.getNextType());
-                    openMessageMenu(player);
-                    break;
-                case 21:
-                    item.setTitle("");
-                    openMessageMenu(player);
-                    break;
-                case 22:
-                    item.setSubtitle("");
-                    openMessageMenu(player);
-                    break;
-            }
-        }
-//</editor-fold>
-    };
+        setItem(21, deleteTitle, e -> {
+            item.setTitle("");
+            openToPlayer(player);
+        });
+        setItem(22, deleteSubtitle, e -> {
+            item.setSubtitle("");
+            openToPlayer(player);
+        });
+    }
 }
