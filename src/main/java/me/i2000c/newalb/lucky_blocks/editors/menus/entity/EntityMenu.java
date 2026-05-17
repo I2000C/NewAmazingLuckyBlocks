@@ -13,6 +13,7 @@ import me.i2000c.newalb.api.gui.GUIItem;
 import me.i2000c.newalb.api.gui.GlassColor;
 import me.i2000c.newalb.api.gui.MenuSize;
 import me.i2000c.newalb.api.gui.menus.EditorMenu;
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.listeners.chat.ChatListener;
 import me.i2000c.newalb.lucky_blocks.editors.menus.EquipmentMenu;
 import me.i2000c.newalb.lucky_blocks.editors.menus.OffsetMenu;
@@ -130,6 +131,10 @@ public class EntityMenu extends EditorMenu<EntityReward> {
         } else if(!item.getEquipment().isEmpty()) {
             Equipment equipment = item.getEquipment();
             for(EquipmentSlot equipmentSlot : EquipmentSlot.VALUES) {
+                if(equipmentSlot == EquipmentSlot.ITEM_IN_OFF_HAND && MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                    continue;
+                }
+                
                 ItemStack stack = equipment.getItem(equipmentSlot);
                 if(stack == null) {
                     wrapper.addLoreLine(String.format("    &6%s: &cnull", equipmentSlot.getConfigKey()));

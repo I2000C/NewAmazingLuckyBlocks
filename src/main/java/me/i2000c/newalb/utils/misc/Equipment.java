@@ -11,6 +11,7 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
 import lombok.SneakyThrows;
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.Config;
 
 public final class Equipment implements Cloneable {
@@ -142,15 +143,30 @@ public final class Equipment implements Cloneable {
                     entityEquipment.setBootsDropChance(dropChance);
                     break;
                 case ITEM_IN_HAND:
-                    entityEquipment.setItemInHand(item);
-                    entityEquipment.setItemInHandDropChance(dropChance);
+                    if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                        entityEquipment.setItemInHand(item);
+                        entityEquipment.setItemInHandDropChance(dropChance);
+                    } else {
+                        entityEquipment.setItemInMainHand(item);
+                        entityEquipment.setItemInMainHandDropChance(dropChance);
+                    }
                     if(le instanceof ArmorStand) {
                         ArmorStand armorStand = (ArmorStand) le;
                         armorStand.setArms(true);
                         armorStand.setBasePlate(false);
                     }
                     break;
-                    
+                case ITEM_IN_OFF_HAND:
+                    if(!MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                        entityEquipment.setItemInOffHand(item);
+                        entityEquipment.setItemInOffHandDropChance(dropChance);
+                        if(le instanceof ArmorStand) {
+                            ArmorStand armorStand = (ArmorStand) le;
+                            armorStand.setArms(true);
+                            armorStand.setBasePlate(false);
+                        }
+                    }
+                    break;
             }
         }
     }

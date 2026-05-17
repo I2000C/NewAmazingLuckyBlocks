@@ -11,7 +11,8 @@ public enum EquipmentSlot {
     CHESTPLATE("Chestplate"),
     LEGGINGS("Leggings"),
     BOOTS("Boots"),
-    ITEM_IN_HAND("ItemInHand");
+    ITEM_IN_HAND("ItemInHand"),
+    ITEM_IN_OFF_HAND("ItemInOffHand");
     
     private final String configKey;
     

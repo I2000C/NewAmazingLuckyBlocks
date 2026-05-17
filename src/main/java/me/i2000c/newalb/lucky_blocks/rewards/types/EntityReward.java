@@ -136,6 +136,10 @@ public class EntityReward extends Reward<EntityReward> {
                 wrapper.addLoreLine("&bEquipment:");
                 
                 for(EquipmentSlot equipmentSlot : EquipmentSlot.VALUES) {
+                    if(equipmentSlot == EquipmentSlot.ITEM_IN_OFF_HAND && MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                        continue;
+                    }
+                    
                     ItemStack stack = equipment.getItem(equipmentSlot);
                     if(stack == null) {
                         wrapper.addLoreLine(String.format("    &6%s: &cnull", equipmentSlot.getConfigKey()));

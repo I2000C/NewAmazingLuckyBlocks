@@ -16,6 +16,7 @@ import me.i2000c.newalb.api.gui.GUIItem;
 import me.i2000c.newalb.api.gui.GlassColor;
 import me.i2000c.newalb.api.gui.MenuSize;
 import me.i2000c.newalb.api.gui.menus.EditorMenu;
+import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.listeners.inventories.MenuClickEvent;
 import me.i2000c.newalb.utils.logging.Logger;
 import me.i2000c.newalb.utils.misc.Equipment;
@@ -41,21 +42,23 @@ public class EquipmentMenu extends EditorMenu<Equipment> {
         });
     }
     
-    private static final int HELMET_SLOT = 13;
-    private static final int CHESTPLATE_SLOT = 22;
-    private static final int LEGGINGS_SLOT = 31;
-    private static final int BOOTS_SLOT = 40;
-    private static final int ITEM_IN_HAND_SLOT = 49;
+    private static final int HELMET_SLOT = 4;
+    private static final int CHESTPLATE_SLOT = 13;
+    private static final int LEGGINGS_SLOT = 22;
+    private static final int BOOTS_SLOT = 31;
+    private static final int ITEM_IN_HAND_SLOT = 40;
+    private static final int ITEM_IN_OFF_HAND_SLOT = 49;
     
     private static final Map<EquipmentSlot, Integer> SLOT_MAP;
     
-    static{
+    static {
         SLOT_MAP = new EnumMap<>(EquipmentSlot.class);
         SLOT_MAP.put(EquipmentSlot.HELMET, HELMET_SLOT);
         SLOT_MAP.put(EquipmentSlot.CHESTPLATE, CHESTPLATE_SLOT);
         SLOT_MAP.put(EquipmentSlot.LEGGINGS, LEGGINGS_SLOT);
         SLOT_MAP.put(EquipmentSlot.BOOTS, BOOTS_SLOT);
         SLOT_MAP.put(EquipmentSlot.ITEM_IN_HAND, ITEM_IN_HAND_SLOT);
+        SLOT_MAP.put(EquipmentSlot.ITEM_IN_OFF_HAND, ITEM_IN_OFF_HAND_SLOT);
     }
     
     @Override
@@ -107,6 +110,10 @@ public class EquipmentMenu extends EditorMenu<Equipment> {
         for(int row=0; row<equipmentPropertyList.size() && iterator.hasNext(); row++) {
             Map.Entry<EquipmentSlot, Integer> entry = iterator.next();
             EquipmentSlot equipmentSlot = entry.getKey();
+            if(equipmentSlot == EquipmentSlot.ITEM_IN_OFF_HAND && MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                continue;
+            }
+            
             int equipmentItemSlot = entry.getValue();
             ItemStack equipmentItem = item.getItem(equipmentSlot);
             int slot = equipmentItemSlot - 2;
