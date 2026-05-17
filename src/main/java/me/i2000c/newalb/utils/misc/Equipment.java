@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
@@ -115,9 +116,13 @@ public final class Equipment implements Cloneable {
                              .allMatch(Objects::isNull);
     }
     
-    @SuppressWarnings("deprecation")
     public void applyToEntity(LivingEntity le) {
-        EntityEquipment entityEquipment = le.getEquipment();
+        if(le instanceof ArmorStand) {
+            ArmorStand armorStand = (ArmorStand) le;
+            boolean hasItemsInHands = getItem(EquipmentSlot.ITEM_IN_HAND) != null || getItem(EquipmentSlot.ITEM_IN_OFF_HAND) != null;
+            armorStand.setArms(hasItemsInHands);
+            armorStand.setBasePlate(true);
+        }
         
         for(EquipmentSlot slot : EquipmentSlot.VALUES) {
             ItemStack item = getItem(slot);
@@ -125,49 +130,74 @@ public final class Equipment implements Cloneable {
                 item = item.clone();
             }
             float dropChance = getDropChance(slot) / 100f;
-            switch(slot) {
-                case HELMET:
-                    entityEquipment.setHelmet(item);
-                    entityEquipment.setHelmetDropChance(dropChance);
-                    break;
-                case CHESTPLATE:
-                    entityEquipment.setChestplate(item);
-                    entityEquipment.setChestplateDropChance(dropChance);
-                    break;
-                case LEGGINGS:
-                    entityEquipment.setLeggings(item);
-                    entityEquipment.setLeggingsDropChance(dropChance);
-                    break;
-                case BOOTS:
-                    entityEquipment.setBoots(item);
-                    entityEquipment.setBootsDropChance(dropChance);
-                    break;
-                case ITEM_IN_HAND:
-                    if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
-                        entityEquipment.setItemInHand(item);
-                        entityEquipment.setItemInHandDropChance(dropChance);
-                    } else {
-                        entityEquipment.setItemInMainHand(item);
-                        entityEquipment.setItemInMainHandDropChance(dropChance);
-                    }
-                    if(le instanceof ArmorStand) {
-                        ArmorStand armorStand = (ArmorStand) le;
-                        armorStand.setArms(true);
-                        armorStand.setBasePlate(false);
-                    }
-                    break;
-                case ITEM_IN_OFF_HAND:
-                    if(!MinecraftVersion.CURRENT_VERSION.is_1_8()) {
-                        entityEquipment.setItemInOffHand(item);
-                        entityEquipment.setItemInOffHandDropChance(dropChance);
-                        if(le instanceof ArmorStand) {
-                            ArmorStand armorStand = (ArmorStand) le;
-                            armorStand.setArms(true);
-                            armorStand.setBasePlate(false);
-                        }
-                    }
-                    break;
-            }
+            setItem(le, slot, item);
+            setDropChance(le, slot, dropChance);
+        }
+    }
+    
+    @SuppressWarnings("deprecation")
+    private static void setItem(LivingEntity le, EquipmentSlot slot, ItemStack item) {
+        EntityEquipment entityEquipment = le.getEquipment();
+        switch(slot) {
+            case HELMET:
+                entityEquipment.setHelmet(item);
+                break;
+            case CHESTPLATE:
+                entityEquipment.setChestplate(item);
+                break;
+            case LEGGINGS:
+                entityEquipment.setLeggings(item);
+                break;
+            case BOOTS:
+                entityEquipment.setBoots(item);
+                break;
+            case ITEM_IN_HAND:
+                if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                    entityEquipment.setItemInHand(item);
+                } else {
+                    entityEquipment.setItemInMainHand(item);
+                }
+                break;
+            case ITEM_IN_OFF_HAND:
+                if(!MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                    entityEquipment.setItemInOffHand(item);
+                }
+                break;
+        }
+    }
+    
+    @SuppressWarnings("deprecation")
+    private static void setDropChance(LivingEntity le, EquipmentSlot slot, float dropChance) {
+        if(!(le instanceof Mob)) {
+            return;
+        }
+        
+        EntityEquipment entityEquipment = le.getEquipment();
+        switch(slot) {
+            case HELMET:
+                entityEquipment.setHelmetDropChance(dropChance);
+                break;
+            case CHESTPLATE:
+                entityEquipment.setChestplateDropChance(dropChance);
+                break;
+            case LEGGINGS:
+                entityEquipment.setLeggingsDropChance(dropChance);
+                break;
+            case BOOTS:
+                entityEquipment.setBootsDropChance(dropChance);
+                break;
+            case ITEM_IN_HAND:
+                if(MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                    entityEquipment.setItemInHandDropChance(dropChance);
+                } else {
+                    entityEquipment.setItemInMainHandDropChance(dropChance);
+                }
+                break;
+            case ITEM_IN_OFF_HAND:
+                if(!MinecraftVersion.CURRENT_VERSION.is_1_8()) {
+                    entityEquipment.setItemInOffHandDropChance(dropChance);
+                }
+                break;
         }
     }
     
