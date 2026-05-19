@@ -45,7 +45,7 @@ public class RewardListMenu extends PaginatedEditorMenu<Outcome, Reward<?>> {
     private boolean delayMode;
     
     public RewardListMenu() {
-        super("&b&lRewards list", MenuSize.SIZE_6_ROWS, true, MenuSize.SIZE_4_ROWS, PREVIOUS_PAGE_SLOT, CURRENT_PAGE_SLOT, NEXT_PAGE_SLOT);
+        super("&b&lReward list", MenuSize.SIZE_6_ROWS, true, MenuSize.SIZE_4_ROWS, PREVIOUS_PAGE_SLOT, CURRENT_PAGE_SLOT, NEXT_PAGE_SLOT);
     }
     
     @Override

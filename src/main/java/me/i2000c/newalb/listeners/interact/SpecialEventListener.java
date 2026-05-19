@@ -31,6 +31,10 @@ public class SpecialEventListener implements Listener{
     @EventHandler(priority = EventPriority.LOW)
     private static void onPlayerInteract(PlayerInteractEvent e){
         //<editor-fold defaultstate="collapsed" desc="Code">
+        if(e.getPlayer().isSneaking()) {
+            return;
+        }
+        
         ItemStack stack = e.getItem();
         if(stack != null){
             Player player = e.getPlayer();

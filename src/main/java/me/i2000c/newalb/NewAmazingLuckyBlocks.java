@@ -30,6 +30,7 @@ import me.i2000c.newalb.listeners.blocks.BlockPlaceListener;
 import me.i2000c.newalb.listeners.blocks.BlockProtectListener;
 import me.i2000c.newalb.listeners.blocks.ChunkLoadListener;
 import me.i2000c.newalb.listeners.chat.ChatListener;
+import me.i2000c.newalb.listeners.interact.ShiftRightClickListener;
 import me.i2000c.newalb.listeners.interact.SpecialEventListener;
 import me.i2000c.newalb.listeners.interact.SpecialItems;
 import me.i2000c.newalb.listeners.inventories.InventoryListener;
@@ -154,6 +155,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         pm.registerEvents(new InventoryListener(), this);
         pm.registerEvents(new ChatListener(), this);
         pm.registerEvents(new SpecialEventListener(), this);
+        pm.registerEvents(new ShiftRightClickListener(), this);
         
         pm.registerEvents(new TextureCacher(), this);
         
