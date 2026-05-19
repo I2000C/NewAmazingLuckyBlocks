@@ -27,7 +27,7 @@ public class LuckyBlockTypeListMenu extends PaginatedMenu<LuckyBlockType> {
     private boolean deleteMode;
     
     public LuckyBlockTypeListMenu() {
-        super("&6&lLucky Block Types", MenuSize.SIZE_6_ROWS, true, MenuSize.SIZE_4_ROWS);
+        super("&6&lLucky Block Types", MenuSize.SIZE_6_ROWS, true, MenuSize.SIZE_3_ROWS, 30, 31, 32);
     }
     
     @Override

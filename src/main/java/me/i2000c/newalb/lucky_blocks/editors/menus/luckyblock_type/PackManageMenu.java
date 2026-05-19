@@ -28,7 +28,7 @@ class PackManageMenu extends PaginatedEditorMenu<LuckyBlockType, Map.Entry<Outco
     private boolean deletePackMode;
     
     public PackManageMenu() {
-        super("&bCurrent packs", MenuSize.SIZE_6_ROWS, true, MenuSize.SIZE_5_ROWS);
+        super("&bCurrent packs", MenuSize.SIZE_6_ROWS, true, MenuSize.SIZE_4_ROWS, 39, 40, 41);
     }
     
     @Override

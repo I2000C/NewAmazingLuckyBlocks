@@ -90,7 +90,9 @@ public abstract class Menu implements InventoryHolder {
         int firstSlot = row*MenuSize.SIZE_1_ROW.getSize();
         int lastSlot = firstSlot + MenuSize.SIZE_1_ROW.getSize();
         for(int slot=firstSlot; slot<lastSlot; slot++) {
-            setItem(slot, glassItem);
+            if(getItem(slot) == null) {
+                setItem(slot, glassItem);
+            }
         }
     }
     
@@ -98,14 +100,18 @@ public abstract class Menu implements InventoryHolder {
         ItemStack glassItem = GUIItem.getGlassItem(glassColor);
         int rowSize = MenuSize.SIZE_1_ROW.getSize();
         for(int slot=column; slot<menuSize.getSize(); slot+=rowSize) {
-            setItem(slot, glassItem);
+            if(getItem(slot) == null) {
+                setItem(slot, glassItem);
+            }
         }
     }
     
     protected void addGlassFill(GlassColor glassColor) {
         ItemStack glassItem = GUIItem.getGlassItem(glassColor);
         for(int slot=0; slot<menuSize.getSize(); slot++) {
-            setItem(slot, glassItem);
+            if(getItem(slot) == null) {
+                setItem(slot, glassItem);
+            }
         }
     }
     
@@ -131,6 +137,7 @@ public abstract class Menu implements InventoryHolder {
                          return false;
                      }
                  })
+                 .filter(slot -> getItem(slot) == null)
                  .forEach(slot -> setItem(slot, glassItem));
     }
     
@@ -156,7 +163,12 @@ public abstract class Menu implements InventoryHolder {
                          return row == firstRow || row == lastRow || column == firstColumn || column == lastColumn;                         
                      }
                  })
+                 .filter(slot -> getItem(slot) == null)
                  .forEach(slot -> setItem(slot, glassItem));
+    }
+    
+    protected ItemStack getItem(int slot) {
+        return contents[slot];
     }
     
     protected void setItem(int slot, ItemStack item) {
