@@ -243,6 +243,10 @@ public class TypeManager{
                 ex.printStackTrace();
             }
         }
+        
+        if(PackManager.ARE_PACKS_LOADED()) {
+            loadPacksFromCachedPacksProbList();
+        }
     }
     
     public static void loadPacksFromCachedPacksProbList() {

@@ -32,7 +32,18 @@ public class PackManager {
     
     private static final Map<String, OutcomePack> packList;
     
+    private static boolean PACKS_LOADED = false;
     private static boolean LOADING_PACKS = false;
+    
+    @Synchronized
+    public static void SET_PACKS_LOADED(boolean state) {
+        PACKS_LOADED = state;
+    }
+    
+    @Synchronized
+    public static boolean ARE_PACKS_LOADED() {
+        return PACKS_LOADED;
+    }
     
     @Synchronized
     public static void SET_LOADING_PACKS(boolean state) {

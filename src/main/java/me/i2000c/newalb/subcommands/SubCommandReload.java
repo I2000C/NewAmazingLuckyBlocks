@@ -51,6 +51,7 @@ public class SubCommandReload implements SubCommand {
         WorldManager.reloadWorlds();
         
         Logger.logAndMessage(ConfigManager.getLangMessage("Reload.packs"), sender);
+        PackManager.SET_PACKS_LOADED(false);
         TypeManager.loadTypes();
         LuckyBlockDropper.loadSettings();
         PackManager.loadPacksAsync(() -> {
@@ -61,6 +62,7 @@ public class SubCommandReload implements SubCommand {
                 throw t;
             } finally {
                 PackManager.SET_LOADING_PACKS(false);
+                PackManager.SET_PACKS_LOADED(true);
             }
             
             String message = ConfigManager.getLangMessage("Packs-loading")

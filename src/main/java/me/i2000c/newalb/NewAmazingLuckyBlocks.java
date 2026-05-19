@@ -107,6 +107,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         TextureCacher.scheduleCaching();
         
         Logger.log(ConfigManager.getLangMessage("Loading.packs"));
+        PackManager.SET_PACKS_LOADED(false);
         TypeManager.loadTypes();
         LuckyBlockDropper.loadSettings();
         PackManager.loadPacksAsync(() -> {
@@ -117,6 +118,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
                 throw t;
             } finally {
                 PackManager.SET_LOADING_PACKS(false);
+                PackManager.SET_PACKS_LOADED(true);
             }
             
             String message = ConfigManager.getLangMessage("Packs-loading")
