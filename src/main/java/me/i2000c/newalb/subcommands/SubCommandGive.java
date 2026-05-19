@@ -166,6 +166,7 @@ public class SubCommandGive implements SubCommand {
                 items.add("objects");
                 items.add("luckyblocks");
                 items.addAll(SpecialItems.getItemsNames());
+                TypeManager.getTypes().forEach(type -> items.add(type.getTypeName()));
                 break;
             case 2:
                 items.add("5");
