@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +25,7 @@ import me.i2000c.newalb.api.gui.MenuManager;
 import me.i2000c.newalb.api.gui.MenuSize;
 import me.i2000c.newalb.listeners.inventories.MenuClickEvent;
 import me.i2000c.newalb.utils.logging.Logger;
+import me.i2000c.newalb.utils.tasks.Task;
 
 public abstract class Menu implements InventoryHolder {
     
@@ -74,11 +76,12 @@ public abstract class Menu implements InventoryHolder {
     
     protected boolean onClickStart(MenuClickEvent event) {
         event.setCancelled(true);
-        return true;
+        ClickType clickType = event.getClick();
+        return clickType == ClickType.LEFT || clickType == ClickType.RIGHT;
     }
     
     protected void onClickEnd(MenuClickEvent event) {
-        if(!event.isEmptyItem()) {
+        if(event.isCancelled() && !event.isEmptyItem()) {
             event.getPlayer().updateInventory();
         }
     }
@@ -206,6 +209,8 @@ public abstract class Menu implements InventoryHolder {
     protected void onPreOpen(Player player) { }
     
     public final void openToPlayer(@NonNull Player player) {
+        // Convert Player to UUID and then to Player again to get the actual Player object.
+        // This is done because this method can receive expired Player objects (e.g.: a Player that has logged out)
         openToPlayer(player.getUniqueId());
     }
     
@@ -215,21 +220,24 @@ public abstract class Menu implements InventoryHolder {
             throw new IllegalArgumentException("Player with uuid " + uuid + " is offline");
         }
         
-        actions.clear();
-        if(firstOpened) {
-            onFirstOpen(player);
-            firstOpened = false;
-        }
-        onPreOpen(player);
-        buildMenu(player);
-        inventory = Bukkit.createInventory(this, menuSize.getSize(), processTitle(title));
-        inventory.setContents(contents);
-        Arrays.fill(contents, null);
-        player.openInventory(inventory);
-        
-        if(trackLastMenu) {
-        	MenuManager.trackLastMenu(player, this);
-        }
+        player.setItemOnCursor(null);
+        Task.runTask(() -> {
+            actions.clear();
+            if(firstOpened) {
+                onFirstOpen(player);
+                firstOpened = false;
+            }
+            onPreOpen(player);
+            buildMenu(player);
+            inventory = Bukkit.createInventory(this, menuSize.getSize(), processTitle(title));
+            inventory.setContents(contents);
+            Arrays.fill(contents, null);
+            player.openInventory(inventory);
+            
+            if(trackLastMenu) {
+                MenuManager.trackLastMenu(player, this);
+            }
+        });
     }
     
     public void onClick(MenuClickEvent event) {

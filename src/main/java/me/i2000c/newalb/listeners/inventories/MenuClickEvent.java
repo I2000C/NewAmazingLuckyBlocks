@@ -1,6 +1,7 @@
 package me.i2000c.newalb.listeners.inventories;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import lombok.Getter;
 import lombok.experimental.Delegate;
 import me.i2000c.newalb.api.gui.InventoryLocation;
+import me.i2000c.newalb.utils.tasks.Task;
 
 public class MenuClickEvent {
     
@@ -52,5 +54,18 @@ public class MenuClickEvent {
         this.emptyCursor = cursor == null || cursor.getType() == Material.AIR;
         
         this.player = (Player) event.getWhoClicked();
+    }
+    
+    public void setCursor(ItemStack cursor, Consumer<Player> onCursorSet) {
+        Task.runTask(() -> {
+            getPlayer().setItemOnCursor(cursor);
+            if(onCursorSet != null) {
+                onCursorSet.accept(getPlayer());
+            }
+        });
+    }
+    
+    public void setCursor(ItemStack cursor) {
+        setCursor(cursor, null);
     }
 }

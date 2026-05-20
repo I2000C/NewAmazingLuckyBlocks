@@ -37,7 +37,6 @@ public class PackListMenu extends PaginatedMenu<OutcomePack> {
         return PackManager.getSortedPacks();
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     public MenuItem mapItemToPage(OutcomePack outcomePack, int index) {
         ItemStackWrapper wrapper = ItemStackWrapper.fromItem(outcomePack.getItemToDisplay(), false);
@@ -65,9 +64,10 @@ public class PackListMenu extends PaginatedMenu<OutcomePack> {
                 //Change pack icon
                 if(!e.isEmptyCursor()) {
                     PackManager.changePackIcon(packName, e.getCursor(), player);
-                    e.setCursor(null);
-                    resetPagination();
-                    openToPlayer(player);
+                    e.setCursor(null, p -> {
+                        resetPagination();
+                        openToPlayer(player);
+                    });
                 }
             } else if(cloneMode) {
                 //Clone pack
@@ -194,7 +194,6 @@ public class PackListMenu extends PaginatedMenu<OutcomePack> {
         }
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     protected void onClickDefault(MenuClickEvent event) {
         if(changeIconMode && event.isBottomInventory() && !event.isEmptyItem()) {

@@ -55,7 +55,6 @@ public class EntityTowerMenu extends PaginatedEditorMenu<EntityTowerReward, Enti
         return entityRewardList;
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     public MenuItem mapItemToPage(EntityReward entityReward, int index) {
         ItemStackWrapper wrapper = ItemStackWrapper.fromItem(entityReward.getItemToDisplay(), false);
@@ -126,7 +125,6 @@ public class EntityTowerMenu extends PaginatedEditorMenu<EntityTowerReward, Enti
         });
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     protected void onClickDefault(MenuClickEvent event) {
         if(event.isTopInventory()) {

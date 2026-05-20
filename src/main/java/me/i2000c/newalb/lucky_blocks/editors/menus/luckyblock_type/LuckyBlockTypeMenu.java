@@ -26,7 +26,6 @@ public class LuckyBlockTypeMenu extends EditorMenu<LuckyBlockType> {
     
     private static final int[] CRAFTING_SLOTS = {21, 22, 23, 30, 31, 32, 39, 40, 41};
     
-    @SuppressWarnings("deprecation")
     @Override
     protected void buildMenu(Player player) {
         addHollowGlassSquare(GlassColor.MAGENTA, 11, 5);
@@ -117,7 +116,7 @@ public class LuckyBlockTypeMenu extends EditorMenu<LuckyBlockType> {
                                                  .setDisplayName(item.getItem().getDisplayName())
                                                  .setLore(item.getItem().getLore())
                                                  .clearEnchantments());
-                    openToPlayer(player);
+                    e.setCursor(null, this::openToPlayer);
                 }
             }
         });
@@ -198,8 +197,7 @@ public class LuckyBlockTypeMenu extends EditorMenu<LuckyBlockType> {
             });
         }
     }
-
-    @SuppressWarnings("deprecation")
+    
     @Override
     protected void onClickDefault(MenuClickEvent event) {
         if(event.isBottomInventory()) {

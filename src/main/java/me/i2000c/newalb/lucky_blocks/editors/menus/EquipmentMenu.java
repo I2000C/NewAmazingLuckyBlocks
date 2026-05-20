@@ -66,7 +66,6 @@ public class EquipmentMenu extends EditorMenu<Equipment> {
         return new Equipment();
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     protected void buildMenu(Player player) {
         addGlassFill(GlassColor.BLACK);
@@ -161,7 +160,6 @@ public class EquipmentMenu extends EditorMenu<Equipment> {
         });
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     protected void onClickDefault(MenuClickEvent event) {
         if(event.isBottomInventory()) {
