@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -33,13 +32,9 @@ import me.i2000c.newalb.utils.random.RandomUtils;
 import me.i2000c.newalb.utils.textures.Texture;
 
 @Data
-@EqualsAndHashCode(of = "ID")
+@EqualsAndHashCode(of = "typeName")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LuckyBlockType implements Displayable, Executable, ItemProvider, Cloneable {
-    
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private int ID;
     
     private String typeName;
     
@@ -67,6 +62,10 @@ public class LuckyBlockType implements Displayable, Executable, ItemProvider, Cl
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private List<String> cachedPacksProbList;
+    
+    public String getNamespacedKey() {
+        return "LuckyBlockType." + typeName;
+    }
     
     @Override
     public ItemStack getItemToDisplay() {
@@ -150,7 +149,6 @@ public class LuckyBlockType implements Displayable, Executable, ItemProvider, Cl
     public LuckyBlockType(String typeName) {
         //<editor-fold defaultstate="collapsed" desc="Code">
         this.typeName = typeName;
-        this.ID = -1;
         
         luckyBlockItem = ItemStackWrapper.newItem(XMaterial.SPONGE);
         
@@ -180,7 +178,6 @@ public class LuckyBlockType implements Displayable, Executable, ItemProvider, Cl
         LuckyBlockType type = new LuckyBlockType();
         
         type.typeName = typeName;
-        type.ID = TypeManager.getNextTypeID();
         
         // Load permissions
         type.requireBreakPermission = config.getBoolean("permissions.break.enable");
@@ -218,7 +215,7 @@ public class LuckyBlockType implements Displayable, Executable, ItemProvider, Cl
         if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_12)) {
             type.recipe = new ShapedRecipe(type.luckyBlockItem.toItemStack());
         } else {
-            NamespacedKey namespacedKey = new NamespacedKey(NewAmazingLuckyBlocks.getInstance(), "NewAmazingLuckyBlocks." + type.ID);
+            NamespacedKey namespacedKey = new NamespacedKey(NewAmazingLuckyBlocks.getInstance(), type.getNamespacedKey());
             type.recipe = new ShapedRecipe(namespacedKey, type.luckyBlockItem.toItemStack());
         }        
         
@@ -248,13 +245,6 @@ public class LuckyBlockType implements Displayable, Executable, ItemProvider, Cl
             }
             type.crafting.add(item);
             ingredientChar++;
-        }
-        
-        //Remove previous recipe if exists
-        TypeManager.removeRecipe(type.recipe);
-        
-        if(type.crafting.stream().anyMatch(item -> item.getType() != Material.AIR)) {
-            Bukkit.addRecipe(type.recipe);
         }
         
         type.typeData = new TypeData(type.luckyBlockItem);

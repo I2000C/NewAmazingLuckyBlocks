@@ -4,24 +4,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
 
 import com.cryptomorin.xseries.XMaterial;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import me.i2000c.newalb.api.version.MinecraftVersion;
 import me.i2000c.newalb.config.Config;
 import me.i2000c.newalb.config.ConfigManager;
 import me.i2000c.newalb.utils.logging.Logger;
@@ -29,7 +24,6 @@ import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.misc.OtherUtils;
 import me.i2000c.newalb.utils.misc.XMaterialUtils;
 import me.i2000c.newalb.utils.random.RandomUtils;
-import me.i2000c.newalb.utils.reflection.ReflectionManager;
 import me.i2000c.newalb.utils.textures.Texture;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -56,12 +50,6 @@ public class TypeManager{
     private static String breakPermissionGlobal;
     private static boolean requirePlacePermissionGlobal;
     private static String placePermissionGlobal;
-    
-    private static int currentRecipeID;
-    
-    static int getNextTypeID() {
-        return ++currentRecipeID;
-    }
     
     //<editor-fold defaultstate="collapsed" desc="Global permissions methods">
     private static void loadGlobalPermissions() {
@@ -198,16 +186,6 @@ public class TypeManager{
     
     
     public static void loadTypes() {
-        currentRecipeID = -1;
-        
-        // Remove all previously used recipes
-        Iterator<LuckyBlockType> iter = luckyBlockTypes.iterator();
-        while(iter.hasNext()) {
-            LuckyBlockType type = iter.next();
-            removeRecipe(type.getRecipe());
-            iter.remove();
-        }
-        
         File luckyBlockTypesFolder = new File(ConfigManager.getDataFolder(), LUCKY_BLOCK_TYPES_FOLDER);
         if(!luckyBlockTypesFolder.exists()) {
             copyDefaultTypes();
@@ -244,6 +222,8 @@ public class TypeManager{
             }
         }
         
+        LuckyBlockRecipeCacher.refreshRecipes();
+        
         if(PackManager.ARE_PACKS_LOADED()) {
             loadPacksFromCachedPacksProbList();
         }
@@ -260,47 +240,6 @@ public class TypeManager{
             type.saveToConfig(config);
             config.saveConfig(LUCKY_BLOCK_TYPES_FOLDER + "/" + type.getTypeName() + ".yml");
         });
-//</editor-fold>
-    }
-    
-    static void removeRecipe(ShapedRecipe typeRecipe) {
-        //<editor-fold defaultstate="collapsed" desc="Code">
-        if(typeRecipe == null) {
-            return;
-        }
-        
-        Iterator<Recipe> iter = Bukkit.recipeIterator();
-        if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_12)) {
-            while(iter.hasNext()) {
-                Recipe recipe = iter.next();
-                if(recipe.getResult().equals(typeRecipe.getResult())) {
-                    iter.remove();
-                    break;
-                }
-            }
-        } else if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_15)) {
-            // Since Minecraft 1.12 recipe iterator is inmutable
-            // https://www.spigotmc.org/threads/problem-remove-recipe.242988/#post-2461728            
-            List<Recipe> backup = new ArrayList<>();
-            while(iter.hasNext()) {
-                Recipe recipe = iter.next();
-                if(recipe instanceof ShapedRecipe) {
-                    ShapedRecipe sr = (ShapedRecipe) recipe;
-                    if(sr.getKey().equals(typeRecipe.getKey())) {
-                        break;
-                    }
-                }
-                
-                backup.add(recipe);
-            }
-            
-            Bukkit.getServer().clearRecipes();
-            backup.forEach(Bukkit::addRecipe);
-        } else {
-            // In Minecraft 1.15 the method org.bukkit.Bukkit.removeRecipe(NamespacedKey key) was added.
-            // Source: https://helpch.at/docs/1.15.2/org/bukkit/Bukkit.html
-            ReflectionManager.callStaticMethod(Bukkit.class, "removeRecipe", typeRecipe.getKey());
-        }
 //</editor-fold>
     }
     
@@ -329,7 +268,7 @@ public class TypeManager{
         //<editor-fold defaultstate="collapsed" desc="Code">
         LuckyBlockType removedType = luckyBlockTypesAux.remove(type.getTypeData());
         luckyBlockTypes.remove(removedType);
-        removeRecipe(type.getRecipe());
+        LuckyBlockRecipeCacher.refreshRecipes();
         String filename = LUCKY_BLOCK_TYPES_FOLDER + "/" + type.getTypeName() + ".yml";
         File typeFile = new File(ConfigManager.getDataFolder(), filename);
         typeFile.delete();
@@ -340,7 +279,6 @@ public class TypeManager{
         //<editor-fold defaultstate="collapsed" desc="Code">
         int typeID = luckyBlockTypes.indexOf(type);
         if(typeID != -1) {
-            removeRecipe(luckyBlockTypes.get(typeID).getRecipe());
             LuckyBlockType oldType = luckyBlockTypes.set(typeID, type);
             removeType(oldType);
         } else {

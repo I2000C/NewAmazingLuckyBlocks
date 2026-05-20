@@ -39,6 +39,7 @@ import me.i2000c.newalb.listeners.updates.UpdateChecker;
 import me.i2000c.newalb.lucky_blocks.LuckyBlockDropper;
 import me.i2000c.newalb.lucky_blocks.TrapManager;
 import me.i2000c.newalb.lucky_blocks.editors.menus.RewardListMenu;
+import me.i2000c.newalb.lucky_blocks.rewards.LuckyBlockRecipeCacher;
 import me.i2000c.newalb.lucky_blocks.rewards.PackManager;
 import me.i2000c.newalb.lucky_blocks.rewards.TypeManager;
 import me.i2000c.newalb.utils.locations.LocationManager;
@@ -171,6 +172,7 @@ public class NewAmazingLuckyBlocks extends JavaPlugin {
         RandomBlocks.forceStopAllRandomBlocksTasks();
         RewardListMenu.testRewardsPlayerList.clear();
         LocationManager.releaseDatabaseConnection();
+        LuckyBlockRecipeCacher.removeAllRecipes();
         
         if(asyncPacksLoaderExecutorService != null) {
 	        asyncPacksLoaderExecutorService.shutdown();
