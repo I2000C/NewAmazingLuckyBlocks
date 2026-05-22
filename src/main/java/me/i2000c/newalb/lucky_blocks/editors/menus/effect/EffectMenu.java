@@ -50,6 +50,11 @@ public class EffectMenu extends EditorMenu<EffectReward> {
     }
     
     @Override
+    protected EffectReward createNewItem() {
+        return new EffectReward(null);
+    }
+    
+    @Override
     protected void buildMenu(Player player) {
         if(showClearEffectsItem) {
             setTitle("&5&lEffect Reward");
