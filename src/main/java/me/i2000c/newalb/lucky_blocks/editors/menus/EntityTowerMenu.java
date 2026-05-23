@@ -1,10 +1,12 @@
 package me.i2000c.newalb.lucky_blocks.editors.menus;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -13,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.cryptomorin.xseries.XMaterial;
 
+import me.i2000c.newalb.api.gui.GUIItem;
 import me.i2000c.newalb.api.gui.GlassColor;
 import me.i2000c.newalb.api.gui.MenuItem;
 import me.i2000c.newalb.api.gui.MenuSize;
@@ -22,6 +25,8 @@ import me.i2000c.newalb.lucky_blocks.rewards.Outcome;
 import me.i2000c.newalb.lucky_blocks.rewards.types.EntityReward;
 import me.i2000c.newalb.lucky_blocks.rewards.types.EntityTowerReward;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
+import me.i2000c.newalb.utils.misc.OtherUtils;
+import me.i2000c.newalb.utils.tasks.Task;
 
 public class EntityTowerMenu extends PaginatedEditorMenu<EntityTowerReward, EntityReward> {
     
@@ -34,11 +39,17 @@ public class EntityTowerMenu extends PaginatedEditorMenu<EntityTowerReward, Enti
     
     private static final String ENTITY_ID_TAG = "entity_id";
     
-    private final Map<Integer, EntityReward> entityTowerSlotMap;
+    public static final int MAX_TOWER_HEIGHT = 60;
+    
+    private static final int TOWER_PAGE_SIZE = 6;
+    private static final int TOWER_PAGES = BigDecimal.valueOf(MAX_TOWER_HEIGHT).divide(BigDecimal.valueOf(TOWER_PAGE_SIZE), 0, RoundingMode.CEILING).intValue();
+    private final List<EntityReward> towerEntities;
+    private int towerPage;
     
     public EntityTowerMenu() {
         super("&e&lEntityTower Reward", MenuSize.SIZE_6_ROWS, true, MenuSize.SIZE_5_ROWS, PREVIOUS_PAGE_SLOT, CURRENT_PAGE_SLOT, NEXT_PAGE_SLOT);
-        this.entityTowerSlotMap = new TreeMap<>(Collections.reverseOrder());
+        this.towerEntities = Arrays.asList(new EntityReward[MAX_TOWER_HEIGHT]);
+        this.towerPage = 0;
     }
     
     @Override
@@ -61,10 +72,10 @@ public class EntityTowerMenu extends PaginatedEditorMenu<EntityTowerReward, Enti
         wrapper.setNbtTag(ENTITY_ID_TAG, entityReward.getEntityID());
         Consumer<MenuClickEvent> action = e -> {
             if(entityReward.getEntityID() == EntityTowerReward.PLAYER_ENTITY_ID) {
-                boolean playerAlreadyInTower = entityTowerSlotMap.values()
-                                                                 .stream()
-                                                                 .map(EntityReward::getEntityID)
-                                                                 .anyMatch(id -> id == EntityTowerReward.PLAYER_ENTITY_ID); 
+                boolean playerAlreadyInTower = towerEntities.stream()
+                                                            .filter(OtherUtils.not(Objects::isNull))
+                                                            .map(EntityReward::getEntityID)
+                                                            .anyMatch(id -> id == EntityTowerReward.PLAYER_ENTITY_ID); 
                 if(playerAlreadyInTower) {
                     return;
                 }
@@ -77,52 +88,102 @@ public class EntityTowerMenu extends PaginatedEditorMenu<EntityTowerReward, Enti
     @Override
     protected void onFirstOpen(Player player) {
         if(!isNewItem) {
-            int slot = MenuSize.SIZE_6_ROWS.getSize() - 1;
+            int i = 0;
             for(int entityID : item.getEntityList()) {
+                if(i >= MAX_TOWER_HEIGHT) {
+                    break;
+                }
+                
                 EntityReward entityReward;
                 if(entityID == EntityTowerReward.PLAYER_ENTITY_ID) {
                     entityReward = EntityTowerReward.getPlayerEntityReward();
                 } else {
                     entityReward = item.getOutcome().getEntityReward(entityID);
                 }
-                entityTowerSlotMap.put(slot, entityReward);
-                slot -= MenuSize.SIZE_1_ROW.getSize();
+                towerEntities.set(i++, entityReward);
             }
         }
     }
     
     @Override
     protected void buildMenu(Player player) {
-        addGlassColumn(GlassColor.CYAN, 7);
-        
         setBackItem(45);
         setNextItem(46, e -> {
-            if(entityTowerSlotMap.size() >= 2) {
-                List<Integer> entityIDs = entityTowerSlotMap.values()
-                                                            .stream()
-                                                            .map(EntityReward::getEntityID)
-                                                            .collect(Collectors.toList());
+            int notEmptySlots = (int) towerEntities.stream()
+                                                   .filter(OtherUtils.not(Objects::isNull))
+                                                   .count();
+            
+            if(notEmptySlots >= 2) {
+                List<Integer> entityIDs = towerEntities.stream()
+                                                       .filter(OtherUtils.not(Objects::isNull))
+                                                       .map(EntityReward::getEntityID)
+                                                       .collect(Collectors.toList());
                 item.setEntityList(entityIDs);
                 onNext(player, item);
             }
         });
         
         ItemStack clearItem = ItemStackWrapper.newItem(XMaterial.BARRIER)
-                                              .setDisplayName("&cReset entity tower")
+                                              .setDisplayName("&cClear entity tower")
                                               .toItemStack();
         
         setItem(48, clearItem, e -> {
             if(e.isEmptyCursor()) {
-                entityTowerSlotMap.clear();
+                towerPage = 0;
+                Collections.fill(towerEntities, null);
                 openToPlayer(player);
             }
         });
         
-        entityTowerSlotMap.forEach((slot, entityReward) -> {
-            ItemStackWrapper wrapper = ItemStackWrapper.fromItem(entityReward.getItemToDisplay(), false);
-            wrapper.setNbtTag(ENTITY_ID_TAG, entityReward.getEntityID());
+        int index = towerPage * TOWER_PAGE_SIZE;
+        int slot = MenuSize.SIZE_6_ROWS.getSize() - 2;
+        for(int i=1; i<=TOWER_PAGE_SIZE; i++) {
+            ItemStackWrapper wrapper;
+            if(i == 1) {
+                wrapper = ItemStackWrapper.fromItem(GUIItem.getGlassItem(GlassColor.RED), false);
+                wrapper.setDisplayName("&cGo to previous tower page");
+                setClickAction(slot, e -> {
+                    towerPage = OtherUtils.addInRange(towerPage, -1, 0, TOWER_PAGES);
+                    if(!e.isEmptyCursor()) {
+                        ItemStack cursor = e.getCursor();
+                        Task.runTask(() -> e.getPlayer().setItemOnCursor(cursor), 2L);
+                    }
+                    openToPlayer(player);
+                });
+            } else if(i == TOWER_PAGE_SIZE) {
+                wrapper = ItemStackWrapper.fromItem(GUIItem.getGlassItem(GlassColor.GREEN), false);
+                wrapper.setDisplayName("&aGo to next tower page");
+                setClickAction(slot, e -> {
+                    towerPage = OtherUtils.addInRange(towerPage, 1, 0, TOWER_PAGES);
+                    if(!e.isEmptyCursor()) {
+                        ItemStack cursor = e.getCursor();
+                        Task.runTask(() -> e.getPlayer().setItemOnCursor(cursor), 2L);
+                    }
+                    openToPlayer(player);
+                });
+            } else {
+                wrapper = ItemStackWrapper.fromItem(GUIItem.getGlassItem(GlassColor.CYAN), false);
+            }
+            wrapper.addLoreLine(String.format("&3Current tower page: &6%d &5/ &6%d", towerPage + 1, TOWER_PAGES));
+            wrapper.setAmount(index + 1);
             setItem(slot, wrapper.toItemStack());
-        });
+            
+            slot -= MenuSize.SIZE_1_ROW.getSize();
+            index++;
+        }
+        
+        slot = MenuSize.SIZE_6_ROWS.getSize() - 1;
+        int firstIndex = towerPage * TOWER_PAGE_SIZE;
+        int lastIndex = firstIndex + TOWER_PAGE_SIZE;
+        for(int i=firstIndex; i<lastIndex; i++) {
+            EntityReward entityReward = towerEntities.get(i);
+            if(entityReward != null) {
+                ItemStackWrapper wrapper = ItemStackWrapper.fromItem(entityReward.getItemToDisplay(), false);
+                wrapper.setNbtTag(ENTITY_ID_TAG, entityReward.getEntityID());
+                setItem(slot, wrapper.toItemStack());
+            }
+            slot -= MenuSize.SIZE_1_ROW.getSize();
+        }
     }
     
     @Override
@@ -130,10 +191,13 @@ public class EntityTowerMenu extends PaginatedEditorMenu<EntityTowerReward, Enti
         if(event.isTopInventory()) {
             int column = event.getSlot() % MenuSize.SIZE_1_ROW.getSize();
             if(column == TOWER_COLUMN) {
+                int baseIndex = towerPage * TOWER_PAGE_SIZE;
+                int row = event.getSlot() / MenuSize.SIZE_1_ROW.getSize();
+                int index = baseIndex + (5 - row);
                 ItemStack cursor = event.getCursor();
                 ItemStack currentItem = event.getCurrentItem();
                 if(event.isEmptyCursor()) {
-                    entityTowerSlotMap.remove(event.getSlot());
+                    towerEntities.set(index, null);
                     event.setCursor(currentItem);
                     event.getInventory().setItem(event.getSlot(), cursor);
                     return;
@@ -144,12 +208,14 @@ public class EntityTowerMenu extends PaginatedEditorMenu<EntityTowerReward, Enti
                         EntityReward entityReward = entityID == EntityTowerReward.PLAYER_ENTITY_ID
                                                                 ? EntityTowerReward.getPlayerEntityReward()
                                                                 : item.getOutcome().getEntityRewards().get(entityID);
-                        entityTowerSlotMap.put(event.getSlot(), entityReward);
+                        towerEntities.set(index, entityReward);
                         event.setCursor(currentItem);
                         event.getInventory().setItem(event.getSlot(), cursor);
                         return;
                     }
                 }
+            } else if(column == GLASS_COLUMN) {
+                return;
             }
         }
         
