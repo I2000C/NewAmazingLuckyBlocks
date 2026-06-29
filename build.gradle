@@ -21,6 +21,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 repositories{
+    mavenLocal()
     mavenCentral()
     maven { url = 'https://repo.codemc.io/repository/maven-public/' }
     maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
@@ -29,30 +30,16 @@ repositories{
 }
 
 dependencies{
-    implementation 'de.tr7zw:item-nbt-api:2.15.7'
-    compileOnly 'de.tr7zw:item-nbt-api:2.15.7:javadoc'
-    compileOnly 'de.tr7zw:item-nbt-api:2.15.7:sources'
-    implementation 'io.github.almighty-satan:XSeries:13.6.0+26.1'
-    compileOnly 'com.github.cryptomorin:XSeries:13.6.0:javadoc'
-    compileOnly 'com.github.cryptomorin:XSeries:13.6.0:sources'
+    implementation 'de.tr7zw:item-nbt-api:2.15.8-SNAPSHOT'
+    implementation 'com.github.cryptomorin:XSeries:13.7.1'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
-    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:javadoc'
-    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT:sources'
     compileOnly 'com.mojang:authlib:1.5.21'
     implementation 'xyz.xenondevs:particle:1.8.4'
-    compileOnly 'xyz.xenondevs:particle:1.8.4:javadoc'
-    compileOnly 'xyz.xenondevs:particle:1.8.4:sources'
     
     compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2'
-    compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:javadoc'
-    compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.2:sources'
     compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0'
-    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0:javadoc'
-    compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.0:sources'
     
     compileOnly 'org.projectlombok:lombok:1.18.30'
-    compileOnly 'org.projectlombok:lombok:1.18.30:javadoc'
-    compileOnly 'org.projectlombok:lombok:1.18.30:sources'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 

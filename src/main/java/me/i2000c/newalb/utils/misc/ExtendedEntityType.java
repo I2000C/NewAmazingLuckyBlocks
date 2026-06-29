@@ -383,7 +383,8 @@ public class ExtendedEntityType{
     
     public boolean isSlime(){
         return entityType == EntityType.SLIME
-                || entityType == EntityType.MAGMA_CUBE;
+                || entityType == EntityType.MAGMA_CUBE
+                || (MinecraftVersion.CURRENT_VERSION.isGreaterThanOrEqual(MinecraftVersion.v26_2) && entityType.name().equals("SULFUR_CUBE"));
     }
     
     public boolean isOcelot(){

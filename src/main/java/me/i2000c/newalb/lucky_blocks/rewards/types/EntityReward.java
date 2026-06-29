@@ -36,6 +36,8 @@ import me.i2000c.newalb.utils.misc.ExtendedEntityType;
 import me.i2000c.newalb.utils.misc.ExtendedEntityType.Age;
 import me.i2000c.newalb.utils.misc.ItemStackWrapper;
 import me.i2000c.newalb.utils.random.RandomUtils;
+import me.i2000c.newalb.utils.reflection.RefClass;
+import me.i2000c.newalb.utils.reflection.ReflectionManager;
 
 @Getter
 @Setter
@@ -245,8 +247,19 @@ public class EntityReward extends Reward<EntityReward> {
                 return;
             }
             
-            if(le instanceof Slime && slimeSize >= 0) {
-                ((Slime) le).setSize(slimeSize);
+            if(slimeSize >= 0) {
+                if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v26_2)) {
+                    if(le instanceof Slime) {
+                        ((Slime) le).setSize(slimeSize);
+                    }
+                } else {
+                    // Since Minecraft 26.2, Slime, MagmaCube and SulfurCube are subclasses of AbstractCubeMob
+                    // https://www.spigotmc.org/threads/spigot-bungeecord-26-2.721331/
+                    RefClass refClass = ReflectionManager.getCachedClass("org.bukkit.entity.AbstractCubeMob");
+                    if(refClass.getActualClass().isInstance(le)) {
+                        ReflectionManager.callMethod(le, "setSize", slimeSize);
+                    }
+                }
             }
             
             if(health >= 0) {                
