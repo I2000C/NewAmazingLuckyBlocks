@@ -30,7 +30,7 @@ repositories{
 }
 
 dependencies{
-    implementation 'de.tr7zw:item-nbt-api:2.15.8-SNAPSHOT'
+    implementation 'de.tr7zw:item-nbt-api:2.16.0'
     implementation 'com.github.cryptomorin:XSeries:13.7.1'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
     compileOnly 'com.mojang:authlib:1.5.21'
