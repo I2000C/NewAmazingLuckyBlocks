@@ -99,7 +99,11 @@ public class EntityTowerReward extends Reward<EntityTowerReward> {
         
         String[] data = config.getString(path).split(",");
         for(String id : data) {
-            this.entityList.add(Integer.parseInt(id));
+            int actualId = Integer.parseInt(id);
+            if(actualId < 0) {
+                actualId = PLAYER_ENTITY_ID;
+            }
+            this.entityList.add(actualId);
         }
     }
     
