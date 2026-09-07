@@ -40,6 +40,12 @@ public class LuckyBlockRecipeCacher {
         types.forEach(type -> {
             String key = type.getNamespacedKey();
             ShapedRecipe recipe = type.getRecipe();
+            
+            if(recipe.getIngredientMap().isEmpty()) {
+                // Skip empty recipes to prevent errors
+                return;
+            }
+            
             if(currentRecipes.containsKey(key)) {
                 ShapedRecipe currentRecipe = currentRecipes.get(key);
                 if(!sameRecipes(currentRecipe, recipe)) {
