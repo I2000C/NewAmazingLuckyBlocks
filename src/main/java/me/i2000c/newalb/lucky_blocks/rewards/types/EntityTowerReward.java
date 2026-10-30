@@ -117,15 +117,18 @@ public class EntityTowerReward extends Reward<EntityTowerReward> {
                 entities.add(player);
             } else {
                 EntityReward entityReward = entityRewardList.get(entityID);
-                entityReward.execute(player, location);
-                entities.add(entityReward.lastSpawnedEntity);
+                entities.add(entityReward.spawnEntity(player, location));
             }
         }
         
         for(int i=0;i<this.entityList.size()-1;i++) {
             Entity entity1 = entities.get(i);
             Entity entity2 = entities.get(i+1);
-            
+            if(entity1 == null || entity2 == null) {
+                // One of the entities failed to spawn
+                continue;
+            }
+
             if(MinecraftVersion.CURRENT_VERSION.isLegacyVersion()) {
                 entity1.setPassenger(entity2);
             } else {
