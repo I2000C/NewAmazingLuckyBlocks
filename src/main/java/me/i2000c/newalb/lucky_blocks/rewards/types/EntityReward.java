@@ -18,7 +18,6 @@ import org.bukkit.potion.PotionEffect;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XPotion;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import me.i2000c.newalb.api.gui.menus.EditorMenu;
@@ -58,10 +57,6 @@ public class EntityReward extends Reward<EntityReward> {
     private boolean isAngry;
     
     private Equipment equipment;
-    
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    protected Entity lastSpawnedEntity = null;
     
     public EntityReward(Outcome outcome) {
         super(outcome);
@@ -214,9 +209,16 @@ public class EntityReward extends Reward<EntityReward> {
         this.usePlayerLoc = config.getBoolean(path + ".usePlayerLoc", false);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void execute(Player player, Location location) {
+        spawnEntity(player, location);
+    }
+    
+    // Returns the spawned entity instead of keeping it in a field, so this
+    // long-lived reward doesn't hold the entity (and the player who last hurt it) in memory
+    @SuppressWarnings("deprecation")
+    Entity spawnEntity(Player player, Location location) {
+        Entity spawnedEntity;
         Location baseLocation = this.usePlayerLoc ? player.getLocation() : location;
         Location targetLocation = this.offset.applyToLocation(baseLocation.clone());
         try {
@@ -228,23 +230,23 @@ public class EntityReward extends Reward<EntityReward> {
                 }
             }
             
-            this.lastSpawnedEntity = targetType.spawnEntity(targetLocation);
+            spawnedEntity = targetType.spawnEntity(targetLocation);
         } catch(Exception ex) {
             Logger.err("Entity " + this.type.name() + " couldn't be spawned due to:");
             Logger.err(ex);
-            return;
+            return null;
         }
         
         
         if(this.customName != null) {
-            this.lastSpawnedEntity.setCustomName(Logger.color(this.customName.replace("%player%", player.getName())));
-            this.lastSpawnedEntity.setCustomNameVisible(this.customNameVisible);
+            spawnedEntity.setCustomName(Logger.color(this.customName.replace("%player%", player.getName())));
+            spawnedEntity.setCustomNameVisible(this.customNameVisible);
         }
         
-        if(this.lastSpawnedEntity instanceof LivingEntity) {
-            LivingEntity le = (LivingEntity) this.lastSpawnedEntity;
+        if(spawnedEntity instanceof LivingEntity) {
+            LivingEntity le = (LivingEntity) spawnedEntity;
             if(le == null) {
-                return;
+                return spawnedEntity;
             }
             
             if(slimeSize >= 0) {
@@ -273,24 +275,24 @@ public class EntityReward extends Reward<EntityReward> {
                 
             this.age.setAge(le);
             
-            if(this.isTamed && this.lastSpawnedEntity instanceof Tameable) {
-                ((Tameable) this.lastSpawnedEntity).setTamed(true);
-                ((Tameable) this.lastSpawnedEntity).setOwner(player);
-                if(this.lastSpawnedEntity instanceof Horse) {
-                    ((Horse) this.lastSpawnedEntity)
+            if(this.isTamed && spawnedEntity instanceof Tameable) {
+                ((Tameable) spawnedEntity).setTamed(true);
+                ((Tameable) spawnedEntity).setOwner(player);
+                if(spawnedEntity instanceof Horse) {
+                    ((Horse) spawnedEntity)
                             .getInventory()
                             .addItem(XMaterial.SADDLE.parseItem());
-                }else if(this.lastSpawnedEntity instanceof Ocelot) {
+                }else if(spawnedEntity instanceof Ocelot) {
                     if(MinecraftVersion.CURRENT_VERSION.isLessThan(MinecraftVersion.v1_13)) {
                         int randomType = RandomUtils.getInt(1, 3);
                         Ocelot.Type catType = Ocelot.Type.getType(randomType);
-                        ((Ocelot) this.lastSpawnedEntity).setCatType(catType);
+                        ((Ocelot) spawnedEntity).setCatType(catType);
                     }                    
                 }
             }
             
             if(this.isAngry) {
-                this.type.setAngry(this.lastSpawnedEntity, player);
+                this.type.setAngry(spawnedEntity, player);
             }
             
             for(String effect : this.effects) {
@@ -311,6 +313,8 @@ public class EntityReward extends Reward<EntityReward> {
             
             this.equipment.applyToEntity(le);
         }
+        
+        return spawnedEntity;
     }
     
     @Override
